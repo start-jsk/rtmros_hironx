@@ -14,7 +14,7 @@ import trajectory_msgs.msg
 
 from pr2_controllers_msgs.msg import JointTrajectoryAction
 from trajectory_msgs.msg import JointTrajectoryPoint
-from hrpsys.srv import *
+from hrpsys_ros_bridge.srv import *
 
 class TestHiroROSBridge(unittest.TestCase):
 
