@@ -2,7 +2,7 @@
 <launch>
 
   <rosparam command="load"
-            file="$(find hrpsys_ros_bridge_tutorials)/models/HIRONX_controller_config.yaml" />
+            file="$(find hironx_ros_bridge)/models/HIRONX_controller_config.yaml" />
 
   <arg name="nameserver" default="hiro014" /> <!-- for real robot -->
   <arg name="MODEL_FILE" default="/opt/jsk/etc/HIRONX/model/main.wrl" />
