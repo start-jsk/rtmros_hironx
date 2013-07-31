@@ -43,4 +43,5 @@ compile_collada_model(${PROJECT_SOURCE_DIR}/models/kawada-hironx.dae)
 ## tests
 ##
 rosbuild_add_rostest(test/hironx-test.launch)
+rosbuild_add_rostest(test/hironx-ros-bridge-test.launch)
 
