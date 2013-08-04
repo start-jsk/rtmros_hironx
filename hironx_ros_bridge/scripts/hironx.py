@@ -8,6 +8,9 @@ import time
 import math
 import numpy
 
+import OpenRTM_aist
+import OpenRTM_aist.RTM_IDL
+
 import rtm
 import OpenHRP
 
