@@ -5,17 +5,25 @@ find_package(catkin REQUIRED COMPONENTS hrpsys_ros_bridge)
 
 catkin_package()
 
+add_custom_command(OUTPUT ${PROJECT_SOURCE_DIR}/models/kawada-hironx.zae
+  COMMAND ${catkin_EXTRAS_DIR}/test/download_checkmd5.py
+  https://github.com/rdiankov/collada_robots/raw/master/kawada-hironx.zae
+  ${PROJECT_SOURCE_DIR}/models/kawada-hironx.zae
+  be4b0015914d33a5aaa24ee055bcdbc8
+  VERBATIM)
+add_custom_command(OUTPUT ${PROJECT_SOURCE_DIR}/models/kawada-hironx.dae
+   COMMAND unzip -u ${PROJECT_SOURCE_DIR}/models/kawada-hironx.zae
+   WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/models
+   DEPENDS ${PROJECT_SOURCE_DIR}/models/kawada-hironx.zae)
+compile_collada_model(${PROJECT_SOURCE_DIR}/models/kawada-hironx.dae)
+
 install(DIRECTORY launch DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION})
-install(DIRECTORY scripts DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION})
+install(DIRECTORY scripts DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION} USE_SOURCE_PERMISSIONS)
+install(DIRECTORY models DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION})
 install(DIRECTORY test DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION})
 
-
-# rosbuild_find_ros_package(hrpsys_ros_bridge)
-# include(${hrpsys_ros_bridge_PACKAGE_PATH}/cmake/compile_robot_model.cmake)
-
-# rosbuild_download_data(https://github.com/rdiankov/collada_robots/raw/master/kawada-hironx.zae models/kawada-hironx.zae be4b0015914d33a5aaa24ee055bcdbc8)
-# add_custom_command(OUTPUT ${PROJECT_SOURCE_DIR}/models/kawada-hironx.dae
-#   COMMAND unzip -u ${PROJECT_SOURCE_DIR}/models/kawada-hironx.zae
-#   WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/models
-#   DEPENDS ${PROJECT_SOURCE_DIR}/models/kawada-hironx.zae)
-# compile_collada_model(${PROJECT_SOURCE_DIR}/models/kawada-hironx.dae)
+set(install_code "
+  execute_process(COMMAND sed -i s@${CMAKE_SOURCE_DIR}@${CMAKE_INSTALL_PREFIX}/share@ $ENV{DESTDIR}/${CMAKE_INSTALL_PREFIX}/share/hironx_ros_bridge/models/kawada-hironx.xml)
+  ")
+message("post process ${install_code}")
+install(CODE ${install_code}) # to use CMAKE_SOURCE_DIR
