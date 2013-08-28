@@ -24,12 +24,12 @@ test.linux:
 	make -f Makefile configure install \
 		MODULE_LOAD_PATH=`rospack find hrpsys`/lib \
 		INSTALL_DIR=/tmp
-	mkdir -p /tmp/etc/HIRONX/model/
-	cp `rospack find hironx_ros_bridge`/models/kawada-hironx.dae /tmp/etc/HIRONX/model/main_dof15.wrl
-	rosrun openrtm_aist rtm-naming 15005
-	rosrun openhrp3 openhrp-model-loader -ORBInitRef NameService=corbaloc:iiop:localhost:15005/NameService &
-	rosrun openrtm_aist rtcd -f /tmp/etc/${ROBOT}/hrprtc/rtcdRobotMode.conf &
-	sleep 3
+	@mkdir -p /tmp/etc/HIRONX/model/
+	@cp `rospack find hironx_ros_bridge`/models/kawada-hironx.dae /tmp/etc/HIRONX/model/main_dof15.wrl
+	@rosrun openrtm_aist rtm-naming 15005 || (sh -c '/bin/echo -e "\e[1;32m\nplease try\n pkill -9 openhrp-model-l; pkill -9 rtcd; pkill -9 omniNames\n and make test.inux again\e[0m"'; false)
+	@rosrun openhrp3 openhrp-model-loader -ORBInitRef NameService=corbaloc:iiop:localhost:15005/NameService &
+	@rosrun openrtm_aist rtcd -f /tmp/etc/${ROBOT}/hrprtc/rtcdRobotMode.conf &
+	@sleep 3
 	@echo -e ''
 	@echo -e '\e[1;32mtry following commad to check rtcd for hiro\e[0m'
 	@echo -e '\e[1;32m  rosrun hironx_ros_bridge hironx.py -ORBInitRef NameService=corbaloc:iiop:localhost:15005/NameService\e[0m'
