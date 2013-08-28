@@ -1,4 +1,4 @@
-model: /opt/jsk/etc/HIRONX/model/main_dof15.wrl
+model: @ROBOT_PATH@/model/main_dof15.wrl
 dt: 0.005
 naming.formats: %n.rtc
 
