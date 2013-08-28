@@ -20,3 +20,24 @@ install:
 	install Robot.conf		${INSTALL_DIR}/etc/${ROBOT}/hrprtc/
 	install rtcdRobotMode.conf	${INSTALL_DIR}/etc/${ROBOT}/hrprtc/
 
+test.linux:
+	make -f Makefile configure install \
+		MODULE_LOAD_PATH=`rospack find hrpsys`/lib \
+		INSTALL_DIR=/tmp
+	mkdir -p /tmp/etc/HIRONX/model/
+	cp `rospack find hironx_ros_bridge`/models/kawada-hironx.dae /tmp/etc/HIRONX/model/main_dof15.wrl
+	rosrun openrtm_aist rtm-naming 15005
+	rosrun openhrp3 openhrp-model-loader -ORBInitRef NameService=corbaloc:iiop:localhost:15005/NameService &
+	rosrun openrtm_aist rtcd -f /tmp/etc/${ROBOT}/hrprtc/rtcdRobotMode.conf &
+	sleep 3
+	@echo -e ''
+	@echo -e '\e[1;32mtry following commad to check rtcd for hiro\e[0m'
+	@echo -e '\e[1;32m  rosrun hironx_ros_bridge hironx.py -ORBInitRef NameService=corbaloc:iiop:localhost:15005/NameService\e[0m'
+	@echo -e '\e[1;32m  RTCTREE_NAMESERVERS=localhost:15005 rtls localhost:15005/\e[0m'
+	@echo -e ''
+	@echo -e '\e[1;31m[hit return key to quit]\e[0m'
+	@read variable
+	pkill -9 openhrp-model-loader || pkill -9 openhrp-model-l
+	pkill -9 rtcd
+	pkill -9 omniNames
+
