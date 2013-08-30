@@ -5,16 +5,14 @@ find_package(catkin REQUIRED COMPONENTS hrpsys_ros_bridge)
 
 catkin_package()
 
-add_custom_command(OUTPUT ${PROJECT_SOURCE_DIR}/models/kawada-hironx.zae
+add_custom_command(OUTPUT ${PROJECT_SOURCE_DIR}/models/kawada-hironx.dae
   COMMAND ${catkin_EXTRAS_DIR}/test/download_checkmd5.py
   https://github.com/rdiankov/collada_robots/raw/master/kawada-hironx.zae
   ${PROJECT_SOURCE_DIR}/models/kawada-hironx.zae
   be4b0015914d33a5aaa24ee055bcdbc8
+  COMMAND unzip -u ${PROJECT_SOURCE_DIR}/models/kawada-hironx.zae
+  WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/models
   VERBATIM)
-add_custom_command(OUTPUT ${PROJECT_SOURCE_DIR}/models/kawada-hironx.dae
-   COMMAND unzip -u ${PROJECT_SOURCE_DIR}/models/kawada-hironx.zae
-   WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/models
-   DEPENDS ${PROJECT_SOURCE_DIR}/models/kawada-hironx.zae)
 compile_collada_model(${PROJECT_SOURCE_DIR}/models/kawada-hironx.dae)
 
 install(DIRECTORY launch DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION})
