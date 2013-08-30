@@ -43,6 +43,10 @@ add_custom_command(OUTPUT ${PROJECT_SOURCE_DIR}/models/kawada-hironx.dae
 compile_collada_model(${PROJECT_SOURCE_DIR}/models/kawada-hironx.dae)
 #rosbuild_find_ros_package(collada_robots)
 #compile_collada_model(${collada_robots_PACKAGE_PATH}/data/robots/kawada-hironx.dae)
+
+#clean generated files
+set_directory_properties(PROPERTIES ADDITIONAL_MAKE_CLEAN_FILES "models/kawada-hironx.RobotHardware.conf;models/kawada-hironx.conf;models/kawada-hironx.dae;models/kawada-hironx.l;models/kawada-hironx.xml;models/kawada-hironx.zae;models/kawada-hironx_nosim.RobotHardware.conf;models/kawada-hironx_nosim.conf;models/kawada-hironx_nosim.xml")
+
 ##
 ## tests
 ##
