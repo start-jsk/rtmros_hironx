@@ -40,9 +40,9 @@ add_custom_command(OUTPUT ${PROJECT_SOURCE_DIR}/models/kawada-hironx.dae
   COMMAND unzip -u ${PROJECT_SOURCE_DIR}/models/kawada-hironx.zae
   WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/models
   DEPENDS ${PROJECT_SOURCE_DIR}/models/kawada-hironx.zae)
-compile_collada_model(${PROJECT_SOURCE_DIR}/models/kawada-hironx.dae)
-#rosbuild_find_ros_package(collada_robots)
-#compile_collada_model(${collada_robots_PACKAGE_PATH}/data/robots/kawada-hironx.dae)
+
+# commit generated files due to  https://code.google.com/p/rtm-ros-robotics/issues/detail?id=187
+#compile_collada_model(${PROJECT_SOURCE_DIR}/models/kawada-hironx.dae)
 
 #clean generated files
 set_directory_properties(PROPERTIES ADDITIONAL_MAKE_CLEAN_FILES "models/kawada-hironx.RobotHardware.conf;models/kawada-hironx.conf;models/kawada-hironx.dae;models/kawada-hironx.l;models/kawada-hironx.xml;models/kawada-hironx.zae;models/kawada-hironx_nosim.RobotHardware.conf;models/kawada-hironx_nosim.conf;models/kawada-hironx_nosim.xml")
