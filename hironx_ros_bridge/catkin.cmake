@@ -13,7 +13,8 @@ add_custom_command(OUTPUT ${PROJECT_SOURCE_DIR}/models/kawada-hironx.dae
   COMMAND unzip -u ${PROJECT_SOURCE_DIR}/models/kawada-hironx.zae
   WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/models
   VERBATIM)
-compile_collada_model(${PROJECT_SOURCE_DIR}/models/kawada-hironx.dae)
+# commit generated files due to  https://code.google.com/p/rtm-ros-robotics/issues/detail?id=187
+#compile_collada_model(${PROJECT_SOURCE_DIR}/models/kawada-hironx.dae)
 
 install(DIRECTORY launch DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION})
 install(DIRECTORY scripts DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION} USE_SOURCE_PERMISSIONS)
