@@ -6,13 +6,14 @@
 
   <arg name="nameserver" default="hiro014" /> <!-- for real robot -->
   <arg name="MODEL_FILE" default="/opt/jsk/etc/HIRONX/model/main.wrl" />
+  <arg name="COLLADA_FILE" default="$(find hironx_ros_bridge)/models/kawada-hironx.dae" />
   <arg name="SIMULATOR_NAME" default="RobotHardware0" />
 
   <include file="$(find hrpsys_ros_bridge)/launch/hrpsys_ros_bridge.launch">
     <arg name="SIMULATOR_NAME" value="$(arg SIMULATOR_NAME)" />
     <arg name="nameserver" value="$(arg nameserver)" />
     <arg name="MODEL_FILE" value="$(arg MODEL_FILE)" />
-    <arg name="COLLADA_FILE" value="$(find hironx_ros_bridge)/models/kawada-hironx.dae" />
+    <arg name="COLLADA_FILE" value="$(arg COLLADA_FILE)" />
 
     <arg name="USE_WALKING" value="false" />
     <arg name="USE_COLLISIONCHECK" value="false" />
