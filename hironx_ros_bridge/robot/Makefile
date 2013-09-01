@@ -1,18 +1,23 @@
 MODULE_LOAD_PATH = /opt/jsk/lib
 INSTALL_DIR=/opt/jsk
 ROBOT=HIRONX
+ROBOT_IP=hiro014
 
 ROBOT_PATH = ${INSTALL_DIR}/etc/${ROBOT}
 LOG_PATH =   ${INSTALL_DIR}/var/log
 
-all: configure install
+all: configure
 
 configure:
 	for file in *.in; do\
+		echo "configure $$file"; \
 		sed s!@MODULE_LOAD_PATH@!${MODULE_LOAD_PATH}! $$file | \
+		sed s!@INSTALL_DIR@!${INSTALL_DIR}! | \
 		sed s!@ROBOT_PATH@!${ROBOT_PATH}! | \
-		sed s!@LOG_PATH@!${LOG_PATH}! > `basename $$file .in`; \
+		sed s!@LOG_PATH@!${LOG_PATH}! | \
+		sed s!@ROBOT_IP@!${ROBOT_IP}! > `basename $$file .in`; \
 	done
+	@echo "\n\n\`make install\` to install generated files\n\n"
 
 install:
 	install -d ${INSTALL_DIR}/bin/  ${INSTALL_DIR}/etc/${ROBOT}/hrprtc/
