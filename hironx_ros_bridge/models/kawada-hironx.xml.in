@@ -14,7 +14,7 @@
    <property name="connection" value="HGcontroller0.dqOut:HiroNX(Robot)0.dqRef"/>
    <property name="connection" value="HGcontroller0.ddqOut:HiroNX(Robot)0.ddqRef"/>
   </item>
-  <item class="com.generalrobotix.ui.item.GrxModelItem" name="kawada-hironx" url="/home/k-okada/ros/groovy/rtm-ros-robotics/rtmros_hironx/hironx_ros_bridge/models/kawada-hironx.dae">
+  <item class="com.generalrobotix.ui.item.GrxModelItem" name="kawada-hironx" url="@HIRONX_ROS_BRIDGE@/models/kawada-hironx.dae">
    <property name="rtcName" value="HiroNX(Robot)0"/>
    <property name="inport" value="qRef:JOINT_VALUE"/>
    <property name="inport" value="dqRef:JOINT_VELOCITY"/>

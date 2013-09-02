@@ -1,0 +1,4 @@
+model: file://@HIRONX_ROS_BRIDGE@/models/kawada-hironx.dae
+exec_cxt.periodic.type: hrpExecutionContext
+exec_cxt.periodic.rate: 200
+

@@ -43,9 +43,18 @@ add_custom_command(OUTPUT ${PROJECT_SOURCE_DIR}/models/kawada-hironx.dae
 
 # commit generated files due to  https://code.google.com/p/rtm-ros-robotics/issues/detail?id=187
 #compile_collada_model(${PROJECT_SOURCE_DIR}/models/kawada-hironx.dae)
+set(HIRONX_ROS_BRIDGE ${PROJECT_SOURCE_DIR})
+configure_file(models/kawada-hironx.RobotHardware.conf.in       ${PROJECT_SOURCE_DIR}/models/kawada-hironx.RobotHardware.conf)
+configure_file(models/kawada-hironx_nosim.RobotHardware.conf.in ${PROJECT_SOURCE_DIR}/models/kawada-hironx_nosim.RobotHardware.conf)
+configure_file(models/kawada-hironx.xml.in                      ${PROJECT_SOURCE_DIR}/models/kawada-hironx.xml)
+configure_file(models/kawada-hironx_nosim.xml.in                ${PROJECT_SOURCE_DIR}/models/kawada-hironx_nosim.xml)
+configure_file(models/kawada-hironx.conf.in                     ${PROJECT_SOURCE_DIR}/models/kawada-hironx.conf)
+configure_file(models/kawada-hironx_nosim.conf.in               ${PROJECT_SOURCE_DIR}/models/kawada-hironx_nosim.conf)
+add_custom_target(model_files ALL DEPENDS ${PROJECT_SOURCE_DIR}/models/kawada-hironx.RobotHardware.conf ${PROJECT_SOURCE_DIR}/models/kawada-hironx_nosim.RobotHardware.conf ${PROJECT_SOURCE_DIR}/models/kawada-hironx.xml ${PROJECT_SOURCE_DIR}/models/kawada-hironx_nosim.xml ${PROJECT_SOURCE_DIR}/models/kawada-hironx.conf ${PROJECT_SOURCE_DIR}/models/kawada-hironx_nosim.conf)
+
 
 #clean generated files
-set_directory_properties(PROPERTIES ADDITIONAL_MAKE_CLEAN_FILES "models/kawada-hironx.RobotHardware.conf;models/kawada-hironx.conf;models/kawada-hironx.dae;models/kawada-hironx.l;models/kawada-hironx.xml;models/kawada-hironx.zae;models/kawada-hironx_nosim.RobotHardware.conf;models/kawada-hironx_nosim.conf;models/kawada-hironx_nosim.xml")
+set_directory_properties(PROPERTIES ADDITIONAL_MAKE_CLEAN_FILES "${PROJECT_SOURCE_DIR}/models/kawada-hironx.RobotHardware.conf;${PROJECT_SOURCE_DIR}/models/kawada-hironx.conf;${PROJECT_SOURCE_DIR}/models/kawada-hironx.dae;${PROJECT_SOURCE_DIR}/models/kawada-hironx.l;${PROJECT_SOURCE_DIR}/models/kawada-hironx.xml;${PROJECT_SOURCE_DIR}/models/kawada-hironx_nosim.RobotHardware.conf;${PROJECT_SOURCE_DIR}/models/kawada-hironx_nosim.conf;${PROJECT_SOURCE_DIR}/models/kawada-hironx_nosim.xml;${PROJECT_SOURCE_DIR}/models/kawada-hironx_nosim.conf")
 
 ##
 ## tests
