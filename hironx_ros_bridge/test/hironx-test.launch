@@ -3,7 +3,9 @@
   <include file="$(find hironx_ros_bridge)/launch/hironx_startup.launch" >
     <arg name="GUI" default="$(arg GUI)" />
     <arg name="LAUNCH_HRPSYSPY" value="false" />
+    <arg name="REALTIME" value="false" />
   </include>
 
-  <test type="hironx-test.py" pkg="hironx_ros_bridge" test-name="hironx_test" time-limit="300" />
+  <test type="hironx-test.py" pkg="hironx_ros_bridge" test-name="hironx_test" time-limit="300"
+        args="-ORBInitRef NameService=corbaloc:iiop:localhost:15005/NameService" />
 </launch>
