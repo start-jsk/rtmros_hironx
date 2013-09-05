@@ -38,7 +38,7 @@ hostname=$1
 hostname=${hostname:="hiro014"} 
 read -p "execute restart command @ $hostname (y/n)?"
 if [ "$REPLY" == "y" ]; then
-    ssh root@${hostname:="hiro014"} -t $commands
+    ssh root@$hostname -t $commands
 else
     echo "DO NOT RUN"
     echo "----"
