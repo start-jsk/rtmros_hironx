@@ -1,6 +1,10 @@
 corba.nameservers: localhost:15005
 logger.enable: YES
 logger.log_level: NORMAL
+#logger.log_level: DEBUG
+#logger.log_level: TRACE
+#logger.log_level: VERBOSE
+#logger.log_level: PARANOID
 logger.file_name: stdout
 exec_cxt.periodic.type: hrpExecutionContext
 exec_cxt.periodic.rate: 200
