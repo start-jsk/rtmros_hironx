@@ -18,7 +18,7 @@ add_custom_command(OUTPUT ${PROJECT_SOURCE_DIR}/models/kawada-hironx.dae
 
 set(HIRONX_ROS_BRIDGE ${PROJECT_SOURCE_DIR})
 if(EXISTS ${openhrp3_SOURCE_DIR})
-  set(OPENHRP3 ${openhrp3_OSURCE_DIR})
+  set(OPENHRP3 ${openhrp3_SOURCE_DIR})
 else()
   find_package(PkgConfig)
   pkg_check_modules(openhrp3 openhrp3.1 REQUIRED)
