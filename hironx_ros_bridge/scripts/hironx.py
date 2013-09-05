@@ -109,7 +109,7 @@ class HIRONX(HrpsysConfigurator):
                 self.setHandJointAngles(h, self.hand_width2angles(width), tm)
 
     def moveHand(self, hand, av, tm=1) : # direction av : + for open, - for close
-        for i in [4, 5, 8, 9]:
+        for i in [2, 3, 6, 7]: # do not change this line if servo is difference, change HandGroups
             av[i] = -av[i]
         self.setHandJointAngles(hand, av, tm)
 
