@@ -20,10 +20,14 @@ configure:
 	@echo "\n\n\`make install\` to install generated files\n\n"
 
 install:
-	install -d ${INSTALL_DIR}/bin/  ${INSTALL_DIR}/etc/${ROBOT}/hrprtc/
-	install rtcd.sh			${INSTALL_DIR}/bin/
-	install Robot.conf		${INSTALL_DIR}/etc/${ROBOT}/hrprtc/
-	install rtcdRobotMode.conf	${INSTALL_DIR}/etc/${ROBOT}/hrprtc/
+	mkdir -p ${INSTALL_DIR}/bin/ ${INSTALL_DIR}/etc/${ROBOT}/hrprtc/
+	cp rtcd.sh		${INSTALL_DIR}/bin/ && chmod u+x ${INSTALL_DIR}/bin/rtcd.sh
+	cp NameServer.sh	${INSTALL_DIR}/bin/ && chmod u+x ${INSTALL_DIR}/bin/NameServer.sh
+	cp ModelLoader.sh	${INSTALL_DIR}/bin/ && chmod u+x ${INSTALL_DIR}/bin/ModelLoader.sh
+	cp startJSK.sh		${INSTALL_DIR}/bin/ && chmod u+x ${INSTALL_DIR}/bin/startJSK.sh
+	cp Robot.conf		${INSTALL_DIR}/etc/${ROBOT}/hrprtc/
+	cp RobotHardware.conf	${INSTALL_DIR}/etc/${ROBOT}/hrprtc/
+	cp rtcdRobotMode.conf	${INSTALL_DIR}/etc/${ROBOT}/hrprtc/
 
 test.linux:
 	make -f Makefile configure install \
