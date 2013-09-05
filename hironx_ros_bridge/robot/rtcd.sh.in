@@ -3,8 +3,7 @@
 export JSK_DIR=/opt/jsk
 export LOG_DIR=@LOG_PATH@
 export PATH=$JSK_DIR/bin:$PATH
-#export LD_LIBRARY_PATH=@MODULE_LOAD_PATH@:/opt/hiro/lib:$LD_LIBRARY_PATH ## why /opt/hiro/lib is required
-export LD_LIBRARY_PATH=@MODULE_LOAD_PATH@:$LD_LIBRARY_PATH
+export LD_LIBRARY_PATH=/opt/hiro/lib:@MODULE_LOAD_PATH@:$LD_LIBRARY_PATH ## use libhrpIo.so in /opt/hiro/lib
 export RTCD_KILLNAME=rtcd
 
 OS=`uname`
