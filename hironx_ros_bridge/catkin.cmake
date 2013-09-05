@@ -25,7 +25,6 @@ else()
   set(OPENHRP3 ${openhrp3_PREFIX}/share/openhrp3)
 endif()
  
-endif()
 configure_file(models/kawada-hironx.RobotHardware.conf.in       ${PROJECT_SOURCE_DIR}/models/kawada-hironx.RobotHardware.conf)
 configure_file(models/kawada-hironx_nosim.RobotHardware.conf.in ${PROJECT_SOURCE_DIR}/models/kawada-hironx_nosim.RobotHardware.conf)
 configure_file(models/kawada-hironx.xml.in                      ${PROJECT_SOURCE_DIR}/models/kawada-hironx.xml)
