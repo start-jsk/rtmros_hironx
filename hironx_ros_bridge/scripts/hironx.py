@@ -107,6 +107,12 @@ class HIRONX(HrpsysConfigurator):
         else:
             for h in self.HandGroups.keys():
                 self.setHandJointAngles(h, self.hand_width2angles(width), tm)
+
+    def moveHand(self, hand, av, tm=1) : # direction av : + for open, - for close
+        for i in [4, 5, 8, 9]:
+            av[i] = -av[i]
+        self.setHandJointAngles(hand, av, tm)
+
     def hand_width2angles(self, width):
         safetyMargin = 3
         l1, l2 = (41.9, 19)
