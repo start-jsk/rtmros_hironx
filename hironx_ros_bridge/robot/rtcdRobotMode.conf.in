@@ -11,7 +11,7 @@ manager.modules.preload: hrpEC.so,RobotHardware.so
 manager.components.precreate: RobotHardware
 
 ## All Robots
-example.RobotHardware.config_file: @ROBOT_PATH@/hrprtc/Robot.conf
+example.RobotHardware.config_file: @ROBOT_PATH@/hrprtc/RobotHardware.conf
 example.SequencePlayer.config_file: @ROBOT_PATH@/hrprtc/Robot.conf
 example.StateHolder.config_file: @ROBOT_PATH@/hrprtc/Robot.conf
 example.ForwardKinematics.config_file: @ROBOT_PATH@/hrprtc/Robot.conf
