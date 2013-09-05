@@ -14,7 +14,7 @@ import OpenRTM_aist.RTM_IDL
 import rtm
 import OpenHRP
 
-from hrpsys_config import HrpsysConfigurator
+from hrpsys_config import *
 
 from waitInput import waitInputConfirm, waitInputSelect
 
