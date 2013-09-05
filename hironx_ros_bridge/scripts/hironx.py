@@ -77,6 +77,7 @@ class HIRONX(HrpsysConfigurator):
             ['seq', "SequencePlayer"],
             ['sh', "StateHolder"],
             ['fk', "ForwardKinematics"],
+            ['el', "SoftErrorLimiter"],
             # ['co', "CollisionDetector"],
             ['sc', "ServoController"],
             ['log', "DataLogger"]
