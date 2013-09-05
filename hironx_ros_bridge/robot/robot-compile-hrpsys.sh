@@ -39,7 +39,7 @@ commands="
   "
 hostname=$1
 hostname=${hostname:="hiro014"} 
-read -p "execute restart command @ $hostname (y/n)?"
+read -p "execute compile command @ $hostname (y/n)?"
 if [ "$REPLY" == "y" ]; then
     ssh root@$hostname -t $commands
 else
