@@ -22,29 +22,28 @@ while [ -n "$1" ] ; do
     esac
 done
 
-domain=`host rtm-ros-robotics.googlecode.com | awk '/^[[:alnum:].-]+ has address/ { print $4 ; exit }'`
+domain=`host rtm-ros-robotics.googlecode.com | awk '/^[[:alnum:].-]+ has address/ { print $4 ; exit }'` # this does not work for  Server certificate verification 
 
 commands="
+  . ~/.profile;
   echo \"* Download hironx_ros_bridge/robot *\";
-  mkdir -p src
-  cd src
-  svn co https://$domain/svn/trunk/rtmros_hironx/hironx_ros_bridge/robot robot
+  mkdir -p src;
+  cd src;
+  svn co http://rtm-ros-robotics.googlecode.com/svn/trunk/rtmros_hironx/hironx_ros_bridge/robot robot;
   echo \"* Configure configure files *\";
   cd robot;
-  PATH=/opt/jsk/bin:$PATH make
+  make;
   echo \"* Install configure files *\";
-  PATH=/opt/jsk/bin:$PATH su -c 'make install'
+  su -c 'make install';
   "
 hostname=$1
 hostname=${hostname:="hiro014"} 
+echo "comands = $commands"
 read -p "execute install command @ $hostname (y/n)?"
 if [ "$REPLY" == "y" ]; then
-    ssh root@$hostname -t $commands
+    ssh hiro@$hostname -t $commands
 else
-    echo "DO NOT RUN"
-    echo "----"
-    echo "$commands"
-    echo "----"
+    echo "DO NOT RUN commands"
     echo "EXITTING.."
 fi
 

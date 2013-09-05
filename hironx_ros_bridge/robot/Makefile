@@ -26,7 +26,6 @@ install:
 	cp ModelLoader.sh	${INSTALL_DIR}/bin/ && chmod u+x ${INSTALL_DIR}/bin/ModelLoader.sh
 	cp startJSK.sh		${INSTALL_DIR}/bin/ && chmod u+x ${INSTALL_DIR}/bin/startJSK.sh
 	cp Robot.conf		${INSTALL_DIR}/etc/${ROBOT}/hrprtc/
-	cp RobotHardware.conf	${INSTALL_DIR}/etc/${ROBOT}/hrprtc/
 	cp rtcdRobotMode.conf	${INSTALL_DIR}/etc/${ROBOT}/hrprtc/
 
 test.linux:
