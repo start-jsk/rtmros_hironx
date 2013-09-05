@@ -338,5 +338,5 @@ if __name__ == '__main__':
 # $ ./hironx.py
 #
 # for real robot
-# ./hironx.py  RobotHardware0  /opt/jsk/etc/HIRONX/model/main_dof15.wrl -- -ORBInitRef NameService=corbaloc:iiop:hiro014:15005/NameService
-# ipython -i hironx.py  RobotHardware0  /opt/jsk/etc/HIRONX/model/main_dof15.wrl -- -ORBInitRef NameService=corbaloc:iiop:hiro014:15005/NameService
+# ./hironx.py  RobotHardware0  /opt/jsk/etc/HIRONX/model/main.wrl -- -ORBInitRef NameService=corbaloc:iiop:hiro014:15005/NameService
+# ipython -i hironx.py  RobotHardware0  /opt/jsk/etc/HIRONX/model/main.wrl -- -ORBInitRef NameService=corbaloc:iiop:hiro014:15005/NameService
