@@ -26,8 +26,8 @@ address=`host hrpsys-base.googlecode.com | awk '/^[[:alnum:].-]+ has address/ { 
 
 commands="
   echo \"* Download hrpsys *\";
-  mkdir -p src2
-  cd src2
+  mkdir -p src
+  cd src
   svn co https://${address}/svn/trunk hrpsys-base-source
   echo \"* Configure hrpsys *\";
   cd hrpsys-base-source;
