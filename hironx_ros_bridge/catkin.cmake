@@ -17,12 +17,14 @@ add_custom_command(OUTPUT ${PROJECT_SOURCE_DIR}/models/kawada-hironx.dae
 #compile_collada_model(${PROJECT_SOURCE_DIR}/models/kawada-hironx.dae)
 
 set(HIRONX_ROS_BRIDGE ${PROJECT_SOURCE_DIR})
-if(EXISTS ${openhrp3_SOURCE_DIR})
-  set(OPENHRP3 ${openhrp3_SOURCE_DIR})
+if(EXISTS ${CATKIN_DEVEL_PREFIX})
+  set(OPENHRP3 ${CATKIN_DEVEL_PREFIX}/share/openhrp3)
 else()
   find_package(PkgConfig)
   pkg_check_modules(openhrp3 openhrp3.1 REQUIRED)
   set(OPENHRP3 ${openhrp3_PREFIX}/share/openhrp3)
+endif()
+ 
 endif()
 configure_file(models/kawada-hironx.RobotHardware.conf.in       ${PROJECT_SOURCE_DIR}/models/kawada-hironx.RobotHardware.conf)
 configure_file(models/kawada-hironx_nosim.RobotHardware.conf.in ${PROJECT_SOURCE_DIR}/models/kawada-hironx_nosim.RobotHardware.conf)
