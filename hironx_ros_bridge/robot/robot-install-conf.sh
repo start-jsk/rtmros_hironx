@@ -22,13 +22,13 @@ while [ -n "$1" ] ; do
     esac
 done
 
-address=`host rtm-ros-robotics.googlecode.com | awk '/^[[:alnum:].-]+ has address/ { print $4 ; exit }'`
+domain=`host rtm-ros-robotics.googlecode.com | awk '/^[[:alnum:].-]+ has address/ { print $4 ; exit }'`
 
 commands="
   echo \"* Download hironx_ros_bridge/robot *\";
   mkdir -p src
   cd src
-  svn co https://rtm-ros-robotics.googlecode.com/svn/trunk/rtmros_hironx/hironx_ros_bridge/robot robot
+  svn co https://$domain/svn/trunk/rtmros_hironx/hironx_ros_bridge/robot robot
   echo \"* Configure configure files *\";
   cd robot;
   PATH=/opt/jsk/bin:$PATH make
