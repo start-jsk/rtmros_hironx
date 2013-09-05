@@ -22,26 +22,29 @@ while [ -n "$1" ] ; do
     esac
 done
 
-address=`host hrpsys-base.googlecode.com | awk '/^[[:alnum:].-]+ has address/ { print $4 ; exit }'`
+address=`host hrpsys-base.googlecode.com | awk '/^[[:alnum:].-]+ has address/ { print $4 ; exit }'` # this does not work for  Server certificate verification 
 
 commands="
+  . ~/.profile;
   echo \"* Download hrpsys *\";
-  mkdir -p src
-  cd src
-  svn co https://${address}/svn/trunk hrpsys-base-source
+  mkdir -p src;
+  cd src;
+  svn co http://hrpsys-base.googlecode.com/svn/trunk hrpsys-base-source;
   echo \"* Configure hrpsys *\";
   cd hrpsys-base-source;
-  PKG_CONFIG_PATH=/opt/jsk/lib/pkgconfig:/usr/pkg/lib/pkgconfig CXX=QCC CC=qcc TVMET_DIR=/opt/jsk OPENRTM_IDL_DIR=/opt/jsk/iclude/OpenRTM-1.1/rtm/idl LDFLAGS=\"-L/usr/pkg/lib -lboost_system -lboost_signals -lboost_filesystem\"  cmake . -DLAPACK_LIBRARY_DIRS=/opt/jsk/lib -DLAPACK_INCLUDE_DIRS=/opt/jsk/include -DOPENRTM_DIR=/opt/jsk -DOPT_COLLADASUPPORT=NO -DEIGEN_INCLUDE_DIR=/opt/jsk/inclde/eigen3 -DCOMPILE_JAVA_STUFF=OFF -DCMAKE_SHARED_LINKER_FLAGS=\"-L/usr/pkg/lib -lboost_system -lboost_signals -lboost_filesystem -lboost_regex -lf2c -Wl,-u,MAIN__\" -DCMAKE_EXE_LINKER_FLAGS=\"-L/usr/pkg/lib -lboost_system -lboost_signals -lboost_filesystem -lboost_regex -lf2c -Wl,-u,MAIN__\" -DCMAKE_MODULE_LINKER_FLAGS=\"-L/usr/pkg/lib -lboost_system -lboost_signals -lboost_filesystem -lboost_regex lf2c -Wl,-u,MAIN__\" -DCMAKE_INSTALL_PREFIX=/opt/jsk -DENABLE_DOXYGEN=OFF 
+  PKG_CONFIG_PATH=/opt/jsk/lib/pkgconfig:/usr/pkg/lib/pkgconfig CXX=QCC CC=qcc TVMET_DIR=/opt/jsk OPENRTM_IDL_DIR=/opt/jsk/iclude/OpenRTM-1.1/rtm/idl LDFLAGS=\"-L/usr/pkg/lib -lboost_thread -lboost_system -lboost_signals -lboost_filesystem\"  cmake . -DLAPACK_LIBRARY_DIRS=/opt/jsk/lib -DLAPACK_INCLUDE_DIRS=/opt/jsk/include -DOPENRTM_DIR=/opt/jsk -DOPT_COLLADASUPPORT=NO -DEIGEN_INCLUDE_DIR=/opt/jsk/inclde/eigen3 -DCOMPILE_JAVA_STUFF=OFF -DCMAKE_SHARED_LINKER_FLAGS=\"-L/usr/pkg/lib -lboost_thread -lboost_system -lboost_signals -lboost_filesystem -lboost_regex -lf2c -Wl,-u,MAIN__\" -DCMAKE_EXE_LINKER_FLAGS=\"-L/usr/pkg/lib -lboost_thread -lboost_system -lboost_signals -lboost_filesystem -lboost_regex -lf2c -Wl,-u,MAIN__\" -DCMAKE_MODULE_LINKER_FLAGS=\"-L/usr/pkg/lib -lboost_thread -lboost_system -lboost_signals -lboost_filesystem -lboost_regex lf2c -Wl,-u,MAIN__\" -DCMAKE_INSTALL_PREFIX=/opt/jsk -DENABLE_DOXYGEN=OFF ;
   echo \"* Compile hrpsys *\";
-  PATH=/opt/jsk/bin:$PATH make
+  make;
   echo \"* Install hrpsys *\";
-  PATH=/opt/jsk/bin:$PATH su -c 'make install; ln -sf /opt/hiro/lib/libhrpIo.so /opt/jsk/lib/libhrpIo.so';
+  su -c 'make install; ln -sf /opt/hiro/lib/libhrpIo.so /opt/jsk/lib/libhrpIo.so';
+  ls -al /opt/jsk/lib/libhrpIo.so;
   "
+
 hostname=$1
 hostname=${hostname:="hiro014"} 
 read -p "execute compile command @ $hostname (y/n)?"
 if [ "$REPLY" == "y" ]; then
-    ssh root@$hostname -t $commands
+    ssh hiro@$hostname -t $commands
 else
     echo "DO NOT RUN"
     echo "----"
