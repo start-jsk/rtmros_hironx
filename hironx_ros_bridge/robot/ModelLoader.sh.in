@@ -1,0 +1,16 @@
+#!/bin/sh
+
+export LOG_DIR=@LOG_PATH@
+export PATH=@INSTALL_DIR@/bin:$PATH
+export LD_LIBRARY_PATH=@MODULE_LOAD_PATH@:$LD_LIBRARY_PATH
+
+DATESTRING=`date +%Y%m%d%H%M%S`
+
+slay openhrp-model-loader
+
+(openhrp-model-loader -ORBInitRef NameService=corbaloc:iiop:localhost:15005/NameService > $LOG_DIR/ModelLoader-$DATESTRING.log 2>&1 )&
+
+if [ -f $LOG_DIR/ModelLoader.log ]; then
+  rm $LOG_DIR/ModelLoader.log
+fi
+ln -s $LOG_DIR/ModelLoader-$DATESTRING.log $LOG_DIR/ModelLoader.log
