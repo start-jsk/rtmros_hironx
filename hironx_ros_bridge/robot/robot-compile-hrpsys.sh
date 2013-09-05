@@ -35,7 +35,7 @@ commands="
   echo \"* Compile hrpsys *\";
   PATH=/opt/jsk/bin:$PATH make
   echo \"* Install hrpsys *\";
-  PATH=/opt/jsk/bin:$PATH su -c 'make install'
+  PATH=/opt/jsk/bin:$PATH su -c 'make install; ln -sf /opt/hiro/lib/libhrpIo.so /opt/jsk/lib/libhrpIo.so';
   "
 hostname=$1
 hostname=${hostname:="hiro014"} 
