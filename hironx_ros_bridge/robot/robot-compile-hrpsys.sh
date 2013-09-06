@@ -22,7 +22,8 @@ while [ -n "$1" ] ; do
     esac
 done
 
-address=`host hrpsys-base.googlecode.com | awk '/^[[:alnum:].-]+ has address/ { print $4 ; exit }'` # this does not work for  Server certificate verification 
+## Comment out; not used.
+#address=`host hrpsys-base.googlecode.com | awk '/^[[:alnum:].-]+ has address/ { print $4 ; exit }'` # this does not work for  Server certificate verification 
 
 commands="
   . ~/.profile;
