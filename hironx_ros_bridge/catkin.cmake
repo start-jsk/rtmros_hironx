@@ -3,7 +3,12 @@ project(hironx_ros_bridge)
 
 find_package(catkin REQUIRED COMPONENTS hrpsys_ros_bridge)
 
-catkin_package()
+catkin_package(
+    DEPENDS # TODO
+    CATKIN-DEPENDS hrpsys_ros_bridge #
+    INCLUDE_DIRS # TODO include
+    LIBRARIES # TODO
+)
 
 add_custom_command(OUTPUT ${PROJECT_SOURCE_DIR}/models/kawada-hironx.dae
   COMMAND ${catkin_EXTRAS_DIR}/test/download_checkmd5.py
