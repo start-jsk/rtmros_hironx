@@ -21,6 +21,7 @@ add_custom_command(OUTPUT ${PROJECT_SOURCE_DIR}/models/kawada-hironx.dae
 # commit generated files due to  https://code.google.com/p/rtm-ros-robotics/issues/detail?id=187
 #compile_collada_model(${PROJECT_SOURCE_DIR}/models/kawada-hironx.dae)
 
+# set HIRONX_ROS_BRIDGE and OPENHRP3 for configure_file
 set(HIRONX_ROS_BRIDGE ${PROJECT_SOURCE_DIR})
 if(EXISTS ${CATKIN_DEVEL_PREFIX})
   set(OPENHRP3 ${CATKIN_DEVEL_PREFIX}/share/openhrp3)
