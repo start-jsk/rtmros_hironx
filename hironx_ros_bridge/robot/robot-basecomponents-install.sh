@@ -1,0 +1,67 @@
+#!/bin/bash
+
+## Discussion for this script: https://github.com/start-jsk/hironx-package/issues/33
+## Install base components of Hiro 2-armed robot. 
+## @arg hostname_robot
+## @arg ?
+
+# Create a work folder for Hiro
+path_hironx_work=~/hironx_rsc
+# Tarball that goes into /opt/jsk
+path_dl=$path_hironx_work/tmp_hironx_dl
+url_tarball=http://rtm-ros-robotics.googlecode.com/files/
+filename_tarball=hironx_opt_jsk_latest.tar.gz
+
+# For stashing
+dir_stash=old_rsc
+dir_install_target=/opt/jsk
+
+# If wget doesn't exist, program terminates and urge user to install.
+command_dl_tarball="
+  echo \"     path_dl=$path_dl\";
+  mkdir $path_hironx_work;
+  set path_dl=$path_hironx_work/tmp_hironx_dl;
+  mkdir $path_dl;
+  cd $path_dl;
+  /usr/pkg/bin/wget $url_tarball$filename_tarball -O $filename_tarball;
+  tar fvxz $filename_tarball;
+  rm $filename_tarball;
+
+  echo \"Stashing directory $dir_install_target to $dir_stash\";
+  cd $path_hironx_work;
+  mkdir $dir_stash;
+  cd $dir_stash;
+  timestamp=$(date +\"%Y%m%d%H%M%S\");
+  mkdir hironx_$timestamp;
+  cd hironx_$timestamp;
+  su;
+  mv $dir_install_target/* .;
+  echo \"New files are copied.\"
+
+  cd $path_dl;
+  mv * $dir_install_target
+  "
+## For some reason wget needs full path like this, otherwise error:
+##  sh: wget: cannot execute - No such file or directory
+
+cmd1=$command_dl_tarball
+commands_all=$cmd1
+
+echo "ARG#1: hostname (DEFAULT: hiro014), ARG#2: username (DEfAULT: root)"
+hostname=$1
+hostname=${hostname:="hiro014"} 
+userid=$2
+userid=${userid:="root"} 
+#hostname=${hostname:="192.168.1.13"}  #Local QNX on VM for testing
+read -p "Move aside the current Hiro resouce @ robot's hostname: $hostname (y/n)?"
+if [ "$REPLY" == "y" ]; then
+#    ssh root@$hostname -t $commands_all
+    echo "command to be run: $commands_all"
+    ssh $userid@$hostname -t $commands_all
+else
+    echo "DO NOT RUN"
+    echo "----"
+    echo "$commands"
+    echo "----"
+    echo "EXITTING.."
+fi
