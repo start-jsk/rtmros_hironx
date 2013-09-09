@@ -1,0 +1,24 @@
+#!/bin/bash
+
+trap 'exit 1' ERR
+
+function setup {
+    rm -fr catkin_ws
+    mkdir -p catkin_ws/src
+    cd catkin_ws/src
+    wstool init
+    wstool merge https://rtm-ros-robotics.googlecode.com/svn/trunk/rtm-ros-robotics.rosinstall
+    wstool update
+    catkin_init_workspace
+    cd ../../
+}
+
+source /opt/ros/groovy/setup.bash
+setup
+cd catkin_ws
+catkin_make
+
+source `rospack find openrtm_tools`/scripts/rtshell-setup.sh
+rtmtest hironx_ros_bridge hironx-test.launch
+rtmtest hironx_ros_bridge hironx-robot-conf-test.launch
+rtmtest hironx_ros_bridge hironx-ros-bridge-test.launch
