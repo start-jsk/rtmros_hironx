@@ -15,12 +15,12 @@ filename_tarball=hironx_opt_jsk_latest.tar.gz
 # For stashing
 dir_stash=old_rsc
 dir_install_target=/opt/jsk
+timestamp=$(date +\"%Y%m%d%H%M%S\");
 
 # If wget doesn't exist, program terminates and urge user to install.
 command_dl_tarball="
   echo \"     path_dl=$path_dl\";
   mkdir $path_hironx_work;
-  set path_dl=$path_hironx_work/tmp_hironx_dl;
   mkdir $path_dl;
   cd $path_dl;
   /usr/pkg/bin/wget $url_tarball$filename_tarball -O $filename_tarball;
@@ -31,15 +31,15 @@ command_dl_tarball="
   cd $path_hironx_work;
   mkdir $dir_stash;
   cd $dir_stash;
-  timestamp=$(date +\"%Y%m%d%H%M%S\");
   mkdir hironx_$timestamp;
   cd hironx_$timestamp;
-  su;
-  mv $dir_install_target/* .;
-  echo \"New files are copied.\"
+  su -c 'mv $dir_install_target/* .';
+  echo \"Previous files are stashed away at: $path_hironx_work/$dir_stash/hironx_$timestamp \";
 
-  cd $path_dl;
-  mv * $dir_install_target
+  echo \"Moving new files into $dir_install_target \";
+  su -c 'mv $path_dl/* $dir_install_target';
+  echo \"New moved files are:\";
+  ls -lt $dir_install_target;
   "
 ## For some reason wget needs full path like this, otherwise error:
 ##  sh: wget: cannot execute - No such file or directory
@@ -47,15 +47,14 @@ command_dl_tarball="
 cmd1=$command_dl_tarball
 commands_all=$cmd1
 
-echo "ARG#1: hostname (DEFAULT: hiro014), ARG#2: username (DEfAULT: root)"
+echo "ARG#1: hostname (DEFAULT: hiro014), ARG#2: username (DEfAULT: hiro)"
 hostname=$1
 hostname=${hostname:="hiro014"} 
 userid=$2
-userid=${userid:="root"} 
+userid=${userid:="hiro"} 
 #hostname=${hostname:="192.168.1.13"}  #Local QNX on VM for testing
 read -p "Move aside the current Hiro resouce @ robot's hostname: $hostname (y/n)?"
 if [ "$REPLY" == "y" ]; then
-#    ssh root@$hostname -t $commands_all
     echo "command to be run: $commands_all"
     ssh $userid@$hostname -t $commands_all
 else
