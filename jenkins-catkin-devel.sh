@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -x
 
 trap 'exit 1' ERR
 
