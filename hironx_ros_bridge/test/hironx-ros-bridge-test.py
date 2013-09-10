@@ -9,6 +9,8 @@ from tf.transformations import quaternion_matrix, euler_from_matrix
 
 import unittest
 
+# for catkin compiled environment, pr2_controller_msgs is not catkinized
+roslib.load_manifest('pr2_controllers_msgs')
 import pr2_controllers_msgs.msg
 import trajectory_msgs.msg
 
