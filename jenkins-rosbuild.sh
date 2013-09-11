@@ -8,6 +8,7 @@ function setup {
     cd rosbuild_ws
     unset ROS_PACKAGE_PATH
     rosws init
+    rosws merge /opt/ros/groovy/
     rosws merge https://rtm-ros-robotics.googlecode.com/svn/trunk/rtm-ros-robotics.rosinstall
     rosws update
     cd ..
