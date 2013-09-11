@@ -7,8 +7,9 @@
 
 # Create a work folder for Hiro
 path_hironx_work=~/hironx_rsc
-# Tarball that goes into /opt/jsk
+# Download directory for new tarball
 path_dl=$path_hironx_work/tmp_hironx_dl
+# Tarball that goes into binary folder (eg. /opt/jsk)
 url_tarball=http://rtm-ros-robotics.googlecode.com/files/
 filename_tarball=hironx_opt_jsk_latest.tar.gz
 
@@ -19,11 +20,13 @@ timestamp=$(date +\"%Y%m%d%H%M%S\");
 
 # If wget doesn't exist, program terminates and urge user to install.
 command_dl_tarball="
-  echo \"     path_dl=$path_dl\";
+  echo \"This script uses (and creates if it's not yet done so) directory $path_hironx_work\";
   mkdir $path_hironx_work;
   mkdir $path_dl;
   cd $path_dl;
+  trap 'ERROR wget failed to retrieve $url_tarball$filename_tarball; rm $filename_tarball; exit' ERR;
   /usr/pkg/bin/wget $url_tarball$filename_tarball -O $filename_tarball;
+  trap - ERR;
   tar fvxz $filename_tarball;
   rm $filename_tarball;
 
@@ -37,7 +40,9 @@ command_dl_tarball="
   echo \"Previous files are stashed away at: $path_hironx_work/$dir_stash/hironx_$timestamp \";
 
   echo \"Moving new files into $dir_install_target \";
+  trap 'ERROR could not move new resource into $dir_install_target...; exit' ERR;
   su -c 'mv $path_dl/* $dir_install_target';
+  trap - ERR;
   echo \"New moved files are:\";
   ls -lt $dir_install_target;
   "
