@@ -8,6 +8,9 @@
   <maintainer email="iisaito@kinugarage.com">Isao Isaac Saito</maintainer>
 
   <license>BSD</license>
+  <url type="website">http://ros.org/wiki/rtmros_hironx/</url>
+  <url type="repository">https://rtm-ros-robotics.googlecode.com/svn/trunk/rtmros_hironx/</url>
+  <url type="bugtracker">https://code.google.com/p/rtm-ros-robotics/issues/</url>
 
   <buildtool_depend>catkin</buildtool_depend>
 

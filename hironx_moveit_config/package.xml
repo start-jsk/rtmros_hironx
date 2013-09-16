@@ -9,12 +9,13 @@
   <author email="uesnaola@gmail.com">Urko Esnaola</author>
 
   <maintainer email="k-okada@jsk.t.u-tokyo.ac.jp">Kei Okada</maintainer>
+  <maintainer email="iisaito@opensource-robotics.tokyo.jp">Isao Isaac Saito</maintainer>
 
   <license>BSD</license>
 
-  <url type="website">http://moveit.ros.org/</url>
-  <url type="bugtracker">https://github.com/ros-planning/moveit_setup_assistant/issues</url>
-  <url type="repository">https://github.com/ros-planning/moveit_setup_assistant</url>
+  <url type="website">http://wiki.ros.org/hironx_moveit_config</url>
+  <url type="repository">https://rtm-ros-robotics.googlecode.com/svn/trunk/rtmros_common</url>
+  <url type="bugtracker">https://code.google.com/p/rtm-ros-robotics/issues/</url>
 
   <buildtool_depend>catkin</buildtool_depend>
   
