@@ -333,7 +333,7 @@ if __name__ == '__main__':
     parser.add_argument('--port', help='corba name server port number')
     parser.add_argument('--modelfile', help='robot model file nmae')
     parser.add_argument('--robot', help='robot modlule name (RobotHardware0 for real robot, Robot()')
-    args = parser.parse_args()
+    args, unknown = parser.parse_known_args()
 
     if args.host:
         rtm.nshost = args.host
@@ -343,6 +343,11 @@ if __name__ == '__main__':
         args.robot = "RobotHardware0" if args.host else "HiroNX(Robot)0"
     if not args.modelfile:
         args.modelfile = ""
+
+    # support old style format
+    if len(unknown) >= 2 :
+        args.robot = unknown[0]
+        args.modelfile = unknown[1]
     hiro = HIRONX()
     hiro.init(robotname=args.robot,url=args.modelfile)
 
