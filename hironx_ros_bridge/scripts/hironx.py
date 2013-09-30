@@ -67,10 +67,13 @@ class HIRONX(HrpsysConfigurator):
     def goOffPose(self, tm=7):
         '''
         Set predefined (as member variable) off pose per each body groups.
+
         @type tm: int
+        @param tm: time
         '''
         for i in range(len(self.Groups)):
-            self.setJointAnglesOfGroup(self.Groups[i][0], self.OffPose[i], tm, wait=False)
+            self.setJointAnglesOfGroup(self.Groups[i][0], self.OffPose[i], tm,
+                                       wait=False)
         for i in range(len(self.Groups)):
             self.seq_svc.waitInterpolationOfGroup(self.Groups[i][0])
         self.servoOff(wait=False)
@@ -80,15 +83,15 @@ class HIRONX(HrpsysConfigurator):
         Set predefined (as member variable) initial pose per each body groups.
 
         @type tm: int
-        @param tm: (TODO: needs documented)
+        @param tm: time
         @type wait: bool
         @param wait: (TODO: needs documented)
         '''
         ret = True
         for i in range(len(self.Groups)):
             # radangles = [x/180.0*math.pi for x in self.InitialPose[i]]
-            print self.configurator_name, 'self.setJointAnglesOfGroup(',\
-                  self.Groups[i][0], ',', self.InitialPose[i], ', ', tm,\
+            print self.configurator_name, 'self.setJointAnglesOfGroup(', \
+                  self.Groups[i][0], ',', self.InitialPose[i], ', ', tm, \
                   ',wait=False)'
             ret &= self.setJointAnglesOfGroup(self.Groups[i][0], self.InitialPose[i], tm, wait=False)
         if wait:
@@ -136,8 +139,9 @@ class HIRONX(HrpsysConfigurator):
     def setHandJointAngles(self, hand, angles, tm=1):
         '''
         @type hand: str
-        @type angles
-        @param angles: In degree.
+        @type angles: List of (TODO: document)
+        @param angles: Elements are in degree.
+        @param tm: time
         '''
         self.sc_svc.setJointAnglesOfGroup(hand, angles, tm)
 
@@ -152,6 +156,8 @@ class HIRONX(HrpsysConfigurator):
     def setHandWidth(self, hand, width, tm=1, effort=None):
         '''
         @type hand: str
+        @param width: Max=100.
+        @param tm: time
         @type effort: int
         '''
         if effort:
@@ -164,7 +170,13 @@ class HIRONX(HrpsysConfigurator):
 
     def moveHand(self, hand, av, tm=1) :  # direction av : + for open, - for close
         '''
+
+        Negate the angle value for {2, 3, 6, 7}th element in av.
+
         @type hand: str
+        @type av: List of (TODO: document)
+        @param av: angle of (TODO: document). Max length of the list=?
+        @param tm: time
         '''
         for i in [2, 3, 6, 7]:  # do not change this line if servo is difference, change HandGroups
             av[i] = -av[i]
@@ -172,10 +184,13 @@ class HIRONX(HrpsysConfigurator):
 
     def hand_width2angles(self, width):
         '''
+        TODO: Needs documented what this method does.
+
         @type width: float
+        @return: None if the given width is invalid.
         '''
         safetyMargin = 3
-        l1, l2 = (41.9, 19)
+        l1, l2 = (41.9, 19)  # TODO: What are these variables?
 
         if width < 0.0 or width > (l1 + l2 - safetyMargin) * 2:
             return None
@@ -199,7 +214,7 @@ class HIRONX(HrpsysConfigurator):
 
     def getActualState(self):
         '''
-        TODO: needs documented.
+        TODO: needs documented. What state does this return?
         '''
         return self.rh_svc.getStatus()
 
@@ -443,7 +458,7 @@ if __name__ == '__main__':
         args.modelfile = ""
 
     # support old style format
-    if len(unknown) >= 2 :
+    if len(unknown) >= 2:
         args.robot = unknown[0]
         args.modelfile = unknown[1]
     hiro = HIRONX()
@@ -455,5 +470,5 @@ if __name__ == '__main__':
 # for real robot
 # ./hironx.py  --host hiro014
 # ./ipython -i hironx.py --host hiro014
-# for real robot with custom moelf ile
+# for real robot with custom model file
 # ./hironx.py  --host hiro014 --modelfile /opt/jsk/etc/HIRONX/model/main.wrl
