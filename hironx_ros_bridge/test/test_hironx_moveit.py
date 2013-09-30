@@ -33,6 +33,9 @@
 
 # Author: Kenji Miyake, Isaac Isao Saito
 
+# This test script needs improved so that it becomes call-able from ROS test
+# structure.
+
 from geometry_msgs.msg import Pose, PoseStamped
 from moveit_commander import MoveGroupCommander, conversions
 import rospy
@@ -43,16 +46,7 @@ rarm = MoveGroupCommander("right_arm")
 larm = MoveGroupCommander("left_arm")
 
 rarm_current_pose = rarm.get_current_pose().pose
-rarm_default_position = [rarm_current_pose.position.x,
-                         rarm_current_pose.position.y,
-                         rarm_current_pose.position.z, 0.13, 0, 0, 0.9914]
 larm_current_pose = larm.get_current_pose().pose
-larm_default_position = [larm_current_pose.position.x,
-                         larm_current_pose.position.y,
-                         larm_current_pose.position.z, -0.13, 0, 0, 0.9914]
-
-target = [0.3035, -0.5399, 0.0709, 0, -1.6, 0]
-target2 = [0.3035, 0, 0.0709, 0, -1.6, 0]
 
 
 def _set_target_random(self):
