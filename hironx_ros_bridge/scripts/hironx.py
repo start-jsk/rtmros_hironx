@@ -11,7 +11,7 @@ import sys
 
 import roslib; roslib.load_manifest("hrpsys")
 
-from hrpsys_config import *
+from hrpsys.hrpsys_config import *
 import OpenHRP
 import OpenRTM_aist
 import OpenRTM_aist.RTM_IDL
