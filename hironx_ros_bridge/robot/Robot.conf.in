@@ -1,4 +1,5 @@
 model: @ROBOT_PATH@/model/main.wrl
+pdgains.file_name: @ROBOT_PATH@/hrprtc/PDgains.sav
 dt: 0.005
 naming.formats: %n.rtc
 

@@ -27,6 +27,7 @@ install:
 	cp startJSK.sh		${INSTALL_DIR}/bin/ && chmod u+x ${INSTALL_DIR}/bin/startJSK.sh
 	cp Robot.conf		${INSTALL_DIR}/etc/${ROBOT}/hrprtc/
 	cp rtcdRobotMode.conf	${INSTALL_DIR}/etc/${ROBOT}/hrprtc/
+	cp PDgains.sav          ${INSTALL_DIR}/etc/${ROBOT}/hrprtc/
 
 test.linux:
 	make -f Makefile configure install \
