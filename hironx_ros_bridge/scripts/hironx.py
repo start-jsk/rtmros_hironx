@@ -29,7 +29,7 @@ class HIRONX(HrpsysConfigurator):
     '''
 
     OffPose = [[0], [0, 0],
-                   [ 25, -139, -157, 45, 0, 0],
+                   [25, -139, -157, 45, 0, 0],
                    [-25, -139, -157, -45, 0, 0],
                    [0, 0, 0, 0],
                    [0, 0, 0, 0]]
@@ -150,7 +150,7 @@ class HIRONX(HrpsysConfigurator):
         @type effort: int
         '''
 
-        for i in [ v for vs in self.HandGroups.values() for v in vs]:  # flatten
+        for i in [v for vs in self.HandGroups.values() for v in vs]:  # flatten
             self.sc_svc.setMaxTorque(i, effort)
 
     def setHandWidth(self, hand, width, tm=1, effort=None):
@@ -170,7 +170,6 @@ class HIRONX(HrpsysConfigurator):
 
     def moveHand(self, hand, av, tm=1) :  # direction av : + for open, - for close
         '''
-
         Negate the angle value for {2, 3, 6, 7}th element in av.
 
         @type hand: str
@@ -229,7 +228,6 @@ class HIRONX(HrpsysConfigurator):
             for item in rstt.servoState:
                 if not item[0] & 1:
                     return False
-        #
         return True
 
     def isServoOn(self, jname='any'):
