@@ -2,9 +2,10 @@
 # -*- coding: utf-8 -*-
 
 PKG = 'hironx_ros_bridge'
-import roslib, sys; sys.path.insert (0, roslib.packages.get_pkg_dir(PKG)+'/scripts'); ## add python  path
-import hironx
-from hrpsys_config import euler_from_matrix
+import roslib; roslib.load_manifest(PKG)
+
+from hironx_ros_bridge import hironx
+from hrpsys.hrpsys_config import euler_from_matrix
 
 import numpy
 import unittest
