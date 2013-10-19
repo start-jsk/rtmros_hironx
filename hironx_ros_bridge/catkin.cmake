@@ -10,6 +10,8 @@ catkin_package(
     LIBRARIES # TODO
 )
 
+catkin_python_setup()
+
 add_custom_command(OUTPUT ${PROJECT_SOURCE_DIR}/models/kawada-hironx.dae
   COMMAND ${catkin_EXTRAS_DIR}/test/download_checkmd5.py
   https://github.com/rdiankov/collada_robots/raw/master/kawada-hironx.zae
