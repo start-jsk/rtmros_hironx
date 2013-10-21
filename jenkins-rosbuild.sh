@@ -22,6 +22,6 @@ rosmake --status-rate=0 --profile -V hironx_ros_bridge
 
 source `rospack find openrtm_tools`/scripts/rtshell-setup.sh
 trap ERR # remove trap
-rtmtest hironx_ros_bridge hironx-test.launch
-rtmtest hironx_ros_bridge hironx-ros-bridge-test.launch
+rtmtest hironx_ros_bridge test-hironx.launch
+rtmtest hironx_ros_bridge test-hironx-ros-bridge.launch
 rosrun rosunit clean_junit_xml.py

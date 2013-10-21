@@ -61,6 +61,6 @@ set_directory_properties(PROPERTIES ADDITIONAL_MAKE_CLEAN_FILES "${PROJECT_SOURC
 ##
 ## tests
 ##
-rosbuild_add_rostest(test/hironx-test.launch)
-rosbuild_add_rostest(test/hironx-ros-bridge-test.launch)
+rosbuild_add_rostest(test/test-hironx.launch)
+rosbuild_add_rostest(test/test-hironx-ros-bridge.launch)
 

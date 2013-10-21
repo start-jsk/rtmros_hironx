@@ -20,7 +20,7 @@ catkin_make
 
 source devel/setup.bash
 source `rospack find openrtm_tools`/scripts/rtshell-setup.sh
-rtmtest hironx_ros_bridge hironx-test.launch
-rtmtest hironx_ros_bridge hironx-ros-bridge-test.launch
+rtmtest hironx_ros_bridge test-hironx.launch
+rtmtest hironx_ros_bridge test-hironx-ros-bridge.launch
 
 catkin_make install

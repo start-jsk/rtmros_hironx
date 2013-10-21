@@ -33,5 +33,5 @@ for dir in openrtm_common/openrtm_aist_core openrtm_common/rtshell_core openrtm_
 done
 
 source `rospack find openrtm_tools`/scripts/rtshell-setup.sh
-rtmtest hironx_ros_bridge hironx-test.launch
-rtmtest hironx_ros_bridge hironx-ros-bridge-test.launch
+rtmtest hironx_ros_bridge test-hironx.launch
+rtmtest hironx_ros_bridge test-hironx-ros-bridge.launch
