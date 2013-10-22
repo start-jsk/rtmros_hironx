@@ -52,7 +52,10 @@ command_dl_tarball="
 cmd1=$command_dl_tarball
 commands_all=$cmd1
 
-echo "ARG#1: hostname (DEFAULT: hiro014), ARG#2: username (DEfAULT: hiro)"
+instruction_arg=" ARG#1: hostname/ipaddr (DEFAULT: hiro014), ARG#2: username (DEfAULT: hiro)"
+
+echo "NOTE: This script will try to expand into $dir_install_target. Edit the dir_install_target variable in the script file if it's not what you want."
+echo $instruction_arg
 hostname=$1
 hostname=${hostname:="hiro014"} 
 userid=$2
@@ -63,9 +66,7 @@ if [ "$REPLY" == "y" ]; then
     echo "command to be run: $commands_all"
     ssh $userid@$hostname -t $commands_all
 else
-    echo "DO NOT RUN"
-    echo "----"
-    echo "$commands"
-    echo "----"
-    echo "EXITTING.."
+    echo "Aborted."
+    echo "Consider typing appropriate arguments upon running this script."
+    echo "$instruction_arg"
 fi
