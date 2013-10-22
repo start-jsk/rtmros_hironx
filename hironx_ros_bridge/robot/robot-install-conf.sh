@@ -2,6 +2,7 @@
 
 function usage {
     echo >&2 "usage: $0 [hostname (default:hiro014)]"
+    echo >&2 "       $1 [user name (default:hiro)]"
     echo >&2 "          [-h|--help] print this message"
     exit 0
 }
@@ -38,10 +39,12 @@ commands="
   "
 hostname=$1
 hostname=${hostname:="hiro014"} 
+userid=$2
+userid=${userid:="hiro"} 
 echo "comands = $commands"
 read -p "execute install command @ $hostname (y/n)?"
 if [ "$REPLY" == "y" ]; then
-    ssh hiro@$hostname -t $commands
+    ssh $userid@$hostname -t $commands
 else
     echo "DO NOT RUN commands"
     echo "EXITTING.."
