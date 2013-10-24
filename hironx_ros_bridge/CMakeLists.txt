@@ -40,23 +40,24 @@ add_custom_command(OUTPUT ${PROJECT_SOURCE_DIR}/models/kawada-hironx.dae
   COMMAND unzip -u ${PROJECT_SOURCE_DIR}/models/kawada-hironx.zae
   WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/models
   DEPENDS ${PROJECT_SOURCE_DIR}/models/kawada-hironx.zae)
+add_custom_target(${PROJECT_NAME}_kawada_hironx_dae ALL DEPENDS ${PROJECT_SOURCE_DIR}/models/kawada-hironx.dae)
 
 # commit generated files due to  https://code.google.com/p/rtm-ros-robotics/issues/detail?id=187
 #compile_collada_model(${PROJECT_SOURCE_DIR}/models/kawada-hironx.dae)
 rosbuild_find_ros_package(openhrp3)
 set(OPENHRP3 ${openhrp3_PACKAGE_PATH}) # for longfloor.wrl
 set(ROBOT_NAME kawada-hironx)
-configure_file(models/kawada-hironx.RobotHardware.conf.in       ${PROJECT_SOURCE_DIR}/models/${ROBOT_NAME}.RobotHardware.conf)
-configure_file(models/kawada-hironx_nosim.RobotHardware.conf.in ${PROJECT_SOURCE_DIR}/models/${ROBOT_NAME}_nosim.RobotHardware.conf)
-configure_file(models/kawada-hironx.xml.in                      ${PROJECT_SOURCE_DIR}/models/${ROBOT_NAME}.xml)
-configure_file(models/kawada-hironx_nosim.xml.in                ${PROJECT_SOURCE_DIR}/models/${ROBOT_NAME}_nosim.xml)
-configure_file(models/kawada-hironx.conf.in                     ${PROJECT_SOURCE_DIR}/models/${ROBOT_NAME}.conf)
-configure_file(models/kawada-hironx_nosim.conf.in               ${PROJECT_SOURCE_DIR}/models/${ROBOT_NAME}_nosim.conf)
-add_custom_target(model_files ALL DEPENDS ${PROJECT_SOURCE_DIR}/models/${ROBOT_NAME}.RobotHardware.conf ${PROJECT_SOURCE_DIR}/models/${ROBOT_NAME}_nosim.RobotHardware.conf ${PROJECT_SOURCE_DIR}/models/${ROBOT_NAME}.xml ${PROJECT_SOURCE_DIR}/models/${ROBOT_NAME}_nosim.xml ${PROJECT_SOURCE_DIR}/models/${ROBOT_NAME}.conf ${PROJECT_SOURCE_DIR}/models/${ROBOT_NAME}_nosim.conf)
+configure_file(conf/RobotHardware.conf.in       ${PROJECT_SOURCE_DIR}/conf/${ROBOT_NAME}.RobotHardware.conf)
+configure_file(conf/nosim.RobotHardware.conf.in ${PROJECT_SOURCE_DIR}/conf/${ROBOT_NAME}_nosim.RobotHardware.conf)
+configure_file(conf/xml.in                      ${PROJECT_SOURCE_DIR}/conf/${ROBOT_NAME}.xml)
+configure_file(conf/nosim.xml.in                ${PROJECT_SOURCE_DIR}/conf/${ROBOT_NAME}_nosim.xml)
+configure_file(conf/conf.in                     ${PROJECT_SOURCE_DIR}/conf/${ROBOT_NAME}.conf)
+configure_file(conf/nosim.conf.in               ${PROJECT_SOURCE_DIR}/conf/${ROBOT_NAME}_nosim.conf)
+add_custom_target(${PROJECT_NAME}_model_files ALL DEPENDS ${PROJECT_SOURCE_DIR}/conf/${ROBOT_NAME}.RobotHardware.conf ${PROJECT_SOURCE_DIR}/conf/${ROBOT_NAME}_nosim.RobotHardware.conf ${PROJECT_SOURCE_DIR}/conf/${ROBOT_NAME}.xml ${PROJECT_SOURCE_DIR}/conf/${ROBOT_NAME}_nosim.xml ${PROJECT_SOURCE_DIR}/conf/${ROBOT_NAME}.conf ${PROJECT_SOURCE_DIR}/conf/${ROBOT_NAME}_nosim.conf)
 
 
 #clean generated files
-set_directory_properties(PROPERTIES ADDITIONAL_MAKE_CLEAN_FILES "${PROJECT_SOURCE_DIR}/models/${ROBOT_NAME}.RobotHardware.conf;${PROJECT_SOURCE_DIR}/models/${ROBOT_NAME}.conf;${PROJECT_SOURCE_DIR}/models/${ROBOT_NAME}.dae;${PROJECT_SOURCE_DIR}/models/${ROBOT_NAME}.l;${PROJECT_SOURCE_DIR}/models/${ROBOT_NAME}.xml;${PROJECT_SOURCE_DIR}/models/${ROBOT_NAME}_nosim.RobotHardware.conf;${PROJECT_SOURCE_DIR}/models/${ROBOT_NAME}_nosim.conf;${PROJECT_SOURCE_DIR}/models/${ROBOT_NAME}_nosim.xml;${PROJECT_SOURCE_DIR}/models/${ROBOT_NAME}_nosim.conf")
+set_directory_properties(PROPERTIES ADDITIONAL_MAKE_CLEAN_FILES "${PROJECT_SOURCE_DIR}/conf/${ROBOT_NAME}.RobotHardware.conf;${PROJECT_SOURCE_DIR}/conf/${ROBOT_NAME}.conf;${PROJECT_SOURCE_DIR}/conf/${ROBOT_NAME}.l;${PROJECT_SOURCE_DIR}/conf/${ROBOT_NAME}.xml;${PROJECT_SOURCE_DIR}/conf/${ROBOT_NAME}_nosim.RobotHardware.conf;${PROJECT_SOURCE_DIR}/conf/${ROBOT_NAME}_nosim.conf;${PROJECT_SOURCE_DIR}/conf/${ROBOT_NAME}_nosim.xml;${PROJECT_SOURCE_DIR}/conf/${ROBOT_NAME}_nosim.conf;${PROJECT_SOURCE_DIR}/models/${ROBOT_NAME}.dae")
 
 ##
 ## tests
