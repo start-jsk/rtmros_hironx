@@ -23,7 +23,7 @@ add_custom_command(OUTPUT ${PROJECT_SOURCE_DIR}/models/kawada-hironx.dae
 # commit generated files due to  https://code.google.com/p/rtm-ros-robotics/issues/detail?id=187
 #compile_collada_model(${PROJECT_SOURCE_DIR}/models/kawada-hironx.dae)
 
-# set HIRONX_ROS_BRIDGE and OPENHRP3 for configure_file
+# set ROBOT_NAME and OPENHRP3 for configure_file
 find_package(PkgConfig)
 pkg_check_modules(openhrp3 openhrp3.1 REQUIRED)
 set(OPENHRP3 ${openhrp3_PREFIX}/share/openhrp3)  # for longfloor.wrl
