@@ -24,18 +24,18 @@ add_custom_command(OUTPUT ${PROJECT_SOURCE_DIR}/models/kawada-hironx.dae
 #compile_collada_model(${PROJECT_SOURCE_DIR}/models/kawada-hironx.dae)
 
 # set HIRONX_ROS_BRIDGE and OPENHRP3 for configure_file
-set(HIRONX_ROS_BRIDGE ${PROJECT_SOURCE_DIR})
 find_package(PkgConfig)
 pkg_check_modules(openhrp3 openhrp3.1 REQUIRED)
-set(OPENHRP3 ${openhrp3_PREFIX}/share/openhrp3)
- 
-configure_file(models/kawada-hironx.RobotHardware.conf.in       ${PROJECT_SOURCE_DIR}/models/kawada-hironx.RobotHardware.conf)
-configure_file(models/kawada-hironx_nosim.RobotHardware.conf.in ${PROJECT_SOURCE_DIR}/models/kawada-hironx_nosim.RobotHardware.conf)
-configure_file(models/kawada-hironx.xml.in                      ${PROJECT_SOURCE_DIR}/models/kawada-hironx.xml)
-configure_file(models/kawada-hironx_nosim.xml.in                ${PROJECT_SOURCE_DIR}/models/kawada-hironx_nosim.xml)
-configure_file(models/kawada-hironx.conf.in                     ${PROJECT_SOURCE_DIR}/models/kawada-hironx.conf)
-configure_file(models/kawada-hironx_nosim.conf.in               ${PROJECT_SOURCE_DIR}/models/kawada-hironx_nosim.conf)
-add_custom_target(model_files ALL DEPENDS ${PROJECT_SOURCE_DIR}/models/kawada-hironx.RobotHardware.conf ${PROJECT_SOURCE_DIR}/models/kawada-hironx_nosim.RobotHardware.conf ${PROJECT_SOURCE_DIR}/models/kawada-hironx.xml ${PROJECT_SOURCE_DIR}/models/kawada-hironx_nosim.xml ${PROJECT_SOURCE_DIR}/models/kawada-hironx.conf ${PROJECT_SOURCE_DIR}/models/kawada-hironx_nosim.conf)
+set(OPENHRP3 ${openhrp3_PREFIX}/share/openhrp3)  # for longfloor.wrl
+set(ROBOT_NAME kawada-hironx)
+
+configure_file(models/kawada-hironx.RobotHardware.conf.in       ${PROJECT_SOURCE_DIR}/models/${ROBOT_NAME}.RobotHardware.conf)
+configure_file(models/kawada-hironx_nosim.RobotHardware.conf.in ${PROJECT_SOURCE_DIR}/models/${ROBOT_NAME}_nosim.RobotHardware.conf)
+configure_file(models/kawada-hironx.xml.in                      ${PROJECT_SOURCE_DIR}/models/${ROBOT_NAME}.xml)
+configure_file(models/kawada-hironx_nosim.xml.in                ${PROJECT_SOURCE_DIR}/models/${ROBOT_NAME}_nosim.xml)
+configure_file(models/kawada-hironx.conf.in                     ${PROJECT_SOURCE_DIR}/models/${ROBOT_NAME}.conf)
+configure_file(models/kawada-hironx_nosim.conf.in               ${PROJECT_SOURCE_DIR}/models/${ROBOT_NAME}_nosim.conf)
+add_custom_target(model_files ALL DEPENDS ${PROJECT_SOURCE_DIR}/models/${ROBOT_NAME}.RobotHardware.conf ${PROJECT_SOURCE_DIR}/models/${ROBOT_NAME}_nosim.RobotHardware.conf ${PROJECT_SOURCE_DIR}/models/${ROBOT_NAME}.xml ${PROJECT_SOURCE_DIR}/models/${ROBOT_NAME}_nosim.xml ${PROJECT_SOURCE_DIR}/models/${ROBOT_NAME}.conf ${PROJECT_SOURCE_DIR}/models/${ROBOT_NAME}_nosim.conf)
 
 install(DIRECTORY launch DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION})
 install(DIRECTORY scripts DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION} USE_SOURCE_PERMISSIONS)
@@ -43,8 +43,8 @@ install(DIRECTORY models DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION} PATTERN
 install(DIRECTORY test DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION} USE_SOURCE_PERMISSIONS)
 
 install(CODE "
-  file(GLOB _xml_files \$ENV{DESTDIR}/${CMAKE_INSTALL_PREFIX}/share/hironx_ros_bridge/models/*.xml)
-  file(GLOB _conf_files \$ENV{DESTDIR}/${CMAKE_INSTALL_PREFIX}/share/hironx_ros_bridge/models/*.conf)
+  file(GLOB _xml_files \$ENV{DESTDIR}/${CMAKE_INSTALL_PREFIX}/share/${PROJECT_SOURCE_DIR}/models/*.xml)
+  file(GLOB _conf_files \$ENV{DESTDIR}/${CMAKE_INSTALL_PREFIX}/share/${PROJECT_SOURCE_DIR}/models/*.conf)
   foreach(_file \${_xml_files};\${_conf_files})
     message(\"++ sed -i s@${PROJECT_SOURCE_DIR}@${CMAKE_INSTALL_PREFIX}/share/${PROJECT_NAME}@ \${_file}\")
     message(\"sed -i s@${PROJECT_SOURCE_DIR}@${CMAKE_INSTALL_PREFIX}/share/${PROJECT_NAME}@ \${_file}\")
