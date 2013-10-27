@@ -35,22 +35,22 @@
    <property name="HEAD_JOINT1.angle" value="0.0"/>
    <property name="HEAD_JOINT1.mode" value="HighGain"/>
    <property name="HEAD_JOINT1.NumOfAABB" value="1"/>
-   <property name="RARM_JOINT0.angle" value="0.0"/>
+   <property name="RARM_JOINT0.angle" value="-0.010472"/>
    <property name="RARM_JOINT0.mode" value="HighGain"/>
    <property name="RARM_JOINT0.NumOfAABB" value="1"/>
    <property name="RARM_JOINT1.angle" value="0.0"/>
    <property name="RARM_JOINT1.mode" value="HighGain"/>
    <property name="RARM_JOINT1.NumOfAABB" value="1"/>
-   <property name="RARM_JOINT2.angle" value="0.0"/>
+   <property name="RARM_JOINT2.angle" value="-1.74533"/>
    <property name="RARM_JOINT2.mode" value="HighGain"/>
    <property name="RARM_JOINT2.NumOfAABB" value="1"/>
-   <property name="RARM_JOINT3.angle" value="0.0"/>
+   <property name="RARM_JOINT3.angle" value="0.26529"/>
    <property name="RARM_JOINT3.mode" value="HighGain"/>
    <property name="RARM_JOINT3.NumOfAABB" value="1"/>
-   <property name="RARM_JOINT4.angle" value="0.0"/>
+   <property name="RARM_JOINT4.angle" value="0.164061"/>
    <property name="RARM_JOINT4.mode" value="HighGain"/>
    <property name="RARM_JOINT4.NumOfAABB" value="1"/>
-   <property name="RARM_JOINT5.angle" value="0.0"/>
+   <property name="RARM_JOINT5.angle" value="0.055851"/>
    <property name="RARM_JOINT5.mode" value="HighGain"/>
    <property name="RARM_JOINT5.NumOfAABB" value="1"/>
    <property name="RHAND_JOINT0.angle" value="0.0"/>
@@ -65,22 +65,22 @@
    <property name="RHAND_JOINT3.angle" value="0.0"/>
    <property name="RHAND_JOINT3.mode" value="HighGain"/>
    <property name="RHAND_JOINT3.NumOfAABB" value="1"/>
-   <property name="LARM_JOINT0.angle" value="0.0"/>
+   <property name="LARM_JOINT0.angle" value="0.010472"/>
    <property name="LARM_JOINT0.mode" value="HighGain"/>
    <property name="LARM_JOINT0.NumOfAABB" value="1"/>
    <property name="LARM_JOINT1.angle" value="0.0"/>
    <property name="LARM_JOINT1.mode" value="HighGain"/>
    <property name="LARM_JOINT1.NumOfAABB" value="1"/>
-   <property name="LARM_JOINT2.angle" value="0.0"/>
+   <property name="LARM_JOINT2.angle" value="-1.74533"/>
    <property name="LARM_JOINT2.mode" value="HighGain"/>
    <property name="LARM_JOINT2.NumOfAABB" value="1"/>
-   <property name="LARM_JOINT3.angle" value="0.0"/>
+   <property name="LARM_JOINT3.angle" value="-0.26529"/>
    <property name="LARM_JOINT3.mode" value="HighGain"/>
    <property name="LARM_JOINT3.NumOfAABB" value="1"/>
-   <property name="LARM_JOINT4.angle" value="0.0"/>
+   <property name="LARM_JOINT4.angle" value="0.164061"/>
    <property name="LARM_JOINT4.mode" value="HighGain"/>
    <property name="LARM_JOINT4.NumOfAABB" value="1"/>
-   <property name="LARM_JOINT5.angle" value="0.0"/>
+   <property name="LARM_JOINT5.angle" value="-0.055851"/>
    <property name="LARM_JOINT5.mode" value="HighGain"/>
    <property name="LARM_JOINT5.NumOfAABB" value="1"/>
    <property name="LHAND_JOINT0.angle" value="0.0"/>
