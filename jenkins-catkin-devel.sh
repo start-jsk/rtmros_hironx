@@ -13,7 +13,8 @@ function setup {
     cd ../../
 }
 
-source /opt/ros/groovy/setup.bash
+DISTRO=${1:-groovy}
+source /opt/ros/${DISTRO}/setup.bash
 setup
 cd catkin_ws
 catkin_make
