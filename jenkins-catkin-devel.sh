@@ -17,6 +17,7 @@ DISTRO=${1:-groovy}
 source /opt/ros/${DISTRO}/setup.bash
 setup
 cd catkin_ws
+rosdep install --from-paths src --ignore-src --rosdistro ${DISTRO} -y -r
 catkin_make
 
 source devel/setup.bash
