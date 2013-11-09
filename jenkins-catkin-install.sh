@@ -18,7 +18,7 @@ source /opt/ros/${DISTRO}/setup.bash
 setup
 cd catkin_ws
 rosdep update
-rosdep install --from-paths src --ignore-src --rosdistro ${DISTRO} -y -r
+rosdep install --reinstall --from-paths src --ignore-src --rosdistro ${DISTRO} -y -r
 
 #
 for dir in openrtm_common/openrtm_aist_core openrtm_common/rtshell_core openrtm_common/openhrp3 openrtm_common/hrpsys rtmros_common/rtmbuild rtmros_common/openrtm_tools rtmros_common/openrtm_ros_bridge rtmros_common/hrpsys_tools rtmros_common/hrpsys_ros_bridge rtmros_hironx/hironx_ros_bridge rtmros_hironx/hironx_moveit_config; do

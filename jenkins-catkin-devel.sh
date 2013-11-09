@@ -18,7 +18,7 @@ source /opt/ros/${DISTRO}/setup.bash
 setup
 cd catkin_ws
 rosdep update
-rosdep install --from-paths src --ignore-src --rosdistro ${DISTRO} -y -r
+rosdep install --reinstall --from-paths src --ignore-src --rosdistro ${DISTRO} -y -r
 catkin_make
 
 source devel/setup.bash
