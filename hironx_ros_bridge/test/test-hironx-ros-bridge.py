@@ -4,9 +4,11 @@
 PKG = 'hironx_ros_bridge'
 # rosbuild needs load_manifest
 try:
+    import roslib
     import hironx_ros_bridge
 except:
     import roslib; roslib.load_manifest(PKG)
+    import hironx_ros_bridge
 
 import rospy, actionlib, math, numpy
 import tf
