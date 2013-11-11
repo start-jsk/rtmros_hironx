@@ -2,7 +2,12 @@
 # -*- coding: utf-8 -*-
 
 PKG = 'hironx_ros_bridge'
-import roslib; roslib.load_manifest(PKG)
+# rosbuild needs load_manifest
+try:
+    import hironx_ros_bridge
+except:
+    import roslib; roslib.load_manifest(PKG)
+
 import rospy, actionlib, math, numpy
 import tf
 from tf.transformations import quaternion_matrix, euler_from_matrix

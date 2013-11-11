@@ -2,7 +2,11 @@
 # -*- coding: utf-8 -*-
 
 PKG = 'hironx_ros_bridge'
-import roslib; roslib.load_manifest(PKG)
+# rosbuild needs load_manifest
+try:
+    import hironx_ros_bridge
+except:
+    import roslib; roslib.load_manifest(PKG)
 
 from hironx_ros_bridge import hironx
 from hrpsys.hrpsys_config import euler_from_matrix
