@@ -3,6 +3,7 @@
 
 try: # catkin does not requires load_manifest
     import roslib
+    import hironx_ros_bridge
 except:
     import roslib; roslib.load_manifest('hironx_ros_bridge')
 
