@@ -18,7 +18,7 @@ source /opt/ros/${DISTRO}/setup.bash
 setup
 cd catkin_ws
 if [ "${DISTRO}" == "hydro" ]; then
-    (cd src; wstool set robot_model https://github.com/ros/robot_model.git --git; wstool update robot_model)
+    (cd src; wstool set robot_model https://github.com/ros/robot_model.git --git -y; wstool update robot_model)
 fi
 rosdep update
 rosdep install --reinstall --from-paths src --ignore-src --rosdistro ${DISTRO} -y -r
