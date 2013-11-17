@@ -17,6 +17,9 @@ DISTRO=${1:-groovy}
 source /opt/ros/${DISTRO}/setup.bash
 setup
 cd catkin_ws
+if [ "${DISTOR}" == "hydro" ]; then
+    (cd src; wstool set robot_model https://github.com/ros/robot_model.git --git; wstool update robot_model)
+fi
 rosdep update
 rosdep install --reinstall --from-paths src --ignore-src --rosdistro ${DISTRO} -y -r
 catkin_make
