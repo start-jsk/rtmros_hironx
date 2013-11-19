@@ -7,7 +7,7 @@ try: # catkin does not requires load_manifest
 except:
     import roslib; roslib.load_manifest('hironx_ros_bridge')
 
-from hironx_ros_bridge import hironx
+from hironx_ros_bridge import hironx_client
 
 import argparse
 if __name__ == '__main__':
@@ -31,14 +31,14 @@ if __name__ == '__main__':
     if len(unknown) >= 2:
         args.robot = unknown[0]
         args.modelfile = unknown[1]
-    hiro = hironx.HIRONX()
+    hiro = hironx_client.HIRONX()
     hiro.init(robotname=args.robot, url=args.modelfile)
 
 # for simulated robot
 # $ ./hironx.py
 #
 # for real robot
-# ./hironx.py  --host hiro014
+# ../script/hironx.py  --host hiro014
 # ./ipython -i hironx.py --host hiro014
 # for real robot with custom model file
-# ./hironx.py  --host hiro014 --modelfile /opt/jsk/etc/HIRONX/model/main.wrl
+# ../script/hironx.py  --host hiro014 --modelfile /opt/jsk/etc/HIRONX/model/main.wrl
