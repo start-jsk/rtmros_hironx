@@ -10,7 +10,7 @@ except:
     import roslib; roslib.load_manifest(PKG)
     import hironx_ros_bridge
 
-from hironx_ros_bridge import hironx_client
+from hironx_ros_bridge import hironx_client as hironx
 from hrpsys.hrpsys_config import euler_from_matrix
 
 import numpy
