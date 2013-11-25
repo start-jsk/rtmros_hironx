@@ -42,10 +42,12 @@ commands="
 
 hostname=$1
 hostname=${hostname:="hiro014"} 
+userid=$2
+userid=${userid:="hiro"} 
 echo "comands = $commands"
 read -p "execute compile command @ $hostname (y/n)?"
 if [ "$REPLY" == "y" ]; then
-    ssh hiro@$hostname -t $commands
+    ssh $userid@$hostname -t $commands
 else
     echo "DO NOT RUN"
     echo "----"
