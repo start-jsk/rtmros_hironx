@@ -15,6 +15,8 @@ from hrpsys.hrpsys_config import euler_from_matrix
 
 import numpy
 import unittest
+import time
+import tempfile
 
 class TestHiroNX(unittest.TestCase):
 
