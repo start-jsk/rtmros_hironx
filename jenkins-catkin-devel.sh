@@ -26,6 +26,7 @@ catkin_make
 
 source devel/setup.bash
 source `rospack find openrtm_tools`/scripts/rtshell-setup.sh
+trap ERR # remove trap
 rtmtest hironx_ros_bridge test-hironx.launch
 rtmtest hironx_ros_bridge test-hironx-ros-bridge.launch
 
