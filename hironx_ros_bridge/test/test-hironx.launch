@@ -6,6 +6,6 @@
     <arg name="REALTIME" value="false" />
   </include>
 
-  <test type="test-hironx.py" pkg="hironx_ros_bridge" test-name="test_hironx" time-limit="300"
+  <test type="test-hironx.py" pkg="hironx_ros_bridge" test-name="test_hironx" time-limit="500"
         args="-ORBInitRef NameService=corbaloc:iiop:localhost:15005/NameService" />
 </launch>
