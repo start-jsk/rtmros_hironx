@@ -21,16 +21,38 @@ roslib.load_manifest('pr2_controllers_msgs')
 import pr2_controllers_msgs.msg
 import trajectory_msgs.msg
 
+from sensor_msgs.msg import JointState
 from pr2_controllers_msgs.msg import JointTrajectoryAction
 from trajectory_msgs.msg import JointTrajectoryPoint
 from hrpsys_ros_bridge.srv import *
 
+from hironx_ros_bridge import hironx_client
+
+import time
+import tempfile
+
 class TestHiroROSBridge(unittest.TestCase):
+
+    def joint_states_cb(self, msg):
+        self.joint_states.append(msg)
+        self.joint_states = self.joint_states[0:3000]
+
+    def __init__(self, *args, **kwargs):
+        super(TestHiroROSBridge, self).__init__(*args, **kwargs)
+        #
+        self.joint_states = []
+        rospy.init_node('hironx_ros_bridge_test')
+        self.joint_states_sub = rospy.Subscriber("joint_states", JointState, self.joint_states_cb)
+        self.filename_base = tempfile.mkstemp()[1]
+        self.filenames = []
 
     @classmethod
     def setUpClass(self):
-        rospy.init_node('hironx_ros_bridge_test')
+
         self.listener = tf.TransformListener()
+
+        hiro = hironx_client.HIRONX()
+        hiro.init()
 
         self.larm = actionlib.SimpleActionClient("/larm_controller/joint_trajectory_action", JointTrajectoryAction)
         self.rarm = actionlib.SimpleActionClient("/rarm_controller/joint_trajectory_action", JointTrajectoryAction)
@@ -103,14 +125,13 @@ class TestHiroROSBridge(unittest.TestCase):
         goal.trajectory.joint_names.append("HEAD_JOINT1")
         return goal
 
-    def setup_Positions(self, goal, positions):
-        tm = 1.0
+    def setup_Positions(self, goal, positions, tm = 1.0):
         for p in positions:
             point = trajectory_msgs.msg.JointTrajectoryPoint()
             point.positions = [ x * math.pi / 180.0 for x in p]
             point.time_from_start = rospy.Duration(tm)
             goal.trajectory.points.append(point)
-            tm += 1.0
+            tm += tm
         return goal
 
     def test_LArmIK(self):
@@ -219,6 +240,107 @@ class TestHiroROSBridge(unittest.TestCase):
                                                              [-0.883022, 0.34202, 0.321394],
                                                              [0.34202, 0.0, 0.939693]]), decimal=3)
 
+    def check_q_data(self, name):
+        import math
+        data = []
+
+        name = name+".q"
+        f = open(name, 'w')
+        for j in self.joint_states:
+            current_time = j.header.stamp.to_sec();
+            current_value = [p*180/math.pi for p in j.position]
+            data.append([current_time, current_value[5]])
+            f.write(str(current_time)+' '+' '.join([str(i) for i in current_value])+"\n")
+        f.close()
+        self.filenames.append(name)
+        return data
+
+    def write_output_to_pdf (self,name):
+        import os
+        cmd = "gnuplot -p -e \"set terminal pdf; set output '"+name+"'; plot "
+        for name in self.filenames:
+            cmd += "'"+name+"' using 0:7 title '"+name+"' with lines"
+            if name != self.filenames[-1]:
+                cmd += ","
+        cmd += "\""
+        os.system(cmd)
+        return cmd
+
+    def test_send_goal_and_wait(self):
+        #self.rarm.send_goal(self.setup_Positions(self.goal_LArm(), [[-0.6, 0, -120, 15.2, 9.4, 3.2]])) this should returns error
+        self.rarm.send_goal(self.setup_Positions(self.goal_RArm(), [[-0.6, 0, -120, 15.2, 9.4, 3.2]], 5))
+        self.rarm.wait_for_result()
+        h.joint_states = []
+        time.sleep(1.0);
+        tm0 = rospy.Time.now()
+        self.rarm.send_goal(self.setup_Positions(self.goal_RArm(), [[-0.6, 0, -140, 15.2, 9.4, 3.2]], 5))
+        self.rarm.wait_for_result()
+        self.rarm.send_goal(self.setup_Positions(self.goal_RArm(), [[-0.6, 0, -100, 15.2, 9.4, 3.2]], 5))
+        self.rarm.wait_for_result()
+        tm1 = rospy.Time.now()
+        data_time = (tm1 - tm0).to_sec()
+        filename = self.filename_base + "-wait"
+        data = self.check_q_data(filename)
+        min_data = min([d[1] for d in data])
+        max_data = max([d[1] for d in data])
+        print "check setJointAnglesOfGroup(wait=True),  tm = ", data_time, ", ok?", abs(data_time - 10.0) < 0.1
+        self.assertTrue(abs(data_time - 10.0) < 0.1)
+        print "                                        min = ", min_data, ", ok?", abs(min_data - -140) < 5
+        self.assertTrue(abs(min_data - -140) < 5)
+        print "                                        max = ", max_data, ", ok?", abs(max_data - -100) < 5
+        self.assertTrue(abs(max_data - -100) < 5)
+
+    def test_send_goal_and_nowait(self):
+        clear_time = [4.5, 4.0, 3.5, 3.0, 2.5, 2.0, 1.5, 1.0]
+        for i in range(len(clear_time)):
+            self.rarm.send_goal(self.setup_Positions(self.goal_RArm(), [[-0.6, 0, -120, 15.2, 9.4, 3.2]], 5))
+            self.rarm.wait_for_result()
+            h.joint_states = []
+            time.sleep(1.0);
+            tm0 = rospy.Time.now()
+            self.rarm.send_goal(self.setup_Positions(self.goal_RArm(), [[-0.6, 0, -140, 15.2, 9.4, 3.2]], 5))
+            time.sleep(clear_time[i]);
+            self.rarm.send_goal(self.setup_Positions(self.goal_RArm(), [[-0.6, 0, -100, 15.2, 9.4, 3.2]], 5))
+            self.rarm.wait_for_result()
+            tm1 = rospy.Time.now()
+            filename = self.filename_base + "-no-wait-"+str(clear_time[i])
+            data = self.check_q_data(filename)
+            data_time = (tm1 - tm0).to_sec()
+            min_data = min([d[1] for d in data])
+            max_data = max([d[1] for d in data])
+            print "check setJointAnglesOfGroup(wait=False), tm = ", data_time, ", ok?", abs(data_time - (10.0 - (5 - clear_time[i]))) < 0.1
+            self.assertTrue(abs(data_time - (10.0 - (5 - clear_time[i]))) < 0.1)
+            print "                                        min = ", min_data, ", ok?", abs(min_data - (-140+i*40/len(clear_time))) < 20, " ", -140+i*40/len(clear_time)
+            self.assertTrue(abs(min_data - (-140+i*40/len(clear_time))) < 20, " ", -140+i*40/len(clear_time))
+            print "                                        max = ", max_data, ", ok?", abs(max_data - -100) < 5
+            self.assertTrue(abs(max_data - -100) < 5)
+
+    def test_send_goal_and_clear(self):
+        clear_time = [4.5, 4.0, 3.5, 3.0, 2.5, 2.0, 1.5, 1.0]
+        for i in range(len(clear_time)):
+            self.rarm.send_goal(self.setup_Positions(self.goal_RArm(), [[-0.6, 0, -120, 15.2, 9.4, 3.2]], 5))
+            self.rarm.wait_for_result()
+            h.joint_states = []
+            time.sleep(1.0);
+            tm0 = rospy.Time.now()
+            self.rarm.send_goal(self.setup_Positions(self.goal_RArm(), [[-0.6, 0, -140, 15.2, 9.4, 3.2]], 5))
+            self.rarm.wait_for_result()
+            self.rarm.send_goal(self.setup_Positions(self.goal_RArm(), [[-0.6, 0, -100, 15.2, 9.4, 3.2]], 5))
+            time.sleep(clear_time[i]);
+            self.rarm.cancel_goal()
+            self.rarm.wait_for_result()
+            tm1 = rospy.Time.now()
+            filename = self.filename_base + "-clear-"+str(clear_time[i])
+            data = self.check_q_data(filename)
+            data_time = (tm1 - tm0).to_sec()
+            min_data = min([d[1] for d in data])
+            max_data = max([d[1] for d in data])
+            print "check setJointAnglesOfGroup(clear),      tm = ", data_time, ", ok?", abs(data_time - 5) < 0.1
+            self.assertTrue(abs(data_time - 5) < 0.1)
+            print "                                        min = ", min_data, ", ok?", abs(min_data - (-140+(i+1)*40/len(clear_time))) < 20, " ", -140+(i+1)*40/len(clear_time)
+            self.assertTrue(abs(min_data - (-140+(i+1)*40/len(clear_time))) < 20)
+            print "                                        max = ", max_data, ", ok?", abs(max_data - -100) < 5
+            self.assertTrue(abs(max_data - -100) < 5)
 
 if __name__ == '__main__':
     import rostest
