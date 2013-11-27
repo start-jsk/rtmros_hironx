@@ -244,8 +244,11 @@ class TestHiroNX(unittest.TestCase):
         min_data = min([d[1] for d in data])
         max_data = max([d[1] for d in data])
         print "check setJointAnglesOfGroup(wait=True),  tm = ", data_time, ", ok?", abs(data_time - 10.0) < 0.1
+        self.assertTrue(abs(data_time - 10.0) < 0.1)
         print "                                        min = ", min_data, ", ok?", abs(min_data - -140) < 5
+        self.assertTrue(abs(min_data - -140) < 5)
         print "                                        max = ", max_data, ", ok?", abs(max_data - -100) < 5
+        self.assertTrue(abs(max_data - -100) < 5)
 
 
     def test_rarm_setJointAngles_NoWait (self):
@@ -266,15 +269,18 @@ class TestHiroNX(unittest.TestCase):
             min_data = min([d[1] for d in data])
             max_data = max([d[1] for d in data])
             print "check setJointAnglesOfGroup(wait=False), tm = ", data_time, ", ok?", abs(data_time - (10.0 - (5 - clear_time[i]))) < 0.1
-            print "                                        min = ", min_data, ", ok?", abs(min_data - (-140+i*40/len(clear_time))) < 10, " ", -140+i*40/len(clear_time)
+            self.assertTrue(abs(data_time - (10.0 - (5 - clear_time[i]))) < 0.1)
+            print "                                        min = ", min_data, ", ok?", abs(min_data - (-140+i*40/len(clear_time))) < 20, " ", -140+i*40/len(clear_time)
+            self.assertTrue(abs(min_data - (-140+i*40/len(clear_time))) < 20, " ", -140+i*40/len(clear_time))
             print "                                        max = ", max_data, ", ok?", abs(max_data - -100) < 5
+            self.assertTrue(abs(max_data - -100) < 5)
 
     def test_rarm_setJointAngles_Clear (self):
         self.limbbody_init()
         # check if clear stops interpolation
         clear_time = [4.5, 4.0, 3.5, 3.0, 2.5, 2.0, 1.5, 1.0]
         for i in range(len(clear_time)):
-            self.robot.setJointAnglesOfGroup("rarm", [-0.6, 0, -100, 15.2, 9.4, 3.2], 5, wait=False);
+            self.robot.setJointAnglesOfGroup("rarm", [-0.6, 0, -120, 15.2, 9.4, 3.2], 5, wait=False);
             self.robot.waitInterpolationOfGroup("rarm")
             self.robot.clearLog()
             self.robot.setJointAnglesOfGroup("rarm", [-0.6, 0, -100, 15.2, 9.4, 3.2], 5-clear_time[i], wait=False);
@@ -290,8 +296,11 @@ class TestHiroNX(unittest.TestCase):
             min_data = min([d[1] for d in data])
             max_data = max([d[1] for d in data])
             print "check setJointAnglesOfGroup(clear),      tm = ", data_time, ", ok?", abs(data_time - 5) < 0.1
-            print "                                        min = ", min_data, ", ok?", abs(min_data - (-140+(i+1)*40/len(clear_time))) < 10, " ", -140+(i+1)*40/len(clear_time)
+            self.assertTrue(abs(data_time - 5) < 0.1)
+            print "                                        min = ", min_data, ", ok?", abs(min_data - (-140+(i+1)*40/len(clear_time))) < 20, " ", -140+(i+1)*40/len(clear_time)
+            self.assertTrue(abs(min_data - (-140+(i+1)*40/len(clear_time))) < 20)
             print "                                        max = ", max_data, ", ok?", abs(max_data - -100) < 5
+            self.assertTrue(abs(max_data - -100) < 5)
 
     def write_output_to_pdf (self,name):
         import os
