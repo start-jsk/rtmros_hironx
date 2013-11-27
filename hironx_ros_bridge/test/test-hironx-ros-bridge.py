@@ -277,6 +277,9 @@ class TestHiroROSBridge(unittest.TestCase):
         self.rarm.wait_for_result()
         self.rarm.send_goal(self.setup_Positions(self.goal_RArm(), [[-0.6, 0, -100, 15.2, 9.4, 3.2]], 5))
         self.rarm.wait_for_result()
+        self.rarm.send_goal(self.setup_Positions(self.goal_RArm(), [[-0.6, 0, -100, 15.2, 9.4, 3.2]], 5))
+        self.rarm.wait_for_result()
+        time.sleep(1.0);
         tm1 = rospy.Time.now()
         data_time = (tm1 - tm0).to_sec()
         filename = self.filename_base + "-wait"
@@ -302,6 +305,7 @@ class TestHiroROSBridge(unittest.TestCase):
             time.sleep(clear_time[i]);
             self.rarm.send_goal(self.setup_Positions(self.goal_RArm(), [[-0.6, 0, -100, 15.2, 9.4, 3.2]], 5))
             self.rarm.wait_for_result()
+            time.sleep(1.0);
             tm1 = rospy.Time.now()
             filename = self.filename_base + "-no-wait-"+str(clear_time[i])
             data = self.check_q_data(filename)
@@ -311,7 +315,7 @@ class TestHiroROSBridge(unittest.TestCase):
             print "check setJointAnglesOfGroup(wait=False), tm = ", data_time, ", ok?", abs(data_time - (10.0 - (5 - clear_time[i]))) < 0.1
             self.assertTrue(abs(data_time - (10.0 - (5 - clear_time[i]))) < 0.1)
             print "                                        min = ", min_data, ", ok?", abs(min_data - (-140+i*40/len(clear_time))) < 20, " ", -140+i*40/len(clear_time)
-            self.assertTrue(abs(min_data - (-140+i*40/len(clear_time))) < 20, " ", -140+i*40/len(clear_time))
+            self.assertTrue(abs(min_data - (-140+i*40/len(clear_time))) < 20)
             print "                                        max = ", max_data, ", ok?", abs(max_data - -100) < 5
             self.assertTrue(abs(max_data - -100) < 5)
 
@@ -329,6 +333,7 @@ class TestHiroROSBridge(unittest.TestCase):
             time.sleep(clear_time[i]);
             self.rarm.cancel_goal()
             self.rarm.wait_for_result()
+            time.sleep(1.0);
             tm1 = rospy.Time.now()
             filename = self.filename_base + "-clear-"+str(clear_time[i])
             data = self.check_q_data(filename)
