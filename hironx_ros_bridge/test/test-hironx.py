@@ -326,7 +326,7 @@ class TestHiroNX(unittest.TestCase):
             self.robot.waitInterpolationOfGroup("rarm")
             self.robot.clearLog()
 
-            self.robot.setJointAnglesOfGroup("rarm", [-0.6, 0, -100, 15.2, 9.4, 3.2], 5-clear_time[i], wait=False);
+            self.robot.setJointAnglesOfGroup("rarm", [-0.6, 0, -100, 15.2, 9.4, 3.2], 5, wait=False);
             self.robot.waitInterpolationOfGroup("rarm")
             self.robot.setJointAnglesOfGroup("rarm", [-0.6, 0, -140, 15.2, 9.4, 3.2], 5, wait=False);
             time.sleep(clear_time[i]);
@@ -339,8 +339,8 @@ class TestHiroNX(unittest.TestCase):
             data_time = data[-1][0] - data[0][0]
             min_data = min([d[1] for d in data])
             max_data = max([d[1] for d in data])
-            print "check setJointAnglesOfGroup(clear),      tm = ", data_time, ", ok?", abs(data_time - 5) < 0.1
-            self.assertTrue(abs(data_time - 5) < 0.1)
+            print "check setJointAnglesOfGroup(clear),      tm = ", data_time, ", ok?", abs(data_time - (5 + clear_time[i])) < 0.1, " ", (5 + clear_time[i])
+            self.assertTrue(abs(data_time - (5 + clear_time[i])) < 0.1)
             print "                                        min = ", min_data, ", ok?", abs(min_data - (-140+(i+1)*40/len(clear_time))) < 20, " ", -140+(i+1)*40/len(clear_time)
             self.assertTrue(abs(min_data - (-140+(i+1)*40/len(clear_time))) < 20)
             print "                                        max = ", max_data, ", ok?", abs(max_data - -100) < 5
@@ -463,6 +463,7 @@ class TestHiroNX(unittest.TestCase):
         return cmd
 
 
+# unittest.main()
 if __name__ == '__main__':
     import rostest
     rostest.rosrun(PKG, 'test_hronx', TestHiroNX) 
