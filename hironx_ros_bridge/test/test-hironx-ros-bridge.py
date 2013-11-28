@@ -270,7 +270,7 @@ class TestHiroROSBridge(unittest.TestCase):
         #self.rarm.send_goal(self.setup_Positions(self.goal_LArm(), [[-0.6, 0, -120, 15.2, 9.4, 3.2]])) this should returns error
         self.rarm.send_goal(self.setup_Positions(self.goal_RArm(), [[-0.6, 0, -120, 15.2, 9.4, 3.2]], 5))
         self.rarm.wait_for_result()
-        h.joint_states = []
+        self.joint_states = []
         time.sleep(1.0);
         tm0 = rospy.Time.now()
         self.rarm.send_goal(self.setup_Positions(self.goal_RArm(), [[-0.6, 0, -140, 15.2, 9.4, 3.2]], 5))
@@ -286,8 +286,8 @@ class TestHiroROSBridge(unittest.TestCase):
         data = self.check_q_data(filename)
         min_data = min([d[1] for d in data])
         max_data = max([d[1] for d in data])
-        print "check setJointAnglesOfGroup(wait=True),  tm = ", data_time, ", ok?", abs(data_time - 10.0) < 0.1
-        self.assertTrue(abs(data_time - 10.0) < 0.1)
+        print "check setJointAnglesOfGroup(wait=True),  tm = ", data_time, ", ok?", abs(data_time - 15.0) < 0.1
+        self.assertTrue(abs(data_time - 15.0) < 0.1)
         print "                                        min = ", min_data, ", ok?", abs(min_data - -140) < 5
         self.assertTrue(abs(min_data - -140) < 5)
         print "                                        max = ", max_data, ", ok?", abs(max_data - -100) < 5
@@ -298,7 +298,7 @@ class TestHiroROSBridge(unittest.TestCase):
         for i in range(len(clear_time)):
             self.rarm.send_goal(self.setup_Positions(self.goal_RArm(), [[-0.6, 0, -120, 15.2, 9.4, 3.2]], 5))
             self.rarm.wait_for_result()
-            h.joint_states = []
+            self.joint_states = []
             time.sleep(1.0);
             tm0 = rospy.Time.now()
             self.rarm.send_goal(self.setup_Positions(self.goal_RArm(), [[-0.6, 0, -140, 15.2, 9.4, 3.2]], 5))
@@ -324,7 +324,7 @@ class TestHiroROSBridge(unittest.TestCase):
         for i in range(len(clear_time)):
             self.rarm.send_goal(self.setup_Positions(self.goal_RArm(), [[-0.6, 0, -120, 15.2, 9.4, 3.2]], 5))
             self.rarm.wait_for_result()
-            h.joint_states = []
+            self.joint_states = []
             time.sleep(1.0);
             tm0 = rospy.Time.now()
             self.rarm.send_goal(self.setup_Positions(self.goal_RArm(), [[-0.6, 0, -140, 15.2, 9.4, 3.2]], 5))
