@@ -311,8 +311,8 @@ class TestHiroROSBridge(unittest.TestCase):
             data_time = (tm1 - tm0).to_sec()
             min_data = min([d[1] for d in data])
             max_data = max([d[1] for d in data])
-            print "check setJointAnglesOfGroup(wait=False), tm = ", data_time, ", ok?", abs(data_time - (10.0 - (5 - clear_time[i]))) < 0.5
-            self.assertTrue(abs(data_time - (10.0 - (5 - clear_time[i]))) < 0.5)
+            print "check setJointAnglesOfGroup(wait=False), tm = ", data_time, ", ok?", abs(data_time - (10.0 - (5 - clear_time[i]))) < 1.5
+            self.assertTrue(abs(data_time - (10.0 - (5 - clear_time[i]))) < 1.5)
             print "                                        min = ", min_data, ", ok?", abs(min_data - (-140+i*40/len(clear_time))) < 20, " ", -140+i*40/len(clear_time)
             self.assertTrue(abs(min_data - (-140+i*40/len(clear_time))) < 20)
             print "                                        max = ", max_data, ", ok?", abs(max_data - -100) < 5
@@ -339,8 +339,8 @@ class TestHiroROSBridge(unittest.TestCase):
             data_time = (tm1 - tm0).to_sec()
             min_data = min([d[1] for d in data])
             max_data = max([d[1] for d in data])
-            print "check setJointAnglesOfGroup(clear),      tm = ", data_time, ", ok?", abs(data_time - 5) < 0.5
-            self.assertTrue(abs(data_time - 5) < 0.5)
+            print "check setJointAnglesOfGroup(clear),      tm = ", data_time, ", ok?", abs(data_time - 10) < 0.5
+            self.assertTrue(abs(data_time - 10) < 1.5)
             print "                                        min = ", min_data, ", ok?", abs(min_data - (-140+(i+1)*40/len(clear_time))) < 20, " ", -140+(i+1)*40/len(clear_time)
             self.assertTrue(abs(min_data - (-140+(i+1)*40/len(clear_time))) < 20)
             print "                                        max = ", max_data, ", ok?", abs(max_data - -100) < 5
