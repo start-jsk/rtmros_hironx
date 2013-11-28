@@ -39,7 +39,7 @@ class TestHiroNX(unittest.TestCase):
                             for i5 in range(-160,160,step):
                                 yield [i0, i1, i2, i3, i4, i5]
 
-    def _test_ik_joint_angle(self):
+    def test_ik_joint_angle(self):
         lav = self.angle_vector_generator().next()
         for av in self.angle_vector_generator():
             print "av", av
@@ -227,13 +227,16 @@ class TestHiroNX(unittest.TestCase):
         self.robot.setSelfGroups()
         self.filename_base = tempfile.mkstemp()[1]
 
+    def assertTrue(self,a):
+        assert(a)
+
     def test_rarm_setJointAngles_Wait (self):
         self.limbbody_init()
         # move to initiali position
         self.robot.setJointAnglesOfGroup("rarm",[-0.6, 0, -120, 15.2, 9.4, 3.2], 5, wait=False);
         self.robot.waitInterpolationOfGroup("rarm")
         self.robot.clearLog()
-        time.sleep(1.0);
+
         self.robot.setJointAnglesOfGroup("rarm", [-0.6, 0, -140, 15.2, 9.4, 3.2], 5, wait=False);
         self.robot.waitInterpolationOfGroup("rarm")
         self.robot.setJointAnglesOfGroup("rarm", [-0.6, 0, -100, 15.2, 9.4, 3.2], 5, wait=False);
@@ -241,15 +244,14 @@ class TestHiroNX(unittest.TestCase):
         self.robot.setJointAnglesOfGroup("rarm", [-0.6, 0, -100, 15.2, 9.4, 3.2], 5, wait=False);
         self.robot.waitInterpolationOfGroup("rarm")
 
-        time.sleep(1.0);
         filename = self.filename_base + "-wait"
         self.robot.saveLog(filename)
         data = self.check_q_data(filename)
         data_time = data[-1][0] - data[0][0]
         min_data = min([d[1] for d in data])
         max_data = max([d[1] for d in data])
-        print "check setJointAnglesOfGroup(wait=True),  tm = ", data_time, ", ok?", abs(data_time - 10.0) < 0.1
-        self.assertTrue(abs(data_time - 10.0) < 0.1)
+        print "check setJointAnglesOfGroup(wait=True),  tm = ", data_time, ", ok?", abs(data_time - 15.0) < 0.1
+        self.assertTrue(abs(data_time - 15.0) < 0.1)
         print "                                        min = ", min_data, ", ok?", abs(min_data - -140) < 5
         self.assertTrue(abs(min_data - -140) < 5)
         print "                                        max = ", max_data, ", ok?", abs(max_data - -100) < 5
@@ -263,12 +265,12 @@ class TestHiroNX(unittest.TestCase):
             self.robot.setJointAnglesOfGroup("rarm", [-0.6, 0, -120, 15.2, 9.4, 3.2], 5, wait=False);
             self.robot.waitInterpolationOfGroup("rarm")
             self.robot.clearLog()
-            time.sleep(1.0);
+
             self.robot.setJointAnglesOfGroup("rarm", [-0.6, 0, -140, 15.2, 9.4, 3.2], 5, wait=False);
             time.sleep(clear_time[i]);
             self.robot.setJointAnglesOfGroup("rarm",[-0.6, 0, -100, 15.2, 9.4, 3.2], 5, wait=False);
             self.robot.waitInterpolationOfGroup("rarm")
-            time.sleep(1.0);
+
             filename = self.filename_base + "-no-wait-"+str(clear_time[i])
             self.robot.saveLog(filename)
             data = self.check_q_data(filename)
@@ -290,14 +292,14 @@ class TestHiroNX(unittest.TestCase):
             self.robot.setJointAnglesOfGroup("rarm", [-0.6, 0, -120, 15.2, 9.4, 3.2], 5, wait=False);
             self.robot.waitInterpolationOfGroup("rarm")
             self.robot.clearLog()
-            time.sleep(1.0);
+
             self.robot.setJointAnglesOfGroup("rarm", [-0.6, 0, -100, 15.2, 9.4, 3.2], 5-clear_time[i], wait=False);
             self.robot.waitInterpolationOfGroup("rarm")
             self.robot.setJointAnglesOfGroup("rarm", [-0.6, 0, -140, 15.2, 9.4, 3.2], 5, wait=False);
             time.sleep(clear_time[i]);
             self.robot.clearOfGroup("rarm")
             self.robot.waitInterpolationOfGroup("rarm")
-            time.sleep(1.0);
+
             filename = self.filename_base + "-clear-"+str(clear_time[i])
             self.robot.saveLog(filename)
             data = self.check_q_data(filename)
