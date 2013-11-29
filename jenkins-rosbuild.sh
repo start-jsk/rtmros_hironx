@@ -18,6 +18,7 @@ source /opt/ros/groovy/setup.bash
 setup
 cd rosbuild_ws
 source setup.bash
+(roscd hrpsys; sed -i s@tags/.*@trunk@ Makefile.hrpsys-base)
 rosmake --status-rate=0 --profile -V hironx_ros_bridge
 
 source `rospack find openrtm_tools`/scripts/rtshell-setup.sh
