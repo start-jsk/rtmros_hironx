@@ -383,20 +383,20 @@ class TestHiroNX(unittest.TestCase):
         #                                      [ 0.6, 0, -120,-15.2, 9.4,-3.2]+np.random.normal(0,1,6),
         #                                      3, wait=False);
 
-        for i in range(0):
+        for i in range(3):
             self.robot.setJointAnglesOfGroup("larm",
-                                             [ 0.6, 0, -120,-15.2, 9.4,-3.2]+np.random.normal(0,1,6),
+                                             [ 0.6, 0, -100,-15.2, 9.4,-3.2]+np.random.normal(0,1,6),
                                              3, wait=False);
             self.robot.setJointAnglesOfGroup("rarm",
-                                             [-0.6, 0, -120, 15.2, 9.4, 3.2]+np.random.normal(0,1,6),
+                                             [-0.6, 0, -100, 15.2, 9.4, 3.2]+np.random.normal(0,1,6),
                                              3, wait=False);
-            time.sleep(1)
+            time.sleep(1.5)
 
         #self.robot.setJointAnglesOfGroup("larm", [ 0.6, 0, -120,-15.2, 9.4,-3.2], 1, wait=False);
         #self.robot.setJointAnglesOfGroup("rarm", [-0.6, 0, -120, 15.2, 9.4, 3.2], 1, wait=False);
         #self.robot.waitInterpolationOfGroup("rarm")
         #self.robot.waitInterpolationOfGroup("larm")
-        self.robot.setJointAnglesOfGroup("rarm", [-0.6, 0, -120, 15.2, 9.4, 3.2], 3, wait=False);
+        self.robot.setJointAnglesOfGroup("rarm", [-0.6, 0, -140, 15.2, 9.4, 3.2], 3, wait=False);
         time.sleep(0.005)
         self.robot.setJointAnglesOfGroup("larm", [ 0.6, 0, -140,-15.2, 9.4,-3.2], 3, wait=False);
         time.sleep(1.5)
@@ -444,12 +444,12 @@ class TestHiroNX(unittest.TestCase):
         os.system(cmd)
 
         # assertion
-        print "check setJointAnglesOfGroup with Accel,  tm = ", data_time, ", ok?", abs(data_time - 30.0) < 0.1
-        #self.assertTrue(abs(data_time - 30.0) < 0.1)
-        print "                                        min = ", min_data, ", ok?", abs(min_data - -130) < 5, " "
-        #self.assertTrue(abs(min_data - -130) < 5)
+        print "check setJointAnglesOfGroup with Accel,  tm = ", data_time, ", ok?", abs(data_time - 9) < 0.5, data_time
+        self.assertTrue(abs(data_time - 9) < 0.5)
+        print "                                        min = ", min_data, ", ok?", abs(min_data - -135) < 5, " "
+        self.assertTrue(abs(min_data - -135) < 5)
         print "                                        max = ", max_data, ", ok?", abs(max_data - -100) < 5
-        #self.assertTrue(abs(max_data - -100) < 5)
+        self.assertTrue(abs(max_data - -100) < 5)
 
     def write_output_to_pdf (self,name):
         import os
