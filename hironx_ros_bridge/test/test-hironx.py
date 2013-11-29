@@ -287,8 +287,8 @@ class TestHiro(unittest.TestCase):
 
     def test_rarm_setJointAnglesOfGroup_Override_Acceleration (self):
         self.limbbody_init()
-        disconnectPorts(self.robot.rh.port("q"), self.robot.log.port("q"))
-        connectPorts(self.robot.el.port("q"), self.robot.log.port("q"))
+        #disconnectPorts(self.robot.rh.port("q"), self.robot.log.port("q"))
+        #connectPorts(self.robot.el.port("q"), self.robot.log.port("q"))
 
         #self.robot.setJointAnglesOfGroup("rarm", [ 25, -139, -157,  45, 0, 0], 3, wait=False);
         #self.robot.setJointAnglesOfGroup("larm", [-25, -139, -157, -45, 0, 0], 3, wait=False);
@@ -296,7 +296,7 @@ class TestHiro(unittest.TestCase):
         self.robot.setJointAnglesOfGroup("larm", [ 0.6, 0, -120,-15.2, 9.4,-3.2], 3, wait=False);
         self.robot.waitInterpolationOfGroup("rarm")
         self.robot.clearLog()
-        self.robot.log_svc.maxLength(200*30)
+        #self.robot.log_svc.maxLength(200*30)
 
         # self.robot.setJointAnglesOfGroup("rarm", [-0.6, 0, -140, 15.2, 9.4, 3.2], 3, wait=False);
         # time.sleep(1.5);
