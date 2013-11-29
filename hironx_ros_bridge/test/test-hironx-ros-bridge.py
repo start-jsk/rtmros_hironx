@@ -304,14 +304,14 @@ class TestHiroROSBridge(unittest.TestCase):
             rospy.sleep(clear_time[i]);
             self.rarm.send_goal(self.setup_Positions(self.goal_RArm(), [[-0.6, 0, -100, 15.2, 9.4, 3.2]], 5))
             self.rarm.wait_for_result()
-            rospy.sleep(1.0)
             tm1 = rospy.Time.now()
+            rospy.sleep(1.0)
             filename = self.filename_base + "-no-wait-"+str(clear_time[i])
             data = self.check_q_data(filename)
             data_time = (tm1 - tm0).to_sec()
             min_data = min([d[1] for d in data])
             max_data = max([d[1] for d in data])
-            print "check setJointAnglesOfGroup(wait=False), tm = ", data_time, ", ok?", abs(data_time - (10.0 - (5 - clear_time[i]))) < 1.5
+            print "check setJointAnglesOfGroup(wait=False), tm = ", data_time, ", ok?", abs(data_time - (10.0 - (5 - clear_time[i]))) < 1.5, " ", (10.0 - (5 - clear_time[i]))
             self.assertTrue(abs(data_time - (10.0 - (5 - clear_time[i]))) < 1.5)
             print "                                        min = ", min_data, ", ok?", abs(min_data - (-140+i*40/len(clear_time))) < 20, " ", -140+i*40/len(clear_time)
             self.assertTrue(abs(min_data - (-140+i*40/len(clear_time))) < 20)
