@@ -13,14 +13,14 @@ except:
 from hironx_ros_bridge import hironx_client as hironx
 from hrpsys.hrpsys_config import euler_from_matrix
 
-import numpy
+import os
 import unittest
 import time
 import tempfile
 
 import math
 import random
-import numpy as np
+import numpy
 
 from rtm import connectPorts, disconnectPorts
 
@@ -140,6 +140,55 @@ class TestHiro(unittest.TestCase):
                     flag = False
                     print("Acceleration vaiorated! : n = %d, idx %d, p0 %f, p1 %f, p2 %f, v1 %f, v2 %f, acc %f (%f)" % (i, j, p0, p1, p2, v0, v1, v1-v0, (v1-v0)/180.0*math.pi))
         self.assertTrue(flag)
+
+    def write_d_dd_data(self, name):
+        name_d = os.path.splitext(name)[0]+".dq"
+        name_dd = os.path.splitext(name)[0]+".ddq"
+        f = open(name)
+        f_d = open(name_d, 'w')
+        f_dd = open(name_dd, 'w')
+        line_0 = None
+        line_1 = None
+        line_2 = None
+        for line_0 in f:
+            if line_2 and line_1 :
+                tm = float(line_1.split(' ')[0])
+                f_d.write(str(tm))
+                f_dd.write(str(tm))
+                for i in range(1,len(line_0.split(' '))-1):
+                    p0 = float(line_0.split(' ')[i])
+                    p1 = float(line_1.split(' ')[i])
+                    p2 = float(line_2.split(' ')[i])
+                    v0 = p1 - p0
+                    v1 = p2 - p1
+                    f_d.write(" %.10f"%v0)
+                    f_dd.write(" %.10f"%(v1 - v0))
+                f_d.write('\n')
+                f_dd.write('\n')
+            line_2 = line_1
+            line_1 = line_0
+        f.close()
+        f_d.close()
+        f_dd.close()
+
+    def write_all_joint_pdf(self, name, pdf_name):
+        print ";; write pdf %s from log data %s"%(pdf_name, name)
+        self.write_d_dd_data(name)
+        _pdf_names = []
+        for _name in [name, os.path.splitext(name)[0]+".dq", os.path.splitext(name)[0]+".ddq"]:
+            _pdf_names.append(_name+"_"+pdf_name)
+            cmd = "gnuplot -p -e \"set terminal pdf; set output '"+_pdf_names[-1]+"'; plot "
+            f = open(_name)
+            l = f.readline().split(' ')[:-1]
+            f.close()
+            for i in range(1,len(l)):
+                cmd += "'"+_name+"' using 1:"+str(i+1)+" title 'joint "+str(i)+"' with lines"
+                if i != len(l)-1:
+                    cmd += ","
+            cmd += "\""
+            os.system(cmd)
+        os.system('pdfunite '+' '.join(_pdf_names) + ' ' + pdf_name)
+        return
 
     def check_acceleration(self, name):
         name1 = name+".q"
@@ -347,12 +396,12 @@ class TestHiro(unittest.TestCase):
         # for i in range(1,10):
         #     time.sleep(i/30.0)
         #     self.robot.setJointAnglesOfGroup("larm",
-        #                                      [ 0.6, 0, -120,-15.2, 9.4,-3.2]+np.random.normal(0,1,6),
+        #                                      [ 0.6, 0, -120,-15.2, 9.4,-3.2]+numpy.random.normal(0,1,6),
         #                                      3, wait=False);
 
         for i in range(3):
             self.robot.setJointAnglesOfGroup("rarm",
-                                             [-0.6, 0, -100, 15.2, 9.4, 3.2]+np.random.normal(0,1,6),
+                                             [-0.6, 0, -100, 15.2, 9.4, 3.2]+numpy.random.normal(0,1,6),
                                              3, wait=False);
             self.robot.setJointAnglesOfGroup("larm", [-0.6, 0, -100, 15.2, 9.4, 3.2], 1.5, wait=True);#  time.sleep(clear_time[i]);
 
@@ -371,37 +420,8 @@ class TestHiro(unittest.TestCase):
         filename = self.filename_base + "-no-wait2"
         self.robot.saveLog(filename)
 
-        data = self.check_q_data(filename)
-        self.check_acceleration(filename)
-        data_time = data[-1][0] - data[0][0]
-        min_data = min([d[1] for d in data])
-        max_data = max([d[1] for d in data])
-
-        # write data
-        import os
-        name = "rarm_test.pdf"
-        cmd = "gnuplot -p -e \"set terminal pdf; set output '"+name+"'; plot "
-        for name in self.filenames:
-            for i in range(2,26):
-                cmd += "'"+name+"' using 0:"+str(i)+" title 'joint "+str(i)+"' with lines"
-                if i != 25 :
-                    cmd += ","
-            if name != self.filenames[-1]:
-                cmd += ","
-        cmd += "\""
-        #print cmd
-        os.system(cmd)
-
-        # write acc data
-        name = "rarm_test_acc.pdf"
-        cmd = "gnuplot -p -e \"set terminal pdf; set output '"+name+"'; plot "
-        for i in range(2,26):
-            cmd += "'"+filename+".acc' using 0:"+str(i)+" title 'joint "+str(i)+"' with lines"
-            if i != 25 :
-                cmd += ","
-        cmd += "\""
-        #print cmd
-        os.system(cmd)
+        # write pdf file
+        self.write_all_joint_pdf(filename+".q", "rarm_accel_check.pdf")
 
         # assertion
         data = self.load_log_data(filename+".q")
@@ -421,6 +441,7 @@ class TestHiro(unittest.TestCase):
         cmd += "\""
         os.system(cmd)
         return cmd
+
 
 
 # unittest.main()

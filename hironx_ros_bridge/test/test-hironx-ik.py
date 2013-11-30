@@ -69,11 +69,9 @@ class TestHiroIK(unittest.TestCase):
                     yield [x/1000.0, y/1000.0, z/1000.0]
 
     def test_ik_left(self):
-        self.limbbody_init()
         self.pos_ik_test("LARM", 220,400, -5,320, 5,300, 100) # zmax=390
 
     def test_ik_right(self):
-        self.limbbody_init()
         self.pos_ik_test("RARM", 220,400, -320,5,  5,300, 100) # zmax=390
 
     def pos_ik_test(self, arm, xmin,xmax,ymin,ymax,zmin,zmax,step):
