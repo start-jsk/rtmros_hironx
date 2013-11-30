@@ -10,5 +10,5 @@
   <param name="joint_states_test/test_duration" value="5.0" />
 
   <!-- test test-name="joint_states_test" pkg="rostest" type="hztest" name="joint_states_test" / -->
-  <test type="test-hironx-ros-bridge.py" pkg="hironx_ros_bridge" test-name="test_hironx_ros_bridge" time-limit="300" />
+  <test type="test-hironx-ros-bridge.py" pkg="hironx_ros_bridge" test-name="test_hironx_ros_bridge" time-limit="1000" />
 </launch>

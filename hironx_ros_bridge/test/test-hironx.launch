@@ -8,6 +8,6 @@
 
   <test type="test-hironx.py" pkg="hironx_ros_bridge" test-name="test_hironx" time-limit="1000"
         args="-ORBInitRef NameService=corbaloc:iiop:localhost:15005/NameService" />
-  <test type="test-hironx-ik.py" pkg="hironx_ros_bridge" test-name="test_hironx_ik" time-limit="1500" 
+  <test type="test-hironx-ik.py" pkg="hironx_ros_bridge" test-name="test_hironx_ik" time-limit="3000" 
         args="-ORBInitRef NameService=corbaloc:iiop:localhost:15005/NameService" />
 </launch>
