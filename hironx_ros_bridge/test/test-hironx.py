@@ -109,7 +109,7 @@ class TestHiro(unittest.TestCase):
         self.filenames.append(name)
         return data
 
-    def check_log_data(self, data, idx, tm_data, min_data, max_data): # expected, time, min, max of index
+    def check_log_data(self, data, idx, tm_data, min_data, max_data, acc_thre=0.06): # expected, time, min, max of index
         _tm_data = len(data)/200.0
         _min_data = min([d[idx] for d in data])
         _max_data = max([d[idx] for d in data])
@@ -136,7 +136,7 @@ class TestHiro(unittest.TestCase):
                 p2 = data[i+1][j]
                 v0 = p1 - p0
                 v1 = p2 - p1
-                if abs(v1 - v0) > 0.006:
+                if abs(v1 - v0) > acc_thre:
                     flag = False
                     print("Acceleration vaiorated! : n = %d, idx %d, p0 %f, p1 %f, p2 %f, v1 %f, v2 %f, acc %f (%f)" % (i, j, p0, p1, p2, v0, v1, v1-v0, (v1-v0)/180.0*math.pi))
         self.assertTrue(flag)
@@ -285,6 +285,52 @@ class TestHiro(unittest.TestCase):
 
             print "check setJointAngles(Clear)"
             self.check_log_data(data, 6, 5, [-140+(i+1)*40/len(clear_time),20], -100.0)
+
+    def test_fullbody_setJointAngles_minus(self):
+        self.fullbody_init()
+        self.robot.el_svc.setServoErrorLimit("all", 0.01) # default is 0.18
+        
+        self.robot.setJointAngles([0, 0, 0, 0,   -0.6, 0, -120, 15.2, 9.4, 3.2,  0,0,0,0,    -0.6, 0, -100,-15.2, 9.4,-3.2,   0, 0, 0, 0], 3);
+        self.robot.waitInterpolation()
+        self.robot.clearLog()
+        self.robot.setJointAngles([0, 0, 0, 0,   -0.6, 0, -120, 15.2, 9.4, 3.2,  0,0,0,0,    -0.6, 0, -100,-15.2, 9.4,-3.2,   0, 0, 0, 0], 1);
+        self.robot.waitInterpolation()
+
+        self.robot.setJointAngles([0, 0, 0, 0,   -0.6, 0, -140, 15.2, 9.4, 3.2,  0,0,0,0,    -0.6, 0, -100,-15.2, 9.4,-3.2,   0, 0, 0, 0], -1);
+        self.robot.waitInterpolation()
+
+        self.robot.setJointAngles([0, 0, 0, 0,   -0.6, 0, -140, 15.2, 9.4, 3.2,  0,0,0,0,    -0.6, 0, -100,-15.2, 9.4,-3.2,   0, 0, 0, 0], 3);
+        self.robot.waitInterpolation()
+
+        self.robot.setJointAngles([0, 0, 0, 0,   -0.6, 0, -120, 15.2, 9.4, 3.2,  0,0,0,0,    -0.6, 0, -100,-15.2, 9.4,-3.2,   0, 0, 0, 0], 0);
+        self.robot.waitInterpolation()
+
+        self.robot.setJointAngles([0, 0, 0, 0,   -0.6, 0, -120, 15.2, 9.4, 3.2,  0,0,0,0,    -0.6, 0, -100,-15.2, 9.4,-3.2,   0, 0, 0, 0], 1);
+        self.robot.waitInterpolation()
+
+        self.robot.setJointAngles([0, 0, 0, 0,   -0.6, 0, -140, 15.2, 9.4, 3.2,  0,0,0,0,    -0.6, 0, -100,-15.2, 9.4,-3.2,   0, 0, 0, 0], 0.1);
+        self.robot.waitInterpolation()
+
+        self.robot.setJointAngles([0, 0, 0, 0,   -0.6, 0, -140, 15.2, 9.4, 3.2,  0,0,0,0,    -0.6, 0, -100,-15.2, 9.4,-3.2,   0, 0, 0, 0], 1.0);
+        self.robot.waitInterpolation()
+
+        self.robot.setJointAngles([0, 0, 0, 0,   -0.6, 0, -120, 15.2, 9.4, 3.2,  0,0,0,0,    -0.6, 0, -100,-15.2, 9.4,-3.2,   0, 0, 0, 0], 0.05);
+        self.robot.waitInterpolation()
+
+        self.robot.setJointAngles([0, 0, 0, 0,   -0.6, 0, -120, 15.2, 9.4, 3.2,  0,0,0,0,    -0.6, 0, -100,-15.2, 9.4,-3.2,   0, 0, 0, 0], 1.0);
+        self.robot.waitInterpolation()
+
+        filename = self.filename_base + "-minus"
+        self.robot.saveLog(filename)
+        # write pdf file
+        self.write_all_joint_pdf(filename+".q", "full_minus_check.pdf")
+
+        # assertion
+        data = self.load_log_data(filename+".q")
+        print "check setJointAngles(minus)"
+        self.check_log_data(data, 6, 7.19, -140, -120.0, acc_thre = 1.0)
+
+        self.robot.el_svc.setServoErrorLimit("all", 0.18) # default is 0.18
 
     ####
 
@@ -442,9 +488,43 @@ class TestHiro(unittest.TestCase):
         os.system(cmd)
         return cmd
 
+    def test_rarm_setJointAnglesOfGroup_minus(self):
+        self.limbbody_init()
+        self.robot.el_svc.setServoErrorLimit("all", 0.01) # default is 0.18
 
+        self.robot.setJointAnglesOfGroup("rarm", [-0.6, 0, -120, 15.2, 9.4, 3.2], 3, wait=False);
+        self.robot.setJointAnglesOfGroup("larm", [ 0.6, 0, -120,-15.2, 9.4,-3.2], 3, wait=False);
+        self.robot.waitInterpolationOfGroup("rarm")
+        self.robot.clearLog()
+        self.robot.setJointAnglesOfGroup("rarm", [-0.6, 0, -120, 15.2, 9.4, 3.2], 1, wait=False);
+        self.robot.setJointAnglesOfGroup("larm", [ 0.6, 0, -120,-15.2, 9.4,-3.2], 1, wait=False);
+        self.robot.waitInterpolationOfGroup("rarm")
 
-# unittest.main()
+        self.robot.setJointAnglesOfGroup("rarm", [ 0.6, 0, -120,-15.2, 9.4,-3.2], -1, wait=True);
+
+        self.robot.setJointAnglesOfGroup("rarm", [ 0.6, 0, -140,-15.2, 9.4,-3.2], -1, wait=True);
+        self.robot.setJointAnglesOfGroup("rarm", [ 0.6, 0, -140,-15.2, 9.4,-3.2], 3, wait=True);
+        self.robot.setJointAnglesOfGroup("rarm", [ 0.6, 0, -120,-15.2, 9.4,-3.2], 0, wait=True);
+        self.robot.setJointAnglesOfGroup("rarm", [ 0.6, 0, -120,-15.2, 9.4,-3.2], 1.0, wait=True);
+        self.robot.setJointAnglesOfGroup("rarm", [ 0.6, 0, -140,-15.2, 9.4,-3.2], 0.1, wait=True);
+        self.robot.setJointAnglesOfGroup("rarm", [ 0.6, 0, -140,-15.2, 9.4,-3.2], 1.0, wait=True);
+        self.robot.setJointAnglesOfGroup("rarm", [ 0.6, 0, -120,-15.2, 9.4,-3.2], 0.05, wait=True);
+        self.robot.setJointAnglesOfGroup("rarm", [ 0.6, 0, -120,-15.2, 9.4,-3.2], 1.0, wait=True);
+        #self.robot.setJointAnglesOfGroup("rarm", [ 0.6, 0, -140,-15.2, 9.4,-3.2], 1.0, wait=True);
+
+        filename = self.filename_base + "-minus"
+        self.robot.saveLog(filename)
+        # write pdf file
+        self.write_all_joint_pdf(filename+".q", "rarm_minus_check.pdf")
+
+        # assertion
+        data = self.load_log_data(filename+".q")
+        print "check setJointAnglesOfGroup(minus)"
+        self.check_log_data(data, 6, 7.19, -140, -120.0, acc_thre = 1.0)
+
+        self.robot.el_svc.setServoErrorLimit("all", 0.18) # default is 0.18
+
+#unittest.main()
 if __name__ == '__main__':
     import rostest
     rostest.rosrun(PKG, 'test_hronx', TestHiro) 
