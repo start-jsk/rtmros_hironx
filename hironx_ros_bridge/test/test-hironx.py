@@ -170,9 +170,11 @@ class TestHiro(unittest.TestCase):
         f.close()
         f_d.close()
         f_dd.close()
+        print "[%s] write %s"%(__file__, name_d)
+        print "[%s] write %s"%(__file__, name_dd)
 
     def write_all_joint_pdf(self, name, pdf_name):
-        print ";; write pdf %s from log data %s"%(pdf_name, name)
+        print "[%s] write pdf %s from log data %s"%(__file__, pdf_name, name)
         self.write_d_dd_data(name)
         _pdf_names = []
         for _name in [name, os.path.splitext(name)[0]+".dq", os.path.splitext(name)[0]+".ddq"]:
@@ -239,7 +241,8 @@ class TestHiro(unittest.TestCase):
         self.robot.waitInterpolation()
         filename = self.filename_base + "-wait"
         self.robot.saveLog(filename)
-        data = self.load_log_data(filename+".q")
+        q_filename = filename+"."+self.robot.rh.name()+"_q"
+        data = self.load_log_data(q_filename)
 
         print "check setJointAngles(wait=True)"
         self.check_log_data(data, 6, 10.0, -140.0, -100.0)
@@ -259,7 +262,8 @@ class TestHiro(unittest.TestCase):
             self.robot.waitInterpolation()
             filename = self.filename_base + "-no-wait-"+str(clear_time[i])
             self.robot.saveLog(filename)
-            data = self.load_log_data(filename+".q")
+            q_filename = filename+"."+self.robot.rh.name()+"_q"
+            data = self.load_log_data(q_filename)
 
             print "check setJointAngles(wait=True)"
             self.check_log_data(data, 6, (10.0 - (5 - clear_time[i])), [-140+i*40/len(clear_time),20], -100.0)
@@ -281,7 +285,8 @@ class TestHiro(unittest.TestCase):
             self.robot.waitInterpolation()
             filename = self.filename_base + "-clear-"+str(clear_time[i])
             self.robot.saveLog(filename)
-            data = self.load_log_data(filename+".q")
+            q_filename = filename+"."+self.robot.rh.name()+"_q"
+            data = self.load_log_data(q_filename)
 
             print "check setJointAngles(Clear)"
             self.check_log_data(data, 6, 5, [-140+(i+1)*40/len(clear_time),20], -100.0)
@@ -323,10 +328,11 @@ class TestHiro(unittest.TestCase):
         filename = self.filename_base + "-minus"
         self.robot.saveLog(filename)
         # write pdf file
-        self.write_all_joint_pdf(filename+".q", "full_minus_check.pdf")
+        q_filename = filename+"."+self.robot.rh.name()+"_q"
+        self.write_all_joint_pdf(q_filename, "full_minus_check.pdf")
 
         # assertion
-        data = self.load_log_data(filename+".q")
+        data = self.load_log_data(q_filename)
         print "check setJointAngles(minus)"
         self.check_log_data(data, 6, 7.19, -140, -120.0, acc_thre = 1.0)
 
@@ -358,7 +364,8 @@ class TestHiro(unittest.TestCase):
 
         filename = self.filename_base + "-wait"
         self.robot.saveLog(filename)
-        data = self.load_log_data(filename+".q")
+        q_filename = filename+"."+self.robot.rh.name()+"_q"
+        data = self.load_log_data(q_filename)
 
         print "check setJointAnglesOfGroup(wait=True)"
         self.check_log_data(data, 6, 15.0, -140.0, -100.0)
@@ -379,7 +386,8 @@ class TestHiro(unittest.TestCase):
 
             filename = self.filename_base + "-no-wait-"+str(clear_time[i])
             self.robot.saveLog(filename)
-            data = self.load_log_data(filename+".q")
+            q_filename = filename+"."+self.robot.rh.name()+"_q"
+            data = self.load_log_data(q_filename)
 
             print "check setJointAnglesOfGroup(wait=True) "+str(clear_time[i])
             self.check_log_data(data, 6, (10.0 - (5 - clear_time[i])), [(-140+i*40/len(clear_time)),20], -100.0)
@@ -403,7 +411,8 @@ class TestHiro(unittest.TestCase):
 
             filename = self.filename_base + "-clear-"+str(clear_time[i])
             self.robot.saveLog(filename)
-            data = self.load_log_data(filename+".q")
+            q_filename = filename+"."+self.robot.rh.name()+"_q"
+            data = self.load_log_data(q_filename)
 
             print "check setJointAnglesOfGroup(clear) "+str(clear_time[i])
             self.check_log_data(data, 6, (5 + clear_time[i]), [(-140+i*40/len(clear_time)),20], -100.0)
@@ -467,10 +476,11 @@ class TestHiro(unittest.TestCase):
         self.robot.saveLog(filename)
 
         # write pdf file
-        self.write_all_joint_pdf(filename+".q", "rarm_accel_check.pdf")
+        q_filename = filename+"."+self.robot.rh.name()+"_q"
+        self.write_all_joint_pdf(q_filename, "rarm_accel_check.pdf")
 
         # assertion
-        data = self.load_log_data(filename+".q")
+        data = self.load_log_data(q_filename)
         print "check setJointAnglesOfGroup(Override_acceleratoin)"
         self.check_log_data(data, 6, 9, -135, -100.0)
 
@@ -515,10 +525,11 @@ class TestHiro(unittest.TestCase):
         filename = self.filename_base + "-minus"
         self.robot.saveLog(filename)
         # write pdf file
-        self.write_all_joint_pdf(filename+".q", "rarm_minus_check.pdf")
+        q_filename = filename+"."+self.robot.rh.name()+"_q"
+        self.write_all_joint_pdf(q_filename, "rarm_minus_check.pdf")
 
         # assertion
-        data = self.load_log_data(filename+".q")
+        data = self.load_log_data(q_filename)
         print "check setJointAnglesOfGroup(minus)"
         self.check_log_data(data, 6, 7.19, -140, -120.0, acc_thre = 1.0)
 
