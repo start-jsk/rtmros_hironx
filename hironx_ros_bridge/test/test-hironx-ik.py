@@ -58,8 +58,8 @@ class TestHiroIK(unittest.TestCase):
             rpy2 = self.robot.getReferenceRPY("LARM_JOINT5")
             print "pos", pos1, pos2, numpy.linalg.norm(numpy.array(pos1)-numpy.array(pos2))
             print "rpy", rpy1, rpy2, numpy.linalg.norm(numpy.array(rpy1)-numpy.array(rpy2))
-            self.assertTrue(numpy.linalg.norm(numpy.array(pos1)-numpy.array(pos2))<5.0e-3) # 0.005 m
-            self.assertTrue(numpy.linalg.norm(numpy.array(rpy1)-numpy.array(rpy2))<5.0e-3) # 0.286 deg
+            self.assertTrue(numpy.linalg.norm(numpy.array(pos1)-numpy.array(pos2))<1.0e-4) # 0.1 mm
+            self.assertTrue(numpy.linalg.norm(numpy.array(rpy1)-numpy.array(rpy2))<1.0e-3) # 0.001 rad = 0.057296 deg
             lav = av
 
     def target_point_generator(self,xmin,xmax,ymin,ymax,zmin,zmax,step):
@@ -86,10 +86,10 @@ class TestHiroIK(unittest.TestCase):
             rot2 = self.robot.getReferenceRotation(arm_target)
             print "pos", pos1, pos2, numpy.linalg.norm(numpy.array(pos1)-numpy.array(pos2))
             print "rpy", rot1, rot2, numpy.linalg.norm(numpy.array(rot1)-numpy.array(rot2))
-            self.assertTrue(numpy.linalg.norm(numpy.array(pos1)-numpy.array(pos2))<5.0e-3) # 0.005 m
-            self.assertTrue(numpy.linalg.norm(numpy.array(rot1)-numpy.array(rot2))<5.0e-3) # 0.286 deg
+            self.assertTrue(numpy.linalg.norm(numpy.array(pos1)-numpy.array(pos2))<1.0e-4) # 0.1 mm
+            self.assertTrue(numpy.linalg.norm(numpy.array(rot1)-numpy.array(rot2))<1.0e-3) # 0.001 rad = 0.057296 deg
 
-
+#unittest.main()
 if __name__ == '__main__':
     import rostest
     rostest.rosrun(PKG, 'test_hronx_ik', TestHiroIK) 
