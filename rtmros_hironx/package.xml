@@ -4,8 +4,9 @@
   <version>1.0.6</version>
   <description>The rtmros_hironx package</description>
 
-  <maintainer email="k-okada@jsk.t.u-tokyo.ac.jp">k-okada</maintainer>
+  <maintainer email="k-okada@jsk.t.u-tokyo.ac.jp">Kei Okada</maintainer>
   <maintainer email="iisaito@kinugarage.com">Isao Isaac Saito</maintainer>
+  <author email="k-okada@jsk.t.u-tokyo.ac.jp">Kei Okada</author>
 
   <license>BSD</license>
   <url type="website">http://ros.org/wiki/rtmros_hironx/</url>
