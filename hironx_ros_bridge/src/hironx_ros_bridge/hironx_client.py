@@ -80,12 +80,12 @@ class HIRONX(HrpsysConfigurator):
 
     def goInitial(self, tm=7, wait=True):
         '''
-        Set predefined (as member variable) initial pose per each body groups.
+        Set predefined initial pose per each body groups. Predefined moves are defined as member variable of this class.
 
         @type tm: int
-        @param tm: time
+        @param tm: Time that takes for the whole process.
         @type wait: bool
-        @param wait: (TODO: needs documented)
+        @param wait: If true, SequencePlayer.waitInterpolationOfGroup gets run. (TODO: Elaborate what this means...Even after having taken a look at its source code I can't tell exactly what it means.)
         '''
         ret = True
         for i in range(len(self.Groups)):
@@ -101,8 +101,10 @@ class HIRONX(HrpsysConfigurator):
 
     def getRTCList(self):
         '''
-        overwrite.
+        Overwriting HrpsysConfigurator.getRTCList
         Returning predefined list of RT components.
+        @rtype [[str]]
+        @rerutrn List of available components. Each element consists of a list of abbreviated and full names of the component.
         '''
         return [
             ['seq', "SequencePlayer"],
@@ -124,6 +126,8 @@ class HIRONX(HrpsysConfigurator):
     #
     def HandOpen(self, hand=None, effort=None):
         '''
+        Set the stretch between two fingers of the specified hand as hardcoded value (100mm).
+
         @type hand: str
         @type effort: int
         '''
@@ -139,14 +143,16 @@ class HIRONX(HrpsysConfigurator):
     def setHandJointAngles(self, hand, angles, tm=1):
         '''
         @type hand: str
-        @type angles: List of (TODO: document)
-        @param angles: Elements are in degree.
-        @param tm: time
+        @param hand: which hand. (TODO: List the possible values)
+        @type angles: OpenHRP::ServoControllerService::dSequence. 
+        @param angles: List of (TODO: document). Elements are in degree.
+        @param tm: Time to complete the task.
         '''
         self.sc_svc.setJointAnglesOfGroup(hand, angles, tm)
 
     def setHandEffort(self, effort=100):
         '''
+        Set maximum torque for all existing hand components.
         @type effort: int
         '''
 
@@ -157,8 +163,9 @@ class HIRONX(HrpsysConfigurator):
         '''
         @type hand: str
         @param width: Max=100.
-        @param tm: time
+        @param tm: Time to complete the move.
         @type effort: int
+        @param effort: Passed to self.setHandEffort if set. Not set by default.
         '''
         if effort:
             self.setHandEffort(effort)
@@ -173,9 +180,10 @@ class HIRONX(HrpsysConfigurator):
         Negate the angle value for {2, 3, 6, 7}th element in av.
 
         @type hand: str
-        @type av: List of (TODO: document)
-        @param av: angle of (TODO: document). Max length of the list=?
-        @param tm: time
+        @param hand: Specifies hand. (TODO: List the possible values. Should be listed in setHandJointAngles so just copy from its doc.)
+        @type av: [int]
+        @param av: angle of each joint of the specified arm (TODO: need verified. Also what's the length of the list?)
+        @param tm: Time in second to complete the work.
         '''
         for i in [2, 3, 6, 7]:  # do not change this line if servo is difference, change HandGroups
             av[i] = -av[i]
@@ -220,6 +228,7 @@ class HIRONX(HrpsysConfigurator):
     def isCalibDone(self):
         '''
         Check whether joints have been calibrated.
+        @rtype bool
         '''
         if self.simulation_mode:
             return True
@@ -232,10 +241,11 @@ class HIRONX(HrpsysConfigurator):
 
     def isServoOn(self, jname='any'):
         '''
-        Check whether servo control has been switched on.
+        Check whether servo control has been turned on.
         @type jname: str
         @param jname: Name of a link (that can be obtained by "hiro.Groups"
                       as lists of groups).
+        @rtype bool
         '''
 
         if self.simulation_mode:
@@ -278,13 +288,15 @@ class HIRONX(HrpsysConfigurator):
 
     def servoOn(self, jname='all', destroy=1, tm=3):
         '''
-        switch servos on/off
+        Turn on/off servos. Calibration of joints need to be done already.
+
         @type jname: str
         @param jname: The value 'all' works iteratively for all servos.
         @param destroy: Not used.
         @type tm: int
+        @param tm: Time to complete.
         @rtype: int
-        @return: 1 or -1.
+        @return: 1 or -1 indicating success or failure, respectively.
         '''
         # check joints are calibrated
         if not self.isCalibDone():
@@ -390,12 +402,14 @@ class HIRONX(HrpsysConfigurator):
 
     def checkEncoders(self, jname='all', option=''):
         '''
-        TODO: needs documented
+        Run the encoder checking sequence for specified joints,
+        run goActual and turn on servos.
 
         @type jname: str
         @param jname: The value 'all' works iteratively for all servos.
         @type option: str
-        @param option: -overwrite: Overwrite calibration value.
+        @param option: Possible values are follows (w/o double quote):\
+                        "-overwrite": Overwrite calibration value.
         '''
         if self.isServoOn():
             waitInputConfirm('Servo must be off for calibration')
@@ -437,3 +451,87 @@ class HIRONX(HrpsysConfigurator):
         print 'Turn on Hand Servo'
         self.sc_svc.servoOn()
 
+    '''
+    **** All methods below here is overridden from super class
+    **** to fill in api document that is missing in the upstream
+    **** repository. See http://TODO_url_ticket for the detail.
+    **** 
+    **** These methods must NOT implement new functionality.
+    **** 
+    **** TODO: These methods must be moved to somewhere abstract,
+    ****       since they are NOT specific to HIRONX.
+    '''
+
+    def goActual():
+        ''' 
+        StateHolder::goActual
+        TODO: behavior needs documented; looking at the original
+              method's code doesn't give enough hint to do so.
+        '''
+        self.goActual()
+
+    def setJointAngle(self, jname, angle, tm):
+        '''
+        HrpsysConfigurator.setJointAngle
+
+        @type jname: str
+        @param jname: Name of joint.
+        @type angle: double
+        @type tm: double
+        @param tm: Time to complete.
+        '''
+        self.setJointAngle(jname, angle, tm)
+
+    def setJointAnglesOfGroup(self, gname, pose, tm, wait=True):
+        '''
+        HrpsysConfigurator.setJointAnglesOfGroup
+
+        @type gname: str
+        @param gname: Name of body link group.
+        @type pose: [double]
+        @param pose: list of positions and orientations
+        @type tm: double
+        @param tm: Time to complete.
+        @type wait: bool
+        @param wait: If true, SequencePlayer.waitInterpolationOfGroup gets run. (TODO: Elaborate what this means...Even after having taken a look at its source code I can't tell exactly what it means.)
+        '''
+        self.setJointAnglesOfGroup(gname, pose, tm, wait)
+
+    def setTargetPoseRelative(self, gname, eename, dx=0, dy=0, dz=0,
+dr=0, dp=0, dw=0, tm=10, wait=True):
+        '''
+        Set angles to a body link group relative to its current pose.
+        All d* arguments are in meter.
+
+        @param gname: Name of the link group.
+        @param eename: Name of the link.
+        '''
+        self.setTargetPoseRelative(gname, eename, dx, dy, dz, dr, dp, dw, tm, wait)
+
+    def writeDigitalOutput(self, dout):
+        '''
+        @type dout: [int]
+        @param dout: List of bits. Length might defer depending on robot's implementation.
+        @return: What RobotHardware.writeDigitalOutput returns (TODO: document).
+        '''
+        self.writeDigitalOutput(dout)
+
+    def writeDigitalOutputWithMask(self, dout, mask):
+        '''
+        @type dout: [int]
+        @param dout: List of bits. Length might defer depending on robot's implementation.
+        @type mask: [int]
+        @param mask: List of masking bits. Length depends on that of dout. 
+        @return: What RobotHardware.writeDigitalOutput returns (TODO: document).
+        '''
+        sel.writeDigitalOutputWithMask(dout, mask)
+
+    def readDigitalInput(self):
+        '''
+        HrpsysConfigurator.readDigitalInput
+
+        TODO: document
+        '''
+        self.readDigitalInput()
+
+    ''' TODO: add What Urko asked '''
