@@ -312,7 +312,7 @@ class HIRONX(HrpsysConfigurator):
             jname = 'all'
 
         self.liftRobotUp()
-        #self.rh_svc.power('all', SWITCH_ON)  # 1/13/14 commented out as debug trial
+        self.rh_svc.power('all', SWITCH_ON)
 
         try:
             waitInputConfirm(\
