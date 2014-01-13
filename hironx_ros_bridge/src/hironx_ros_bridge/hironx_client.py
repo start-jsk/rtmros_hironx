@@ -312,7 +312,7 @@ class HIRONX(HrpsysConfigurator):
             jname = 'all'
 
         self.liftRobotUp()
-        self.rh_svc.power('all', SWITCH_ON)
+        #self.rh_svc.power('all', SWITCH_ON)  # 1/13/14 commented out as debug trial
 
         try:
             waitInputConfirm(\
@@ -436,6 +436,8 @@ class HIRONX(HrpsysConfigurator):
         try:
             waitInputConfirm(msg)
         except:
+            print "If you're connecting to the robot from remote, " + \
+                  "make sure tunnel X (eg. -X option with ssh)."
             self.rh_svc.power('all', SWITCH_OFF)
             return 0
 
