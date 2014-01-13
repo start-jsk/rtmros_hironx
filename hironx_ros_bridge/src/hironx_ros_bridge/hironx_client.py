@@ -20,7 +20,7 @@ from waitInput import waitInputConfirm, waitInputSelect
 
 SWITCH_ON = OpenHRP.RobotHardwareService.SWITCH_ON
 SWITCH_OFF = OpenHRP.RobotHardwareService.SWITCH_OFF
-
+_MSG_ASK_ISSUEREPORT = 'Your report to http://code.google.com/p/rtm-ros-robotics/issues about the situation you see this issue is appreciated.'
 
 class HIRONX(HrpsysConfigurator):
     '''
@@ -311,8 +311,8 @@ class HIRONX(HrpsysConfigurator):
         if jname == '':
             jname = 'all'
 
-        self.liftRobotUp()
-        self.rh_svc.power('all', SWITCH_ON)
+        # self.liftRobotUp()  # lift robot up does not need for non-legged robot
+        # self.rh_svc.power('all', SWITCH_ON)  # do not switch on before goActual
 
         try:
             waitInputConfirm(\
@@ -322,6 +322,20 @@ class HIRONX(HrpsysConfigurator):
         except:  # ths needs to change
             self.rh_svc.power('all', SWITCH_OFF)
             raise
+
+        try:
+            # remove jointGroups
+            self.seq_svc.removeJointGroup("larm")
+            self.seq_svc.removeJointGroup("rarm")
+            self.seq_svc.removeJointGroup("head")
+            self.seq_svc.removeJointGroup("torso")
+        except:
+            print self.configurator_name, 'Exception during servoOn while removing JoingGroup. ' + _MSG_ASK_ISSUEREPORT
+        try:
+            # setup jointGroups
+            self.setSelfGroups() # restart groups
+        except:
+            print self.configurator_name, 'Exception during servoOn while removing setSelfGroups. ' + _MSG_ASK_ISSUEREPORT
 
         try:
             self.stOff()
