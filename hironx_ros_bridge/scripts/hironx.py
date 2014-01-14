@@ -7,9 +7,11 @@ try: # catkin does not requires load_manifest
 except:
     import roslib; roslib.load_manifest('hironx_ros_bridge')
 
+import rtm
+import argparse
+
 from hironx_ros_bridge import hironx_client
 
-import argparse
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='hiro command line interpreters')
     parser.add_argument('--host', help='corba name server hostname')
