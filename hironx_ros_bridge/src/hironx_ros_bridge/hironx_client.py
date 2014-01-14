@@ -1,6 +1,37 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+# Software License Agreement (BSD License)
+#
+# Copyright (c) 2013, JSK Lab, University of Tokyo
+# All rights reserved.
+#
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions
+# are met:
+#
+#  * Redistributions of source code must retain the above copyright
+#    notice, this list of conditions and the following disclaimer.
+#  * Redistributions in binary form must reproduce the above
+#    copyright notice, this list of conditions and the following
+#    disclaimer in the documentation and/or other materials provided
+#    with the distribution.
+#  * Neither the name of JSK Lab, University of Tokyo. nor the
+#    names of its contributors may be used to endorse or promote products
+#    derived from this software without specific prior written permission.
+#
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+# "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+# LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+# FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+# COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+# INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+# BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+# LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+# CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+# LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+# ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+# POSSIBILITY OF SUCH DAMAGE.
 
 import math
 import numpy
@@ -21,6 +52,7 @@ from waitInput import waitInputConfirm, waitInputSelect
 SWITCH_ON = OpenHRP.RobotHardwareService.SWITCH_ON
 SWITCH_OFF = OpenHRP.RobotHardwareService.SWITCH_OFF
 _MSG_ASK_ISSUEREPORT = 'Your report to http://code.google.com/p/rtm-ros-robotics/issues about the situation you see this issue is appreciated.'
+
 
 class HIRONX(HrpsysConfigurator):
     '''
@@ -323,6 +355,8 @@ class HIRONX(HrpsysConfigurator):
             self.rh_svc.power('all', SWITCH_OFF)
             raise
 
+        # Need to reset JointGroups.
+        # See https://code.google.com/p/rtm-ros-robotics/issues/detail?id=277
         try:
             # remove jointGroups
             self.seq_svc.removeJointGroup("larm")
@@ -477,6 +511,14 @@ class HIRONX(HrpsysConfigurator):
     **** TODO: These methods must be moved to somewhere abstract,
     ****       since they are NOT specific to HIRONX.
     '''
+    def getCurrentPosition(self, lname):
+        '''
+        HrpsysConfigurator.getCurrentPosition
+
+        @type lname: str
+        @param lname: Name of joint.
+        '''
+        return self.getCurrentPosition(lname)
 
     def goActual():
         ''' 
@@ -496,7 +538,7 @@ class HIRONX(HrpsysConfigurator):
         @type tm: double
         @param tm: Time to complete.
         '''
-        self.setJointAngle(jname, angle, tm)
+        return self.setJointAngle(jname, angle, tm)
 
     def setJointAnglesOfGroup(self, gname, pose, tm, wait=True):
         '''
@@ -511,7 +553,7 @@ class HIRONX(HrpsysConfigurator):
         @type wait: bool
         @param wait: If true, SequencePlayer.waitInterpolationOfGroup gets run. (TODO: Elaborate what this means...Even after having taken a look at its source code I can't tell exactly what it means.)
         '''
-        self.setJointAnglesOfGroup(gname, pose, tm, wait)
+        return self.setJointAnglesOfGroup(gname, pose, tm, wait)
 
     def setTargetPoseRelative(self, gname, eename, dx=0, dy=0, dz=0,
 dr=0, dp=0, dw=0, tm=10, wait=True):
@@ -521,8 +563,9 @@ dr=0, dp=0, dw=0, tm=10, wait=True):
 
         @param gname: Name of the link group.
         @param eename: Name of the link.
+        @rtype: bool
         '''
-        self.setTargetPoseRelative(gname, eename, dx, dy, dz, dr, dp, dw, tm, wait)
+        return self.setTargetPoseRelative(gname, eename, dx, dy, dz, dr, dp, dw, tm, wait)
 
     def writeDigitalOutput(self, dout):
         '''
