@@ -518,7 +518,7 @@ class HIRONX(HrpsysConfigurator):
         @type lname: str
         @param lname: Name of joint.
         '''
-        return self.getCurrentPosition(lname)
+        return HrpsysConfigurator.getCurrentPosition(lname)
 
     def goActual():
         ''' 
@@ -526,7 +526,7 @@ class HIRONX(HrpsysConfigurator):
         TODO: behavior needs documented; looking at the original
               method's code doesn't give enough hint to do so.
         '''
-        self.goActual()
+        HrpsysConfigurator.goActual()
 
     def setJointAngle(self, jname, angle, tm):
         '''
@@ -538,7 +538,7 @@ class HIRONX(HrpsysConfigurator):
         @type tm: double
         @param tm: Time to complete.
         '''
-        return self.setJointAngle(jname, angle, tm)
+        return HrpsysConfigurator.setJointAngle(jname, angle, tm)
 
     def setJointAnglesOfGroup(self, gname, pose, tm, wait=True):
         '''
@@ -553,7 +553,7 @@ class HIRONX(HrpsysConfigurator):
         @type wait: bool
         @param wait: If true, SequencePlayer.waitInterpolationOfGroup gets run. (TODO: Elaborate what this means...Even after having taken a look at its source code I can't tell exactly what it means.)
         '''
-        return self.setJointAnglesOfGroup(gname, pose, tm, wait)
+        return HrpsysConfigurator.setJointAnglesOfGroup(gname, pose, tm, wait)
 
     def setTargetPoseRelative(self, gname, eename, dx=0, dy=0, dz=0,
 dr=0, dp=0, dw=0, tm=10, wait=True):
@@ -565,7 +565,7 @@ dr=0, dp=0, dw=0, tm=10, wait=True):
         @param eename: Name of the link.
         @rtype: bool
         '''
-        return self.setTargetPoseRelative(gname, eename, dx, dy, dz, dr, dp, dw, tm, wait)
+        return HrpsysConfigurator.setTargetPoseRelative(gname, eename, dx, dy, dz, dr, dp, dw, tm, wait)
 
     def writeDigitalOutput(self, dout):
         '''
@@ -573,7 +573,7 @@ dr=0, dp=0, dw=0, tm=10, wait=True):
         @param dout: List of bits. Length might defer depending on robot's implementation.
         @return: What RobotHardware.writeDigitalOutput returns (TODO: document).
         '''
-        self.writeDigitalOutput(dout)
+        HrpsysConfigurator.writeDigitalOutput(dout)
 
     def writeDigitalOutputWithMask(self, dout, mask):
         '''
@@ -583,7 +583,7 @@ dr=0, dp=0, dw=0, tm=10, wait=True):
         @param mask: List of masking bits. Length depends on that of dout. 
         @return: What RobotHardware.writeDigitalOutput returns (TODO: document).
         '''
-        sel.writeDigitalOutputWithMask(dout, mask)
+        HrpsysConfigurator.writeDigitalOutputWithMask(dout, mask)
 
     def readDigitalInput(self):
         '''
@@ -591,6 +591,4 @@ dr=0, dp=0, dw=0, tm=10, wait=True):
 
         TODO: document
         '''
-        self.readDigitalInput()
-
-    ''' TODO: add What Urko asked '''
+        HrpsysConfigurator.readDigitalInput()
