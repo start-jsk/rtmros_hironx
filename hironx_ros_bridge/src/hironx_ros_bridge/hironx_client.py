@@ -529,24 +529,25 @@ class HIRONX(HrpsysConfigurator):
     '''
     def getCurrentPosition(self, lname):
         '''
-        HrpsysConfigurator.getCurrentPosition
+        @see: HrpsysConfigurator.getCurrentPosition
 
         @type lname: str
         @param lname: link name.
         '''
-        return HrpsysConfigurator.getCurrentPosition(lname)
+        return HrpsysConfigurator.getCurrentPosition(self, lname)
 
     def goActual(self):
         '''
-        StateHolder::goActual
+        @see: HrpsysConfigurator.goActual (that calls StateHolder::goActual)
+
         TODO: behavior needs documented; looking at the original
               method's code doesn't give enough hint to do so.
         '''
-        HrpsysConfigurator.goActual()
+        HrpsysConfigurator.goActual(self)
 
     def setJointAngle(self, jname, angle, tm):
         '''
-        HrpsysConfigurator.setJointAngle
+        @see: HrpsysConfigurator.setJointAngle
 
         @type jname: str
         @param jname: Name of joint.
@@ -554,11 +555,11 @@ class HIRONX(HrpsysConfigurator):
         @type tm: double
         @param tm: Time to complete.
         '''
-        return HrpsysConfigurator.setJointAngle(jname, angle, tm)
+        return HrpsysConfigurator.setJointAngle(self, jname, angle, tm)
 
     def setJointAnglesOfGroup(self, gname, pose, tm, wait=True):
         '''
-        HrpsysConfigurator.setJointAnglesOfGroup
+        @see: HrpsysConfigurator.setJointAnglesOfGroup
 
         @type gname: str
         @param gname: Name of joint group.
@@ -571,11 +572,13 @@ class HIRONX(HrpsysConfigurator):
                   (TODO: Elaborate what this means...Even after having taken
                   a look at its source code I can't tell exactly what it means)
         '''
-        return HrpsysConfigurator.setJointAnglesOfGroup(gname, pose, tm, wait)
+        return HrpsysConfigurator.setJointAnglesOfGroup(self, gname, pose, tm,
+                                                        wait)
 
     def setTargetPoseRelative(self, gname, eename, dx=0, dy=0, dz=0,
                               dr=0, dp=0, dw=0, tm=10, wait=True):
         '''
+        @see: HrpsysConfigurator.setTargetPoseRelative
         Set angles to a joint group relative to its current pose.
         All d* arguments are in meter.
 
@@ -583,21 +586,25 @@ class HIRONX(HrpsysConfigurator):
         @param eename: Name of the link.
         @rtype: bool
         '''
-        return HrpsysConfigurator.setTargetPoseRelative(gname, eename,
+        return HrpsysConfigurator.setTargetPoseRelative(self, gname, eename,
                                                         dx, dy, dz, dr, dp, dw,
                                                         tm, wait)
 
     def writeDigitalOutput(self, dout):
         '''
+        @see: HrpsysConfigurator.writeDigitalOutput
+
         @type dout: [int]
         @param dout: List of bits. Length might defer depending on
                      robot's implementation.
         @return: What RobotHardware.writeDigitalOutput returns (TODO: document)
         '''
-        HrpsysConfigurator.writeDigitalOutput(dout)
+        HrpsysConfigurator.writeDigitalOutput(self, dout)
 
     def writeDigitalOutputWithMask(self, dout, mask):
         '''
+        @see: HrpsysConfigurator.writeDigitalOutputWithMask
+
         @type dout: [int]
         @param dout: List of bits. Length might defer depending on robot's
                      implementation.
@@ -605,12 +612,12 @@ class HIRONX(HrpsysConfigurator):
         @param mask: List of masking bits. Length depends on that of dout.
         @return: What RobotHardware.writeDigitalOutput returns (TODO: document)
         '''
-        HrpsysConfigurator.writeDigitalOutputWithMask(dout, mask)
+        HrpsysConfigurator.writeDigitalOutputWithMask(self, dout, mask)
 
     def readDigitalInput(self):
         '''
-        HrpsysConfigurator.readDigitalInput
+        @see: HrpsysConfigurator.readDigitalInput
 
         TODO: document
         '''
-        HrpsysConfigurator.readDigitalInput()
+        HrpsysConfigurator.readDigitalInput(self)
