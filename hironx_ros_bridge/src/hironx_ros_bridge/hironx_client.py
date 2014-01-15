@@ -259,7 +259,8 @@ class HIRONX(HrpsysConfigurator):
         for item in self.Groups:
             self.seq_svc.addJointGroup(item[0], item[1])
         for k, v in self.HandGroups.iteritems():
-            self.sc_svc.addJointGroup(k, v)
+            if self.sc_svc:
+                self.sc_svc.addJointGroup(k, v)
 
     def getActualState(self):
         '''
@@ -412,7 +413,8 @@ class HIRONX(HrpsysConfigurator):
 
         # turn on hand motors
         print 'Turn on Hand Servo'
-        self.sc_svc.servoOn()
+        if self.sc_svc:
+            self.sc_svc.servoOn()
 
         return 1
 
@@ -431,7 +433,8 @@ class HIRONX(HrpsysConfigurator):
             return 0
 
         print 'Turn off Hand Servo'
-        self.sc_svc.servoOff()
+        if self.sc_svc:
+            self.sc_svc.servoOff()
         # if the servos aren't on switch power off
         if not self.isServoOn(jname):
             if jname.lower() == 'all':
@@ -457,7 +460,8 @@ class HIRONX(HrpsysConfigurator):
 
             # turn off hand motors
             print 'Turn off Hand Servo'
-            self.sc_svc.servoOff()
+            if self.sc_svc:
+                self.sc_svc.servoOff()
 
             return 2
         except:
@@ -515,7 +519,8 @@ class HIRONX(HrpsysConfigurator):
 
         # turn on hand motors
         print 'Turn on Hand Servo'
-        self.sc_svc.servoOn()
+        if self.sc_svc:
+            self.sc_svc.servoOn()
 
     '''
     **** All methods below here is overridden from super class
