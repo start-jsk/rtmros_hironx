@@ -7,10 +7,10 @@ try: # catkin does not requires load_manifest
 except:
     import roslib; roslib.load_manifest('hironx_ros_bridge')
 
+from hironx_ros_bridge import hironx_client
+
 import rtm
 import argparse
-
-from hironx_ros_bridge import hironx_client
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='hiro command line interpreters')
