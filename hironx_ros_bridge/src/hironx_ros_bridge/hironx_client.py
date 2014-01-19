@@ -550,6 +550,14 @@ class HIRONX(HrpsysConfigurator):
         '''
         HrpsysConfigurator.goActual(self)
 
+    def readDigitalInput(self):
+        '''
+        @see: HrpsysConfigurator.readDigitalInput
+
+        TODO: document
+        '''
+        HrpsysConfigurator.readDigitalInput(self)
+
     def setJointAngle(self, jname, angle, tm):
         '''
         @see: HrpsysConfigurator.setJointAngle
@@ -595,6 +603,18 @@ class HIRONX(HrpsysConfigurator):
                                                         dx, dy, dz, dr, dp, dw,
                                                         tm, wait)
 
+    def waitInterpolationOfGroup(self, groupname):
+        '''
+        Lets SequencePlayer wait until the movement currently happening to
+        finish.
+        @see: SequencePlayer.waitInterpolationOfGroup
+        @see: http://wiki.ros.org/joint_trajectory_action. This method
+              corresponds to JointTrajectoryGoal in ROS.
+
+        @type groupname: str
+        '''
+        self.seq_svc.waitInterpolationOfGroup(groupname)
+
     def writeDigitalOutput(self, dout):
         '''
         @see: HrpsysConfigurator.writeDigitalOutput
@@ -618,11 +638,3 @@ class HIRONX(HrpsysConfigurator):
         @return: What RobotHardware.writeDigitalOutput returns (TODO: document)
         '''
         HrpsysConfigurator.writeDigitalOutputWithMask(self, dout, mask)
-
-    def readDigitalInput(self):
-        '''
-        @see: HrpsysConfigurator.readDigitalInput
-
-        TODO: document
-        '''
-        HrpsysConfigurator.readDigitalInput(self)
