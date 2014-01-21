@@ -41,7 +41,7 @@ commands="
   echo \"* Compile hrpsys *\";
   PATH=/opt/jsk/bin:/usr/pkg/bin:/usr/qnx650/host/qnx6/x86/usr/bin:$PATH LD_LIBRARY_PATH=/opt/jsk/lib:/usr/pkg/lib:/usr/qnx650/host/qnx6/x86/usr/lib make VERBOSE=1;
   echo \"* package hrpsys *\";
-  tar -cvzf ../hrpsys-base.tgz ./;
+  tar -cvzf ../hrpsys-base-\`svn info ../hrpsys-base-source | grep Revision | cut -d \\  -f 2.tgz\` ./;
   echo \"* Install hrpsys *\";
   su -c 'make install; rm /opt/jsk/lib/libhrpIo.so';
   "
