@@ -32,10 +32,15 @@ commands="
   cd src;
   svn co http://hrpsys-base.googlecode.com/svn/trunk hrpsys-base-source;
   echo \"* Configure hrpsys *\";
-  cd hrpsys-base-source;
-  PATH=/opt/jsk/bin:/usr/pkg/bin:$PATH LD_LIBRARY_PATH=/opt/jsk/lib:/usr/pkg/lib PKG_CONFIG_PATH=/opt/jsk/lib/pkgconfig:/usr/pkg/lib/pkgconfig CXX=QCC CC=qcc TVMET_DIR=/opt/jsk OPENRTM_IDL_DIR=/opt/jsk/include/OpenRTM-1.1/rtm/idl LDFLAGS=\"-L/usr/pkg/lib -lboost_system -lboost_signals -lboost_thread -lboost_filesystem\" cmake . -DLAPACK_LIBRARY_DIRS=/opt/jsk/lib -DLAPACK_INCLUDE_DIRS=/opt/jsk/include -DOPENRTM_DIR=/opt/jsk -DOPT_COLLADASUPPORT=NO -DEIGEN_INCLUDE_DIR=/opt/jsk/include -DCOMPILE_JAVA_STUFF=OFF -DCMAKE_SHARED_LINKER_FLAGS=\"-L/usr/pkg/lib -lboost_system -lboost_signals -lboost_filesystem -lboost_thread -lboost_regex -lf2c -Wl,-u,MAIN__\" -DCMAKE_EXE_LINKER_FLAGS=\"-L/usr/pkg/lib -lboost_system -lboost_signals -lboost_thread -lboost_filesystem -lboost_regex -lf2c -Wl,-u,MAIN__\" -DCMAKE_MODULE_LINKER_FLAGS=\"-L/usr/pkg/lib -lboost_system -lboost_signals -lboost_filesystem -lboost_thread -lboost_regex -lf2c -Wl,-u,MAIN__\" -DCMAKE_INSTALL_PREFIX=/opt/jsk -DBLAS_LIBRARY=/opt/jsk/lib/libblas.so -DLAPACK_LIBRARY=/opt/jsk/lib/liblapack.so -DG2C_LIBRARY=/opt/jsk/lib/libf2c.so -DCMAKE_CXX_FLAGS=\"-I/usr/pkg/include\" -DCMAKE_INSTALL_PREFIX=/opt/jsk -DENABLE_DOXYGEN=OFF ;
+  rm -fr hrpsys-base-build;
+  mkdir -p hrpsys-base-build;
+  cd hrpsys-base-build;
+  svn info ../hrpsys-base-source > 00ReadMe
+  PATH=/opt/jsk/bin:/usr/pkg/bin:$PATH LD_LIBRARY_PATH=/opt/jsk/lib:/usr/pkg/lib PKG_CONFIG_PATH=/opt/jsk/lib/pkgconfig:/usr/pkg/lib/pkgconfig CXX=QCC CC=qcc TVMET_DIR=/opt/jsk OPENRTM_IDL_DIR=/opt/jsk/include/OpenRTM-1.1/rtm/idl LDFLAGS=\"-L/usr/pkg/lib -lboost_system -lboost_signals -lboost_thread -lboost_filesystem\" cmake ../hrpsys-base-source -DLAPACK_LIBRARY_DIRS=/opt/jsk/lib -DLAPACK_INCLUDE_DIRS=/opt/jsk/include -DOPENRTM_DIR=/opt/jsk -DOPT_COLLADASUPPORT=NO -DEIGEN_INCLUDE_DIR=/opt/jsk/include -DCOMPILE_JAVA_STUFF=OFF -DCMAKE_SHARED_LINKER_FLAGS=\"-L/usr/pkg/lib -lboost_system -lboost_signals -lboost_filesystem -lboost_thread -lboost_regex -lf2c -Wl,-u,MAIN__\" -DCMAKE_EXE_LINKER_FLAGS=\"-L/usr/pkg/lib -lboost_system -lboost_signals -lboost_thread -lboost_filesystem -lboost_regex -lf2c -Wl,-u,MAIN__\" -DCMAKE_MODULE_LINKER_FLAGS=\"-L/usr/pkg/lib -lboost_system -lboost_signals -lboost_filesystem -lboost_thread -lboost_regex -lf2c -Wl,-u,MAIN__\" -DCMAKE_INSTALL_PREFIX=/opt/jsk -DBLAS_LIBRARY=/opt/jsk/lib/libblas.so -DLAPACK_LIBRARY=/opt/jsk/lib/liblapack.so -DG2C_LIBRARY=/opt/jsk/lib/libf2c.so -DCMAKE_CXX_FLAGS=\"-I/usr/pkg/include\" -DCMAKE_INSTALL_PREFIX=/opt/jsk -DENABLE_DOXYGEN=OFF ;
   echo \"* Compile hrpsys *\";
   PATH=/opt/jsk/bin:/usr/pkg/bin:/usr/qnx650/host/qnx6/x86/usr/bin:$PATH LD_LIBRARY_PATH=/opt/jsk/lib:/usr/pkg/lib:/usr/qnx650/host/qnx6/x86/usr/lib make VERBOSE=1;
+  echo \"* package hrpsys *\";
+  tar -cvzf ../hrpsys-base-`svn info ../hrpsys-base-source | grep Revision | cut -d \  -f 2`.tgz ./
   echo \"* Install hrpsys *\";
   su -c 'make install; rm /opt/jsk/lib/libhrpIo.so';
   "
