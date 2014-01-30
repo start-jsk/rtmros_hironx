@@ -4,7 +4,7 @@
   <description>ROS-OpenRTM interfacing package for Kawada's Hiro dual-arm robot.</description>
 
   <maintainer email="k-okada@jsk.t.u-tokyo.ac.jp">Kei Okada</maintainer>
-  <maintainer email="iisaito@kinugarage.com">Isao Isaac Saito</maintainer>
+  <maintainer email="iisaito@kinugarage.com">Isaac Isao Saito</maintainer>
   <author email="k-okada@jsk.t.u-tokyo.ac.jp">Kei Okada</author>
 
   <license>BSD</license>
