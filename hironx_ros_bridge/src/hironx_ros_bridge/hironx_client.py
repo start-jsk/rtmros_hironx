@@ -59,6 +59,16 @@ class HIRONX(HrpsysConfigurator):
     robot called Hiro.
     '''
 
+    Groups = [['torso', ['CHEST_JOINT0']],
+              ['head', ['HEAD_JOINT0', 'HEAD_JOINT1']],
+              ['rarm', ['RARM_JOINT0', 'RARM_JOINT1', 'RARM_JOINT2',
+                        'RARM_JOINT3', 'RARM_JOINT4', 'RARM_JOINT5']],
+              ['larm', ['LARM_JOINT0', 'LARM_JOINT1', 'LARM_JOINT2',
+                        'LARM_JOINT3', 'LARM_JOINT4', 'LARM_JOINT5']]]
+
+    '''
+    For OffPose and InitialPose, the angles of each joint are listed in the
+    ordered as defined in Groups variable.'''
     OffPose = [[0], [0, 0],
                    [25, -139, -157, 45, 0, 0],
                    [-25, -139, -157, -45, 0, 0],
@@ -70,12 +80,6 @@ class HIRONX(HrpsysConfigurator):
                    [0, 0, 0, 0],
                    [0, 0, 0, 0]]
 
-    Groups = [['torso', ['CHEST_JOINT0']],
-              ['head', ['HEAD_JOINT0', 'HEAD_JOINT1']],
-              ['rarm', ['RARM_JOINT0', 'RARM_JOINT1', 'RARM_JOINT2',
-                        'RARM_JOINT3', 'RARM_JOINT4', 'RARM_JOINT5']],
-              ['larm', ['LARM_JOINT0', 'LARM_JOINT1', 'LARM_JOINT2',
-                        'LARM_JOINT3', 'LARM_JOINT4', 'LARM_JOINT5']]]
     HandGroups = {'rhand': [2, 3, 4, 5], 'lhand': [6, 7, 8, 9]}
 
     RtcList = []
@@ -99,10 +103,11 @@ class HIRONX(HrpsysConfigurator):
 
     def goOffPose(self, tm=7):
         '''
-        Set predefined (as member variable) off pose per each body groups.
+        Move arms to the predefined (as member variable) pose where robot can
+        be safely turned off.
 
-        @type tm: int
-        @param tm: time
+        @type tm: float
+        @param tm: Second to complete.
         '''
         for i in range(len(self.Groups)):
             self.setJointAnglesOfGroup(self.Groups[i][0], self.OffPose[i], tm,
@@ -113,11 +118,10 @@ class HIRONX(HrpsysConfigurator):
 
     def goInitial(self, tm=7, wait=True):
         '''
-        Set predefined initial pose per each body groups. Predefined moves are
-        defined as member variable of this class.
+        Move arms to the predefined (as member variable) "initialized" pose.
 
-        @type tm: int
-        @param tm: Time that takes for the whole process.
+        @type tm: float
+        @param tm: Second to complete.
         @type wait: bool
         @param wait: If true, SequencePlayer.waitInterpolationOfGroup gets run.
                      (TODO: Elaborate what this means...Even after having taken
@@ -139,8 +143,8 @@ class HIRONX(HrpsysConfigurator):
 
     def getRTCList(self):
         '''
-        Overwriting HrpsysConfigurator.getRTCList
-        Returning predefined list of RT components.
+        @see: HrpsysConfigurator.getRTCList
+
         @rtype [[str]]
         @rerutrn List of available components. Each element consists of a list
                  of abbreviated and full names of the component.
@@ -155,7 +159,6 @@ class HIRONX(HrpsysConfigurator):
             ['log', "DataLogger"]
             ]
 
-    #
     # hand interface
     # effort: 1~100[%]
     # hiro.HandOpen("rhand", effort)
@@ -227,7 +230,7 @@ class HIRONX(HrpsysConfigurator):
                   (TODO: need verified. Also what's the length of the list?)
         @param tm: Time in second to complete the work.
         '''
-        for i in [2, 3, 6, 7]:  # do not change this line if servo is difference, change HandGroups
+        for i in [2, 3, 6, 7]:  # do not change this line if servo is different, change HandGroups
             av[i] = -av[i]
         self.setHandJointAngles(hand, av, tm)
 
@@ -253,8 +256,8 @@ class HIRONX(HrpsysConfigurator):
 
     def setSelfGroups(self):
         '''
-        Set elements of body groups and joing groups that are statically
-        defined as member variables within this class.
+        Set to the hrpsys.SequencePlayer the groups of links and joints that
+        are statically defined as member variables (Groups) within this class.
         '''
         for item in self.Groups:
             self.seq_svc.addJointGroup(item[0], item[1])
@@ -264,7 +267,7 @@ class HIRONX(HrpsysConfigurator):
 
     def getActualState(self):
         '''
-        TODO: needs documented. What state does this return?
+        @return: currently commanded values.
         '''
         return self.rh_svc.getStatus()
 
@@ -331,13 +334,14 @@ class HIRONX(HrpsysConfigurator):
 
     def servoOn(self, jname='all', destroy=1, tm=3):
         '''
-        Turn on/off servos. Calibration of joints need to be done already.
+        Turn on/off servos.
+        Joints need to be calibrated (otherwise error returns).
 
         @type jname: str
         @param jname: The value 'all' works iteratively for all servos.
         @param destroy: Not used.
-        @type tm: int
-        @param tm: Time to complete.
+        @type tm: float
+        @param tm: Second to complete.
         @rtype: int
         @return: 1 or -1 indicating success or failure, respectively.
         '''
@@ -532,14 +536,123 @@ class HIRONX(HrpsysConfigurator):
     **** TODO: These methods must be moved to somewhere abstract,
     ****       since they are NOT specific to HIRONX.
     '''
-    def getCurrentPosition(self, lname):
+    def getCurrentPose(self, jointname):
+        '''
+        @see: HrpsysConfigurator.getCurrentPose
+
+        @type jointname: str
+        @rtype: List of float
+        @return: Rotational matrix and the position of the given joint in
+                 1-dimensional list, that is:
+
+                 [a11, a12, a13, x,
+                  a21, a22, a23, y,
+                  a31, a32, a33, z,
+                   0,   0,   0,  1]
+        '''
+        return HrpsysConfigurator.getCurrentPose(self, jointname)
+
+    def getCurrentPosition(self, jointname):
         '''
         @see: HrpsysConfigurator.getCurrentPosition
 
-        @type lname: str
-        @param lname: link name.
+        @type jointname: str
+        @rtype: List of float
+        @return: List of x, y, z positions about the specified joint.
         '''
-        return HrpsysConfigurator.getCurrentPosition(self, lname)
+        return HrpsysConfigurator.getCurrentPosition(self, jointname)
+
+    def getCurrentRotation(self, jointname):
+        '''
+        @see: HrpsysConfigurator.getCurrentRotation
+
+        @type jointname: str
+        @rtype: List of float
+        @return: Rotational matrix of the given joint in 2-dimensional list,
+                 that is:
+                 [[a11, a12, a13],
+                  [a21, a22, a23],
+                  [a31, a32, a33]]
+        '''
+        return HrpsysConfigurator.getCurrentRotation(self, jointname)
+
+    def getCurrentRPY(self, jointname):
+        '''
+        @see: HrpsysConfigurator.getCurrentRPY
+
+        @type jointname: str
+        @rtype: List of float
+        @return: List of orientation in rpy form about the specified joint.
+        '''
+        return HrpsysConfigurator.getCurrentRPY(self, jointname)
+
+    def getJointAngles(self):
+        '''
+        @see: HrpsysConfigurator.getJointAngles
+
+        @rtype: List of float
+        @return: List of angles (degree) of all joints, in the order defined
+                 in the member variable 'Groups' (eg. chest, head1, head2, ..).
+        '''
+        return HrpsysConfigurator.getJointAngles(self)
+
+    def getReferencePose(self, jointname):
+        '''
+        @see: HrpsysConfigurator.getReferencePose
+
+        TODO: This seems to return the same values with getCurrentPose. Is that
+              so?
+
+        @rtype: List of float
+        @return: Rotational matrix and the position of the given joint in
+                 1-dimensional list, that is:
+
+                 [a11, a12, a13, x,
+                  a21, a22, a23, y,
+                  a31, a32, a33, z,
+                   0,   0,   0,  1]
+        '''
+        return HrpsysConfigurator.getReferencePose(self, jointname)
+
+    def getReferencePosition(self, jointname):
+        '''
+        @see: HrpsysConfigurator.getReferencePosition
+        TODO: This seems to return the same values with getCurrentPosition.
+              Is that so?
+
+        @type jointname: str
+        @rtype: List of float
+        @return: List of x, y, z positions about the specified joint.
+        '''
+        return HrpsysConfigurator.getReferencePosition(self, jointname)
+
+    def getReferenceRotation(self, jointname):
+        '''
+        @see: HrpsysConfigurator.getReferenceRotation
+        TODO: This seems to return the same values with getCurrentRotation.
+              Is that so?
+
+        @type jointname: str
+        @rtype: List of float
+        @return: Rotational matrix of the given joint in 2-dimensional list,
+                 that is:
+                 [[a11, a12, a13],
+                  [a21, a22, a23],
+                  [a31, a32, a33]]
+        '''
+        return HrpsysConfigurator.getReferenceRotation(self, jointname)
+
+    def getReferenceRPY(self, jointname):
+        '''
+        @see: HrpsysConfigurator.getReferenceRPY
+        TODO: This seems to return the same values with getCurrentRPY.
+              Is that so?
+
+        @type jointname: str
+        @rtype: List of float
+        @return: List of orientation in rpy form about the specified joint.
+        '''
+        return HrpsysConfigurator.getReferenceRPY(self, jointname)
 
     def goActual(self):
         '''
@@ -562,10 +675,18 @@ class HIRONX(HrpsysConfigurator):
         '''
         @see: HrpsysConfigurator.setJointAngle
 
+        Set angle to the given joint.
+
+        Note that while this method does not check angle value range,
+        any joints could emit position limit over error, which has not yet
+        been handled in hrpsys so that there's no way to catch on this client
+        class level. Please consider opening an enhancement ticket for that
+        at hironx' designated issue tracker.
+
         @type jname: str
-        @param jname: Name of joint.
-        @type angle: double
-        @type tm: double
+        @type angle: float
+        @param angle: In degree.
+        @type tm: float
         @param tm: Time to complete.
         '''
         return HrpsysConfigurator.setJointAngle(self, jname, angle, tm)
@@ -574,11 +695,17 @@ class HIRONX(HrpsysConfigurator):
         '''
         @see: HrpsysConfigurator.setJointAnglesOfGroup
 
+        Note that while this method does not check angle value range,
+        any joints could emit position limit over error, which has not yet
+        been handled in hrpsys so that there's no way to catch on this client
+        class level. Please consider opening an enhancement ticket for that
+        at hironx' designated issue tracker.
+
         @type gname: str
         @param gname: Name of joint group.
-        @type pose: [double]
+        @type pose: [float]
         @param pose: list of positions and orientations
-        @type tm: double
+        @type tm: float
         @param tm: Time to complete.
         @type wait: bool
         @param wait: If true, SequencePlayer.waitInterpolationOfGroup gets run.
