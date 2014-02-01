@@ -324,6 +324,12 @@ class HIRONX(HrpsysConfigurator):
         return False
 
     def flat2Groups(self, flatList):
+        '''
+        @type flatList: []
+        @param flatList: single dimension list with its length of 15
+        @rtype: [[]]
+        @return: 2-dimensional list of Groups.
+        '''
         retList = []
         index = 0
         for group in self.Groups:
@@ -667,7 +673,7 @@ class HIRONX(HrpsysConfigurator):
         '''
         @see: HrpsysConfigurator.readDigitalInput
 
-        TODO: document
+        @return: TODO: elaborate
         '''
         HrpsysConfigurator.readDigitalInput(self)
 
@@ -677,11 +683,15 @@ class HIRONX(HrpsysConfigurator):
 
         Set angle to the given joint.
 
-        Note that while this method does not check angle value range,
+        NOTE-1: It's known that this method does not do anything after
+                some group operation is done.
+                TODO: at least need elaborated to warn users.
+
+        NOTE-2: that while this method does not check angle value range,
         any joints could emit position limit over error, which has not yet
-        been handled in hrpsys so that there's no way to catch on this client
-        class level. Please consider opening an enhancement ticket for that
-        at hironx' designated issue tracker.
+        been thrown by hrpsys so that there's no way to catch on this client
+        side. Worthwhile opening an enhancement ticket for that at
+        hironx' designated issue tracker.
 
         @type jname: str
         @type angle: float
@@ -714,6 +724,19 @@ class HIRONX(HrpsysConfigurator):
         '''
         return HrpsysConfigurator.setJointAnglesOfGroup(self, gname, pose, tm,
                                                         wait)
+
+    def setTargetPose(self, gname, pos, rpy, tm):
+        '''
+        @see: HrpsysConfigurator.setTargetPose
+        Set absolute pose to a joint.
+        All d* arguments are in meter.
+
+        @param gname: Name of the joint group.
+        @type pos: float
+        @type rpy: TODO: ??
+        @rtype: bool
+        '''
+        return HrpsysConfigurator.setTargetPose(self, gname, pos, rpy, tm)
 
     def setTargetPoseRelative(self, gname, eename, dx=0, dy=0, dz=0,
                               dr=0, dp=0, dw=0, tm=10, wait=True):
