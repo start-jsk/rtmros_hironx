@@ -701,6 +701,24 @@ class HIRONX(HrpsysConfigurator):
         '''
         return HrpsysConfigurator.setJointAngle(self, jname, angle, tm)
 
+    def setJointAngles(self, angles, tm):
+        '''
+        @see: HrpsysConfigurator.setJointAngles
+
+        NOTE-1: that while this method does not check angle value range,
+        any joints could emit position limit over error, which has not yet
+        been thrown by hrpsys so that there's no way to catch on this client
+        side. Worthwhile opening an enhancement ticket for that at
+        hironx' designated issue tracker.
+
+        @type angles: float
+        @param angles: In degree.
+        @type tm: float
+        @param tm: Time to complete.
+        '''
+        return HrpsysConfigurator.setJointAngles(self, angles, tm)
+
+
     def setJointAnglesOfGroup(self, gname, pose, tm, wait=True):
         '''
         @see: HrpsysConfigurator.setJointAnglesOfGroup
