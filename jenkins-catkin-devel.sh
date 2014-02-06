@@ -9,6 +9,7 @@ function setup {
     wstool init
     wstool merge https://rtm-ros-robotics.googlecode.com/svn/trunk/rtm-ros-robotics.rosinstall
     wstool remove rtm-ros-robotics/rtmros_tutorials
+    wstool remove rtm-ros-robotics/rtmros_gazebo
     wstool update
     catkin_init_workspace
     cd ../../
