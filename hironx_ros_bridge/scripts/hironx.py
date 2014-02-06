@@ -33,8 +33,8 @@ if __name__ == '__main__':
     if len(unknown) >= 2:
         args.robot = unknown[0]
         args.modelfile = unknown[1]
-    hiro = hironx_client.HIRONX()
-    hiro.init(robotname=args.robot, url=args.modelfile)
+    robot = hiro = hironx_client.HIRONX()
+    robot.init(robotname=args.robot, url=args.modelfile)
 
 # for simulated robot
 # $ ./hironx.py
