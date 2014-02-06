@@ -10,6 +10,7 @@ function setup {
     rosws init
     rosws merge /opt/ros/groovy/
     rosws merge https://rtm-ros-robotics.googlecode.com/svn/trunk/rtm-ros-robotics.rosinstall
+    rosws remove rtm-ros-robotics/rtmros_tutorials
     rosws update
     cd ..
 }

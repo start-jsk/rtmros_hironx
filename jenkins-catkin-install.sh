@@ -8,6 +8,7 @@ function setup {
     cd catkin_ws/src
     wstool init
     wstool merge https://rtm-ros-robotics.googlecode.com/svn/trunk/rtm-ros-robotics.rosinstall
+    wstool remove rtm-ros-robotics/rtmros_tutorials
     wstool update
     cd ../../
 }
