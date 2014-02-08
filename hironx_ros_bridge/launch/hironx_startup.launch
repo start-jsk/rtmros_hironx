@@ -1,0 +1,26 @@
+<launch>
+  <arg name="GUI" default="true" />
+  <arg name="LAUNCH_HRPSYSPY" default="true" />
+  <arg name="REALTIME" default="true" />
+  <arg name="PROJECT_FILE" default="$(find hironx_ros_bridge)/conf/kawada-hironx_nosim.xml" />
+  <arg name="MODEL_FILE" default="$(find hironx_ros_bridge)/models/kawada-hironx.dae" />
+  <arg name="CONF_FILE" default="$(find hironx_ros_bridge)/conf/kawada-hironx.conf" />
+  <arg name="SIMULATOR_NAME" default="HiroNX(Robot)0" />
+  <arg name="HRPSYS_PY_PKG" default="hironx_ros_bridge"/>
+  <arg name="HRPSYS_PY_NAME" default="hironx.py"/>
+
+  <!-- begin use sim time -->
+  <param name="use_sim_time" value="true" />
+  <!-- end use sim time -->
+  <include file="$(find hrpsys_tools)/launch/hrpsys.launch">
+    <arg name="PROJECT_FILE" value="$(arg PROJECT_FILE)" />
+    <arg name="MODEL_FILE" value="$(arg MODEL_FILE)" />
+    <arg name="CONF_FILE" value="$(arg CONF_FILE)" />
+    <arg name="SIMULATOR_NAME" value="$(arg SIMULATOR_NAME)" />
+    <arg name="GUI" default="$(arg GUI)" />
+    <arg name="LAUNCH_HRPSYSPY" default="$(arg LAUNCH_HRPSYSPY)" />
+    <arg name="HRPSYS_PY_PKG" default="$(arg HRPSYS_PY_PKG)"/>
+    <arg name="HRPSYS_PY_NAME" default="$(arg HRPSYS_PY_NAME)"/>
+    <arg name="REALTIME" default="$(arg REALTIME)" />
+  </include>
+</launch>

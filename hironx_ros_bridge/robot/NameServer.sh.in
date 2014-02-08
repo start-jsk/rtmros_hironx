@@ -1,0 +1,19 @@
+#!/usr/pkg/bin/bash
+
+export LOG_DIR=@LOG_PATH@
+export LD_LIBRARY_PATH=@MODULE_LOAD_PATH@:$LD_LIBRARY_PATH
+
+rm /tmp/omninames-*.bak
+rm /tmp/omninames-*.log
+
+DATESTRING=`date +%Y%m%d%H%M%S`
+
+slay omniNames
+
+/opt/jsk/bin/omniNames -logdir /tmp -start 15005 > $LOG_DIR/NameServer-$DATESTRING.log 2>&1 &
+
+if [ -f $LOG_DIR/NameServer.log ]; then
+  rm $LOG_DIR/NameServer.log
+fi
+
+ln -s $LOG_DIR/NameServer-$DATESTRING.log $LOG_DIR/NameServer.log

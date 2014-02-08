@@ -1,0 +1,15 @@
+#!/bin/sh
+
+DATE=`date +%y%m%d_%H%M%S`
+export LD_LIBRARY_PATH=/opt/hiro/bin
+slay shm_iob_hiro
+slay hand_iob
+cd /opt/hiro/bin
+./shared init
+./shm_iob_hiro > /opt/hiro/log/shm_iob_hiro_$DATE.log 2>&1 &
+
+cd @INSTALL_DIR@/bin
+./NameServer.sh
+./ModelLoader.sh
+/usr/bin/env sleep 3
+./rtcd.sh &

@@ -1,0 +1,27 @@
+<package>
+  <name>hironx_ros_bridge</name>
+  <version>1.0.10</version>
+  <description>ROS-OpenRTM interfacing package for Kawada's Hiro dual-arm robot.</description>
+
+  <maintainer email="k-okada@jsk.t.u-tokyo.ac.jp">Kei Okada</maintainer>
+  <maintainer email="iisaito@kinugarage.com">Isaac Isao Saito</maintainer>
+  <author email="k-okada@jsk.t.u-tokyo.ac.jp">Kei Okada</author>
+
+  <license>BSD</license>
+
+  <url type="website">http://ros.org/wiki/hironx_ros_bridge</url>
+  <url type="repository">https://rtm-ros-robotics.googlecode.com/svn/trunk/rtmros_hironx</url>
+  <url type="bugtracker">https://code.google.com/p/rtm-ros-robotics/issues/</url>
+  <!-- <url type="bugtracker"></url> -->
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <build_depend>hrpsys_ros_bridge</build_depend>
+  <run_depend>hrpsys_ros_bridge</run_depend>
+
+  <!-- <test_depend>hrpsys_ros_bridge</test_depend> -->
+
+  <export>
+
+  </export>
+</package>

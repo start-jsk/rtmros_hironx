@@ -1,0 +1,29 @@
+<package>
+
+  <name>hironx_moveit_config</name>
+  <version>1.0.10</version>
+  <description>
+     An automatically generated package with all the configuration and launch files for using the HiroNX with the MoveIt Motion Planning Framework
+  </description>
+  <author email="assistant@moveit.ros.org">MoveIt Setup Assistant</author>
+  <author email="uesnaola@gmail.com">Urko Esnaola</author>
+
+  <maintainer email="k-okada@jsk.t.u-tokyo.ac.jp">Kei Okada</maintainer>
+  <maintainer email="iisaito@opensource-robotics.tokyo.jp">Isaac Isao Saito</maintainer>
+
+  <license>BSD</license>
+
+  <url type="website">http://wiki.ros.org/hironx_moveit_config</url>
+  <url type="repository">https://rtm-ros-robotics.googlecode.com/svn/trunk/rtmros_common</url>
+  <url type="bugtracker">https://code.google.com/p/rtm-ros-robotics/issues/</url>
+
+  <buildtool_depend>catkin</buildtool_depend>
+  
+  <build_depend>moveit_ros_move_group</build_depend>
+  <build_depend>hironx_ros_bridge</build_depend>
+
+  <run_depend>moveit_ros</run_depend>
+  <run_depend>pr2_moveit_plugins</run_depend>
+  <run_depend>hironx_ros_bridge</run_depend>
+
+</package>

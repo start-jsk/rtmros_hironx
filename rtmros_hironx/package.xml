@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<package>
+  <name>rtmros_hironx</name>
+  <version>1.0.10</version>
+  <description>The rtmros_hironx package</description>
+
+  <maintainer email="k-okada@jsk.t.u-tokyo.ac.jp">Kei Okada</maintainer>
+  <maintainer email="iisaito@kinugarage.com">Isaac Isao Saito</maintainer>
+  <author email="k-okada@jsk.t.u-tokyo.ac.jp">Kei Okada</author>
+
+  <license>BSD</license>
+  <url type="website">http://ros.org/wiki/rtmros_hironx/</url>
+  <url type="repository">https://rtm-ros-robotics.googlecode.com/svn/trunk/rtmros_hironx/</url>
+  <url type="bugtracker">https://code.google.com/p/rtm-ros-robotics/issues/</url>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <run_depend>hironx_moveit_config</run_depend>
+  <run_depend>hironx_ros_bridge</run_depend>
+
+  <export>
+    <metapackage/>
+  </export>
+</package>
