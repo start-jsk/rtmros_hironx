@@ -11,6 +11,8 @@
 
   <depend package="hrpsys_ros_bridge"/>
 
+  <rosdep name="hrpsys_ros_bridge"/>
+
 </package>
 
 
