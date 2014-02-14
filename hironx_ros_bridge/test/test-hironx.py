@@ -12,6 +12,7 @@ except:
 
 from hironx_ros_bridge import hironx_client as hironx
 from hrpsys.hrpsys_config import euler_from_matrix
+from hrpsys import rtm
 
 import os
 import unittest
@@ -28,8 +29,12 @@ class TestHiro(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
+        modelfile = '/opt/jsk/etc/HIRONX/model/main.wrl'
+        rtm.nshost = 'hiro024'
+        robotname = "RobotHardware0"
+
         cls.robot = hironx.HIRONX()
-        cls.robot.init()
+        cls.robot.init(robotname=robotname, url=modelfile)
 
     @classmethod
     def tearDownClass(cls):
@@ -40,9 +45,9 @@ class TestHiro(unittest.TestCase):
         self.limbbody_init()
         self.robot.goInitial()
 
-    def test_goOffPose(self):
-        self.limbbody_init()
-        self.robot.goOffPose()
+#    def test_goOffPose(self):
+#        self.limbbody_init()
+#        self.robot.goOffPose()
 
     ###
     def set_joint_angles_no_wait_test (self):
