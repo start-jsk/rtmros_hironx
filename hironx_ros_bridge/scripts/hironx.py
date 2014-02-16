@@ -9,7 +9,7 @@ except:
 
 from hironx_ros_bridge import hironx_client
 
-import rtm
+from hrpsys import rtm  # See https://github.com/tork-a/rtmros_nextage/commit/d4268d81ec14a514bb4b3b52614c81e708dd1ecc#diff-20257dd6ad60c0892cfb122c37a8f2ba 
 import argparse
 
 if __name__ == '__main__':
