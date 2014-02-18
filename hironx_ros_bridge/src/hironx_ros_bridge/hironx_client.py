@@ -50,7 +50,9 @@ from waitInput import waitInputConfirm, waitInputSelect
 
 SWITCH_ON = OpenHRP.RobotHardwareService.SWITCH_ON
 SWITCH_OFF = OpenHRP.RobotHardwareService.SWITCH_OFF
-_MSG_ASK_ISSUEREPORT = 'Your report to http://code.google.com/p/rtm-ros-robotics/issues about the situation you see this issue is appreciated.'
+_MSG_ASK_ISSUEREPORT = 'Your report to ' + \
+                       'https://github.com/start-jsk/rtmros_hironx/issues ' + \
+                       'about the issue you are seeing is appreciated.'
 
 
 class HIRONX(HrpsysConfigurator):
