@@ -25,7 +25,7 @@ else
 fi
 
 echo -n "  Check Memory Size .. $memory\t\t\t\t\t\t"
-if [ "$memory" == "1023Mb" ]; then
+if [ "$memory" == "3318Mb" ]; then
   echo "OK"
 else
   echo "False"
