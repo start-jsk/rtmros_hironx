@@ -13,14 +13,14 @@ EOF
 gcc -o /tmp/test-openhrp3 /tmp/test-openhrp3.cpp -I/opt/jsk/include/OpenHRP-3.1 -lstdc++
 openhrp3_version=`/tmp/test-openhrp3`
 
-echo -n "  Check OpenHRP3 version\t($openhrp3_version)\t\t\t\t\t";  ([ "$openhrp3_version" == "3.1.4" ] && echo "OK" ) || echo "False"
+echo -n "  Check OpenHRP3 version\t($openhrp3_version)\t\t\t\t\t";  ([ "$openhrp3_version" == "3.1.5" ] && echo "OK" ) || echo "False"
 
 
 echo "* Check /opt/hiro/lib/libhrpIo.so"
 md5sum=`python -c "import hashlib,os; print hashlib.md5(open('/opt/hiro/lib/libhrpIo.so','rb').read()).hexdigest()"`
 size=`python -c "import hashlib,os; print os.path.getsize('/opt/hiro/lib/libhrpIo.so')"`
-echo -n "\t   size $size\t\t\t\t\t\t\t";   ([ $size == '1897398' ] && echo "OK" ) || echo "False"
-echo -n "\t md5sum $md5sum\t\t\t"; ([ $md5sum == 'abf490aa1675152f87fe98a9535564e2' ] && echo "OK" ) || echo "False"
+echo -n "\t   size $size\t\t\t\t\t\t\t";   ([ $size == '1907174' ] && echo "OK" ) || echo "False"
+echo -n "\t md5sum $md5sum\t\t\t"; ([ $md5sum == 'e2e07b593dbbf6bbe18328af441af645' ] && echo "OK" ) || echo "False"
 
 
 
@@ -65,8 +65,8 @@ fi
 echo "* Check /opt/jsk/lib/hrpEC.so"
 md5sum=`python -c "import hashlib,os; print hashlib.md5(open('/opt/jsk/lib/hrpEC.so','rb').read()).hexdigest()"`
 size=`python -c "import hashlib,os; print os.path.getsize('/opt/jsk/lib/hrpEC.so')"`
-echo -n "\t   size $size\t\t\t\t\t\t\t";   ([ $size == '169903' ] && echo "OK" ) || echo "False"
-echo -n "\t md5sum $md5sum\t\t\t"; ([ $md5sum == 'b7df8914944dd1cb1c7595d4329d6b20' ] && echo "OK" ) || echo "False"
+echo -n "\t   size $size\t\t\t\t\t\t\t";   ([ $size == '169895' ] && echo "OK" ) || echo "False"
+echo -n "\t md5sum $md5sum\t\t\t"; ([ $md5sum == '17eae811e7ae2a920b445cc2b7c284c8' ] && echo "OK" ) || echo "False"
 
 
 
