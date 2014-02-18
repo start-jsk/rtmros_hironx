@@ -1,7 +1,6 @@
 #!/bin/sh
 
 
-exit 0
 python <<EOF
 
 import hashlib
