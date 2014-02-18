@@ -23,7 +23,11 @@ for dir in [['/usr/pkg/bin',    'e846c663623045c0846353f8d1187c0c'],
   dir_md5 = hashlib.md5()
   for root, dirs, files in os.walk(full_dir):
     for file in files:
-      file_md5 = hashlib.md5(open(os.path.join(root,file), 'rb').read()).hexdigest()
+      if os.path.exists(os.path.join(root,file)):
+        file_md5 = hashlib.md5(open(os.path.join(root,file), 'rb').read()).hexdigest()
+      else:
+        file_md5 = 'No such file or directory'
+        print "  ** ",os.path.join(root,file),"\t\t",file_md5
       print >>f, os.path.join(root,file),"\t\t",file_md5
       dir_md5.update(file_md5)
   print "  Check ", full_dir, "   \t(", dir_md5.hexdigest(), ")\t", dir_md5.hexdigest()==dir[1]
