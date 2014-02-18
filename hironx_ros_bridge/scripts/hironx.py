@@ -40,7 +40,10 @@ if __name__ == '__main__':
 # $ ./hironx.py
 #
 # for real robot
-# ../script/hironx.py  --host hiro014
-# ./ipython -i hironx.py --host hiro014
+# ../script/hironx.py -- --host hiro014
+# ./ipython -i hironx.py -- --host hiro014
 # for real robot with custom model file
-# ../script/hironx.py  --host hiro014 --modelfile /opt/jsk/etc/HIRONX/model/main.wrl
+# ../script/hironx.py -- --host hiro014 --modelfile /opt/jsk/etc/HIRONX/model/main.wrl
+#
+# See http://unix.stackexchange.com/questions/11376/what-does-double-dash-mean
+# for the use of double-dash on unix/linux.
