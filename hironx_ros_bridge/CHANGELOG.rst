@@ -2,8 +2,8 @@
 Changelog for package hironx_ros_bridge
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.0.11 (2014-02-19)
+-------------------
 * (hironx_client.py) Documenting a bunch. Removed humanoid specific methods.
 * (hironx.py) fix to `#14 <https://github.com/start-jsk/rtmros_hironx/issues/14>`_
 * add rtcd-check.sh

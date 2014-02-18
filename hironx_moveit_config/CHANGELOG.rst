@@ -2,5 +2,5 @@
 Changelog for package hironx_moveit_config
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.0.11 (2014-02-19)
+-------------------
