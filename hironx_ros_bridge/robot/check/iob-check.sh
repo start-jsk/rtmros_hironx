@@ -65,8 +65,8 @@ fi
 echo "* Check /opt/jsk/lib/hrpEC.so"
 md5sum=`python -c "import hashlib,os; print hashlib.md5(open('/opt/jsk/lib/hrpEC.so','rb').read()).hexdigest()"`
 size=`python -c "import hashlib,os; print os.path.getsize('/opt/jsk/lib/hrpEC.so')"`
-echo -n "\t   size $size\t\t\t\t\t\t\t";   ([ $size == '169895' ] && echo "OK" ) || echo "False"
-echo -n "\t md5sum $md5sum\t\t\t"; ([ $md5sum == '17eae811e7ae2a920b445cc2b7c284c8' ] && echo "OK" ) || echo "False"
+echo -n "\t   size $size\t\t\t\t\t\t\t";   ([ $size == '169935' ] && echo "OK" ) || echo "False"
+echo -n "\t md5sum $md5sum\t\t\t"; ([ $md5sum == 'cc859cf9e12f467e1e0c007054562ed1' ] && echo "OK" ) || echo "False"
 
 
 

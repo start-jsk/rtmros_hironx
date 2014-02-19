@@ -1,6 +1,5 @@
 #!/bin/sh
 
-
 python <<EOF
 
 import hashlib
@@ -10,14 +9,14 @@ from operator import add
 print "* Check /usr/pkg files"
 
 f = open('/tmp/check-usr-pkg-md5.txt', 'w')
-for dir in [['/usr/pkg/bin',    'e846c663623045c0846353f8d1187c0c'],
-            ['/usr/pkg/include','461ea43f9de05ef519c487f5e84bd988'],
-            ['/usr/pkg/lib',    'cc0f135dc109309132292fe2834afbda'],
-            ['/usr/pkg/sbin',   'c85c04e21d100b9a9d40da813ff2ec04'],
-            ['/usr/pkg/etc',    '6fa3a22c96ae700e95c3007f2da3cc11'],
-            ['/usr/pkg/info',   '56e7ec0e27be98c0e51f17cd21b652b8'],
-            ['/usr/pkg/man',    '9b9a2be866fd83d13d826657fba8367f'],
-            ['/usr/pkg/share',  '1aff998cad709c0a8d8f95138b01e5a5']]:
+for dir in [['/usr/pkg/bin',    '91139a9c30f34dffc77c5c2f503490b9'],
+            ['/usr/pkg/include','571b30ce3d36b39462bddc8594e2d1a9'],
+            ['/usr/pkg/lib',    '8df0558a7a5cc363edda1faa0f51ea2c'],
+            ['/usr/pkg/sbin',   'd26912c9261a982f5314062c768db1c6'],
+            ['/usr/pkg/etc',    'e3368de29e1af11f6abfe18e1429a71a'],
+            ['/usr/pkg/info',   '5d4bf3fef0568d72f8d42199e46d6a72'],
+            ['/usr/pkg/man',    'cb127126cfb1cffde510f0d9cc98ef27'],
+            ['/usr/pkg/share',  '81d02f473ac239886f36a2498d73d5be']]:
   full_dir = dir[0]
   dir_md5 = hashlib.md5()
   for root, dirs, files in os.walk(full_dir):
