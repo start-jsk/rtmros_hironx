@@ -9,10 +9,10 @@ from operator import add
 print "* Check /opt/jsk files (OpenHRP3)"
 
 f = open('/tmp/check-opt-jsk-oepnhrp3-md5.txt', 'w')
-for dir in [['/opt/jsk/include/OpenHRP-3.1',    '34ee2a6c7eab15c42a4b2d0b0caa53c7'],
-            ['/opt/jsk/share/OpenHRP-3.1',      '25a0851d9fec96db6f67711726190337']]:
+for dir in [['/opt/jsk/include/OpenHRP-3.1',    0xa20be86660da52f7eec582fbcefecbbdL],
+            ['/opt/jsk/share/OpenHRP-3.1',      0xf4312237b7075c23dcf0000761c7ee1dL]]:
   full_dir = dir[0]
-  dir_md5 = hashlib.md5()
+  dir_md5 = 0
   for root, dirs, files in os.walk(full_dir):
     for file in files:
       if os.path.exists(os.path.join(root,file)):
@@ -21,11 +21,11 @@ for dir in [['/opt/jsk/include/OpenHRP-3.1',    '34ee2a6c7eab15c42a4b2d0b0caa53c
         file_md5 = 'No such file or directory'
         print "  ** ",os.path.join(root,file),"\t\t",file_md5
       print >>f, os.path.join(root,file),"\t\t",file_md5
-      dir_md5.update(file_md5)
-  print "  Check ", full_dir, "   \t(", dir_md5.hexdigest(), ")\t", dir_md5.hexdigest()==dir[1]
+      dir_md5 = dir_md5 ^ int(file_md5, 16)
+  print "  Check ", full_dir, "   \t(", hex(dir_md5), ")\t", dir_md5==dir[1]
 
 root = '/opt/jsk/lib'
-dir_md5 = hashlib.md5()
+dir_md5 = 0
 for file in ['pkgconfig/openhrp3.1.pc','libhrpCorbaStubSkel-3.1.a','libhrpUtil-3.1.so.0.0.0','libhrpUtil-3.1.so.0','libhrpUtil-3.1.so','libhrpCollision-3.1.so.0.0.0','libhrpCollision-3.1.so.0','libhrpCollision-3.1.so','libhrpModel-3.1.so.0.0.0','libhrpModel-3.1.so.0','libhrpModel-3.1.so','SimulationEC.so.0.0.0','SimulationEC.so.0','SimulationEC.so']:
   if os.path.exists(os.path.join(root,file)):
     file_md5 = hashlib.md5(open(os.path.join(root,file), 'rb').read()).hexdigest()
@@ -33,11 +33,11 @@ for file in ['pkgconfig/openhrp3.1.pc','libhrpCorbaStubSkel-3.1.a','libhrpUtil-3
     file_md5 = 'No such file or directory'
     print "  ** ",os.path.join(root,file),"\t\t",file_md5
   print >>f, os.path.join(root,file),"\t\t",file_md5
-  dir_md5.update(file_md5)
-print "  Check ", root, "\t\t\t(", dir_md5.hexdigest(), ")\t", dir_md5.hexdigest()=='bd864d88cef39b9bca6c97f7e5f725f1'
+  dir_md5 = dir_md5 ^ int(file_md5, 16)
+print "  Check ", root, "\t\t\t(", hex(dir_md5), ")\t", dir_md5==0x40c513a2fc2260090a53979b7200474aL
 
 root = '/opt/jsk/bin'
-dir_md5 = hashlib.md5()
+dir_md5 = 0
 for file in ['openhrp-model-loader','export-vrml','openhrp-collision-detector','openhrp-shutdown-servers','openhrp-jython-prompt']:
   if os.path.exists(os.path.join(root,file)):
     file_md5 = hashlib.md5(open(os.path.join(root,file), 'rb').read()).hexdigest()
@@ -45,8 +45,8 @@ for file in ['openhrp-model-loader','export-vrml','openhrp-collision-detector','
     file_md5 = 'No such file or directory'
     print "  ** ",os.path.join(root,file),"\t\t",file_md5
   print >>f, os.path.join(root,file),"\t\t",file_md5
-  dir_md5.update(file_md5)
-print "  Check ", root, "\t\t\t(", dir_md5.hexdigest(), ")\t", dir_md5.hexdigest()=='ead09b2eebe3b6c2da80282367036584'
+  dir_md5 = dir_md5 ^ int(file_md5, 16)
+print "  Check ", root, "\t\t\t(", hex(dir_md5), ")\t", dir_md5==0x8049c8b5a0082c2e7c06ced929c9495cL
 
 
 EOF

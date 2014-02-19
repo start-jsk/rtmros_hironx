@@ -9,16 +9,16 @@ from operator import add
 print "* Check /usr/pkg files"
 
 f = open('/tmp/check-usr-pkg-md5.txt', 'w')
-for dir in [['/usr/pkg/bin',    '91139a9c30f34dffc77c5c2f503490b9'],
-            ['/usr/pkg/include','571b30ce3d36b39462bddc8594e2d1a9'],
-            ['/usr/pkg/lib',    '8df0558a7a5cc363edda1faa0f51ea2c'],
-            ['/usr/pkg/sbin',   'd26912c9261a982f5314062c768db1c6'],
-            ['/usr/pkg/etc',    'e3368de29e1af11f6abfe18e1429a71a'],
-            ['/usr/pkg/info',   '5d4bf3fef0568d72f8d42199e46d6a72'],
-            ['/usr/pkg/man',    'cb127126cfb1cffde510f0d9cc98ef27'],
-            ['/usr/pkg/share',  '81d02f473ac239886f36a2498d73d5be']]:
+for dir in [['/usr/pkg/bin',    0x565e5cfd033686e06904d012e06995d6L],
+            ['/usr/pkg/include',0xcf89f4f17f1c569afc8ec3ad8a5ec10aL],
+            ['/usr/pkg/lib',    0x15a1a23d5acc5d2ebf100e503bd67550L],
+            ['/usr/pkg/sbin',   0x58a3b20eafea4170215f820182f68483L],
+            ['/usr/pkg/etc',    0xbeef94e03b158101a77526be67d3b9ecL],
+            ['/usr/pkg/info',   0x3e0519bf78f3258cc72f3d095e942ed8L],
+            ['/usr/pkg/man',    0xb97c0f124a4170abd7c170fc882b7425L],
+            ['/usr/pkg/share',  0x814de4e7c790d11dc4764139b5fb3625L]]:
   full_dir = dir[0]
-  dir_md5 = hashlib.md5()
+  dir_md5 = 0
   for root, dirs, files in os.walk(full_dir):
     for file in files:
       if os.path.exists(os.path.join(root,file)):
@@ -27,8 +27,8 @@ for dir in [['/usr/pkg/bin',    '91139a9c30f34dffc77c5c2f503490b9'],
         file_md5 = 'No such file or directory'
         print "  ** ",os.path.join(root,file),"\t\t",file_md5
       print >>f, os.path.join(root,file),"\t\t",file_md5
-      dir_md5.update(file_md5)
-  print "  Check ", full_dir, "   \t(", dir_md5.hexdigest(), ")\t", dir_md5.hexdigest()==dir[1]
+      dir_md5 = dir_md5 ^ int(file_md5, 16)
+  print "  Check ", full_dir, "   \t(", hex(dir_md5), ")\t", dir_md5==dir[1]
 f.close
 #  for file in files
 # print [hashlib.md5(open(fname, 'rb').read()).hexdigest() for fname in reduce(add, [[os.path.join(root, file) for file in files] for root, dirs, files in os.walk('$dir')])]"
