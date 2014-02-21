@@ -1,0 +1,10 @@
+/opt/hiro/lib/libhrpIo.so.315.1.7 		e2e07b593dbbf6bbe18328af441af645
+/opt/hiro/bin/10param.csv 		6ec1cded5093f600118615d35a2593e9
+/opt/hiro/bin/11offsets.csv 		756188e1834e1a1802f17a1c080f6400
+/opt/hiro/bin/12gain.csv 		f4adb299dd8139b094d8528054bfbe2e
+/opt/hiro/bin/13limit.csv 		bcc9a4e70cc50d7d6308cb7e99cf8480
+/opt/hiro/bin/StatusPluginParam 		47c606f79de6d47e652f028f2608d774
+/opt/hiro/bin/calibCurrent.csv 		2b4688e429d3111ee9dad5dfda072a23
+/opt/hiro/bin/pci7020bios020X1141fix 		7f5bf967fdf80f9dbb4c447e0da6fc15
+/opt/hiro/bin/shared 		3a2fc4e4036cdd849e4b34ff75116d97
+/opt/hiro/bin/shm_iob_hiro 		ec72f8a1e1ba8f4074e40d2475252345
