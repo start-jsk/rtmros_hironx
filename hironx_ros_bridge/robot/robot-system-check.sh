@@ -41,6 +41,6 @@ userid=${userid:="hiro"}
 echo ";; Copying check script to $userid@$hostname"
 scp -r ./check $userid@$hostname:/tmp
 echo ";; Execute check scripts"
-ssh $userid@$hostname -t $commands
+ssh $userid@$hostname -t $commands 2>&1 | tee robot-system-check-$hostname.log
 scp $userid@$hostname:/tmp/check-*-md5.txt ./check/
 
