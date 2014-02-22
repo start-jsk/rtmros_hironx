@@ -34,7 +34,7 @@ for file in ['pkgconfig/openhrp3.1.pc','libhrpCorbaStubSkel-3.1.a','libhrpUtil-3
     print "  ** ",os.path.join(root,file),"\t\t",file_md5
   print >>f, os.path.join(root,file),"\t\t",file_md5
   dir_md5 = dir_md5 ^ int(file_md5, 16)
-print "  Check ", root, "\t\t\t(", hex(dir_md5), ")\t", dir_md5==0x40c513a2fc2260090a53979b7200474aL
+print "  Check ", root, "\t\t\t(", hex(dir_md5), ")\t", dir_md5==0x101bbeeb3a8e2357942115caca7e7f9aL
 
 root = '/opt/jsk/bin'
 dir_md5 = 0
@@ -46,8 +46,7 @@ for file in ['openhrp-model-loader','export-vrml','openhrp-collision-detector','
     print "  ** ",os.path.join(root,file),"\t\t",file_md5
   print >>f, os.path.join(root,file),"\t\t",file_md5
   dir_md5 = dir_md5 ^ int(file_md5, 16)
-print "  Check ", root, "\t\t\t(", hex(dir_md5), ")\t", dir_md5==0x8049c8b5a0082c2e7c06ced929c9495cL
-
+print "  Check ", root, "\t\t\t(", hex(dir_md5), ")\t", dir_md5==0x2c67d749a0185e7854ce828469be2432L
 
 EOF
 
