@@ -89,7 +89,16 @@ class TestHiroIK(unittest.TestCase):
             self.assertTrue(numpy.linalg.norm(numpy.array(pos1)-numpy.array(pos2))<1.0e-4) # 0.1 mm
             self.assertTrue(numpy.linalg.norm(numpy.array(rot1)-numpy.array(rot2))<1.0e-3) # 0.001 rad = 0.057296 deg
 
-#unittest.main()
+    def _test_set_target_pose(self):
+        self.robot.setJointAnglesOfGroup("TORSO",[45],3)
+        self.robot.waitInterpolationOfGroup("TORSO")
+        ret = self.robot.setTargetPose("larm", [0.3255627368715471, 0.1823638733778268, 0.07462449717662004+0.2], [-3.0732189053889805, -1.5690225912054285, 3.0730289207320203], 5, "CHEST_JOINT0")
+        self.assertTrue(ret)
+
+
+# for debug
+# $ python -m unittest test_hironx_ik.TestHiroIK.test_set_target_pose
+#
 if __name__ == '__main__':
     import rostest
     rostest.rosrun(PKG, 'test_hronx_ik', TestHiroIK) 
