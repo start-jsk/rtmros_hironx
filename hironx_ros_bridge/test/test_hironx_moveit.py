@@ -36,53 +36,71 @@
 # This test script needs improved so that it becomes call-able from ROS test
 # structure.
 
+import time
+import unittest
+
 from geometry_msgs.msg import Pose, PoseStamped
 from moveit_commander import MoveGroupCommander, conversions
 import rospy
 
-rospy.init_node("test_hironx_moveit")
+_PKG = 'hironx_ros_bridge'
+_SEC_WAIT_BETWEEN_TESTCASES = 3
 
-rarm = MoveGroupCommander("right_arm")
-larm = MoveGroupCommander("left_arm")
+class TestHironxMoveit(unittest.TestCase):
 
-rarm_current_pose = rarm.get_current_pose().pose
-larm_current_pose = larm.get_current_pose().pose
+    @classmethod
+    def setUpClass(self):
 
+        rospy.init_node("test_hironx_moveit")
 
-def _set_target_random(self):
-    '''
-    @type self: moveit_commander.MoveGroupCommander
-    @param self: In this particular test script, the argument "self" is either
-                 'rarm' or 'larm'.
-    '''
-    global current, current2, target
-    current = self.get_current_pose()
-    print "*current*", current
-    target = self.get_random_pose()
-    print "*target*", target
-    self.set_pose_target(target)
-    self.go()
-    current2 = self.get_current_pose()
-    print "*current2*", current2
+        self.rarm = MoveGroupCommander("right_arm")
+        self.larm = MoveGroupCommander("left_arm")
 
-# Associate a method to MoveGroupCommander class. This enables users to use
-# the method on interpreter.
-# Although not sure if this is the smartest Python code, this works fine from
-# Python interpreter.
-MoveGroupCommander._set_target_random = _set_target_random
+        self.rarm_current_pose = self.rarm.get_current_pose().pose
+        self.larm_current_pose = self.larm.get_current_pose().pose
 
-# ****** Usage ******
-#
-# See wiki tutorial
-#  https://code.google.com/p/rtm-ros-robotics/wiki/hironx_ros_bridge_en#Manipulate_Hiro_with_Moveit_via_Python
-#
+    def _set_target_random(self):
+        '''
+        @type self: moveit_commander.MoveGroupCommander
+        @param self: In this particular test script, the argument "self" is either
+                     'rarm' or 'larm'.
+        '''
+        global current, current2, target
+        current = self.get_current_pose()
+        print "*current*", current
+        target = self.get_random_pose()
+        print "*target*", target
+        self.set_pose_target(target)
+        self.go()
+        current2 = self.get_current_pose()
+        print "*current2*", current2
 
-# #rpy ver
-# target=[0.2035, -0.5399, 0.0709, 0,-1.6,0]
-# rarm.set_pose_target(target)
-# rarm.go()
-#
-# #Quaternion ver
-# target2=[0.2035, -0.5399, 0.0709, 0.000427, 0.000317, -0.000384, 0.999999]
-# rarm.set_pose_target(target2)
-# rarm.go()
+    # Associate a method to MoveGroupCommander class. This enables users to use
+    # the method on interpreter.
+    # Although not sure if this is the smartest Python code, this works fine from
+    # Python interpreter.
+    ##MoveGroupCommander._set_target_random = _set_target_random
+    
+    # ****** Usage ******
+    #
+    # See wiki tutorial
+    #  https://code.google.com/p/rtm-ros-robotics/wiki/hironx_ros_bridge_en#Manipulate_Hiro_with_Moveit_via_Python
+    #
+
+    def test_set_pose_target_rpy(self):    
+        # #rpy ver
+        target=[0.2035, -0.5399, 0.0709, 0,-1.6,0]
+        self.rarm.set_pose_target(target)
+        self.rarm.go()
+        time.sleep(_SEC_WAIT_BETWEEN_TESTCASES)
+    
+    def test_set_pose_target_quarternion(self):    
+        # #Quaternion ver
+        target2=[0.2035, -0.5399, 0.0709, 0.000427, 0.000317, -0.000384, 0.999999]
+        self.rarm.set_pose_target(target2)
+        self.rarm.go()
+        time.sleep(_SEC_WAIT_BETWEEN_TESTCASES)
+
+if __name__ == '__main__':
+    import rostest
+    rostest.rosrun(_PKG, 'test_hironx_moveit_run', TestHironxMoveit)
