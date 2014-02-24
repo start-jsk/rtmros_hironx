@@ -11,6 +11,7 @@ except:
     import hironx_ros_bridge
 
 from hironx_ros_bridge import hironx_client as hironx
+from hrpsys import rtm
 from hrpsys.hrpsys_config import euler_from_matrix
 
 import numpy
@@ -27,8 +28,12 @@ class TestHiroIK(unittest.TestCase):
 
     @classmethod
     def setUpClass(self):
+        modelfile = '/opt/jsk/etc/HIRONX/model/main.wrl'
+        rtm.nshost = 'hiro014'
+        robotname = "RobotHardware0"
+
         self.robot = hironx.HIRONX()
-        self.robot.init()
+        self.robot.init(robotname=robotname, url=modelfile)
 
     def angle_vector_generator(self):
         step = 80
