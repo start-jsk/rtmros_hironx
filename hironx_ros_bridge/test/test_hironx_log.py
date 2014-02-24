@@ -54,8 +54,8 @@ class TestHiro(unittest.TestCase):
             self.robot.setJointAnglesOfGroup( "larm" , av_l,  5)
             self.robot.waitInterpolationOfGroup("larm")
             self.robot.goInitial(tm=5)
-        self.robot.saveLog("/tmp/test-hironx-log")
-        self.robot.servoOff()
+        self.robot.saveLog("/tmp/test_hironx_log")
+        self.robot.goOffPose()
         
 
 #unittest.main()
@@ -64,13 +64,13 @@ if __name__ == '__main__':
     rostest.rosrun(PKG, 'test_hronx_log', TestHiro) 
     print("===================================================")
     print("# Please consult test result with following process")
-    print("sh /tmp/check-test-hironx-log.sh")
-    command = "scp hiro@hiro014:/tmp/test-hironx-log.* /tmp/;"
+    print("sh /tmp/check-test_hironx_log.sh")
+    command = "scp hiro@hiro014:/tmp/test_hironx_log.* /tmp/;"
     command += "gnuplot -e 'set style line 1 pointsize 1; plot "
     for i in [5,6,7,8,9,10, 11,12,13,14,15,16]:
-        command += '"/tmp/test-hironx-log.RobotHardware0_q" using 1:%d with point pointtype %d, '%(i, i-4)
-        command += '"/tmp/test-hironx-log.sh_qOut" using 1:%d with linespoints pointtype %d, '%(i, i-4)
+        command += '"/tmp/test_hironx_log.RobotHardware0_q" using 1:%d with point pointtype %d, '%(i, i-4)
+        command += '"/tmp/test_hironx_log.sh_qOut" using 1:%d with linespoints pointtype %d, '%(i, i-4)
     command += "0; pause -1'"
-    with open("/tmp/check-test-hironx-log.sh", "w") as f:
+    with open("/tmp/check-test_hironx_log.sh", "w") as f:
         f.write(command)
 
