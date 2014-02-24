@@ -30,7 +30,7 @@ class TestHiro(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         modelfile = '/opt/jsk/etc/HIRONX/model/main.wrl'
-        rtm.nshost = 'hiro024'
+        rtm.nshost = 'hiro014'
         robotname = "RobotHardware0"
 
         cls.robot = hironx.HIRONX()
@@ -55,7 +55,7 @@ class TestHiro(unittest.TestCase):
             self.robot.waitInterpolationOfGroup("larm")
             self.robot.goInitial(tm=5)
         self.robot.saveLog("/tmp/test_hironx_log")
-        self.robot.servoOff()
+        self.robot.goOffPose()
         
 
 #unittest.main()
