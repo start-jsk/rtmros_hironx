@@ -1,11 +1,8 @@
 cmake_minimum_required(VERSION 2.8.3)
 project(hironx_ros_bridge)
 
-find_package(catkin REQUIRED COMPONENTS hrpsys_ros_bridge)
-
 catkin_package(
     DEPENDS # TODO
-    CATKIN-DEPENDS hrpsys_ros_bridge #
     INCLUDE_DIRS # TODO include
     LIBRARIES # TODO
 )
