@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 2.8.3)
 project(hironx_ros_bridge)
 
-find_package(catkin REQUIRED COMPONENTS hrpsys_ros_bridge)
+find_package(catkin REQUIRED COMPONENTS openhrp3 hrpsys_ros_bridge)
 
 catkin_package(
     DEPENDS # TODO
@@ -24,9 +24,11 @@ add_custom_command(OUTPUT ${PROJECT_SOURCE_DIR}/models/kawada-hironx.dae
 #compile_collada_model(${PROJECT_SOURCE_DIR}/models/kawada-hironx.dae)
 
 # set ROBOT_NAME and OPENHRP3 for configure_file
-find_package(PkgConfig)
-pkg_check_modules(openhrp3 openhrp3.1 REQUIRED)
-set(OPENHRP3 ${openhrp3_PREFIX}/share/openhrp3)  # for longfloor.wrl
+if(EXISTS ${openhrp3_SOURCE_PREFIX}) # for longfloor.wrl
+  set(OPENHRP3 ${openhrp3_SOURCE_PREFIX}) # devel
+else()
+  set(OPENHRP3 ${openhrp3_PREFIX}/share/openhrp3)  # install
+endif()
 set(ROBOT_NAME kawada-hironx)
 
 configure_file(conf/RobotHardware.conf.in       ${PROJECT_SOURCE_DIR}/conf/${ROBOT_NAME}.RobotHardware.conf)
