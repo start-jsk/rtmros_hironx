@@ -2,8 +2,8 @@
 Changelog for package hironx_ros_bridge
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.0.12 (2014-02-26)
+-------------------
 * Adding and improving unit test files.
 * Adding travis conf files.
 * Adding more checker programs for robot's internal os.
