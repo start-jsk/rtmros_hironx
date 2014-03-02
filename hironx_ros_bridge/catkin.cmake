@@ -5,7 +5,7 @@ find_package(catkin REQUIRED COMPONENTS hrpsys_ros_bridge)
 
 catkin_package(
     DEPENDS # TODO
-    CATKIN-DEPENDS hrpsys_ros_bridge #
+    CATKIN_DEPENDS hrpsys_ros_bridge #
     INCLUDE_DIRS # TODO include
     LIBRARIES # TODO
 )
