@@ -24,11 +24,21 @@ add_custom_command(OUTPUT ${PROJECT_SOURCE_DIR}/models/kawada-hironx.dae
 #compile_collada_model(${PROJECT_SOURCE_DIR}/models/kawada-hironx.dae)
 
 # set ROBOT_NAME and OPENHRP3 for configure_file
-find_package(PkgConfig)
-pkg_check_modules(openhrp3 openhrp3.1 REQUIRED)
-set(OPENHRP3 ${openhrp3_PREFIX}/share/openhrp3)  # for longfloor.wrl
+set(PKG_CONFIG_PATH "${openhrp3_PREFIX}/lib/pkgconfig:$ENV{PKG_CONFIG_PATH}") # for openrtm3.1.pc
+execute_process(
+  COMMAND pkg-config --variable=idl_dir openhrp3.1
+  OUTPUT_VARIABLE OPENHRP_IDL_DIR
+  RESULT_VARIABLE RESULT
+  OUTPUT_STRIP_TRAILING_WHITESPACE)
+if(NOT RESULT EQUAL 0)
+  set(OPENHRP_FOUND FALSE)
+endif()
+# OPENHRP_IDL_DIR = <openhrp3>/share/OpenHRP-3.1/idl/
+string(OPENHRP_SAMPLE_DIR ${OPENHRP_IDL_DIR}/../../../)
+set(OPENHRP3 ${OPENHRP_SAMPLE_DIR})  # for longfloor.wrl
 set(ROBOT_NAME kawada-hironx)
 
+message("Configure ${ROBOT_NAME} related file with OPENHRP3=${OPENHRP3}")
 configure_file(conf/RobotHardware.conf.in       ${PROJECT_SOURCE_DIR}/conf/${ROBOT_NAME}.RobotHardware.conf)
 configure_file(conf/nosim.RobotHardware.conf.in ${PROJECT_SOURCE_DIR}/conf/${ROBOT_NAME}_nosim.RobotHardware.conf)
 configure_file(conf/xml.in                      ${PROJECT_SOURCE_DIR}/conf/${ROBOT_NAME}.xml)
