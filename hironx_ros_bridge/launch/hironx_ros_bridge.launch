@@ -8,6 +8,7 @@
   <arg name="MODEL_FILE" default="/opt/jsk/etc/HIRONX/model/main.wrl" />
   <arg name="COLLADA_FILE" default="$(find hironx_ros_bridge)/models/kawada-hironx.dae" />
   <arg name="SIMULATOR_NAME" default="RobotHardware0" />
+  <arg name="corbaport" default="15005" />
 
   <include file="$(find hrpsys_ros_bridge)/launch/hrpsys_ros_bridge.launch">
     <arg name="SIMULATOR_NAME" value="$(arg SIMULATOR_NAME)" />
@@ -19,6 +20,8 @@
     <arg name="USE_COLLISIONCHECK" value="false" />
     <arg name="USE_IMPEDANCECONTROLLER" value="false" />
     <arg name="USE_SOFTERRORLIMIT" value="false" />
+
+    <arg name="corbaport" default="$(arg corbaport)" />
   </include>
 <!--
   <node name="hironx_rviz" pkg="rviz" type="rviz" respawn="true"
