@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 2.8.3)
 project(hironx_ros_bridge)
 
-find_package(catkin REQUIRED COMPONENTS hrpsys_ros_bridge)
+find_package(catkin REQUIRED COMPONENTS hrpsys_ros_bridge rostest)
 
 catkin_package(
     DEPENDS # TODO
@@ -54,3 +54,6 @@ install(CODE "
   endforeach()
   ")
 
+
+add_rostest(test/test-hironx.launch)
+add_rostest(test/test-hironx-ros-bridge.launch)
