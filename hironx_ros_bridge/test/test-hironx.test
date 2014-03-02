@@ -7,8 +7,8 @@
     <arg name="corbaport" default="2809" />
   </include>
 
-  <test type="test-hironx.py" pkg="hironx_ros_bridge" test-name="test_hironx" time-limit="1000"
+  <test type="test_hironx.py" pkg="hironx_ros_bridge" test-name="test_hironx" time-limit="1000"
         args="-ORBInitRef NameService=corbaloc:iiop:localhost:2809/NameService" />
-  <test type="test-hironx-ik.py" pkg="hironx_ros_bridge" test-name="test_hironx_ik" time-limit="3000" 
+  <test type="test_hironx-ik.py" pkg="hironx_ros_bridge" test-name="test_hironx_ik" time-limit="3000" 
         args="-ORBInitRef NameService=corbaloc:iiop:localhost:2809/NameService" />
 </launch>

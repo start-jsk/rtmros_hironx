@@ -34,7 +34,7 @@ if(NOT RESULT EQUAL 0)
   set(OPENHRP_FOUND FALSE)
 endif()
 # OPENHRP_IDL_DIR = <openhrp3>/share/OpenHRP-3.1/idl/
-string(OPENHRP_SAMPLE_DIR ${OPENHRP_IDL_DIR}/../../../)
+set(OPENHRP_SAMPLE_DIR ${OPENHRP_IDL_DIR}/../../../)
 set(OPENHRP3 ${OPENHRP_SAMPLE_DIR})  # for longfloor.wrl
 set(ROBOT_NAME kawada-hironx)
 
