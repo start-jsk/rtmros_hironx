@@ -66,4 +66,4 @@ install(CODE "
 
 
 add_rostest(test/test-hironx.test)
-add_rostest(test/test-hironx-ros-bridge.launch)
+#add_rostest(test/test-hironx-ros-bridge.launch)
