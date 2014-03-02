@@ -9,9 +9,9 @@ from operator import add
 print "* Check /usr/pkg files"
 
 f = open('/tmp/check-usr-pkg-md5.txt', 'w')
-for dir in [['/usr/pkg/bin',    0x565e5cfd033686e06904d012e06995d6L],
+for dir in [['/usr/pkg/bin',    0x3d8eff565b05b7532b3107b20589cbe6L],
             ['/usr/pkg/include',0xcf89f4f17f1c569afc8ec3ad8a5ec10aL],
-            ['/usr/pkg/lib',    0x15a1a23d5acc5d2ebf100e503bd67550L],
+            ['/usr/pkg/lib',    0x5facb204c74dce823ebe7fef06d80cffL],
             ['/usr/pkg/sbin',   0x58a3b20eafea4170215f820182f68483L],
             ['/usr/pkg/etc',    0xbeef94e03b158101a77526be67d3b9ecL],
             ['/usr/pkg/info',   0x3e0519bf78f3258cc72f3d095e942ed8L],
