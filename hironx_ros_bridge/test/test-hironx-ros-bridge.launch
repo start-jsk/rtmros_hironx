@@ -2,6 +2,7 @@
   <arg name="GUI" default="false" />
   <include file="$(find hironx_ros_bridge)/launch/hironx_ros_bridge_simulation.launch" >
     <arg name="GUI" default="$(arg GUI)" />
+    <arg name="corbaport" default="2809" />
   </include>
 
   <param name="joint_states_test/topic" value="/joint_states" />

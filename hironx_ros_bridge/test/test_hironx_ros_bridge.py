@@ -26,8 +26,6 @@ from pr2_controllers_msgs.msg import JointTrajectoryAction
 from trajectory_msgs.msg import JointTrajectoryPoint
 from hrpsys_ros_bridge.srv import *
 
-from hironx_ros_bridge import hironx_client
-
 import time
 import tempfile
 
@@ -50,9 +48,6 @@ class TestHiroROSBridge(unittest.TestCase):
     def setUpClass(self):
 
         self.listener = tf.TransformListener()
-
-        hiro = hironx_client.HIRONX()
-        hiro.init()
 
         self.larm = actionlib.SimpleActionClient("/larm_controller/joint_trajectory_action", JointTrajectoryAction)
         self.rarm = actionlib.SimpleActionClient("/rarm_controller/joint_trajectory_action", JointTrajectoryAction)
