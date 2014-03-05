@@ -2,6 +2,12 @@
 Changelog for package hironx_moveit_config
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Applying an important change suggest by moveit developers (same as https://github.com/tork-a/rtmros_nextage/issues/46).
+* (hironx_moveit_config) Add run_depend on moveit_planners to avoid the error happens on RViz Moveit plugin without.
+* Contributors: Isaac Isao Saito
+
 1.0.12 (2014-02-26)
 -------------------
 * (moveit_rviz.launch) Enable to respawn rviz
