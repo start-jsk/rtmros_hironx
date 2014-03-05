@@ -2,8 +2,8 @@
 Changelog for package hironx_ros_bridge
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.0.13 (2014-03-06)
+-------------------
 * Add comment to clarify necessary build_depend.
 * quick hack for missing python-tk on hrpsys/waitInput.py
 * disable test-hironx-ros-bridge for now
