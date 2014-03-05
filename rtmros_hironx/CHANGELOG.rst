@@ -2,6 +2,16 @@
 Changelog for package rtmros_hironx
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Applying an important change suggest by moveit developers (same as https://github.com/tork-a/rtmros_nextage/issues/46).
+* (hironx_moveit_config) Add run_depend on moveit_planners to avoid the error happens on RViz Moveit plugin without.
+* Add comment to clarify necessary build_depend.
+* Enable rostest
+* disable test-hironx-ros-bridge for now
+* Comform to python file naming scheme so that test files run from travis
+* Contributors: Kei Okada, Isaac Isao Saito
+
 1.0.12 (2014-02-26)
 -------------------
 * Adding and improving unit test files.

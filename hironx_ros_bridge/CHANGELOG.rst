@@ -2,6 +2,17 @@
 Changelog for package hironx_ros_bridge
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Add comment to clarify necessary build_depend.
+* quick hack for missing python-tk on hrpsys/waitInput.py
+* disable test-hironx-ros-bridge for now
+* Comform to python file naming scheme so that test files run from travis
+* use pkg-config --variable=idl_dir openhrp3.1 to specify openhrp3 directory
+* support corbaport arguments
+* Enable rostest
+* Contributors: Isaac Isao Saito, Kei Okada
+
 1.0.12 (2014-02-26)
 -------------------
 * Adding and improving unit test files.
