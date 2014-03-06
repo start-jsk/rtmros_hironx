@@ -839,7 +839,7 @@ class HIRONX(HrpsysConfigurator):
         return HrpsysConfigurator.setJointAnglesOfGroup(self, gname, pose, tm,
                                                         wait)
 
-    def setTargetPose(self, gname, pos, rpy, tm):
+    def setTargetPose(self, gname, pos, rpy, tm, ref_frame_name=None):
         '''
         @see: HrpsysConfigurator.setTargetPose
 
@@ -850,8 +850,11 @@ class HIRONX(HrpsysConfigurator):
         @type pos: float
         @type rpy: TODO: ??
         @rtype: bool
+        @type ref_frame_name: str
+        @param ref_frame_name: Name of the frame that this particular command
+                               reference to.
         '''
-        return HrpsysConfigurator.setTargetPose(self, gname, pos, rpy, tm)
+        return HrpsysConfigurator.setTargetPose(self, gname, pos, rpy, tm, ref_frame_name)
 
     def setTargetPoseRelative(self, gname, eename, dx=0, dy=0, dz=0,
                               dr=0, dp=0, dw=0, tm=10, wait=True):
