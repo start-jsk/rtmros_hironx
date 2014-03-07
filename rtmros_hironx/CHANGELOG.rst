@@ -2,6 +2,11 @@
 Changelog for package rtmros_hironx
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Fix https://github.com/start-jsk/rtmros_hironx/issues/45 Add versioned build_dependency.
+* Contributors: Isaac Isao Saito
+
 1.0.13 (2014-03-06)
 -------------------
 * Applying an important change suggest by moveit developers (same as https://github.com/tork-a/rtmros_nextage/issues/46).

@@ -2,6 +2,11 @@
 Changelog for package hironx_ros_bridge
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Fix https://github.com/start-jsk/rtmros_hironx/issues/45 Add versioned build_dependency.
+* Contributors: Isaac Isao Saito
+
 1.0.13 (2014-03-06)
 -------------------
 * Add comment to clarify necessary build_depend.
