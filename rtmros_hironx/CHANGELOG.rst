@@ -2,8 +2,8 @@
 Changelog for package rtmros_hironx
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.0.14 (2014-03-07)
+-------------------
 * Fix https://github.com/start-jsk/rtmros_hironx/issues/45 Add versioned build_dependency.
 * Contributors: Isaac Isao Saito
 
