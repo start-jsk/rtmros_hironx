@@ -173,16 +173,27 @@ class HIRONX(HrpsysConfigurator):
     def HandOpen(self, hand=None, effort=None):
         '''
         Set the stretch between two fingers of the specified hand as
-        hardcoded value (100mm).
+        hardcoded value (100mm), by internally calling self.setHandWidth.
 
         @type hand: str
+        @param hand: Name of the hand joint group. In the default 
+                     setting of HIRONX, hand joint groups are defined
+                     in member 'HandGroups' where 'lhand' and 'rhand'
+                     are added.
         @type effort: int
         '''
         self.setHandWidth(hand, 100, effort=effort)
 
     def HandClose(self, hand=None, effort=None):
         '''
+        Close 2-finger hand, by internally calling self.setHandWidth 
+        setting 0 width.
+
         @type hand: str
+        @param hand: Name of the hand joint group. In the default 
+                     setting of HIRONX, hand joint groups are defined
+                     in member 'HandGroups' where 'lhand' and 'rhand'
+                     are added.
         @type effort: int
         '''
         self.setHandWidth(hand, 0, effort=effort)
@@ -190,7 +201,10 @@ class HIRONX(HrpsysConfigurator):
     def setHandJointAngles(self, hand, angles, tm=1):
         '''
         @type hand: str
-        @param hand: which hand. (TODO: List the possible values)
+        @param hand: Name of the hand joint group. In the default 
+                     setting of HIRONX, hand joint groups are defined
+                     in member 'HandGroups' where 'lhand' and 'rhand'
+                     are added.
         @type angles: OpenHRP::ServoControllerService::dSequence.
         @param angles: List of (TODO: document). Elements are in degree.
         @param tm: Time to complete the task.
@@ -209,6 +223,10 @@ class HIRONX(HrpsysConfigurator):
     def setHandWidth(self, hand, width, tm=1, effort=None):
         '''
         @type hand: str
+        @param hand: Name of the hand joint group. In the default 
+                     setting of HIRONX, hand joint groups are defined
+                     in member 'HandGroups' where 'lhand' and 'rhand'
+                     are added.
         @param width: Max=100.
         @param tm: Time to complete the move.
         @type effort: int
