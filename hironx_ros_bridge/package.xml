@@ -20,9 +20,13 @@
   <build_depend>unzip</build_depend>
   <build_depend>mk</build_depend>
   <build_depend>rosbuild</build_depend>
+  <build_depend>roslang</build_depend>
+  <build_depend>rosbash</build_depend>
 
   <run_depend version_gte="315.1.8">hrpsys</run_depend> <!-- See https://github.com/tork-a/rtmros_nextage/issues/51 -->
   <run_depend>hrpsys_ros_bridge</run_depend>
+  <run_depend>roslang</run_depend>
+  <run_depend>rosbash</run_depend>
 
   <!-- <test_depend>hrpsys_ros_bridge</test_depend> -->
 
