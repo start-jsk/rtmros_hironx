@@ -17,16 +17,16 @@
 
   <build_depend version_gte="315.1.8">hrpsys</build_depend> <!-- See https://github.com/tork-a/rtmros_nextage/issues/51. Even though hrpsys is transitively depended via hrpsys_ros_bridge, still define it here explicitly to clarify, especially the version dependency. -->
   <build_depend>hrpsys_ros_bridge</build_depend> <!-- Needed to transitively depend on openhrp3. See https://github.com/start-jsk/rtmros_hironx/pull/30#commitcomment-5535604 -->
-  <build_depend>unzip</build_depend>
   <build_depend>mk</build_depend>
+  <build_depend>rosbash</build_depend>
   <build_depend>rosbuild</build_depend>
   <build_depend>roslang</build_depend>
-  <build_depend>rosbash</build_depend>
+  <build_depend>unzip</build_depend>
 
   <run_depend version_gte="315.1.8">hrpsys</run_depend> <!-- See https://github.com/tork-a/rtmros_nextage/issues/51 -->
   <run_depend>hrpsys_ros_bridge</run_depend>
-  <run_depend>roslang</run_depend>
   <run_depend>rosbash</run_depend>
+  <run_depend>roslang</run_depend>
 
   <!-- <test_depend>hrpsys_ros_bridge</test_depend> -->
 
