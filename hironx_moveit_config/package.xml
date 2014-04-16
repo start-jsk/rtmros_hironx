@@ -19,6 +19,7 @@
 
   <buildtool_depend>catkin</buildtool_depend>
   
+  <build_depend>collada_urdf</build_depend>
   <build_depend>hironx_ros_bridge</build_depend>
   <build_depend>moveit_ros_move_group</build_depend>
 
