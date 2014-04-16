@@ -13,7 +13,10 @@
 
   <rosdep name="hrpsys_ros_bridge"/>
   <rosdep name="unzip"/>
+  <rosdep name="mk"/>
+  <rosdep name="rosbuild"/>
+  <rosdep name="roslang"/>
+  <rosdep name="rosbash"/>
 
 </package>
-
 
