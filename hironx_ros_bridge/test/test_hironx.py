@@ -30,11 +30,12 @@ class TestHiro(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         modelfile = '/opt/jsk/etc/HIRONX/model/main.wrl'
-        rtm.nshost = 'hiro024'
-        robotname = "RobotHardware0"
+        #rtm.nshost = 'hiro024'
+        #robotname = "RobotHardware0"
 
         cls.robot = hironx.HIRONX()
-        cls.robot.init(robotname=robotname, url=modelfile)
+        #cls.robot.init(robotname=robotname, url=modelfile)
+        cls.robot.init()
 
     @classmethod
     def tearDownClass(cls):
