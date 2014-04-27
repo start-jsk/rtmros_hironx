@@ -28,12 +28,13 @@ class TestHiroIK(unittest.TestCase):
 
     @classmethod
     def setUpClass(self):
-        modelfile = '/opt/jsk/etc/HIRONX/model/main.wrl'
-        rtm.nshost = 'hiro014'
-        robotname = "RobotHardware0"
+        #modelfile = '/opt/jsk/etc/HIRONX/model/main.wrl'
+        #rtm.nshost = 'hiro014'
+        #robotname = "RobotHardware0"
 
         self.robot = hironx.HIRONX()
-        self.robot.init(robotname=robotname, url=modelfile)
+        #self.robot.init(robotname=robotname, url=modelfile)
+        self.robot.init()
 
     def angle_vector_generator(self):
         step = 80
