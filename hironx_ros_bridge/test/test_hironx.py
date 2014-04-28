@@ -115,11 +115,11 @@ class TestHiro(unittest.TestCase):
         self.filenames.append(name)
         return data
 
-    def check_log_data(self, data, idx, tm_data, min_data, max_data, acc_thre=0.06): # expected, time, min, max of index
+    def check_log_data(self, data, idx, tm_data, min_data, max_data, acc_thre=0.06, tm_thre=0.1): # expected, time, min, max of index
         _tm_data = len(data)/200.0
         _min_data = min([d[idx] for d in data])
         _max_data = max([d[idx] for d in data])
-        _tm_thre = 0.1
+        _tm_thre = tm_thre
         # min_data = [min_data, min_thre]
         if isinstance(min_data, (int, float)):
             min_data = [min_data, 5]
@@ -540,7 +540,7 @@ class TestHiro(unittest.TestCase):
         # assertion
         data = self.load_log_data(q_filename)
         print "check setJointAnglesOfGroup(minus)"
-        self.check_log_data(data, 6, 7.19, -140, -120.0, acc_thre = 1.5)
+        self.check_log_data(data, 6, 7.19, -140, -120.0, acc_thre = 1.5, tm_thre = 0.3)
 
         self.robot.el_svc.setServoErrorLimit("all", 0.18) # default is 0.18
 

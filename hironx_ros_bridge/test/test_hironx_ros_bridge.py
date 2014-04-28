@@ -281,7 +281,7 @@ class TestHiroROSBridge(unittest.TestCase):
         min_data = min([d[1] for d in data])
         max_data = max([d[1] for d in data])
         print "check setJointAnglesOfGroup(wait=True),  tm = ", data_time, ", ok?", abs(data_time - 15.0) < 0.1
-        self.assertTrue(abs(data_time - 15.0) < 0.1)
+        self.assertTrue(abs(data_time - 15.0) < 1.0)
         print "                                        min = ", min_data, ", ok?", abs(min_data - -140) < 5
         self.assertTrue(abs(min_data - -140) < 5)
         print "                                        max = ", max_data, ", ok?", abs(max_data - -100) < 5
