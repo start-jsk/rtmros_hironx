@@ -195,7 +195,10 @@ class TestHiro(unittest.TestCase):
                     cmd += ","
             cmd += "\""
             os.system(cmd)
-        os.system('pdfunite '+' '.join(_pdf_names) + ' ' + pdf_name)
+        cmd_str = 'pdfunite '+' '.join(_pdf_names) + ' ' + pdf_name
+        cmd_str = cmd_str.replace('(', '\(')
+        cmd_str = cmd_str.replace(')', '\)')
+        os.system(cmd_str)
         return
 
     def check_acceleration(self, name):
