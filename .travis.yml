@@ -62,7 +62,7 @@ before_script: # Use this to prepare your build for testing e.g. copy database c
   #### HOTFIX
   ####
   - sudo apt-get install -qq -y ros-$ROS_DISTRO-pr2-controllers ros-$ROS_DISTRO-pr2-common
-  - sudo touch /opt/ros/$ROS_DISTRO/lib/python2.7/dist-packages/hrpsys_ros_bridge/__init__.py
+  - if [ $USE_DEB == true ]; then sudo touch /opt/ros/$ROS_DISTRO/lib/python2.7/dist-packages/hrpsys_ros_bridge/__init__.py; fi
   ####
   - source /opt/ros/$ROS_DISTRO/setup.bash
   - if [ $BUILDER == rosbuild ]; then source src/setup.bash        ; fi
