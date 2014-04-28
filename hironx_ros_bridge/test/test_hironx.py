@@ -540,7 +540,7 @@ class TestHiro(unittest.TestCase):
         # assertion
         data = self.load_log_data(q_filename)
         print "check setJointAnglesOfGroup(minus)"
-        self.check_log_data(data, 6, 7.19, -140, -120.0, acc_thre = 1.0)
+        self.check_log_data(data, 6, 7.19, -140, -120.0, acc_thre = 1.5)
 
         self.robot.el_svc.setServoErrorLimit("all", 0.18) # default is 0.18
 
