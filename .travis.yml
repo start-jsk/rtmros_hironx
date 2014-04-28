@@ -41,6 +41,11 @@ before_install: # Use this to prepare the system to install prerequisites or dep
   - sudo rosdep init
   - rosdep update; while [ $? != 0 ]; do sleep 1; rosdep update; done
 install: # Use this to install any prerequisites or dependencies necessary to run your build
+  ####
+  #### HOTFIX
+  ####
+  - sudo apt-get install -qq -y ros-$ROS_DISTRO-pr2-controllers ros-$ROS_DISTRO-pr2-common
+  ####
   # Create workspace
   - mkdir -p ~/ros/ws_$REPOSITORY_NAME/src
   - cd ~/ros/ws_$REPOSITORY_NAME/src
