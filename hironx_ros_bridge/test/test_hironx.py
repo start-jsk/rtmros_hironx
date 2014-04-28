@@ -298,7 +298,7 @@ class TestHiro(unittest.TestCase):
             data = self.load_log_data(q_filename)
 
             print "check setJointAngles(Clear)"
-            self.check_log_data(data, 6, 5, [-140+(i+1)*40/len(clear_time),20], -100.0)
+            self.check_log_data(data, 6, 5, [-140+(i+1)*40/len(clear_time),20], -100.0, acc_thre=0.2)
 
     def test_fullbody_setJointAngles_minus(self):
         self.fullbody_init()
