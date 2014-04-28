@@ -30,11 +30,12 @@ class TestHiro(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         modelfile = '/opt/jsk/etc/HIRONX/model/main.wrl'
-        rtm.nshost = 'hiro024'
-        robotname = "RobotHardware0"
+        #rtm.nshost = 'hiro024'
+        #robotname = "RobotHardware0"
 
         cls.robot = hironx.HIRONX()
-        cls.robot.init(robotname=robotname, url=modelfile)
+        #cls.robot.init(robotname=robotname, url=modelfile)
+        cls.robot.init()
 
     @classmethod
     def tearDownClass(cls):
@@ -194,7 +195,10 @@ class TestHiro(unittest.TestCase):
                     cmd += ","
             cmd += "\""
             os.system(cmd)
-        os.system('pdfunite '+' '.join(_pdf_names) + ' ' + pdf_name)
+        cmd_str = 'pdfunite '+' '.join(_pdf_names) + ' ' + pdf_name
+        cmd_str = cmd_str.replace('(', '\(')
+        cmd_str = cmd_str.replace(')', '\)')
+        os.system(cmd_str)
         return
 
     def check_acceleration(self, name):
