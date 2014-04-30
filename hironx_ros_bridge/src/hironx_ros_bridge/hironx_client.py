@@ -874,7 +874,7 @@ class HIRONX(HrpsysConfigurator):
         '''
         return HrpsysConfigurator.setTargetPose(self, gname, pos, rpy, tm, ref_frame_name)
 
-    def setTargetPoseRelative(self, gname, eename, dx=0, dy=0, dz=0,
+    def setTargetPoseRelative(self, gname, target_frame, dx=0, dy=0, dz=0,
                               dr=0, dp=0, dw=0, tm=10, wait=True):
         '''
         @see: HrpsysConfigurator.setTargetPoseRelative
@@ -889,12 +889,12 @@ class HIRONX(HrpsysConfigurator):
                                         tm=0.1)
 
         @param gname: Name of the joint group.
-        @param eename: Name of the joint.
+        @param target_frame: Frame that the pose will be calculated against.
         @rtype: bool
         '''
-        return HrpsysConfigurator.setTargetPoseRelative(self, gname, eename,
-                                                        dx, dy, dz, dr, dp, dw,
-                                                        tm, wait)
+        return HrpsysConfigurator.setTargetPoseRelative(self, gname,
+                                                     target_frame, dx, dy, dz,
+                                                     dr, dp, dw, tm, wait)
 
     def waitInterpolationOfGroup(self, groupname):
         '''
