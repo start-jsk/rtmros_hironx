@@ -2,15 +2,23 @@
   <arg name="GUI" default="true" />
   <arg name="corbaport" default="15005" />
   <arg name="MODEL_FILE" default="$(find hironx_ros_bridge)/models/kawada-hironx.dae" />
+  <arg name="CONF_FILE" default="$(find hironx_ros_bridge)/conf/kawada-hironx.conf" />
+  <arg name="CONF_FILE_COLLISIONDETECT" default="$(find hironx_ros_bridge)/conf/kawada-hironx.conf" />
+
+  <!-- Set model file to parameter server  -->
+  <param name="hironx/collada_model_filepath" value="$(arg MODEL_FILE)" />
+
   <include file="$(find hironx_ros_bridge)/launch/hironx_startup.launch" >
     <arg name="GUI" default="$(arg GUI)" />
     <arg name="MODEL_FILE" value="$(arg MODEL_FILE)" />
     <arg name="corbaport" default="$(arg corbaport)" />
+    <arg name="CONF_FILE" value="$(arg CONF_FILE)" />    
   </include>
   <include file="$(find hironx_ros_bridge)/launch/hironx_ros_bridge.launch" >
     <arg name="nameserver" value="localhost" />
     <arg name="MODEL_FILE" value="$(arg MODEL_FILE)" />
     <arg name="SIMULATOR_NAME" value="HiroNX(Robot)0" />
     <arg name="corbaport" default="$(arg corbaport)" />
+    <arg name="CONF_FILE_COLLISIONDETECT" value="$(arg CONF_FILE_COLLISIONDETECT)" />
   </include>
 </launch>

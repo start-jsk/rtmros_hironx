@@ -5,10 +5,12 @@
             file="$(find hironx_ros_bridge)/models/HIRONX_controller_config.yaml" />
 
   <arg name="nameserver" default="hiro014" /> <!-- for real robot -->
-  <arg name="MODEL_FILE" default="/opt/jsk/etc/HIRONX/model/main.wrl" />
+  <arg name="MODEL_FILE" default="$(find hironx_ros_bridge)/models/kawada-hironx.dae" />
   <arg name="COLLADA_FILE" default="$(find hironx_ros_bridge)/models/kawada-hironx.dae" />
   <arg name="SIMULATOR_NAME" default="RobotHardware0" />
   <arg name="corbaport" default="15005" />
+  <arg name="CONF_FILE_COLLISIONDETECT" default="$(find hironx_ros_bridge)/conf/kawada-hironx.conf" /> <!-- Default is simulation -->
+  <arg name="USE_COLLISIONCHECK" value="false" /> <!-- For running collsion detection inside the robot (QNX) -->
 
   <include file="$(find hrpsys_ros_bridge)/launch/hrpsys_ros_bridge.launch">
     <arg name="SIMULATOR_NAME" value="$(arg SIMULATOR_NAME)" />
@@ -17,7 +19,8 @@
     <arg name="COLLADA_FILE" value="$(arg COLLADA_FILE)" />
 
     <arg name="USE_WALKING" value="false" />
-    <arg name="USE_COLLISIONCHECK" value="false" />
+    <!-- In hrpsys_ros_bridge.launch, Collision check might be turned on -->
+    <arg name="USE_COLLISIONCHECK" value="$(arg USE_COLLISIONCHECK)" />
     <arg name="USE_IMPEDANCECONTROLLER" value="false" />
     <arg name="USE_SOFTERRORLIMIT" value="false" />
 
@@ -28,4 +31,13 @@
   args="-sync -d $(find hrpsys_ros_bridge_tutorials)/launch/hironx.vcg"
         />
 -->
+
+  <!-- Collision detection here runs external to the robot (on Ubuntu) and 
+       visualizes the distance between each links. -->
+  <include file="$(find hrpsys_ros_bridge)/launch/collision_detector.launch">
+    <arg name="MODEL_FILE" value="$(arg MODEL_FILE)" />
+    <arg name="CONF_FILE" value="$(arg CONF_FILE_COLLISIONDETECT)" />
+    <arg name="nameserver" value="$(arg nameserver)" />
+    <arg name="SIMULATOR_NAME" value="$(arg SIMULATOR_NAME)" />    
+  </include>
 </launch>

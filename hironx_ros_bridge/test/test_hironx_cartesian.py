@@ -57,7 +57,7 @@ class TestNextageopen(unittest.TestCase):
     @classmethod
     def setUpClass(self):
 
-        modelfile = '/opt/jsk/etc/HIRONX/model/main.wrl'
+        modelfile = rospy.get_param("hironx/collada_model_filepath")
         rtm.nshost = 'hiro024'
         robotname = "RobotHardware0"
 
