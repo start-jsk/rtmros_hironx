@@ -30,11 +30,12 @@ class TestHiro(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         modelfile = '/opt/jsk/etc/HIRONX/model/main.wrl'
-        rtm.nshost = 'hiro024'
-        robotname = "RobotHardware0"
+        #rtm.nshost = 'hiro024'
+        #robotname = "RobotHardware0"
 
         cls.robot = hironx.HIRONX()
-        cls.robot.init(robotname=robotname, url=modelfile)
+        #cls.robot.init(robotname=robotname, url=modelfile)
+        cls.robot.init()
 
     @classmethod
     def tearDownClass(cls):
@@ -114,11 +115,11 @@ class TestHiro(unittest.TestCase):
         self.filenames.append(name)
         return data
 
-    def check_log_data(self, data, idx, tm_data, min_data, max_data, acc_thre=0.06): # expected, time, min, max of index
+    def check_log_data(self, data, idx, tm_data, min_data, max_data, acc_thre=0.06, tm_thre=0.1): # expected, time, min, max of index
         _tm_data = len(data)/200.0
         _min_data = min([d[idx] for d in data])
         _max_data = max([d[idx] for d in data])
-        _tm_thre = 0.1
+        _tm_thre = tm_thre
         # min_data = [min_data, min_thre]
         if isinstance(min_data, (int, float)):
             min_data = [min_data, 5]
@@ -194,7 +195,10 @@ class TestHiro(unittest.TestCase):
                     cmd += ","
             cmd += "\""
             os.system(cmd)
-        os.system('pdfunite '+' '.join(_pdf_names) + ' ' + pdf_name)
+        cmd_str = 'pdfunite '+' '.join(_pdf_names) + ' ' + pdf_name
+        cmd_str = cmd_str.replace('(', '\(')
+        cmd_str = cmd_str.replace(')', '\)')
+        os.system(cmd_str)
         return
 
     def check_acceleration(self, name):
@@ -294,7 +298,7 @@ class TestHiro(unittest.TestCase):
             data = self.load_log_data(q_filename)
 
             print "check setJointAngles(Clear)"
-            self.check_log_data(data, 6, 5, [-140+(i+1)*40/len(clear_time),20], -100.0)
+            self.check_log_data(data, 6, 5, [-140+(i+1)*40/len(clear_time),20], -100.0, acc_thre=0.2)
 
     def test_fullbody_setJointAngles_minus(self):
         self.fullbody_init()
@@ -536,7 +540,7 @@ class TestHiro(unittest.TestCase):
         # assertion
         data = self.load_log_data(q_filename)
         print "check setJointAnglesOfGroup(minus)"
-        self.check_log_data(data, 6, 7.19, -140, -120.0, acc_thre = 1.0)
+        self.check_log_data(data, 6, 7.19, -140, -120.0, acc_thre = 1.5, tm_thre = 0.3)
 
         self.robot.el_svc.setServoErrorLimit("all", 0.18) # default is 0.18
 
