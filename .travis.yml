@@ -47,7 +47,8 @@ before_install: # Use this to prepare the system to install prerequisites or dep
   ##
   ## install openhrp3 from deb
   ##
-  - sudo apt-get install -qq -y ros-$ROS_DISTRO-openhrp3 ros-$ROS_DISTRO-openrtm-aist-python
+  - if [ $USE_DEB == true -a $ROS_DISTRO == groovy ]; then sudo apt-get install -qq -y ros-$ROS_DISTRO-pr2-controllers ; fi
+  - 
   ##
 install: # Use this to install any prerequisites or dependencies necessary to run your build
   # Create workspace
