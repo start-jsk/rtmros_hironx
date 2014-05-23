@@ -29,7 +29,7 @@ class TestHiro(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        modelfile = '/opt/jsk/etc/HIRONX/model/main.wrl'
+        modelfile = rospy.get_param("hironx/collada_model_filepath")
         rtm.nshost = 'hiro014'
         robotname = "RobotHardware0"
 
