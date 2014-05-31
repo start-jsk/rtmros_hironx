@@ -963,3 +963,13 @@ class HIRONX(HrpsysConfigurator):
         @return: What RobotHardware.writeDigitalOutput returns (TODO: document)
         '''
         HrpsysConfigurator.writeDigitalOutputWithMask(self, dout, mask)
+
+    def clear(self):
+        '''
+        @see HrpsysConfigurator.clear
+        Clears the Sequencer's current operation. Works for joint groups too.
+
+        Discussed in https://github.com/fkanehiro/hrpsys-base/issues/158
+        Examples is found in a unit test: https://github.com/start-jsk/rtmros_hironx/blob/bb0672be3e03e5366e03fe50520e215302b8419f/hironx_ros_bridge/test/test_hironx.py#L293
+        '''
+        HrpsysConfigurator.clear(self)
