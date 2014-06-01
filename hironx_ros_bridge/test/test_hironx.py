@@ -544,6 +544,39 @@ class TestHiro(unittest.TestCase):
 
         self.robot.el_svc.setServoErrorLimit("all", 0.18) # default is 0.18
 
+    def testSetTargetPoseBothArm(self):
+        tm = 10
+        self.robot.goInitial()
+        posl1 = self.robot.getCurrentPosition('LARM_JOINT5')
+        posl2 = self.robot.getCurrentPosition('LARM_JOINT5')
+        posr1 = self.robot.getCurrentPosition('RARM_JOINT5')
+        posr2 = self.robot.getCurrentPosition('RARM_JOINT5')
+        rpyl1 = self.robot.getCurrentRPY('LARM_JOINT5')
+        rpyr1 = self.robot.getCurrentRPY('RARM_JOINT5')
+        posr1[0] += 0.05
+        posr2[2] += 0.08
+        posl1[0] -= 0.09
+        posl2[2] -= 0.07
+        # Til here initializing.
+
+        if not self.robot.setTargetPose('larm', posl1, rpyl1, tm):
+            assert(False)
+        if not self.robot.setTargetPose('rarm', posr1, rpyr1, tm):
+            assert(False)
+        print('Before waitInterpolationOfGroup(larm) begins.')
+        self.robot.waitInterpolationOfGroup('larm')
+        print('waitInterpolationOfGroup(larm) returned.')
+        self.robot.waitInterpolationOfGroup('rarm') # just to make sure
+        print('waitInterpolationOfGroup(rarm) returned.')
+        if not self.robot.setTargetPose('larm', posl2, rpyl1, tm):
+            assert(False)
+        if not self.robot.setTargetPose('rarm', posr2, rpyr1, tm):
+            assert(False)
+
+        # Making sure if reached here. If any error occurred. If not reached
+        # assert false should be returned earlier.
+        assert(True)  
+
 #unittest.main()
 if __name__ == '__main__':
     import rostest
