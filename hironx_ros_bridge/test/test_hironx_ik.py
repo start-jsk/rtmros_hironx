@@ -45,27 +45,28 @@ class TestHiroIK(unittest.TestCase):
                             for i5 in range(-160,160,160):
                                 yield [i0, i1, i2, i3, i4, i5]
 
-    def test_ik_joint_angle(self):
-        lav = self.angle_vector_generator().next()
-        for av in self.angle_vector_generator():
-            print "av", av
-            self.robot.setJointAnglesOfGroup("LARM", av, 1)
-            self.robot.waitInterpolationOfGroup("LARM")
-            pos1 = self.robot.getReferencePosition("LARM_JOINT5")
-            rpy1 = self.robot.getReferenceRPY("LARM_JOINT5")
-            if numpy.linalg.norm(numpy.array(lav) - numpy.array(av)) > 10:
-                lav = av
-            self.robot.setJointAnglesOfGroup("LARM", lav, 1)
-            self.robot.waitInterpolationOfGroup("LARM")
-            self.assertTrue(self.robot.setTargetPose("LARM", pos1, rpy1, 1))
-            self.robot.waitInterpolationOfGroup("LARM")
-            pos2 = self.robot.getReferencePosition("LARM_JOINT5")
-            rpy2 = self.robot.getReferenceRPY("LARM_JOINT5")
-            print "pos", pos1, pos2, numpy.linalg.norm(numpy.array(pos1)-numpy.array(pos2))
-            print "rpy", rpy1, rpy2, numpy.linalg.norm(numpy.array(rpy1)-numpy.array(rpy2))
-            self.assertTrue(numpy.linalg.norm(numpy.array(pos1)-numpy.array(pos2))<1.0e-4) # 0.1 mm
-            self.assertTrue(numpy.linalg.norm(numpy.array(rpy1)-numpy.array(rpy2))<1.0e-3) # 0.001 rad = 0.057296 deg
-            lav = av
+# 3/9/2014 Isaac comments out the entire test_ik_joint_angle that can cause left arm to hit its shoulder.
+#    def test_ik_joint_angle(self):
+#        lav = self.angle_vector_generator().next()
+#        for av in self.angle_vector_generator():
+#            print "av", av
+#            self.robot.setJointAnglesOfGroup("LARM", av, 2)
+#            self.robot.waitInterpolationOfGroup("LARM")
+#            pos1 = self.robot.getReferencePosition("LARM_JOINT5")
+#            rpy1 = self.robot.getReferenceRPY("LARM_JOINT5")
+#            if numpy.linalg.norm(numpy.array(lav) - numpy.array(av)) > 10:
+#                lav = av
+#            self.robot.setJointAnglesOfGroup("LARM", lav, 2)
+#            self.robot.waitInterpolationOfGroup("LARM")
+#            self.assertTrue(self.robot.setTargetPose("LARM", pos1, rpy1, 5))
+#            self.robot.waitInterpolationOfGroup("LARM")
+#            pos2 = self.robot.getReferencePosition("LARM_JOINT5")
+#            rpy2 = self.robot.getReferenceRPY("LARM_JOINT5")
+#            print "pos", pos1, pos2, numpy.linalg.norm(numpy.array(pos1)-numpy.array(pos2))
+#            print "rpy", rpy1, rpy2, numpy.linalg.norm(numpy.array(rpy1)-numpy.array(rpy2))
+#            self.assertTrue(numpy.linalg.norm(numpy.array(pos1)-numpy.array(pos2))<1.0e-4) # 0.1 mm
+#            self.assertTrue(numpy.linalg.norm(numpy.array(rpy1)-numpy.array(rpy2))<1.0e-3) # 0.001 rad = 0.057296 deg
+#            lav = av
 
     def target_point_generator(self,xmin,xmax,ymin,ymax,zmin,zmax,step):
         for x in range(xmin,xmax,step):
@@ -94,7 +95,7 @@ class TestHiroIK(unittest.TestCase):
             self.assertTrue(numpy.linalg.norm(numpy.array(pos1)-numpy.array(pos2))<1.0e-4) # 0.1 mm
             self.assertTrue(numpy.linalg.norm(numpy.array(rot1)-numpy.array(rot2))<1.0e-3) # 0.001 rad = 0.057296 deg
 
-    def _test_set_target_pose(self):
+    def test_set_target_pose(self):
         self.robot.setJointAnglesOfGroup("TORSO",[45],3)
         self.robot.waitInterpolationOfGroup("TORSO")
         ret = self.robot.setTargetPose("larm", [0.3255627368715471, 0.1823638733778268, 0.07462449717662004+0.2], [-3.0732189053889805, -1.5690225912054285, 3.0730289207320203], 5, "CHEST_JOINT0")
