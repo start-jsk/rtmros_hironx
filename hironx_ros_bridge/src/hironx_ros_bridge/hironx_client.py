@@ -71,18 +71,29 @@ class HIRONX(HrpsysConfigurator):
                         'LARM_JOINT3', 'LARM_JOINT4', 'LARM_JOINT5']]]
 
     '''
-    For OffPose and InitialPose, the angles of each joint are listed in the
+    For OffPose and _InitialPose, the angles of each joint are listed in the
     ordered as defined in Groups variable.'''
     OffPose = [[0], [0, 0],
                    [25, -139, -157, 45, 0, 0],
                    [-25, -139, -157, -45, 0, 0],
                    [0, 0, 0, 0],
                    [0, 0, 0, 0]]
-    InitialPose = [[0], [0, 0],
+    # With this pose the EEFs level up the tabletop surface.
+    _InitialPose = [[0], [0, 0],
                    [-0.6, 0, -100, 15.2, 9.4, 3.2],
                    [0.6, 0, -100, -15.2, 9.4, -3.2],
                    [0, 0, 0, 0],
                    [0, 0, 0, 0]]
+    # This pose sets joint angles at the factory initial pose. No danger, but
+    # no real advange either for in normal usage.
+    # See https://github.com/start-jsk/rtmros_hironx/issues/107
+    _InitialPose_Factory = [[0], [0, 0],
+                   [-0, 0, -130, 0, 0, 0],
+                   [0, 0, -130, 0, 0, 0],
+                   [0, 0, 0, 0],
+                   [0, 0, 0, 0]]
+    INITPOS_TYPE_EVEN = 0
+    INITPOS_TYPE_FACTORY = 1
 
     HandGroups = {'rhand': [2, 3, 4, 5], 'lhand': [6, 7, 8, 9]}
 
@@ -120,7 +131,7 @@ class HIRONX(HrpsysConfigurator):
             self.seq_svc.waitInterpolationOfGroup(self.Groups[i][0])
         self.servoOff(wait=False)
 
-    def goInitial(self, tm=7, wait=True):
+    def goInitial(self, tm=7, wait=True, init_pose_type=0):
         '''
         Move arms to the predefined (as member variable) "initialized" pose.
 
@@ -130,15 +141,24 @@ class HIRONX(HrpsysConfigurator):
         @param wait: If true, SequencePlayer.waitInterpolationOfGroup gets run.
                      (TODO: Elaborate what this means...Even after having taken
                      a look at its source code I can't tell what it means.)
+        @type init_pose_type: int
+        @param init_pose_type: 0: default init pose (specified as _InitialPose)
+                               1: factory init pose (specified as
+                                  _InitialPose_Factory)
         '''
+        if init_pose_type == self.INITPOS_TYPE_FACTORY:
+            _INITPOSE = self._InitialPose_Factory
+        else:
+            _INITPOSE = self._InitialPose
+
         ret = True
         for i in range(len(self.Groups)):
-            # radangles = [x/180.0*math.pi for x in self.InitialPose[i]]
+            # radangles = [x/180.0*math.pi for x in self._InitialPose[i]]
             print self.configurator_name, 'self.setJointAnglesOfGroup(', \
-                  self.Groups[i][0], ',', self.InitialPose[i], ', ', tm, \
+                  self.Groups[i][0], ',', _INITPOSE[i], ', ', tm, \
                   ',wait=False)'
             ret &= self.setJointAnglesOfGroup(self.Groups[i][0],
-                                              self.InitialPose[i],
+                                              _INITPOSE[i],
                                               tm, wait=False)
         if wait:
             for i in range(len(self.Groups)):
