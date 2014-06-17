@@ -9,5 +9,6 @@
     <arg name="corbaport" default="$(arg corbaport)" />
     <arg name="MODEL_FILE" value="$(arg MODEL_FILE)" />
     <arg name="nameserver" value="$(arg nameserver)" />
+    <arg name="USE_SERVOCONTROLLER" value="true" />
   </include>
 </launch>
