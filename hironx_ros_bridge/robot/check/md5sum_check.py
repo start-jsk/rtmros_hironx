@@ -28,7 +28,7 @@ def md5sum_check_dir(dir_info):
 
   filename = full_dir.replace("/","-") + ".py"
   if filename[0] == "-":
-    filenaem = filename[1:]
+    filename = filename[1:]
   filename = "md5sum-" + filename
 
   print filename
