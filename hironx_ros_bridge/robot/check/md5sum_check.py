@@ -7,7 +7,7 @@ from pprint import pprint
 def md5sum_check_dir_to_name(full_dir):
   name = full_dir.replace("/","_")
   name = name.replace("-","_")
-  if name[0] == "-":
+  if name[0] == "_":
     name = name[1:]
   return name
 
