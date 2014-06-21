@@ -22,7 +22,7 @@ def md5sum_file(filename):
     print "  ** ",filename,"\t\t",file_md5
   return file_md5
 
-def md5sum_check_dir(dir_info):
+def md5sum_check_dir(dir_info, output_dir=''):
   ret = True
   info = {}
   
@@ -44,7 +44,8 @@ def md5sum_check_dir(dir_info):
 
   filename = md5sum_check_filename(full_dir)
 
-  f = open(filename, 'wb')
+  print "  Writingg results to ... ", os.path.join(output_dir,filename)
+  f = open(os.path.join(output_dir,filename), 'wb')
   print >>f, 'info=',
   pprint(info,f,width=240)
   f.close()
