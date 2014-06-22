@@ -2,6 +2,23 @@
 Changelog for package hironx_ros_bridge
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* fix `#107 <https://github.com/start-jsk/rtmros_hironx/issues/107>`_
+* Add acceptance test code for hrpsys-based api.
+* (hironx_client.py) api document improved.
+* (test_hironx.py) Add a testcase to check both arms simultaneous operation
+* Launch collision detection viewer ("natto"-view) by default.
+* (test-hironx-ros-bridge.test) Accept corba port input
+* (robot/robot-compile-hrpsys.sh) update to use github
+* (hironx_client.py) Improve arg name (#issues61#issuecomment-37535993)
+* (test_hironx.py, test_hironx_ik.py, test_hironx_ros_bridge.py) relax test condition to pass travis
+* rename test-hironx-ros-bridge.launch -> test-hironx-ros-bridge.test
+* Add depends to gnuplot for test, currently our travis code does not see test_depends so add them to the {build,run}_depend
+* (`#81 <https://github.com/start-jsk/rtmros_hironx/issues/81>`_) set test code for simulation environment
+* add roslang/rosbash to depends for roslib.load_manifest()
+* Contributors: Isaac IY Saito, Kei Okada
+
 1.0.14 (2014-03-07)
 -------------------
 * Fix https://github.com/start-jsk/rtmros_hironx/issues/45 Add versioned build_dependency.
