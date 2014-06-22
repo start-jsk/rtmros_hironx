@@ -2,8 +2,8 @@
 Changelog for package rtmros_hironx
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.0.15 (2014-06-22)
+-------------------
 * fix `#107 <https://github.com/start-jsk/rtmros_hironx/issues/107>`_
 * Add acceptance test code for hrpsys-based api.
 * (hironx_client.py) api document improved.
