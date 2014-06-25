@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-import pickle, sys
+import sys
 from md5sum_check import *
 
 if len(sys.argv) < 1:
