@@ -3,7 +3,7 @@
 import sys, tempfile, zipfile, socket, time, subprocess
 from qnx_cpu_check import *
 from qnx_hdd_check import *
-from qnx_qconfig import *
+#from qnx_qconfig import *
 from hrpiob_check import *
 from md5sum_check import *
 
@@ -36,8 +36,8 @@ try:
     ret = qnx_hdd_check()
 
     # run qnx config
-    print "* Check QNX Info"
-    ret = qnx_qconfig() and ret
+    #print "* Check QNX Info"
+    #ret = qnx_qconfig() and ret
 
     # check hrpIo.so
     print "* Check libhrpIo.so"
