@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-import sys, pickle, tempfile, zipfile, socket, time, subprocess
+import sys, tempfile, zipfile, socket, time, subprocess
 from qnx_cpu_check import *
 from qnx_hdd_check import *
 from qnx_qconfig import *
