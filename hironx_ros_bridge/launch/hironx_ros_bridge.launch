@@ -39,7 +39,8 @@
   <include file="$(find hrpsys_ros_bridge)/launch/collision_detector.launch">
     <arg name="MODEL_FILE" value="$(arg MODEL_FILE)" />
     <arg name="CONF_FILE" value="$(arg CONF_FILE_COLLISIONDETECT)" />
+    <arg name="corbaport" default="$(arg corbaport)" />
     <arg name="nameserver" value="$(arg nameserver)" />
-    <arg name="SIMULATOR_NAME" value="$(arg SIMULATOR_NAME)" />    
+    <arg name="SIMULATOR_NAME" value="$(arg SIMULATOR_NAME)" />
   </include>
 </launch>
