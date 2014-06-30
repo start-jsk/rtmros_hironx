@@ -3,7 +3,7 @@
 export JSK_DIR=/opt/jsk
 export LOG_DIR=@LOG_PATH@
 export PATH=$JSK_DIR/bin:$PATH
-export LD_LIBRARY_PATH=/opt/hiro/lib:@MODULE_LOAD_PATH@:$LD_LIBRARY_PATH ## use libhrpIo.so in /opt/hiro/lib
+export LD_LIBRARY_PATH=/opt/nextage-open/lib:@MODULE_LOAD_PATH@:$LD_LIBRARY_PATH ## use libhrpIo.so in /opt/nextage-open/lib
 export RTCD_KILLNAME=rtcd
 
 OS=`uname`
