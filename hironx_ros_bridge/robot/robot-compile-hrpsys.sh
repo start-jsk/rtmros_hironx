@@ -39,8 +39,8 @@ commands="
   trap 'exit 1' ERR;
   set +x;
   echo \"* Download hrpsys *\";
-  mkdir -p /tmp/hrpsys-source-$DATE/src;
-  cd /tmp/hrpsys-source-$DATE/src;
+  mkdir -p /tmp/hrpsys-source-${HRPSYS_VERSION}-${DATE}/src;
+  cd /tmp/hrpsys-source-${HRPSYS_VERSION}-${DATE}/src;
   mv /tmp/hrpsys-base-$HRPSYS_VERSION.zip .;
   unzip -o hrpsys-base-$HRPSYS_VERSION.zip ;
   mkdir -p ../build;
@@ -60,7 +60,7 @@ commands="
   make install INSTALL_DIR=/opt/jsk/;
   cd /tmp;
   echo \"* make tarball *\";
-  tar -czf hrpsys-${HRPSYS_VERSION}-qnx-${DATE}.tgz ./hrpsys-source-$DATE/;
+  tar -czf hrpsys-${HRPSYS_VERSION}-qnx-${DATE}.tgz ./hrpsys-source-${HRPSYS_VERSION}-${DATE}/;
   "
 
 echo "comands = $commands"
@@ -69,7 +69,7 @@ if [ "$REPLY" == "y" ]; then
     scp /tmp/hrpsys-base-${HRPSYS_VERSION}.zip /tmp/hironx-robot-script-$DATE.tgz $USERID@$HOSTNAME:/tmp/
     ssh $USERID@$HOSTNAME -t $commands 2>&1 | tee /tmp/robot-compile-hrpsys-`date +"%Y%m%d-%H%M%S"`.log
     echo "====="
-    echo "$ tar -xvzf /tmp/hrpsys-${HRPSYS_VERSION}-qnx-${DATE}; cd hrpsys-source-$DATE/build; make install"
+    echo "$ tar -xvzf /tmp/hrpsys-${HRPSYS_VERSION}-qnx-${DATE}; cd hrpsys-source-${HRPSYS_VERSION}-${DATE}/build; make install"
 else
     echo "DO NOT RUN"
     echo "----"
