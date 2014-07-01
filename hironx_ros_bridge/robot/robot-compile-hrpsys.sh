@@ -30,7 +30,7 @@ HRPSYS_VERSION=${3-"315.1.10"}
 
 DATE=`date +%Y-%m-%d`
 
-#wget https://github.com/fkanehiro/hrpsys-base/archive/${HRPSYS_VERSION}.zip -O /tmp/hrpsys-base-${HRPSYS_VERSION}.zip || echo "ERROR:: Failed to download source code"
+wget https://github.com/fkanehiro/hrpsys-base/archive/${HRPSYS_VERSION}.zip -O /tmp/hrpsys-base-${HRPSYS_VERSION}.zip || echo "ERROR:: Failed to download source code"
 (cd ../; tar -cvzf /tmp/hironx-robot-script-$DATE.tgz robot/Makefile robot/*.in robot/*.sav)
 
 commands="
