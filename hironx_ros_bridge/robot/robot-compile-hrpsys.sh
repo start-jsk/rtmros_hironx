@@ -6,6 +6,8 @@ function usage {
     exit 0
 }
 
+trap 'exit 1' ERR;
+
 # command line parse
 OPT=`getopt -o h -l help -- $*`
 if [ $? != 0 ]; then
