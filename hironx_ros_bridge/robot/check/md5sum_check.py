@@ -64,10 +64,10 @@ def md5sum_check_files(full_dir, info):
           ret = False
         del info[filename]
       else:
-        print " **", filename,"\t\t is not found on database"
+        print " **", filename,"\t\t is possibly newly added (not found on database)."
         ret = False
   for fname in info.keys():
-    print " **", fname,"\t\t is not found"
+    print " **", fname,"\t\t is missing."
   return ret
 
 
