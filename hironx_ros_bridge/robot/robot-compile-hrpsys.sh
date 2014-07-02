@@ -70,7 +70,6 @@ read -p "execute compile command @ $HOSTNAME (y/n)? "
 if [ "$REPLY" == "y" ]; then
     scp /tmp/hrpsys-base-${HRPSYS_VERSION}.zip /tmp/hironx-robot-script-$DATE.tgz $USERID@$HOSTNAME:/tmp/
     ssh $USERID@$HOSTNAME -t $commands 2>&1 | tee /tmp/robot-compile-hrpsys-`date +"%Y%m%d-%H%M%S"`.log
-    scp $USERID@$HOSTNAME:/tmp/robot-compile-hrpsys-`date +"%Y%m%d-%H%M%S"`.log /tmp
     echo "====="
     echo "$ tar -xvzf /tmp/hrpsys-${HRPSYS_VERSION}-qnx-${DATE}; cd hrpsys-source-${HRPSYS_VERSION}-${DATE}/build; make install"
 else
