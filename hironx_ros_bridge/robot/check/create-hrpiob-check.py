@@ -39,6 +39,7 @@ def create_check_hrpiob_iob():
     try:
         print 0
         print subprocess.check_call(command, shell=True)
+        print subprocess.check_call(exename, shell=True)
         # convert exe to base64ascii
         f_exe = open(exename, 'r');
         f_txt = open('hrpiob_check_bin.py','w')
