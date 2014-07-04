@@ -54,7 +54,7 @@ commands="
   sed -i 's/COIL_OS_LINUX/COIL_OS_QNX/' src/lib/coil/posix/coil/Routing.cpp;
   sed -i 's/COIL_OS_LINUX/COIL_OS_QNX/' src/lib/coil/posix/coil/UUID.cpp;
   sed -i 's/COIL_OS_LINUX/COIL_OS_QNX/' src/lib/coil/posix/coil/UUID.h;
-  PATH=/usr/pkg/bin:/usr/qnx650/host/qnx6/x86/usr/bin:$PATH PKG_CONFIG_PATH=/usr/pkg/lib/pkgconfig CXX=QCC CC=qcc LDFLAGS=\"-L/opt/jsk/lib -L/usr/pkg/lib -lboost_system -lboost_signals -lboost_filesystem -Wl,-u,MAIN__\" CPPFLAGS=\"-I/opt/jsk/include -I/usr/pkg/include -Wall -O2 -I../../include/ \" CXXFLAGS=\"-I/opt/jsk/include -I/usr/pkg/include -Wall -O2 -I../../include/ \" ./configure --host x86-linux-gnu --prefix=/opt/jsk --with-pic=no;
+  PATH=/usr/pkg/bin:/usr/qnx650/host/qnx6/x86/usr/bin:$PATH PKG_CONFIG_PATH=/usr/pkg/lib/pkgconfig CXX=QCC CC=qcc LDFLAGS=\"-L/opt/jsk/lib -L/usr/pkg/lib -lboost_system -lboost_signals -lboost_filesystem -luuid -lsocket -Wl,-u,MAIN__\" CPPFLAGS=\"-I/opt/jsk/include -I/usr/pkg/include -Wall -O2 -I../../include/ \" CXXFLAGS=\"-I/opt/jsk/include -I/usr/pkg/include -Wall -O2 -I../../include/ \" ./configure --host x86-linux-gnu --prefix=/opt/jsk --with-pic=no;
   echo \"* Compile openrtm *\";
   PATH=/usr/pkg/bin:/usr/qnx650/host/qnx6/x86/usr/bin:$PATH LD_LIBRARY_PATH=/usr/pkg/lib:/usr/qnx650/host/qnx6/x86/usr/lib make VERBOSE=1;
   echo \"* install openrtm *\";
