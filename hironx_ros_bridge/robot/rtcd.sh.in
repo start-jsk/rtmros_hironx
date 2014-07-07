@@ -10,6 +10,7 @@ OS=`uname`
 if [ "$OS" = "Linux" ]; then
   KILLALL="/usr/bin/killall -q"
 elif [ "$OS" = "QNX" ]; then
+  # On QNX many libraries requreid for hiro-nxo are installed via pkgsrc, which goes into /usr/pkg.
   export LD_LIBRARY_PATH=/usr/pkg/lib:$LD_LIBRARY_PATH
   KILLALL=/bin/slay
 fi
@@ -21,8 +22,7 @@ mkdir -p $LOG_DIR
 $KILLALL -9 $RTCD_KILLNAME
 
 while :; do
-    ./unlock_iob
-
+    /opt/nextage-open/bin/unlock_iob
 
     if [ -f $LOG_DIR/rtcd.log ]; then
         rm $LOG_DIR/rtcd.log
