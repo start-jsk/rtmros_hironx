@@ -2,6 +2,14 @@
 Changelog for package hironx_ros_bridge
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* First release of install script suites (for QNX)
+* (test-hironx.test, test-hironx-ros-bridge.test) Add omniNames script to start it on ros buildfarm (see https://github.com/start-jsk/rtmros_common/issues/416#issuecomment-46846623)
+* (hironx_ros_bridge.launch) Pass corba port to collision detector launch
+* hironx_ros_bridge_real.launch, enable ServoController for real robot
+* Contributors: Kei Okada, Isaac IY Saito
+
 1.0.15 (2014-06-22)
 -------------------
 * fix `#107 <https://github.com/start-jsk/rtmros_hironx/issues/107>`_
