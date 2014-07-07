@@ -30,14 +30,16 @@ userid=${userid:="hiro"}
 DATE=`date +%Y-%m-%d`
 
 TMPDIR=/tmp/HOGE
+URL_NXO_LATEST_ZIPBALL=https://github.com/tork-a/rtmros_nextage/archive/0.2.14.zip
 mkdir -p ${TMPDIR}/opt/jsk
-wget https://github.com/tork-a/rtmros_nextage/archive/0.2.14.zip -O ${TMPDIR}/rtmros_nextage-0.2.14.zip || echo "ERROR:: Failed to download source code"
+wget ${URL_NXO_LATEST_ZIPBALL} -O ${TMPDIR}/rtmros_nextage.zip || echo "ERROR:: Failed to download source code"
 wget 'https://docs.google.com/uc?authuser=0&id=0B5hXrFUpyR2iZS0tQlFyXzhjaGc&export=download' -O ${TMPDIR}/opt-jsk-base.tgz || echo "ERROR:: Failed to download source code"
 
 (cd ${TMPDIR}; tar -xvzf opt-jsk-base.tgz)
-(cd ${TMPDIR}; unzip -o rtmros_nextage-0.2.14.zip)
+(cd ${TMPDIR}; unzip -o rtmros_nextage.zip)
 mkdir -p ${TMPDIR}/opt/jsk/etc
-mv ${TMPDIR}/rtmros_nextage-0.2.14/nextage_description/ ${TMPDIR}/opt/jsk/etc/
+# zipball retrieved by URL_NXO_LATEST_ZIPBALL yields random folder name. So skip it by asterisk.
+mv ${TMPDIR}/*/nextage_description/ ${TMPDIR}/opt/jsk/etc/HIRONX
 tar -C ${TMPDIR} -cvzf ${TMPDIR}/opt-jsk-base-model.tgz ./opt/jsk/
 
 commands="
@@ -48,9 +50,10 @@ commands="
   echo \"* setup /opt/jsk directory *\";
   cd /;
   tar -xvzf /tmp/opt-jsk-base-model.tgz;
+  mkdir -p /opt/jsk/var/log
   "
 
-echo "comands = $commands"
+echo "Necessary files are prepared on your host and now ready to run these commands inside the robot = $commands"
 read -p "execute compile command @ $hostname (y/n)? "
 if [ "$REPLY" == "y" ]; then
     scp ${TMPDIR}/opt-jsk-base-model.tgz $userid@$hostname:/tmp/
