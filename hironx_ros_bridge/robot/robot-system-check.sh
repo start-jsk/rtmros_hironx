@@ -1,7 +1,7 @@
 #!/bin/bash
 
 function usage {
-    echo >&2 "usage: $0 [hostname (default:hiro014)] [username (default:hiro)]"
+    echo >&2 "usage: $0 [hostname (default:qnx)] [username (default:tork)]"
     echo >&2 "          [-h|--help] print this message"
     exit 0
 }
@@ -22,29 +22,39 @@ while [ -n "$1" ] ; do
     esac
 done
 
-## Comment out; not used.
-#address=`host hrpsys-base.googlecode.com | awk '/^[[:alnum:].-]+ has address/ { print $4 ; exit }'` # this does not work for  Server certificate verification 
-
+TMPDIR=tmp.$$
 commands="
   . ~/.profile;
   env;
-  for file in \`ls /tmp/check/*.sh\`; do
-   sh \$file;
-  done;
-  "
+  ls -al /tmp/$TMPDIR/robot-system-check-base;
+  tmp/$TMPDIR/robot-system-check-base;
+  rm -fr /tmp/$TMPDIR
+"
 
 hostname=$1
-hostname=${hostname:="hiro014"} 
+hostname=${hostname:="qnx"}
 userid=$2
-userid=${userid:="hiro"} 
+userid=${userid:="tork"}
 
-echo ";; Copying check script to $userid@$hostname"
-scp -r ./check $userid@$hostname:/tmp
+trap 'echo "hit any key to exit"; read DUMMY; exit 1' ERR;
+
+DISTRO=`lsb_release  -cs`
+echo ";; check Ubuntu version $DISTRO"
+[ $DISTRO == "precise" ] || (echo -e "-- [ERROR] Wrong ubuntu version\n`lsb_release -a`"; exit 1 ; )
+
+ping -c1 $hostname || (echo -e "-- [ERROR] Could not connect to $hostname"; exit 1 ; )
+
+host $hostname || (echo -e "-- [ERROR] Could find IP address/Host name for $hostname"; exit 1 ; )
+
+
+echo ";; Copying check script to $userid@$hostname:$TMPDIR"
+ssh  $userid@$hostname "touch /opt/jsk/.checked"
+ssh  $userid@$hostname "mkdir -p /tmp/$TMPDIR"
+scp  ./check/robot-system-check-base $userid@$hostname:/tmp/$TMPDIR/
 echo ";; Execute check scripts"
 ssh $userid@$hostname -t $commands 2>&1 | tee robot-system-check-$hostname.log
-scp $userid@$hostname:/tmp/check-*-md5.txt ./check/;
-git diff 2>&1 | tee -a robot-system-check-$hostname.log
 
-echo ";; Done check scripts, please check robot-system-check-$hostname.log file"
-# invoke `git checkout -- .` to revert all
+echo -e ";;\n;;\n;; Done check scripts, please check robot-system-check-$hostname.log file\n;;\n;;\n"
 
+
+echo "hit any key to exit"; read DUMMY;

@@ -29,6 +29,12 @@ sys.stdout = Logger('%s/robot-system-check-result.log'%(tmp_dir))
 try:
 
     # run cpu check
+    print "* Check Environment Variables"
+    print "  Check $PATH ... ", os.environ.get('PATH')
+    print "  Check $LD_LIBRARY_PATH ... ", os.environ.get('LD_LIBRARY_PATH')
+    print "  Check $PYTHON_PATH ... ", os.environ.get('PYTHON_PATH')
+
+    # run cpu check
     print "* Check CPU Info"
     ret = qnx_cpu_check()
 
