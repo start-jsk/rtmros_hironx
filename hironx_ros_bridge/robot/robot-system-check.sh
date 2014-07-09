@@ -44,7 +44,7 @@ echo ";; check Ubuntu version $DISTRO"
 
 ping -c1 $hostname || (echo -e "-- [ERROR] Could not connect to $hostname"; exit 1 ; )
 
-host $hostname || (echo -e "-- [ERROR] Could find IP address/Host name for $hostname"; exit 1 ; )
+getent ahosts $hostname || (echo -e "-- [ERROR] Could find IP address/Host name for $hostname"; exit 1 ; )
 
 
 echo ";; Copying check script to $userid@$hostname:$TMPDIR"
