@@ -72,7 +72,7 @@ echo "comands = $commands"
 read -p "execute compile command @ $hostname (y/n)? "
 if [ "$REPLY" == "y" ]; then
     scp /tmp/OpenRTM-aist-1.1.0-RELEASE.tar.gz $userid@$hostname:/tmp/
-    ssh $userid@$hostname -t $commands 2>&1 | tee /tmp/robot-compile-opentm-`date +"%Y%m%d-%H%M%S"`.log
+    ssh $userid@$hostname -t $commands 2>&1 | tee /tmp/robot-compile-openrtm-`date +"%Y%m%d-%H%M%S"`.log
     echo "====="
     echo "$ tar -xvzf /tmp/openrtm-qnx-$DATE.tgz; cd openrtm-$DATE/build; make install"
 else
