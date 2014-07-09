@@ -10,8 +10,8 @@
   <arg name="SIMULATOR_NAME" default="RobotHardware0" />
   <arg name="corbaport" default="15005" />
   <arg name="CONF_FILE_COLLISIONDETECT" default="$(find hironx_ros_bridge)/conf/kawada-hironx.conf" /> <!-- Default is simulation -->
-  <arg name="USE_COLLISIONCHECK" value="false" /> <!-- For running collsion detection inside the robot (QNX) -->
-  <arg name="USE_SERVOCONTROLLER" value="false" />
+  <arg name="USE_COLLISIONCHECK" default="false" /> <!-- For running collsion detection inside the robot (QNX) -->
+  <arg name="USE_SERVOCONTROLLER" default="false" />
 
   <include file="$(find hrpsys_ros_bridge)/launch/hrpsys_ros_bridge.launch">
     <arg name="SIMULATOR_NAME" value="$(arg SIMULATOR_NAME)" />
