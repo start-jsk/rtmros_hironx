@@ -27,7 +27,7 @@ commands="
   . ~/.profile;
   env;
   ls -al /tmp/$TMPDIR/robot-system-check-base;
-  tmp/$TMPDIR/robot-system-check-base;
+  /tmp/$TMPDIR/robot-system-check-base;
   rm -fr /tmp/$TMPDIR
 "
 
