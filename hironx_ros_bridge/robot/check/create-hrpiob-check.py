@@ -5,12 +5,18 @@ code = """
 #include <sys/types.h>
 #include <iob.h>
 int main() {
-  int ret;
-  ret = open_iob();
-  printf("open_iob returns %d\\n", ret);
+  int ret1, ret2;
+  ret1 = open_iob();
+  printf("open_iob returns %d\\n", ret1);
 
-  ret = close_iob();
-  printf("close_iob returns %d\\n", ret);
+  ret2 = close_iob();
+  printf("close_iob returns %d\\n", ret2);
+
+  if ( ret1 && ret2 ) {
+    return 0; // success
+  } else {
+    return 1; // failure
+  }
 }
 """
 
