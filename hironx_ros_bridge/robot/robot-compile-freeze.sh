@@ -48,9 +48,9 @@ cat <<EOF > robot-install.cpp
 #include <sys/types.h>
 #include <sys/stat.h>
 
-#include <dirent.h>
-#include <hw/nicinfo.h> 
-#include <sys/dcmd_io-net.h> 
+#include <sys/socket.h>
+#include <net/if_dl.h>
+#include <ifaddrs.h>
 
 #include "boost/filesystem.hpp"
 
@@ -68,6 +68,8 @@ void rm_dir(int signum) {
 }
 
 int main () {
+    char buffer[256];
+
     // create tmp dir
     mktemp(tmpdir);
     cerr << "tmpdir = " << tmpdir << endl;
@@ -75,26 +77,52 @@ int main () {
     signal(SIGINT, rm_dir);
 
     // mac address
-    char full_int_name[256];
-    int fd;
-    sprintf(full_int_name, "/dev/io-net/%s","en0"); 
-    if ((fd = open(full_int_name, O_RDONLY)) == -1) 
-    {
-      cerr << "could not open io-net" << endl;
-      return(-1); 
-    } 
-    nic_config_t nicconfig; 
-    devctl(fd, DCMD_IO_NET_GET_CONFIG, &nicconfig, sizeof(nicconfig), NULL);
-    char buffer[256];
-    int i;
-    for (i=0; i < 6; i++)
-      sprintf(&buffer[i*3], "%02x:", nicconfig.permanent_address[i]);
-    buffer[6*3-1] = 0;
+    struct ifaddrs *ifaphead;
+    unsigned char * if_mac;
+    int found = 0;
+    struct ifaddrs *ifap;
+    struct sockaddr_dl *sdl = NULL;
+    char iface[] = "wm0";
+
+    if (getifaddrs(&ifaphead) != 0) {
+      perror("get_if_name: getifaddrs() failed");
+      exit(1);
+    }
+
+    for (ifap = ifaphead; ifap && !found; ifap = ifap->ifa_next) {
+      if ((ifap->ifa_addr->sa_family == AF_LINK)) {
+        if (strlen(ifap->ifa_name) == strlen(iface))
+          if (strcmp(ifap->ifa_name,iface) == 0) {
+            found = 1;
+            sdl = (struct sockaddr_dl *)ifap->ifa_addr;
+            if (sdl) {
+              /* I was returning this from a function before converting
+               * * this snippet, which is why I make a copy here on the heap */
+              if_mac = (unsigned char *)malloc(sdl->sdl_alen);
+              memcpy(if_mac, LLADDR(sdl), sdl->sdl_alen);
+            }
+          }
+      }
+    }
+    if (!found) {
+      fprintf (stderr,"Can't find interface %s.\n",iface);
+      if(ifaphead)
+          freeifaddrs(ifaphead);
+      exit(1);
+    }
+
+   sprintf (buffer, "%02x:%02x:%02x:%02x:%02x:%02x",
+            if_mac[0] , if_mac[1] , if_mac[2] ,
+            if_mac[3] , if_mac[4] , if_mac[5] );
+   if(ifaphead)
+     freeifaddrs(ifaphead);
+
     cerr << "mac = " << buffer << endl;
 
     // md5sum
     unsigned char result[MD5_DIGEST_LENGTH];
     MD5((unsigned char *)buffer, 17, result);
+    int i;
     for(i =0; i < MD5_DIGEST_LENGTH; i++ )
       sprintf(&buffer[i*2], "%02x", result[i]);
     cerr << "md5sum = " << buffer << endl;
