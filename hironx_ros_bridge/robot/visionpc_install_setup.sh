@@ -51,3 +51,7 @@ rosdep update
 # Connect Ubuntu to the robot. IP Addr and user name needs modified accordingly.
 sudo sh -c 'echo "# For connection to the robot. See https://github.com/start-jsk/rtmros_hironx/issues/136#issuecomment-48106612" >> /etc/hosts'
 sudo sh -c 'echo "192.168.128.10  nextage" >> /etc/hosts'
+
+# Create a developer user on Ubuntu with admin privilege.
+sudo useradd -d /home/nxouser -s /bin/bash -m nxouser && sudo adduser nxouser sudo
+sudo passwd nxouser
