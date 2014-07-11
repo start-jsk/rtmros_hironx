@@ -489,18 +489,18 @@ message_callback (message_context_t * ctp, int type, unsigned flags,
     case 1:			// get data
       {
 	float tmp[12] = {
-	  (float) data_0->filter0.fx / (float) data_0->full_scale.fx,
-	  (float) data_0->filter0.fy / (float) data_0->full_scale.fy,
-	  (float) data_0->filter0.fz / (float) data_0->full_scale.fz,
-	  (float) data_0->filter0.mx / (float) data_0->full_scale.mx,
-	  (float) data_0->filter0.my / (float) data_0->full_scale.my,
-	  (float) data_0->filter0.mz / (float) data_0->full_scale.mz,
-	  (float) data_1->filter0.fx / (float) data_1->full_scale.fx,
-	  (float) data_1->filter0.fy / (float) data_1->full_scale.fy,
-	  (float) data_1->filter0.fz / (float) data_1->full_scale.fz,
-	  (float) data_1->filter0.mx / (float) data_1->full_scale.mx,
-	  (float) data_1->filter0.my / (float) data_1->full_scale.my,
-	  (float) data_1->filter0.mz / (float) data_1->full_scale.mz
+	  -1.0 * (float) data_0->filter0.fx / (float) data_0->full_scale.fx,
+	  -1.0 * (float) data_0->filter0.fy / (float) data_0->full_scale.fy,
+	  -1.0 * (float) data_0->filter0.fz / (float) data_0->full_scale.fz,
+	  -1.0 * (float) data_0->filter0.mx / (float) data_0->full_scale.mx * 0.1, // Newton*meter*10
+	  -1.0 * (float) data_0->filter0.my / (float) data_0->full_scale.my * 0.1,
+	  -1.0 * (float) data_0->filter0.mz / (float) data_0->full_scale.mz * 0.1,
+	  -1.0 * (float) data_1->filter0.fx / (float) data_1->full_scale.fx,
+	  -1.0 * (float) data_1->filter0.fy / (float) data_1->full_scale.fy,
+	  -1.0 * (float) data_1->filter0.fz / (float) data_1->full_scale.fz,
+	  -1.0 * (float) data_1->filter0.mx / (float) data_1->full_scale.mx * 0.1,
+	  -1.0 * (float) data_1->filter0.my / (float) data_1->full_scale.my * 0.1,
+	  -1.0 * (float) data_1->filter0.mz / (float) data_1->full_scale.mz * 0.1
 	};
 	memcpy (msg_reply, tmp, sizeof (float) * 12);
       }
