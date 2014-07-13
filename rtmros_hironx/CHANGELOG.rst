@@ -2,8 +2,8 @@
 Changelog for package rtmros_hironx
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.0.17 (2014-07-13)
+-------------------
 * 1st fully functional release (robot-compile-setup.sh, robot-system-check).
 * Add install script for Vision PC Ubuntu.
 * Add Nitta JR3 driver
