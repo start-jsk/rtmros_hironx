@@ -34,7 +34,101 @@
 
 import time
 
+import rospy
+
 from hironx_ros_bridge.hironx_client import HIRONX
+
+
+class AcTestRos():
+    _TIME_DURATION_DEFAULT = 5.0
+    _POSITIONS_LARM_DEG_UP = [-4.697, -2.012, -117.108, -17.180, 29.146, -3.739]
+    _POSITIONS_LARM_DEG_DOWN = [6.196, -5.311, -73.086, -15.287, -12.906, -2.957]
+    _POSITIONS_RARM_DEG_DOWN = [-4.949, -3.372, -80.050, 15.067, -7.734, 3.086]
+    _POSITIONS_LARM_DEG_UP_SYNC = [-4.695, -2.009, -117.103, -17.178, 29.138, -3.738]
+    _POSITIONS_RARM_DEG_SYNC = [4.695, -2.009, -117.103, 17.178, 29.138, 3.738]
+
+    def __init__(self, robot_client):
+        self._robotclient = robot_client
+
+    def _ros_task1_move_armbyarm(self):
+        rospy.loginfo('*** task1 begins ***')
+        self._robotclient.ros.go_init()
+        TASK_DURATION = self._TIME_DURATION_DEFAULT
+        self._robotclient.ros.set_joint_angles_deg(
+                      'larm', self._POSITIONS_LARM_DEG_UP, TASK_DURATION, True)
+        self._robotclient.ros.set_joint_angles_deg(
+                    'rarm', self._POSITIONS_RARM_DEG_DOWN, TASK_DURATION, True)
+        time.sleep(2.0)
+
+    def _ros_task2_movearms_together(self):
+        rospy.loginfo('*** task2 begins ***')
+        self._robotclient.ros.go_init()
+        TASK_DURATION = self._TIME_DURATION_DEFAULT
+        self._robotclient.ros.set_joint_angles_deg(
+                 'larm', self._POSITIONS_LARM_DEG_UP_SYNC, TASK_DURATION, True)
+        self._robotclient.ros.set_joint_angles_deg(
+                 'rarm', self._POSITIONS_RARM_DEG_SYNC, TASK_DURATION)
+        time.sleep(2.0)
+
+    def _ros_task3_move_head(self):
+        rospy.loginfo('*** task3 begins; See up and down. ***')
+        self._robotclient.ros.go_init()
+        TASK_DURATION = self._TIME_DURATION_DEFAULT
+        rotations = [[0.1, 0.0], [50.0, 10.0]]
+        for rotation in rotations:
+            self._robotclient.ros.set_joint_angles_deg('head', rotation,
+                                                       TASK_DURATION, True)
+
+        rospy.loginfo('*** task3; Rotating. ***')
+        TASK_DURATION_ROT = 4
+        ROTATION_POSITIONS = [[50, 10], [-50, -10], [0, 0]]
+        for positions in ROTATION_POSITIONS:
+            self._robotclient.ros.set_joint_angles_deg('head', positions,
+                                                   TASK_DURATION_ROT, True)
+            self._robotclient.ros.set_joint_angles_deg('head', positions,
+                                                   TASK_DURATION_ROT, True)
+
+    def _ros_task4_cartesian_smallinc(self):
+        rospy.loginfo('*** Task4 begins; move arm w/small increments ***')
+        self._robotclient.ros.go_init()
+        rospy.loginfo('*** Task4 is not yet implemented with ROS. Need to' +
+                      ' figure out how. ***')
+
+    def _ros_task5_torso(self):
+        rospy.loginfo('*** Task5 begins. Turn torso ***')
+        self._robotclient.ros.go_init()
+        TASK_DURATION = self._TIME_DURATION_DEFAULT
+        POSITIONS_TORSO_DEG = [[130.0], [-130.0]]
+        for positions in POSITIONS_TORSO_DEG:
+            self._robotclient.ros.set_joint_angles_deg('torso', positions,
+                                                       TASK_DURATION, True)
+
+    def _ros_task6_overwrite_torso(self):
+        rospy.loginfo('*** Task6-1 begins. Overwrite previous command. ***')
+        self._robotclient.ros.go_init()
+        TASK_DURATION = 7
+        ROTATION_TORSO_DEGS = [[130.0], [-130.0]]
+        self._robotclient.ros.set_joint_angles_deg(
+                      'torso', ROTATION_TORSO_DEGS[0], TASK_DURATION, False)
+        time.sleep(2.0)
+        self._robotclient.ros.set_joint_angles_deg(
+                      'torso', ROTATION_TORSO_DEGS[1], TASK_DURATION, True)
+        time.sleep(2.0)
+
+    def _ros_task6_overwrite_arm(self):
+        rospy.loginfo('*** Task6-2 begins. Overwrite previous arm command.' +
+                      '\n\tIn the beginning both arm starts to move to the' +
+                      '\n\tsame height, but to the left arm interrupting' +
+                      '\ncommand is sent and it goes downward. ***')
+        self._robotclient.ros.go_init()
+        TASK_DURATION = 5
+        self._robotclient.ros.set_joint_angles_deg(
+                'larm', self._POSITIONS_LARM_DEG_UP_SYNC, TASK_DURATION, False)
+        self._robotclient.ros.set_joint_angles_deg(
+                'rarm', self._POSITIONS_RARM_DEG_SYNC, TASK_DURATION)
+        time.sleep(2.0)
+        self._robotclient.ros.set_joint_angles_deg(
+                'larm', self._POSITIONS_LARM_DEG_DOWN, TASK_DURATION, False)
 
 
 class AcceptanceTest_Hiro():
@@ -52,7 +146,7 @@ class AcceptanceTest_Hiro():
     manner by rostest and in nosetest manner.
 
     Prefix for methods 'at' means 'acceptance test'.
-    
+
     All time arguments are second.
     '''
 
@@ -64,7 +158,15 @@ class AcceptanceTest_Hiro():
         '''
         Run by ROS exactly the same actions that run_tests_hrpsys performs. 
         '''
-        True
+        test_ros = AcTestRos(self.robot)
+        test_ros._robotclient.ros.go_init()
+        test_ros._ros_task1_move_armbyarm()
+        test_ros._ros_task2_movearms_together()
+        test_ros._ros_task3_move_head()
+        test_ros._ros_task4_cartesian_smallinc()
+        test_ros._ros_task5_torso()
+        test_ros._ros_task6_overwrite_torso()
+        test_ros._ros_task6_overwrite_arm()
 
     def run_tests_hrpsys(self):
         _TIME_SETTARGETP_L = 3
@@ -73,7 +175,7 @@ class AcceptanceTest_Hiro():
 
         self.robot.goInitial()
 
-        # === TASK-1 === 
+        # === TASK-1 ===
         # L arm setTargetPose
         _POS_L_INIT = self.robot.getCurrentPosition('LARM_JOINT5')
         _POS_L_INIT[2] += 0.8
@@ -101,7 +203,7 @@ class AcceptanceTest_Hiro():
                                          dz=_Z_SETTARGETP_R,
                                          tm=_TIME_SETTARGETP_R, wait=False)
 
-        # === TASK-3 === 
+        # === TASK-3 ===
         # Head toward down
         _TIME_HEAD = 5
         self.robot.setTargetPoseRelative('head', 'HEAD_JOINT0', dp=0.1, tm=_TIME_HEAD)
@@ -116,12 +218,12 @@ class AcceptanceTest_Hiro():
         # Set back face to the starting pose w/o wait. 
         self.robot.setJointAnglesOfGroup( 'head', [0, 0], 2, wait=False)
 
-        # === TASK-4 === 
+        # === TASK-4 ===
         # 0.1mm increment is not working for some reason.
         self.robot.goInitial()
         # Move by iterating 0.1mm at cartesian space
         _TIME_CARTESIAN = 0.1
-        _INCREMENT_MIN=0.0001
+        _INCREMENT_MIN = 0.0001
         for i in range(300):
             self.robot.setTargetPoseRelative('larm', 'LARM_JOINT5',
                                              dy=_INCREMENT_MIN,
@@ -132,7 +234,7 @@ class AcceptanceTest_Hiro():
             print('{}th move'.format(i))
 
         self.robot.goInitial()
-        # === TASK-5 === 
+        # === TASK-5 ===
         # Turn torso
         _TORSO_ANGLE = 120
         _TIME_TORSO_R = 7
@@ -142,15 +244,16 @@ class AcceptanceTest_Hiro():
  
         self.robot.goInitial()
 
-        # === TASK-6.1 === 
+        # === TASK-6.1 ===
         # Overwrite previous command, for torso using setJointAnglesOfGroup
-        self.robot.setJointAnglesOfGroup('torso', [_TORSO_ANGLE], _TIME_TORSO_R, wait=False)
+        self.robot.setJointAnglesOfGroup('torso', [_TORSO_ANGLE], _TIME_TORSO_R,
+                                         wait=False)
         time.sleep(1)
         self.robot.setJointAnglesOfGroup('torso', [-_TORSO_ANGLE], 10, wait=True)
 
         self.robot.goInitial(5)
 
-        # === TASK-6.2 === 
+        # === TASK-6.2 ===
         # Overwrite previous command, for arms using setTargetPose
         _X_EEF_OVERWRITE = 0.05
         _Z_EEF_OVERWRITE = 0.1
@@ -168,7 +271,7 @@ class AcceptanceTest_Hiro():
         # Stop rarm
         self.robot.clearOfGroup('rarm')  # Movement should stop here.
 
-        # === TASK-7.1 === 
+        # === TASK-7.1 ===
         # Cover wide workspace.
         _TIME_COVER_WORKSPACE = 3
         # Close to the max width the robot can spread arms with the hand kept
@@ -177,7 +280,7 @@ class AcceptanceTest_Hiro():
         _RPY_L_X_NEAR_Y_FAR = (-3.07491977663752, -1.5690249316560323, 3.074732073335767)
         _POS_R_X_NEAR_Y_FAR = [0.32556456455769633, -0.47239119592815987, 1.0476131608682244]
         _RPY_R_X_NEAR_Y_FAR = (3.072515432213872, -1.5690200270375372, -3.072326882451363)
-        
+
         # Close to the farthest distance the robot can reach, with the hand kept
         # at table level.
         _POS_L_X_FAR_Y_FAR = [0.47548142379781055, 0.17430276793604782, 1.0376878025614884]
