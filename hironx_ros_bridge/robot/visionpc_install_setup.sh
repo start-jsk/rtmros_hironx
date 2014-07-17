@@ -30,7 +30,7 @@ PKG_OSS_DEV="git gitk meld"
 PKG_TO_INSTALL="$PKG_TO_INSTALL $PKG_OSS_DEV"
 
 # For ROS
-PKG_ROS="ros-hydro-rtmros-nextage ros-hydro-hironx-tutorial ros-hydro-rtshell-core"
+PKG_ROS="ros-hydro-rtmros-nextage ros-hydro-hironx-tutorial ros-hydro-rtshell-core ntp"
 PKG_TO_INSTALL="$PKG_TO_INSTALL $PKG_ROS"
 
 # Random tools
