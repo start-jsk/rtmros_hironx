@@ -794,7 +794,7 @@ class HIRONX(HrpsysConfigurator):
         @param tm: - The time to take for the 1st line.
         @return: List of 2 oct(string) values.
         '''
-        HrpsysConfigurator.loadPattern(self, fname, tm)
+        return HrpsysConfigurator.loadPattern(self, fname, tm)
 
     def readDigitalInput(self):
         '''
@@ -806,7 +806,7 @@ class HIRONX(HrpsysConfigurator):
         @rtype: [str]
         @return: List of 2 oct(string) values.
         '''
-        HrpsysConfigurator.readDigitalInput(self)
+        return HrpsysConfigurator.readDigitalInput(self)
         #TODO: Catch AttributeError that occurs when RobotHardware not found.
         #      Typically with simulator, erro msg might look like this;
         #      'NoneType' object has no attribute 'readDigitalInput'
@@ -945,7 +945,7 @@ class HIRONX(HrpsysConfigurator):
 
         @return: What RobotHardware.writeDigitalOutput returns (TODO: document)
         '''
-        HrpsysConfigurator.writeDigitalOutput(self, dout)
+        return HrpsysConfigurator.writeDigitalOutput(self, dout)
 
     def writeDigitalOutputWithMask(self, dout, mask):
         '''
@@ -982,7 +982,7 @@ class HIRONX(HrpsysConfigurator):
                      0 or 1.
         @return: What RobotHardware.writeDigitalOutput returns (TODO: document)
         '''
-        HrpsysConfigurator.writeDigitalOutputWithMask(self, dout, mask)
+        return HrpsysConfigurator.writeDigitalOutputWithMask(self, dout, mask)
 
     def clear(self):
         '''
