@@ -2,6 +2,11 @@
 Changelog for package rtmros_hironx
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* (hironx_client) Fixed some methods not returning what super class returns.
+* Contributors: Isaac IY Saito
+
 1.0.17 (2014-07-13)
 -------------------
 * 1st fully functional release (robot-compile-setup.sh, robot-system-check).
