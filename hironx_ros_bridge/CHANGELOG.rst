@@ -2,8 +2,8 @@
 Changelog for package hironx_ros_bridge
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.0.18 (2014-07-21)
+-------------------
 * (hironx_client) Fixed some methods not returning what super class returns.
 * Contributors: Isaac IY Saito
 
