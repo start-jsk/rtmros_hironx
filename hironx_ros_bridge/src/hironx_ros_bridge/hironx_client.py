@@ -943,7 +943,8 @@ class HIRONX(HrpsysConfigurator):
                      What each element stands for depends on how
                      the robot's imlemented. Consult the hardware manual.
 
-        @return: What RobotHardware.writeDigitalOutput returns (TODO: document)
+        @rtype: bool
+        @return: RobotHardware.writeDigitalOutput returns True if writable. False otherwise.
         '''
         return HrpsysConfigurator.writeDigitalOutput(self, dout)
 
@@ -980,7 +981,8 @@ class HIRONX(HrpsysConfigurator):
         @type mask: [int]
         @param mask: List of masking bits, length of 32 bits where elements are
                      0 or 1.
-        @return: What RobotHardware.writeDigitalOutput returns (TODO: document)
+        @rtype: bool
+        @return: RobotHardware.writeDigitalOutput returns True if writable. False otherwise.
         '''
         return HrpsysConfigurator.writeDigitalOutputWithMask(self, dout, mask)
 
