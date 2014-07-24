@@ -30,7 +30,7 @@ PKG_OSS_DEV="git gitk meld"
 PKG_TO_INSTALL="$PKG_TO_INSTALL $PKG_OSS_DEV"
 
 # For ROS
-PKG_ROS="ros-hydro-rtmros-nextage ros-hydro-hironx-tutorial ros-hydro-rtshell-core ntp"
+PKG_ROS="ros-hydro-desktop-full ros-hydro-rtmros-nextage ros-hydro-hironx-tutorial ros-hydro-rtshell-core ntp"
 PKG_TO_INSTALL="$PKG_TO_INSTALL $PKG_ROS"
 
 # Random tools
@@ -52,6 +52,12 @@ rosdep update
 sudo sh -c 'echo "# For connection to the robot. See https://github.com/start-jsk/rtmros_hironx/issues/136#issuecomment-48106612" >> /etc/hosts'
 sudo sh -c 'echo "192.168.128.10  nextage" >> /etc/hosts'
 
+# Remove unnecessary folders on home dir.
+cd ~
+rm -fr Documents Downloads examples.desktop Music Pictures Public Templates Videos
+
 # Create a developer user on Ubuntu with admin privilege.
 sudo useradd -d /home/nxouser -s /bin/bash -m nxouser && sudo adduser nxouser sudo
 sudo passwd nxouser
+# Setup ROS environment for nxouser
+echo "source /opt/ros/hydro/setup.bash" >> /home/nxouser/.bashrc
