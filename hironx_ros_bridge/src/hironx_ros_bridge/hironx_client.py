@@ -37,19 +37,15 @@ import math
 import numpy
 import os
 import time
-import socket
-import sys
 
 import roslib; roslib.load_manifest("hrpsys")
 from hrpsys.hrpsys_config import *
 import OpenHRP
 import OpenRTM_aist
 import OpenRTM_aist.RTM_IDL
-import rospy
 import rtm
 from waitInput import waitInputConfirm, waitInputSelect
 
-from hironx_ros_bridge.ros_client import ROS_Client
 
 SWITCH_ON = OpenHRP.RobotHardwareService.SWITCH_ON
 SWITCH_OFF = OpenHRP.RobotHardwareService.SWITCH_OFF
@@ -118,9 +114,6 @@ class HIRONX(HrpsysConfigurator):
         '''
         HrpsysConfigurator.init(self, robotname=robotname, url=url)
         self.setSelfGroups()
-
-        joint_group_names = [groupname for groupname, joints in self.Groups]
-        self.ros = ROS_Client(joint_group_names)
 
     def goOffPose(self, tm=7):
         '''

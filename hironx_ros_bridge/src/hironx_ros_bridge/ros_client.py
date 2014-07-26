@@ -35,10 +35,9 @@
 import math
 
 import actionlib
-import pr2_controllers_msgs
+import rospy
 from pr2_controllers_msgs.msg import JointTrajectoryAction
 from pr2_controllers_msgs.msg import JointTrajectoryGoal
-import rospy
 from trajectory_msgs.msg import JointTrajectoryPoint
 
 _MSG_ASK_ISSUEREPORT = 'Your report to ' + \
@@ -70,23 +69,32 @@ class ROS_Client(object):
         '''
         @type jointgroups: [str]
         '''
-        rospy.init_node('hironx_ros_client', anonymous=True)
+        rospy.init_node('hironx_ros_client')
         if jointgroups:
             self._set_groupnames(jointgroups)
 
+    def init_action_clients(self):
         self._aclient_larm = actionlib.SimpleActionClient(
              '/larm_controller/joint_trajectory_action', JointTrajectoryAction)
+        self._aclient_rarm = actionlib.SimpleActionClient(
+             '/rarm_controller/joint_trajectory_action', JointTrajectoryAction)
+        self._aclient_head = actionlib.SimpleActionClient(
+             '/head_controller/joint_trajectory_action', JointTrajectoryAction)
+        self._aclient_torso = actionlib.SimpleActionClient(
+            '/torso_controller/joint_trajectory_action', JointTrajectoryAction)
+
         self._aclient_larm.wait_for_server()
+        rospy.loginfo('ros_client; 1')
         self._goal_larm = JointTrajectoryGoal()
+        rospy.loginfo('ros_client; 2')
         self._goal_larm.trajectory.joint_names.append("LARM_JOINT0")
         self._goal_larm.trajectory.joint_names.append("LARM_JOINT1")
         self._goal_larm.trajectory.joint_names.append("LARM_JOINT2")
         self._goal_larm.trajectory.joint_names.append("LARM_JOINT3")
         self._goal_larm.trajectory.joint_names.append("LARM_JOINT4")
         self._goal_larm.trajectory.joint_names.append("LARM_JOINT5")
+        rospy.loginfo('ros_client; 3')
 
-        self._aclient_rarm = actionlib.SimpleActionClient(
-             '/rarm_controller/joint_trajectory_action', JointTrajectoryAction)
         self._aclient_rarm.wait_for_server()
         self._goal_rarm = JointTrajectoryGoal()
         self._goal_rarm.trajectory.joint_names.append("RARM_JOINT0")
@@ -96,26 +104,22 @@ class ROS_Client(object):
         self._goal_rarm.trajectory.joint_names.append("RARM_JOINT4")
         self._goal_rarm.trajectory.joint_names.append("RARM_JOINT5")
 
-        self._aclient_head = actionlib.SimpleActionClient(
-             '/head_controller/joint_trajectory_action', JointTrajectoryAction)
         self._aclient_head.wait_for_server()
         self._goal_head = JointTrajectoryGoal()
         self._goal_head.trajectory.joint_names.append('HEAD_JOINT0')
         self._goal_head.trajectory.joint_names.append('HEAD_JOINT1')
 
-        self._aclient_torso = actionlib.SimpleActionClient(
-            '/torso_controller/joint_trajectory_action', JointTrajectoryAction)
         self._aclient_torso.wait_for_server()
         self._goal_torso = JointTrajectoryGoal()
         self._goal_torso.trajectory.joint_names.append('CHEST_JOINT0')
 
-        rospy.logdebug('Joint names; ' +
+        rospy.loginfo('Joint names; ' +
                       'Torso: {}\n\tHead: {}\n\tL-Arm: {}\n\tR-Arm: {}'.format(
                                     self._goal_torso.trajectory.joint_names,
                                     self._goal_head.trajectory.joint_names,
                                     self._goal_larm.trajectory.joint_names,
                                     self._goal_rarm.trajectory.joint_names))
-
+        
     def _set_groupnames(self, groupnames):
         '''
         @type groupnames: [str]
@@ -133,23 +137,23 @@ class ROS_Client(object):
         self._GR_RARM = groupnames[2]
         self._GR_LARM = groupnames[3]
 
-    def go_init(self):
+    def go_init(self, task_duration=7.0):
         '''
         Init positions are taken from HIRONX.
         TODO: Need to add factory position too that's so convenient when
               working with the manufacturer.
+        @type task_duration: double
         '''
         rospy.loginfo('*** go_init begins ***')
-        TASK_DURATION = 5.0
         POSITIONS_TORSO_DEG = [0.0]
-        self.set_joint_angles_deg(self._GR_TORSO, POSITIONS_TORSO_DEG, TASK_DURATION)
+        self.set_joint_angles_deg(self._GR_TORSO, POSITIONS_TORSO_DEG, task_duration)
         POSITIONS_HEAD_DEG = [0.0, 0.0]
-        self.set_joint_angles_deg(self._GR_HEAD, POSITIONS_HEAD_DEG, TASK_DURATION)
+        self.set_joint_angles_deg(self._GR_HEAD, POSITIONS_HEAD_DEG, task_duration)
         POSITIONS_LARM_DEG = [0.6, 0, -100, -15.2, 9.4, -3.2]
-        self.set_joint_angles_deg(self._GR_LARM, POSITIONS_LARM_DEG, TASK_DURATION)
+        self.set_joint_angles_deg(self._GR_LARM, POSITIONS_LARM_DEG, task_duration)
         POSITIONS_RARM_DEG = [-0.6, 0, -100, 15.2, 9.4, 3.2]
-        self.set_joint_angles_deg(self._GR_RARM, POSITIONS_RARM_DEG, TASK_DURATION,
-                              wait=True)
+        self.set_joint_angles_deg(self._GR_RARM, POSITIONS_RARM_DEG,
+                                  task_duration, wait=True)
         rospy.loginfo(self._goal_larm.trajectory.points)
 
     def set_joint_angles_rad(self, groupname, positions_radian, duration=7.0,
