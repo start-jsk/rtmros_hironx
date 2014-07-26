@@ -74,6 +74,7 @@ if [ "$REPLY" == "y" ]; then
     scp /tmp/OpenRTM-aist-1.1.0-RELEASE.tar.gz $userid@$hostname:/tmp/
     ssh $userid@$hostname -t $commands 2>&1 | tee /tmp/robot-compile-openrtm-`date +"%Y%m%d-%H%M%S"`.log
     echo "====="
+    echo "Log on to $userid@$hostname, then run the following:"
     echo "$ tar -xvzf /tmp/openrtm-qnx-$DATE.tgz; cd openrtm-$DATE/build; make install"
 else
     echo "DO NOT RUN"
