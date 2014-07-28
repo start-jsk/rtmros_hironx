@@ -114,6 +114,7 @@ class HIRONX(HrpsysConfigurator):
         @type url: str
         '''
         HrpsysConfigurator.init(self, robotname=robotname, url=url)
+        self.set_eefs(['LARM_JOINT5', 'RARM_JOINT5'])
         self.setSelfGroups()
 
     def goOffPose(self, tm=7):
@@ -638,12 +639,14 @@ class HIRONX(HrpsysConfigurator):
         '''
         return HrpsysConfigurator.getCurrentPose(self, jointname)
 
-    def getCurrentPosition(self, jointname):
+    def getCurrentPosition(self, lname=None):
         '''
         @see: HrpsysConfigurator.getCurrentPosition
 
         Returns the current physical position of the specified joint.
         cf. getReferencePosition that returns commanded value.
+
+        If no joint name is given, returns values of all EEFs.
 
         eg.
             robot.getCurrentPosition('LARM_JOINT5')
@@ -653,14 +656,16 @@ class HIRONX(HrpsysConfigurator):
         @rtype: List of float
         @return: List of x, y, z positions about the specified joint.
         '''
-        return HrpsysConfigurator.getCurrentPosition(self, jointname)
+        return HrpsysConfigurator.getCurrentPosition(self, lname)
 
-    def getCurrentRotation(self, jointname):
+    def getCurrentRotation(self, jointname=None):
         '''
         @see: HrpsysConfigurator.getCurrentRotation
 
         Returns the current physical rotation of the specified joint.
         cf. getReferenceRotation that returns commanded value.
+
+        If no joint name is given, returns values of all EEFs.
 
         @type jointname: str
         @rtype: List of float
@@ -672,12 +677,14 @@ class HIRONX(HrpsysConfigurator):
         '''
         return HrpsysConfigurator.getCurrentRotation(self, jointname)
 
-    def getCurrentRPY(self, jointname):
+    def getCurrentRPY(self, jointname=None):
         '''
         @see: HrpsysConfigurator.getCurrentRPY
 
         Returns the current physical rotation in RPY of the specified joint.
         cf. getReferenceRPY that returns commanded value.
+
+        If no joint name is given, returns values of all EEFs.
 
         @type jointname: str
         @rtype: List of float
@@ -718,12 +725,14 @@ class HIRONX(HrpsysConfigurator):
         '''
         return HrpsysConfigurator.getReferencePose(self, jointname)
 
-    def getReferencePosition(self, jointname):
+    def getReferencePosition(self, jointname=None):
         '''
         @see: HrpsysConfigurator.getReferencePosition
 
         Returns the current commanded position of the specified joint.
         cf. getCurrentPosition that returns physical value.
+
+        If no joint name is given, returns values of all EEFs.
 
         @type jointname: str
         @rtype: List of float
@@ -731,12 +740,14 @@ class HIRONX(HrpsysConfigurator):
         '''
         return HrpsysConfigurator.getReferencePosition(self, jointname)
 
-    def getReferenceRotation(self, jointname):
+    def getReferenceRotation(self, jointname=None):
         '''
         @see: HrpsysConfigurator.getReferenceRotation
 
         Returns the current commanded rotation of the specified joint.
         cf. getCurrentRotation that returns physical value.
+
+        If no joint name is given, returns values of all EEFs.
 
         @type jointname: str
         @rtype: List of float
@@ -748,12 +759,14 @@ class HIRONX(HrpsysConfigurator):
         '''
         return HrpsysConfigurator.getReferenceRotation(self, jointname)
 
-    def getReferenceRPY(self, jointname):
+    def getReferenceRPY(self, jointname=None):
         '''
         @see: HrpsysConfigurator.getReferenceRPY
 
         Returns the current commanded rotation in RPY of the specified joint.
         cf. getCurrentRPY that returns physical value.
+
+        If no joint name is given, returns values of all EEFs.
 
         @type jointname: str
         @rtype: List of float
