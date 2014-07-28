@@ -2,6 +2,15 @@
 Changelog for package rtmros_hironx
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Enable RobotHardwareServiceROSBridge for when working with real robot. Fixes `#138 <https://github.com/start-jsk/rtmros_hironx/issues/138>`_ (servoOn/Off issue).
+* (hironx_client) Add readDigitalOut.
+* Robot installation
+  * (robot-compile-openrtm.sh) Fix: Non-existent path. Add more instruction message.
+  * (visionpc_install_setup.sh) Minor update (Add ros desktop-full, remove unnecessary Ubuntu init folders, ros env setting for nxouser)
+* Contributors: Isaac IY Saito
+
 1.0.18 (2014-07-21)
 -------------------
 * (hironx_client) Fixed some methods not returning what super class returns.
