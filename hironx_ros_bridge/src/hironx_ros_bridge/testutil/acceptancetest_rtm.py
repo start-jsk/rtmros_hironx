@@ -34,46 +34,64 @@
 
 import time
 
-from hironx_ros_bridge.hironx_client import HIRONX
+from hironx_ros_bridge.testutil.abst_acceptancetest import AbstAcceptanceTest
 
 
-class AcceptanceTest_Hiro():
-    '''
-    This class holds methods that can be used for verification of the robot
-    Kawada Industries' dual-arm robot Hiro (and the same model of other robots
-    e.g. NEXTAGE OPEN).
+class AcceptanceTestRTM(AbstAcceptanceTest):
 
-    This test class is:
-    - Intended to be run as nosetests, ie. roscore isn't available by itself.
-    - Almost all the testcases don't run without an access to a robot running.
-
-    Above said, combined with a rostest that launches roscore and robot (either
-    simulation or real) hopefully these testcases can be run, both in batch
-    manner by rostest and in nosetest manner.
-
-    Prefix for methods 'at' means 'acceptance test'.
-    
-    All time arguments are second.
-    '''
-
-    def init(self, robotname='HiroNX(Robot)0', url=''):
-        self.robot = hiro = HIRONX()
-        self.robot.init(robotname=args.robot, url=args.modelfile)
-
-    def run_tests_ros(self):
+    def __init__(self, robot_client):
         '''
-        Run by ROS exactly the same actions that run_tests_hrpsys performs. 
+        @type robot_client: hironx_ros_bridge.hironx_client.HIRONX
         '''
-        True
+        self._robotclient = robot_client
 
-    def run_tests_hrpsys(self):
+    def go_initpos(self):
+        self._robotclient.goInitial()
+
+    def set_joint_angles(self, joint_group, joint_angles, msg_tasktitle=None,
+                         task_duration=7.0, do_wait=True):
+        '''
+        @see: AbstAcceptanceTest.set_joint_angles
+        '''
+        print("== RTM; {} ==".format(msg_tasktitle))
+        self._robotclient.setJointAnglesOfGroup(
+                         joint_group, joint_angles, task_duration, do_wait)
+
+    def set_pose(self, joint_group, pose, rpy, msg_tasktitle,
+                      task_duration=7.0, do_wait=True, ref_frame_name=None):
+
+        print("== RTM; {} ==".format(msg_tasktitle))
+        self._robotclient.setTargetPose(joint_group, pose, rpy, task_duration,
+                                        ref_frame_name)
+        if do_wait:
+            self._robotclient.waitInterpolationOfGroup(joint_group)
+
+    def set_pose_relative(
+                        self, joint_group, dx=0, dy=0, dz=0, dr=0, dp=0, dw=0,
+                        msg_tasktitle=None, task_duration=7.0, do_wait=True):
+        if joint_group == self.GRNAME_LEFT_ARM:
+            eef = 'LARM_JOINT5'
+        elif joint_group == self.GRNAME_RIGHT_ARM:
+            eef = 'RARM_JOINT5'
+
+        print("== RTM; {} ==".format(msg_tasktitle))
+        self._robotclient.setTargetPoseRelative(
+                                    joint_group, eef, dx, dy, dz, dr, dp, dw,
+                                    task_duration, do_wait)
+
+    def _run_tests_hrpsys(self):
+        '''
+        @deprecated: This method remains as a reference. This used to function
+                     when being called directly from ipython commandline and
+                     now replaced by optimized codes.
+        '''
         _TIME_SETTARGETP_L = 3
         _TIME_SETTARGETP_R = 2
         _TIME_BW_TESTS = 5
 
         self.robot.goInitial()
 
-        # === TASK-1 === 
+        # === TASK-1 ===
         # L arm setTargetPose
         _POS_L_INIT = self.robot.getCurrentPosition('LARM_JOINT5')
         _POS_L_INIT[2] += 0.8
@@ -101,7 +119,7 @@ class AcceptanceTest_Hiro():
                                          dz=_Z_SETTARGETP_R,
                                          tm=_TIME_SETTARGETP_R, wait=False)
 
-        # === TASK-3 === 
+        # === TASK-3 ===
         # Head toward down
         _TIME_HEAD = 5
         self.robot.setTargetPoseRelative('head', 'HEAD_JOINT0', dp=0.1, tm=_TIME_HEAD)
@@ -116,12 +134,12 @@ class AcceptanceTest_Hiro():
         # Set back face to the starting pose w/o wait. 
         self.robot.setJointAnglesOfGroup( 'head', [0, 0], 2, wait=False)
 
-        # === TASK-4 === 
+        # === TASK-4 ===
         # 0.1mm increment is not working for some reason.
         self.robot.goInitial()
         # Move by iterating 0.1mm at cartesian space
         _TIME_CARTESIAN = 0.1
-        _INCREMENT_MIN=0.0001
+        _INCREMENT_MIN = 0.0001
         for i in range(300):
             self.robot.setTargetPoseRelative('larm', 'LARM_JOINT5',
                                              dy=_INCREMENT_MIN,
@@ -132,7 +150,7 @@ class AcceptanceTest_Hiro():
             print('{}th move'.format(i))
 
         self.robot.goInitial()
-        # === TASK-5 === 
+        # === TASK-5 ===
         # Turn torso
         _TORSO_ANGLE = 120
         _TIME_TORSO_R = 7
@@ -142,15 +160,16 @@ class AcceptanceTest_Hiro():
  
         self.robot.goInitial()
 
-        # === TASK-6.1 === 
+        # === TASK-6.1 ===
         # Overwrite previous command, for torso using setJointAnglesOfGroup
-        self.robot.setJointAnglesOfGroup('torso', [_TORSO_ANGLE], _TIME_TORSO_R, wait=False)
+        self.robot.setJointAnglesOfGroup('torso', [_TORSO_ANGLE], _TIME_TORSO_R,
+                                         wait=False)
         time.sleep(1)
         self.robot.setJointAnglesOfGroup('torso', [-_TORSO_ANGLE], 10, wait=True)
 
         self.robot.goInitial(5)
 
-        # === TASK-6.2 === 
+        # === TASK-6.2 ===
         # Overwrite previous command, for arms using setTargetPose
         _X_EEF_OVERWRITE = 0.05
         _Z_EEF_OVERWRITE = 0.1
@@ -168,7 +187,7 @@ class AcceptanceTest_Hiro():
         # Stop rarm
         self.robot.clearOfGroup('rarm')  # Movement should stop here.
 
-        # === TASK-7.1 === 
+        # === TASK-7.1 ===
         # Cover wide workspace.
         _TIME_COVER_WORKSPACE = 3
         # Close to the max width the robot can spread arms with the hand kept
@@ -177,7 +196,7 @@ class AcceptanceTest_Hiro():
         _RPY_L_X_NEAR_Y_FAR = (-3.07491977663752, -1.5690249316560323, 3.074732073335767)
         _POS_R_X_NEAR_Y_FAR = [0.32556456455769633, -0.47239119592815987, 1.0476131608682244]
         _RPY_R_X_NEAR_Y_FAR = (3.072515432213872, -1.5690200270375372, -3.072326882451363)
-        
+
         # Close to the farthest distance the robot can reach, with the hand kept
         # at table level.
         _POS_L_X_FAR_Y_FAR = [0.47548142379781055, 0.17430276793604782, 1.0376878025614884]
@@ -195,31 +214,3 @@ class AcceptanceTest_Hiro():
         self.robot.waitInterpolationOfGroup('rarm')
 
         self.robot.goInitial()
-
-import argparse
-
-from hrpsys import rtm
-
-if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description='hiro command line interpreters')
-    parser.add_argument('--host', help='corba name server hostname')
-    parser.add_argument('--port', help='corba name server port number')
-    parser.add_argument('--modelfile', help='robot model file nmae')
-    parser.add_argument('--robot', help='robot modlule name (RobotHardware0 for real robot, Robot()')
-    args, unknown = parser.parse_known_args()
-
-    if args.host:
-        rtm.nshost = args.host
-    if args.port:
-        rtm.nsport = args.port
-    if not args.robot:
-        args.robot = 'RobotHardware0' if args.host else 'HiroNX(Robot)0'
-    if not args.modelfile:
-        args.modelfile = ''
-
-    # support old style format
-    if len(unknown) >= 2:
-        args.robot = unknown[0]
-        args.modelfile = unknown[1]
-    acceptance_test = AcceptanceTest_Hiro()
-    acceptance_test.init(robotname=args.robot, url=args.modelfile)

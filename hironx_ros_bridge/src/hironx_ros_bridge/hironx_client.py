@@ -37,8 +37,6 @@ import math
 import numpy
 import os
 import time
-import socket
-import sys
 
 import roslib; roslib.load_manifest("hrpsys")
 from hrpsys.hrpsys_config import *
@@ -47,6 +45,7 @@ import OpenRTM_aist
 import OpenRTM_aist.RTM_IDL
 import rtm
 from waitInput import waitInputConfirm, waitInputSelect
+
 
 SWITCH_ON = OpenHRP.RobotHardwareService.SWITCH_ON
 SWITCH_OFF = OpenHRP.RobotHardwareService.SWITCH_OFF
