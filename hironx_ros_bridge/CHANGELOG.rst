@@ -2,8 +2,8 @@
 Changelog for package hironx_ros_bridge
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.0.20 (2014-07-31)
+-------------------
 * Add ROS client. See acceptancetest_hironx.py for usage sample.
 * acceptancetest_hironx.py:
   * Add tasks written in ROS. 
