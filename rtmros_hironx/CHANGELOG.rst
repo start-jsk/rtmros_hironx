@@ -2,6 +2,16 @@
 Changelog for package rtmros_hironx
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Add ROS client. See acceptancetest_hironx.py for usage sample.
+* acceptancetest_hironx.py:
+  * Add tasks written in ROS. 
+  * Add option to wait kb input before every task.
+  * Move location to /scripts so that you can call by `ipython -i `rospack find hironx_ros_bridge`/scripts/acceptancetest_hironx.py` (similar to `hironx.py`).
+* Add doc about launch and test files.
+* Contributors: Isaac IY Saito
+
 1.0.19 (2014-07-28)
 -------------------
 * Enable RobotHardwareServiceROSBridge for when working with real robot. Fixes `#138 <https://github.com/start-jsk/rtmros_hironx/issues/138>`_ (servoOn/Off issue).
