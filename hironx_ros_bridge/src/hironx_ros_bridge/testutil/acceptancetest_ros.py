@@ -58,10 +58,12 @@ class AcceptanceTestROS(AbstAcceptanceTest):
         self._robotclient.set_joint_angles_deg(
                          joint_group, joint_angles, task_duration, do_wait)
 
+    def set_pose(self, joint_group, pose, rpy, msg_tasktitle=None,
+                 task_duration=7.0, do_wait=True, ref_frame_name=None):
+        rospy.logerr('AcceptanceTestROS) set_pose is not implemented yet.')
+
     def set_pose_relative(
                         self, joint_group, dx=0, dy=0, dz=0, dr=0, dp=0, dw=0,
                         msg_tasktitle=None, task_duration=7.0, do_wait=True):
-        rospy.loginfo('*** Task4 begins; move arm w/small increments ***')
-        rospy.logwarn('*** Task4 is not yet implemented with ROS. Need to' +
-                      ' figure out how. ***')
+        rospy.logerr('AcceptanceTestROS; set_pose_relative is not implemented yet')
         pass

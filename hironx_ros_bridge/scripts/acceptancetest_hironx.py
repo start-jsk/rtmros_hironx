@@ -105,13 +105,25 @@ class AcceptanceTest_Hiro():
         self.rtm.init(robotname=self._rtm_robotname, url=self._rtm_url)
         self._acceptance_rtm_client = AcceptanceTestRTM(self.rtm)
 
-    def _wait_input(self, do_wait_input=False):
+    def _wait_input(self, msg, do_wait_input=False):
         '''
+        @type msg: str
+        @param msg: To be printed on prompt.
         @param do_wait_input: If True python commandline waits for any input
                               to proceed.
         '''
+        if msg:
+            msg = '\n' + msg + '= '
         if do_wait_input:
-            input('Waiting for any key pressed.')
+            try:
+                input('Waiting for any key. **Do NOT** hit enter multiple ' +
+                      'times. ' + msg)
+            except NameError:
+                # On python < 3, `input` can cause errors like following with
+                # any input string. So here just catch-release it.
+                # e.g.
+                #   NameError: name 'next' is not defined
+                pass
 
     def run_tests_rtm(self, do_wait_input=False):
         '''
@@ -133,41 +145,69 @@ class AcceptanceTest_Hiro():
         '''
         @type test_client: hironx_ros_robotics.abst_acceptancetest.AbstAcceptanceTest
         '''
+        _msg_type_client = None
+        if isinstance(test_client, AcceptanceTestROS):
+            _msg_type_client = '(ROS) '
+        elif isinstance(test_client, AcceptanceTestRTM):
+            _msg_type_client = '(RTM) '
+        msg = _msg_type_client
 
         test_client.go_initpos()
-        self._wait_input(do_wait_input)
-        # Procedure in the methods in test_client with the same name are run
-        # between pre and post processes defined in in AbstAcceptanceTest.
 
-        #Task1
-        self._move_armbyarm(test_client)
+        msg_task = ('TASK-1. Move each arm separately to the given pose ' +
+                    'by passing joint space.')
+        msg = _msg_type_client + msg_task
+        self._wait_input(msg, do_wait_input)
+        self._move_armbyarm_jointangles(test_client)
 
-        #task2
-        self._wait_input(do_wait_input)
+        msg_task = ('TASK-1. Move each arm separately to the given pose ' +
+                    'by passing pose in hand space (i.e. orthogonal ' +
+                    'coordinate of eef).')
+        msg = _msg_type_client + msg_task
+        self._wait_input(msg, do_wait_input)
+        self._move_armbyarm_pose(test_client)
+
+        msg_task = ('TASK-2. Move both arms at the same time using relative ' +
+                'distance and angle from the current pose.')
+        msg = _msg_type_client + msg_task
+        self._wait_input(msg, do_wait_input)
         self._movearms_together(test_client)
 
-        #task3
+        msg_task = ('TASK-3. Move arm with very small increment (0.1mm/sec).' +
+                    '\n\tRight hand 3 cm upward over 30 seconds.')
+        msg = _msg_type_client + msg_task
+        self._wait_input(msg, do_wait_input)
         self._set_pose_relative(test_client)
-        self._wait_input(do_wait_input)
 
-        #task4
+        msg_task = ('In the beginning you\'ll see the displacement of the previous task.' +
+                    '\nTASK-4. Move head using Joint angles in degree.')
+        msg = _msg_type_client + msg_task
+        self._wait_input(msg, do_wait_input)
         self._move_head(test_client)
-        self._wait_input(do_wait_input)
 
-        #task5
+        msg_task = ('TASK-5. Rotate torso to the left and right 130 degree.')
+        msg = _msg_type_client + msg_task
+        self._wait_input(msg, do_wait_input)
         self._move_torso(test_client)
-        self._wait_input(do_wait_input)
 
-        #task6-1
+        msg_task = ('TASK-6. Overwrite ongoing action.' +
+                    '\n\t6-1. While rotating torso toward left, it gets' +
+                    'canceled and rotate toward right.' +
+                    '\n\t6-2. While lifting left hand, right hand also tries ' +
+                    'to reach the same height that gets cancelled so that it ' +
+                    'stays lower than the left hand.')
+        msg = _msg_type_client + msg_task
+        self._wait_input(msg, do_wait_input)
         self._overwrite_torso(test_client)
         #task6-2
         self._overwrite_arm(test_client)
-        self._wait_input(do_wait_input)
 
-        #task7
+        msg_task = ('TASK-7. Show the capable workspace on front side of the robot.')
+        msg = _msg_type_client + msg_task
+        self._wait_input(msg, do_wait_input)
         self._show_workspace(test_client)
 
-    def _move_armbyarm(self, test_client):
+    def _move_armbyarm_jointangles(self, test_client):
         '''
         @type test_client: hironx_ros_robotics.abst_acceptancetest.AbstAcceptanceTest  
         '''
@@ -181,6 +221,10 @@ class AcceptanceTest_Hiro():
                                      'Task1 {}'.format(arm))
         time.sleep(2.0)
 
+    def _move_armbyarm_pose(self, test_client):
+        print('** _move_armbyarm_pose isn\'t yet implemented')
+        pass
+
     def _movearms_together(self, test_client):
         '''
         @type test_client: hironx_ros_robotics.abst_acceptancetest.AbstAcceptanceTest  
@@ -188,23 +232,25 @@ class AcceptanceTest_Hiro():
         test_client.go_initpos()
         arm = AbstAcceptanceTest.GRNAME_LEFT_ARM
         test_client.set_joint_angles(
-                 arm, self._POSITIONS_LARM_DEG_UP_SYNC, 'Task2 {}'.format(arm),
+                 arm, self._POSITIONS_LARM_DEG_UP_SYNC, '{}'.format(arm),
                  self._TASK_DURATION_DEFAULT, False)
                 #'task2; Under current implementation, left arm ' +
                 #'always moves first, followed immediately by right arm')
         arm = AbstAcceptanceTest.GRNAME_RIGHT_ARM
         test_client.set_joint_angles(
-                    arm, self._POSITIONS_RARM_DEG_DOWN, 'Task2 {}'.format(arm),
+                    arm, self._POSITIONS_RARM_DEG_DOWN, '{}'.format(arm),
                     self._TASK_DURATION_DEFAULT, False)
         time.sleep(2.0)
 
     def _set_pose_relative(self, test_client):
+        test_client.go_initpos()
+
         delta = self._R_Z_SMALLINCREMENT
         t = self._DURATION_EACH_SMALLINCREMENT
         t_total_sec = self._DURATON_TOTAL_SMALLINCREMENT
         total_increment = int(t_total_sec / t)
-        msg_1 = 'Task3; right arm is moving upward with' + \
-              '{}mm increment per {}s'.format(delta, t)
+        msg_1 = ('Right arm is moving upward with' +
+                 '{}mm increment per {}s'.format(delta, t))
         msg_2 = ' (Total {}cm over {}s).'.format(delta * total_increment, t_total_sec)
         print(msg_1 + msg_2)
         for i in range(total_increment):
@@ -219,38 +265,38 @@ class AcceptanceTest_Hiro():
         for positions in self._ROTATION_ANGLES_HEAD_1:
             test_client.set_joint_angles(
                                AbstAcceptanceTest.GRNAME_HEAD,
-                               positions, 'task4-1;', self._TASK_DURATION_HEAD)
+                               positions, '(1);', self._TASK_DURATION_HEAD)
 
         for positions in self._ROTATION_ANGLES_HEAD_2:
             test_client.set_joint_angles(
                                      AbstAcceptanceTest.GRNAME_HEAD, positions,
-                                     'task4-2;', self._TASK_DURATION_HEAD)
+                                     '(2);', self._TASK_DURATION_HEAD)
 
     def _move_torso(self, test_client):
         test_client.go_initpos()
         for positions in self._POSITIONS_TORSO_DEG:
             test_client.set_joint_angles(AbstAcceptanceTest.GRNAME_TORSO,
-                                         positions, 'task5')
+                                         positions, '')
 
     def _overwrite_torso(self, test_client):
         test_client.go_initpos()
         test_client.set_joint_angles(
                         AbstAcceptanceTest.GRNAME_TORSO, self._POSITIONS_TORSO_DEG[0],
-                        'task5-1', self._TASK_DURATION_TORSO, False)
+                        '(1)', self._TASK_DURATION_TORSO, False)
         time.sleep(2.0)
         test_client.set_joint_angles(
                           AbstAcceptanceTest.GRNAME_TORSO, self._POSITIONS_TORSO_DEG[1],
-                          'task5-2', self._TASK_DURATION_TORSO, True)
+                          '(2)', self._TASK_DURATION_TORSO, True)
         time.sleep(2.0)
 
     def _overwrite_arm(self, test_client):
         test_client.go_initpos()
         test_client.set_joint_angles(
                     AbstAcceptanceTest.GRNAME_LEFT_ARM, self._POSITIONS_LARM_DEG_UP_SYNC,
-                    'task6-1', self._TASK_DURATION_DEFAULT, False)
+                    '(1)', self._TASK_DURATION_DEFAULT, False)
         test_client.set_joint_angles(
                    AbstAcceptanceTest.GRNAME_RIGHT_ARM, self._POSITIONS_RARM_DEG_UP_SYNC,
-                   'Task6-2 begins. Overwrite previous arm command.' +
+                   '(2) begins. Overwrite previous arm command.' +
                    '\n\tIn the beginning both arm starts to move to the' +
                    '\n\tsame height, but to the left arm interrupting' +
                    '\ncommand is sent and it goes downward.',
@@ -258,11 +304,11 @@ class AcceptanceTest_Hiro():
         time.sleep(2.0)
         test_client.set_joint_angles(
                       AbstAcceptanceTest.GRNAME_LEFT_ARM, self._POSITIONS_LARM_DEG_DOWN,
-                      'task6-3', self._TASK_DURATION_DEFAULT, False)
+                      '(3)', self._TASK_DURATION_DEFAULT, False)
 
     def _show_workspace(self, test_client):
         test_client.go_initpos()
-        msg = 'Task 7; '
+        msg = '; '
 
         larm = AbstAcceptanceTest.GRNAME_LEFT_ARM
         rarm = AbstAcceptanceTest.GRNAME_RIGHT_ARM
