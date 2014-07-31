@@ -88,11 +88,22 @@ class AcceptanceTest_Hiro():
     _DURATON_TOTAL_SMALLINCREMENT = 30  # Second.
 
     def __init__(self, rtm_robotname='HiroNX(Robot)0', url=''):
+        '''
+        Initiate both ROS and RTM robot clients, keep them public so that they
+        are callable from script. e.g. On ipython,
+
+                In [1]: acceptance.ros.go_init()
+                In [2]: acceptance.rtm.goOffPose()
+        '''
         self._rtm_robotname = rtm_robotname
         self._rtm_url = url
 
-        self._acceptance_ros_client = None
-        self._acceptance_rtm_client = None
+        # Init RTM and ROS client.
+        self.ros = ROS_Client()
+        self._acceptance_ros_client = AcceptanceTestROS(self.ros)
+        self.rtm = HIRONX()
+        self.rtm.init(robotname=self._rtm_robotname, url=self._rtm_url)
+        self._acceptance_rtm_client = AcceptanceTestRTM(self.rtm)
 
     def _wait_input(self, do_wait_input=False):
         '''
@@ -107,10 +118,6 @@ class AcceptanceTest_Hiro():
         @param do_wait_input: If True, the user will be asked to hit any key
                               before each task to proceed.
         '''
-        if not self._acceptance_rtm_client:
-            _rtm_client = HIRONX()
-            _rtm_client.init(robotname=self._rtm_robotname, url=self._rtm_url)
-            self._acceptance_rtm_client = AcceptanceTestRTM(_rtm_client)
         self._run_tests(self._acceptance_rtm_client, do_wait_input)
 
     def run_tests_ros(self, do_wait_input=False):
@@ -120,8 +127,6 @@ class AcceptanceTest_Hiro():
         @param do_wait_input: If True, the user will be asked to hit any key
                               before each task to proceed.
         '''
-        if not self._acceptance_ros_client:
-            self._acceptance_ros_client = AcceptanceTestROS(ROS_Client())
         self._run_tests(self._acceptance_ros_client, do_wait_input)
 
     def _run_tests(self, test_client, do_wait_input=False):
