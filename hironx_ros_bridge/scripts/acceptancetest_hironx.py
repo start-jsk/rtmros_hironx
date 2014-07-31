@@ -302,4 +302,4 @@ if __name__ == '__main__':
     if len(unknown) >= 2:
         args.robot = unknown[0]
         args.modelfile = unknown[1]
-    acceptance_test = AcceptanceTest_Hiro()
+    acceptance = AcceptanceTest_Hiro()
