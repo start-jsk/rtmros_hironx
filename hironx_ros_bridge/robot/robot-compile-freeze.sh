@@ -2,7 +2,7 @@
 
 ##
 ## ssh to target QNX
-## $ tar -cvzf /tmp/opt_jsk.tgz /opt/jsk
+## $ tar -cvzf /tmp/opt_jsk_<hrpsys_version>.tgz /opt/jsk_<hrspys_version>
 ## run this script 
 ## input custmer's QNX's MAC address, which is shown in robot-system-check-base
 ## get robot-install-<MAC address>
@@ -19,7 +19,7 @@ cd $TMPDIR
 
 python <<EOF
 import binascii
-f_exe = open("/tmp/opt_jsk.tgz", 'r');
+f_exe = open("/tmp/opt_jsk_315.1.10.tgz", 'r');
 f_txt = open('opt_jsk_hex.h','w')
 f_txt.write('std::string bin_data="')
 f_txt.write(binascii.hexlify(f_exe.read()))
