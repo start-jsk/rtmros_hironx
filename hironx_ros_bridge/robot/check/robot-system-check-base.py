@@ -71,7 +71,7 @@ try:
     ret = md5sum_check_dir(['/usr/pkg/share',  0x814de4e7c790d11dc4764139b5fb3625L], output_dir = tmp_dir) and ret
 
     print "* Check /opt/nextage-open directories"
-    ret = md5sum_check_dir(['/opt/nextage-open',    0x5644cb667d7241ebec88d79b610b4558L], output_dir = tmp_dir) and ret
+    ret = md5sum_check_dir(['/opt/nextage-open',    0x5c63a325454cc0dc9c1614c427705a0L], output_dir = tmp_dir) and ret
 
     print "* Check /var files"
     import md5sum_var
