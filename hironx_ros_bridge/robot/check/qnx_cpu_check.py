@@ -32,7 +32,7 @@ def qnx_cpu_check() :
     check_pinfo(info, 'CPU:\S+', "CPU:X86")
 
     print "  Check Memory Size .. ",
-    check_pinfo(info, 'FreeMem:\S+', "3318Mb")
+    check_pinfo(info, '(?<=Mb\/)\S+', "3318Mb")  # Positive-lookbehind assertion
 
     print "  Check OS Release .. ",
     check_pinfo(info, 'Release:\S+', "Release:6.5.0")
