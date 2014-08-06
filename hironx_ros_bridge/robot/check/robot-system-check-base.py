@@ -35,15 +35,15 @@ try:
     print "  Check $PYTHON_PATH ... ", os.environ.get('PYTHON_PATH')
 
     # db check
-    db_check("start testing on " + hostname)
+    ret = db_check("start testing on " + hostname) and ret
 
     # run cpu check
     print "* Check CPU Info"
-    ret = qnx_cpu_check()
+    ret = qnx_cpu_check() and ret
 
     # check hdd space
     print "* Check HDD Info"
-    ret = qnx_hdd_check()
+    ret = qnx_hdd_check() and ret
 
     # run qnx config
     #print "* Check QNX Info"
@@ -51,7 +51,7 @@ try:
 
     # check eth
     print "* Check Eth Info"
-    ret = qnx_eth_check()
+    ret = qnx_eth_check() and ret
 
     # check hrpIo.so
     print "* Check libhrpIo.so"
