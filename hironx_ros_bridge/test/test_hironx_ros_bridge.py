@@ -171,7 +171,7 @@ class TestHiroROSBridge(unittest.TestCase):
         goal = self.goal_LArm()
         goal = self.setup_Positions(goal, [[ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
                                            [  25,-139,-157,  45,   0,   0],
-                                           [ 0.6, 0.0,-100,-15.2, 9.5, -3.2]])
+                                           [ 0.618, -0.157,-100.0,-15.212, 9.501, -3.188]])
         self.larm.send_goal_and_wait(goal)
 
         rospy.sleep(1)
@@ -188,7 +188,7 @@ class TestHiroROSBridge(unittest.TestCase):
         goal = self.goal_RArm()
         goal = self.setup_Positions(goal, [[ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
                                            [  25,-139,-157,  45,   0,   0],
-                                           [-0.6, 0.0,-100, 15.2, 9.5,  3.2]])
+                                           [-0.618, -0.157,-100.0,15.212, 9.501, 3.188]])
         self.rarm.send_goal_and_wait(goal)
 
         rospy.sleep(1)
