@@ -104,6 +104,15 @@ try:
     import md5sum_opt_nextage_open
     ret = md5sum_check_files('/opt/nextage-open', md5sum_opt_nextage_open.info) and ret
 
+    print "* Check /opt/jsk"
+    import md5sum_opt_jsk
+    try:
+        open("/opt/jsk/.checking", "w+").write("checking by TORK")
+    except Exception, e:
+        print e
+        raise(e)
+    ret = md5sum_check_files('/opt/jsk', md5sum_opt_jsk.info)    and ret
+
     print ""
     print "---"
     print ""
