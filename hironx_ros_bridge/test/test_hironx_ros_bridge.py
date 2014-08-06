@@ -182,7 +182,7 @@ class TestHiroROSBridge(unittest.TestCase):
         numpy.testing.assert_array_almost_equal(quaternion_matrix(rot)[0:3,0:3],
                                                 numpy.array([[ 0, 0,-1],
                                                              [ 0, 1, 0],
-                                                             [ 1, 0, 0]]), decimal=3)
+                                                             [ 1, 0, 0]]), decimal=2)
 
     def test_RArm(self):
         goal = self.goal_RArm()
@@ -199,7 +199,7 @@ class TestHiroROSBridge(unittest.TestCase):
         numpy.testing.assert_array_almost_equal(quaternion_matrix(rot)[0:3,0:3],
                                                 numpy.array([[ 0, 0,-1],
                                                              [ 0, 1, 0],
-                                                             [ 1, 0, 0]]), decimal=3)
+                                                             [ 1, 0, 0]]), decimal=2)
 
     def test_Torso(self):
         goal = self.goal_Torso()
