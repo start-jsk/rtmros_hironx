@@ -8,6 +8,7 @@ from qnx_eth_check import *
 from hrpiob_check import *
 from md5sum_check import *
 
+
 class Logger(object):
     def __init__(self, filename="Default.log"):
         self.terminal = sys.stdout
@@ -71,7 +72,7 @@ try:
     ret = md5sum_check_dir(['/usr/pkg/share',  0x814de4e7c790d11dc4764139b5fb3625L], output_dir = tmp_dir) and ret
 
     print "* Check /opt/nextage-open directories"
-    ret = md5sum_check_dir(['/opt/nextage-open',    0x5644cb667d7241ebec88d79b610b4558L], output_dir = tmp_dir) and ret
+    ret = md5sum_check_dir(['/opt/nextage-open',    0x5c63a325454cc0dc9c1614c427705a0L], output_dir = tmp_dir) and ret
 
     print "* Check /var files"
     import md5sum_var
@@ -107,12 +108,19 @@ try:
     print ""
     print "---"
     print ""
+    print "                              *******"
     print "Done all test, Result is ... ", ret
+    print "                              *******"
 
     if ret:
         print ""
         print "--- !!! CONGRATULATIONS !!! --- "
         print ""
+
+    # Version of Installability Checker. 
+    # TODO: Clarify versioning policy. As of now it corresponds to that of hironx_ros_bridge.
+    print('\tInstallability Checker version = 1.0.21')
+    print('\tFor any issue please report to TORK or https://github.com/start-jsk/rtmros_hironx/issues')
 
 except Exception, e:
     print "*** "

@@ -44,15 +44,15 @@ echo ";; check Ubuntu version $DISTRO"
 
 ping -c1 $hostname || (echo -e "-- [ERROR] Could not connect to $hostname"; exit 1 ; )
 
-getent ahosts $hostname || (echo -e "-- [ERROR] Could find IP address/Host name for $hostname"; exit 1 ; )
+getent ahosts $hostname || (echo -e "-- [ERROR] Could not find IP address/Host name for $hostname"; exit 1 ; )
 
 
 echo ";; Copying check script to $userid@$hostname:$TMPDIR"
-ssh  $userid@$hostname "touch /opt/jsk/.checked"
 ssh  $userid@$hostname "mkdir -p /tmp/$TMPDIR"
-scp  ./check/robot-system-check-base $userid@$hostname:/tmp/$TMPDIR/
+scp  ./robot-system-check-base $userid@$hostname:/tmp/$TMPDIR/
 echo ";; Execute check scripts"
 ssh $userid@$hostname -t $commands 2>&1 | tee robot-system-check-$hostname.log
+ssh  $userid@$hostname "touch /opt/jsk/.checked"
 
 echo -e ";;\n;;\n;; Done check scripts, please check robot-system-check-$hostname.log file\n;;\n;;\n"
 
