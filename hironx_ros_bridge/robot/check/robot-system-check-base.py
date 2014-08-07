@@ -8,6 +8,7 @@ from qnx_eth_check import *
 from hrpiob_check import *
 from md5sum_check import *
 
+
 class Logger(object):
     def __init__(self, filename="Default.log"):
         self.terminal = sys.stdout
@@ -107,12 +108,19 @@ try:
     print ""
     print "---"
     print ""
+    print "                              *******"
     print "Done all test, Result is ... ", ret
+    print "                              *******"
 
     if ret:
         print ""
         print "--- !!! CONGRATULATIONS !!! --- "
         print ""
+
+    # Version of Installability Checker. 
+    # TODO: Clarify versioning policy. As of now it corresponds to that of hironx_ros_bridge.
+    print('\tInstallability Checker version = 1.0.21')
+    print('\tFor any issue please report to TORK or https://github.com/start-jsk/rtmros_hironx/issues')
 
 except Exception, e:
     print "*** "
