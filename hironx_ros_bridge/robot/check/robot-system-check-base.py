@@ -28,6 +28,8 @@ os.mkdir(tmp_dir)
 sys.stdout = Logger('%s/robot-system-check-result.log'%(tmp_dir))
 
 try:
+    ret = True
+
     # run cpu check
     print "* Check Environment Variables"
     print "  Check $PATH ... ", os.environ.get('PATH')
