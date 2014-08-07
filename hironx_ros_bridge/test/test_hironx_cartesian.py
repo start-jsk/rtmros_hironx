@@ -38,6 +38,7 @@
 # This should come earlier than later import.
 # See http://code.google.com/p/rtm-ros-robotics/source/detail?r=6773
 import unittest
+import numpy
 
 from hironx_ros_bridge import hironx_client as hironx
 from hrpsys import rtm
@@ -57,12 +58,13 @@ class TestNextageopen(unittest.TestCase):
     @classmethod
     def setUpClass(self):
 
-        modelfile = rospy.get_param("hironx/collada_model_filepath")
-        rtm.nshost = 'hiro024'
-        robotname = "RobotHardware0"
+        #modelfile = rospy.get_param("hironx/collada_model_filepath")
+        #rtm.nshost = 'hiro024'
+        #robotname = "RobotHardware0"
 
         self._robot = hironx.HIRONX()
-        self._robot.init(robotname=robotname, url=modelfile)
+        #self._robot.init(robotname=robotname, url=modelfile)
+        self._robot.init()
 
         self._robot.goInitial(_GOINITIAL_TIME_MIDSPEED)
 
@@ -77,10 +79,13 @@ class TestNextageopen(unittest.TestCase):
             #print('   joint=', nxc.getJointAngles()[3:9])
         posi_post = self._robot.getCurrentPosition(_LINK_TESTED)
 
-        diff_result = posi_post
+        diff_result = posi_prev
         for i in range(len(posi_prev)):
-            diff_result[i] = posi_prev[i] - posi_post[i]
-        print('Position diff={}'.format(diff_result))
+            diff_result[i] = posi_post[i] - posi_prev[i]
+        diff_expected = _NUM_CARTESIAN_ITERATION*numpy.array([dx,dy,dz])
+        diff_result = numpy.array(diff_result)
+        print('Position diff={}, expected={}'.format(diff_result, diff_expected))
+        numpy.testing.assert_array_almost_equal(diff_result, diff_expected, decimal=3)
         return True
 
     def test_set_targetpose_relative_dx(self):
@@ -95,6 +100,7 @@ class TestNextageopen(unittest.TestCase):
         assert(self._set_relative(dz=0.0001))
         self._robot.goInitial(_GOINITIAL_TIME_MIDSPEED)
 
+# unittest.main()
 if __name__ == '__main__':
     import rostest
     rostest.rosrun(_PKG, 'test_nxopen', TestNextageopen)
