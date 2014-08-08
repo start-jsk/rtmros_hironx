@@ -69,3 +69,6 @@ fi
 
 
 echo "hit any key to exit"; read DUMMY;
+
+exit $RESULT
+
