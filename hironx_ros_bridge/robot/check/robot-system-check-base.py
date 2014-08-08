@@ -116,6 +116,7 @@ try:
         print ""
 
 except Exception, e:
+    ret = False
     print "*** "
     print "*** Somegthing was wrong...", e.message
     print "*** "
@@ -147,8 +148,11 @@ finally:
     print ""
     
 
+    if ret:
+        sys.exit(0)
+    else:
+        sys.exit(-1)
 
-sys.exit(ret)
 
 
 
