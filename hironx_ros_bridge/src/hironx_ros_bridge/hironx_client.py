@@ -789,7 +789,7 @@ class HIRONX(HrpsysConfigurator):
           - The time taken for the 1st line is defined by the arg tm.
 
         @param fname: Name of the pattern file.
-        @type tm: double
+        @type tm: float
         @param tm: - The time to take for the 1st line.
         @return: List of 2 oct(string) values.
         '''
