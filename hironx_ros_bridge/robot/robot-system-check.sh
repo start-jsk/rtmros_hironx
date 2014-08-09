@@ -61,7 +61,7 @@ echo $RESULT
 echo -e ";;\n;;\n;; Done check scripts, please check robot-system-check-$hostname.log file\n;;\n;;\n"
 
 if [ $RESULT == 0 ]; then
-    echo -e ";; RESULT: SUCEEDED"
+    echo -e ";; RESULT: SUCCEED"
 else
     echo -e ";; RESULT: FAILED"
 fi
