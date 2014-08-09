@@ -25,8 +25,11 @@ Similar to the `.launch`, `rostest` (`.test`) files are separated per `ROS` and 
  * `test-hironx-ros-bridge.test` tests `ROS`-based commands via `ROS_Client` client class. This internally launches `hironx_ros_bridge.launch`.
  * `test-hironx.test` tests `hrpsys`-based commands via `HIRONX` client class. This launches `hironx_startup.launch`.
 
+NOTE: these stress tests are currently intended for the simulation only (see the reasoning[1_]. Run on the **REAL ROBOT WITH EXTRA CARE**.
 
 Acceptance tests
 ------------------
 
 (TBD)
+
+.. _1: https://github.com/start-jsk/rtmros_hironx/issues/81#issuecomment-41697482
