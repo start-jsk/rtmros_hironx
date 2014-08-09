@@ -145,64 +145,64 @@ class AcceptanceTest_Hiro():
         '''
         @type test_client: hironx_ros_robotics.abst_acceptancetest.AbstAcceptanceTest
         '''
+
+        _task_msgs = ['TASK-1-1. Move each arm separately to the given pose by passing joint space.',
+                      'TASK-1-2. Move each arm separately to the given pose by specifying a pose.',
+                      'TASK-2. Move both arms at the same time using relative distance and angle from the current pose.',
+                      'TASK-3. Move arm with very small increment (0.1mm/sec).\n\tRight hand 3 cm upward over 30 seconds.',
+                      'In the beginning you\'ll see the displacement of the previous task.' +
+                       '\nTASK-4. Move head using Joint angles in degree.',
+                      'TASK-5. Rotate torso to the left and right 130 degree.',
+                      'TASK-6. Overwrite ongoing action.' +
+                      '\n\t6-1. While rotating torso toward left, it gets canceled and rotate toward right.' +
+                      '\n\t6-2. While lifting left hand, right hand also tries to reach the same height that gets cancelled so that it stays lower than the left hand.',
+                      'TASK-7. Show the capable workspace on front side of the robot.']
+
         _msg_type_client = None
         if isinstance(test_client, AcceptanceTestROS):
             _msg_type_client = '(ROS) '
         elif isinstance(test_client, AcceptanceTestRTM):
             _msg_type_client = '(RTM) '
-        msg = _msg_type_client
 
         test_client.go_initpos()
 
-        msg_task = ('TASK-1. Move each arm separately to the given pose ' +
-                    'by passing joint space.')
+        msg_task = _task_msgs[0]
         msg = _msg_type_client + msg_task
         self._wait_input(msg, do_wait_input)
         self._move_armbyarm_jointangles(test_client)
 
-        msg_task = ('TASK-1. Move each arm separately to the given pose ' +
-                    'by passing pose in hand space (i.e. orthogonal ' +
-                    'coordinate of eef).')
+        msg_task = _task_msgs[1]
         msg = _msg_type_client + msg_task
         self._wait_input(msg, do_wait_input)
         self._move_armbyarm_pose(test_client)
 
-        msg_task = ('TASK-2. Move both arms at the same time using relative ' +
-                'distance and angle from the current pose.')
+        msg_task = _task_msgs[2]
         msg = _msg_type_client + msg_task
         self._wait_input(msg, do_wait_input)
         self._movearms_together(test_client)
 
-        msg_task = ('TASK-3. Move arm with very small increment (0.1mm/sec).' +
-                    '\n\tRight hand 3 cm upward over 30 seconds.')
+        msg_task = _task_msgs[3]
         msg = _msg_type_client + msg_task
         self._wait_input(msg, do_wait_input)
         self._set_pose_relative(test_client)
 
-        msg_task = ('In the beginning you\'ll see the displacement of the previous task.' +
-                    '\nTASK-4. Move head using Joint angles in degree.')
+        msg_task = _task_msgs[4]
         msg = _msg_type_client + msg_task
         self._wait_input(msg, do_wait_input)
         self._move_head(test_client)
 
-        msg_task = ('TASK-5. Rotate torso to the left and right 130 degree.')
+        msg_task = _task_msgs[5]
         msg = _msg_type_client + msg_task
         self._wait_input(msg, do_wait_input)
         self._move_torso(test_client)
 
-        msg_task = ('TASK-6. Overwrite ongoing action.' +
-                    '\n\t6-1. While rotating torso toward left, it gets' +
-                    'canceled and rotate toward right.' +
-                    '\n\t6-2. While lifting left hand, right hand also tries ' +
-                    'to reach the same height that gets cancelled so that it ' +
-                    'stays lower than the left hand.')
+        msg_task = _task_msgs[6]
         msg = _msg_type_client + msg_task
         self._wait_input(msg, do_wait_input)
         self._overwrite_torso(test_client)
-        #task6-2
         self._overwrite_arm(test_client)
 
-        msg_task = ('TASK-7. Show the capable workspace on front side of the robot.')
+        msg_task = _task_msgs[7]
         msg = _msg_type_client + msg_task
         self._wait_input(msg, do_wait_input)
         self._show_workspace(test_client)

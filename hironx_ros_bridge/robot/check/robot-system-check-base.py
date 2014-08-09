@@ -124,6 +124,7 @@ try:
     print('\tFor any issue please report to TORK or https://github.com/start-jsk/rtmros_hironx/issues')
 
 except Exception, e:
+    ret = False
     print "*** "
     print "*** Somegthing was wrong...", e.message
     print "*** "
@@ -155,8 +156,11 @@ finally:
     print ""
     
 
+    if ret:
+        sys.exit(0)
+    else:
+        sys.exit(-1)
 
-sys.exit(ret)
 
 
 
