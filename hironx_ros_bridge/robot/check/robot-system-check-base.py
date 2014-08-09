@@ -28,6 +28,7 @@ os.mkdir(tmp_dir)
 sys.stdout = Logger('%s/robot-system-check-result.log'%(tmp_dir))
 
 try:
+    ret = True
 
     # run cpu check
     print "* Check Environment Variables"
@@ -37,11 +38,11 @@ try:
 
     # run cpu check
     print "* Check CPU Info"
-    ret = qnx_cpu_check()
+    ret = qnx_cpu_check() and ret
 
     # check hdd space
     print "* Check HDD Info"
-    ret = qnx_hdd_check()
+    ret = qnx_hdd_check() and ret
 
     # run qnx config
     #print "* Check QNX Info"
@@ -49,7 +50,7 @@ try:
 
     # check eth
     print "* Check Eth Info"
-    ret = qnx_eth_check()
+    ret = qnx_eth_check() and ret
 
     # check hrpIo.so
     print "* Check libhrpIo.so"
@@ -123,6 +124,7 @@ try:
     print('\tFor any issue please report to TORK or https://github.com/start-jsk/rtmros_hironx/issues')
 
 except Exception, e:
+    ret = False
     print "*** "
     print "*** Somegthing was wrong...", e.message
     print "*** "
@@ -154,8 +156,11 @@ finally:
     print ""
     
 
+    if ret:
+        sys.exit(0)
+    else:
+        sys.exit(-1)
 
-sys.exit(ret)
 
 
 
