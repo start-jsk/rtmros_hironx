@@ -142,7 +142,7 @@ class ROS_Client(object):
         Init positions are taken from HIRONX.
         TODO: Need to add factory position too that's so convenient when
               working with the manufacturer.
-        @type task_duration: double
+        @type task_duration: float
         '''
         rospy.loginfo('*** go_init begins ***')
         POSITIONS_TORSO_DEG = [0.0]
@@ -161,8 +161,8 @@ class ROS_Client(object):
         '''
         @type groupname: str
         @param groupname: This should exist in self.groupnames.
-        @type positions_radian: [double]
-        @type duration: double
+        @type positions_radian: [float]
+        @type duration: float
         @type wait: bool
         '''
         if groupname == self._GR_TORSO:
@@ -201,8 +201,8 @@ class ROS_Client(object):
         '''
         @type groupname: str
         @param groupname: This should exist in self.groupnames.
-        @type positions_deg: [int]
-        @type duration: double
+        @type positions_deg: [float]
+        @type duration: float
         @type wait: bool
         '''
         self.set_joint_angles_rad(groupname, self._to_rad_list(positions_deg),
@@ -213,7 +213,7 @@ class ROS_Client(object):
         @TODO Needs to be replaced by something more common, or at least moved
               somewhere more common.
 
-        @type list_degree: [int]
+        @type list_degree: [float]
         @param list_degree: A list length of the number of joints.
         '''
         list_rad = []
