@@ -2,8 +2,8 @@
 Changelog for package rtmros_hironx
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.0.21 (2014-08-11)
+-------------------
 * (robot installability check) 
 
   * Update md5sum to 7/17/2014 KWD version.
