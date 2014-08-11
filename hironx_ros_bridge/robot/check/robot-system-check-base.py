@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-import sys, tempfile, zipfile, socket, time, subprocess
+import sys, tempfile, zipfile, socket, time, subprocess, getopt
 from db_check import *
 from qnx_cpu_check import *
 from qnx_hdd_check import *
@@ -21,6 +21,27 @@ class Logger(object):
         self.terminal.flush()
         self.log.flush()
 
+def usage():
+    print "-h : print this message"
+    print "--remote-log : send log to remote database"
+
+try:
+    opts, args = getopt.getopt(sys.argv[1:], "h", ["help", "remote-log"])
+except getopt.GetoptError, err:
+    print str(err) # will print something like "option -a not recognized"
+    usage()
+    sys.exit(2)
+SaveToRemoteDatabase = False
+for o, a in opts:
+    if o in ("-h", "--help"):
+        usage()
+        sys.exit()
+    if o == "--remote-log":
+        SaveToRemoteDatabase = True
+        print "saving log message to remote database..."
+    else:
+        assert False, "unhandled option"
+
 hostname = socket.gethostname()
 localtime = time.strftime("%Y%m%d-%H%M%S", time.gmtime())
 tmp_base_dir = tempfile.mkdtemp()
@@ -38,7 +59,8 @@ try:
     print "  Check $PYTHON_PATH ... ", os.environ.get('PYTHON_PATH')
 
     # db check
-    ret = db_check("start testing on " + hostname) and ret
+    if SaveToRemoteDatabase:
+        ret = db_check("start testing on " + hostname) and ret
 
     # run cpu check
     print "* Check CPU Info"
