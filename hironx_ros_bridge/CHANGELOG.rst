@@ -2,6 +2,20 @@
 Changelog for package hironx_ros_bridge
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* (robot installability check) 
+
+  * Update md5sum to 7/17/2014 KWD version.
+  * Update checker QNX binary.
+  * Many improvements (no duplicate ssh password. Add tool's version. Fix memory-checking regex).
+  * save result to db.
+  * save hrpsys veresion.
+
+* (test_hironx_ros_bridge) add assertion, fix to work on simulation.
+* (doc) Add unit tests policy.
+* Contributors: Kei Okada, Isaac I.Y. Saito
+
 1.0.20 (2014-07-31)
 -------------------
 * Add ROS client. See acceptancetest_hironx.py for usage sample.
