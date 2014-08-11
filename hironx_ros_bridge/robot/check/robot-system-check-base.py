@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import sys, tempfile, zipfile, socket, time, subprocess
+from db_check import *
 from qnx_cpu_check import *
 from qnx_hdd_check import *
 from qnx_eth_check import *
@@ -35,6 +36,9 @@ try:
     print "  Check $PATH ... ", os.environ.get('PATH')
     print "  Check $LD_LIBRARY_PATH ... ", os.environ.get('LD_LIBRARY_PATH')
     print "  Check $PYTHON_PATH ... ", os.environ.get('PYTHON_PATH')
+
+    # db check
+    ret = db_check("start testing on " + hostname) and ret
 
     # run cpu check
     print "* Check CPU Info"
@@ -146,6 +150,8 @@ finally:
     print "Saving results.... to %s}"%logfilename
 
     try:
+        # db check
+        db_check(open('%s/robot-system-check-result.log'%(tmp_dir)).read())
         subprocess.check_call("cd %s; zip --password %s %s/%s -r ."%(tmp_base_dir, passwd, os.getcwd(), logfilename), shell=True, stdout=subprocess.PIPE)
     except Exception, e:
         print "*** Somegthing was wrong...", e.message
