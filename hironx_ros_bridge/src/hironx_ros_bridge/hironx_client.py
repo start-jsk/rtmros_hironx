@@ -913,7 +913,8 @@ class HIRONX(HrpsysConfigurator):
         @see: HrpsysConfigurator.setTargetPoseRelative
 
         Set angles to a joint group relative to its current pose.
-        All d* arguments are in meter.
+
+        For d*, distance arguments are in meter while rotations are in degree.
 
         Example usage: The following moves RARM_JOINT5 joint 0.1mm forward
                        within 0.1sec.
