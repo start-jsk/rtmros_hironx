@@ -34,6 +34,7 @@
 
 import time
 
+from hironx_ros_bridge.constant import Constant
 from hironx_ros_bridge.testutil.abst_acceptancetest import AbstAcceptanceTest
 
 
@@ -69,9 +70,9 @@ class AcceptanceTestRTM(AbstAcceptanceTest):
     def set_pose_relative(
                         self, joint_group, dx=0, dy=0, dz=0, dr=0, dp=0, dw=0,
                         msg_tasktitle=None, task_duration=7.0, do_wait=True):
-        if joint_group == self.GRNAME_LEFT_ARM:
+        if joint_group == Constant.GRNAME_LEFT_ARM:
             eef = 'LARM_JOINT5'
-        elif joint_group == self.GRNAME_RIGHT_ARM:
+        elif joint_group == Constant.GRNAME_RIGHT_ARM:
             eef = 'RARM_JOINT5'
 
         print("== RTM; {} ==".format(msg_tasktitle))

@@ -34,6 +34,7 @@
 
 import time
 
+from hironx_ros_bridge.constant import Constant
 from hironx_ros_bridge.hironx_client import HIRONX
 from hironx_ros_bridge.ros_client import ROS_Client
 from hironx_ros_bridge.testutil.abst_acceptancetest import AbstAcceptanceTest
@@ -212,11 +213,11 @@ class AcceptanceTest_Hiro():
         @type test_client: hironx_ros_robotics.abst_acceptancetest.AbstAcceptanceTest  
         '''
         test_client.go_initpos()
-        arm = AbstAcceptanceTest.GRNAME_LEFT_ARM
+        arm = Constant.GRNAME_LEFT_ARM
         test_client.set_joint_angles(arm, self._POSITIONS_LARM_DEG_UP,
                                      'Task1 {}'.format(arm))
 
-        arm = AbstAcceptanceTest.GRNAME_RIGHT_ARM
+        arm = Constant.GRNAME_RIGHT_ARM
         test_client.set_joint_angles(arm, self._POSITIONS_RARM_DEG_DOWN,
                                      'Task1 {}'.format(arm))
         time.sleep(2.0)
@@ -230,13 +231,13 @@ class AcceptanceTest_Hiro():
         @type test_client: hironx_ros_robotics.abst_acceptancetest.AbstAcceptanceTest  
         '''
         test_client.go_initpos()
-        arm = AbstAcceptanceTest.GRNAME_LEFT_ARM
+        arm = Constant.GRNAME_LEFT_ARM
         test_client.set_joint_angles(
                  arm, self._POSITIONS_LARM_DEG_UP_SYNC, '{}'.format(arm),
                  self._TASK_DURATION_DEFAULT, False)
                 #'task2; Under current implementation, left arm ' +
                 #'always moves first, followed immediately by right arm')
-        arm = AbstAcceptanceTest.GRNAME_RIGHT_ARM
+        arm = Constant.GRNAME_RIGHT_ARM
         test_client.set_joint_angles(
                     arm, self._POSITIONS_RARM_DEG_DOWN, '{}'.format(arm),
                     self._TASK_DURATION_DEFAULT, False)
@@ -256,7 +257,7 @@ class AcceptanceTest_Hiro():
         for i in range(total_increment):
             msg_eachloop = '{}th loop;'.format(i)
             test_client.set_pose_relative(
-                     AbstAcceptanceTest.GRNAME_RIGHT_ARM, dz=delta,
+                     Constant.GRNAME_RIGHT_ARM, dz=delta,
                      msg_tasktitle=msg_eachloop, task_duration=t, do_wait=True)
 
     def _move_head(self, test_client):
@@ -264,38 +265,38 @@ class AcceptanceTest_Hiro():
 
         for positions in self._ROTATION_ANGLES_HEAD_1:
             test_client.set_joint_angles(
-                               AbstAcceptanceTest.GRNAME_HEAD,
+                               Constant.GRNAME_HEAD,
                                positions, '(1);', self._TASK_DURATION_HEAD)
 
         for positions in self._ROTATION_ANGLES_HEAD_2:
             test_client.set_joint_angles(
-                                     AbstAcceptanceTest.GRNAME_HEAD, positions,
+                                     Constant.GRNAME_HEAD, positions,
                                      '(2);', self._TASK_DURATION_HEAD)
 
     def _move_torso(self, test_client):
         test_client.go_initpos()
         for positions in self._POSITIONS_TORSO_DEG:
-            test_client.set_joint_angles(AbstAcceptanceTest.GRNAME_TORSO,
+            test_client.set_joint_angles(Constant.GRNAME_TORSO,
                                          positions, '')
 
     def _overwrite_torso(self, test_client):
         test_client.go_initpos()
         test_client.set_joint_angles(
-                        AbstAcceptanceTest.GRNAME_TORSO, self._POSITIONS_TORSO_DEG[0],
+                        Constant.GRNAME_TORSO, self._POSITIONS_TORSO_DEG[0],
                         '(1)', self._TASK_DURATION_TORSO, False)
         time.sleep(2.0)
         test_client.set_joint_angles(
-                          AbstAcceptanceTest.GRNAME_TORSO, self._POSITIONS_TORSO_DEG[1],
+                          Constant.GRNAME_TORSO, self._POSITIONS_TORSO_DEG[1],
                           '(2)', self._TASK_DURATION_TORSO, True)
         time.sleep(2.0)
 
     def _overwrite_arm(self, test_client):
         test_client.go_initpos()
         test_client.set_joint_angles(
-                    AbstAcceptanceTest.GRNAME_LEFT_ARM, self._POSITIONS_LARM_DEG_UP_SYNC,
+                    Constant.GRNAME_LEFT_ARM, self._POSITIONS_LARM_DEG_UP_SYNC,
                     '(1)', self._TASK_DURATION_DEFAULT, False)
         test_client.set_joint_angles(
-                   AbstAcceptanceTest.GRNAME_RIGHT_ARM, self._POSITIONS_RARM_DEG_UP_SYNC,
+                   Constant.GRNAME_RIGHT_ARM, self._POSITIONS_RARM_DEG_UP_SYNC,
                    '(2) begins. Overwrite previous arm command.' +
                    '\n\tIn the beginning both arm starts to move to the' +
                    '\n\tsame height, but to the left arm interrupting' +
@@ -303,15 +304,15 @@ class AcceptanceTest_Hiro():
                    self._TASK_DURATION_DEFAULT, False)
         time.sleep(2.0)
         test_client.set_joint_angles(
-                      AbstAcceptanceTest.GRNAME_LEFT_ARM, self._POSITIONS_LARM_DEG_DOWN,
+                      Constant.GRNAME_LEFT_ARM, self._POSITIONS_LARM_DEG_DOWN,
                       '(3)', self._TASK_DURATION_DEFAULT, False)
 
     def _show_workspace(self, test_client):
         test_client.go_initpos()
         msg = '; '
 
-        larm = AbstAcceptanceTest.GRNAME_LEFT_ARM
-        rarm = AbstAcceptanceTest.GRNAME_RIGHT_ARM
+        larm = Constant.GRNAME_LEFT_ARM
+        rarm = Constant.GRNAME_RIGHT_ARM
         # X near, Y far.
         test_client.set_pose(
                    larm, self._POS_L_X_NEAR_Y_FAR, self._RPY_L_X_NEAR_Y_FAR,
