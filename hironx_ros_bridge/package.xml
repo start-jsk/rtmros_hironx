@@ -17,6 +17,8 @@
 
   <build_depend>hrpsys_ros_bridge</build_depend> <!-- Needed to transitively depend on openhrp3. See https://github.com/start-jsk/rtmros_hironx/pull/30#commitcomment-5535604 -->
   <build_depend>mk</build_depend>
+  <build_depend>pr2_controllers_msgs</build_depend>
+  <build_depend>roslib</build_depend>
   <build_depend>rosbash</build_depend>
   <build_depend>rosbuild</build_depend>
   <build_depend>roslang</build_depend>
@@ -25,6 +27,8 @@
 
   <run_depend>gnuplot</run_depend>
   <run_depend>hrpsys_ros_bridge</run_depend>
+  <run_depend>pr2_controllers_msgs</run_depend>
+  <run_depend>roslib</run_depend>
   <run_depend>rosbash</run_depend>
   <run_depend>rospy</run_depend>
   <run_depend>roslang</run_depend>
