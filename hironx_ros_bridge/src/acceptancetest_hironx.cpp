@@ -63,7 +63,7 @@ public:
   static const double positions_larm_deg_up_sync[6];
   static const double positions_rarm_deg_up_sync[6];
   static const double rotation_angles_head_1[2][2];
-  static const double rotation_angles_head_2[3][2];
+  static const double rotation_angles_head_2[2][2];
   static const double positions_torso_deg[2][1];
   static const double R_Z_SMALLINCREMENT;
   // WORKSPACE; x near, y far
@@ -82,6 +82,7 @@ public:
   static const double TASK_DURATION_TORSO;
   static const double DURATION_EACH_SMALLINCREMENT;
   static const double TASK_DURATION_HEAD;
+  static const int SLEEP_OVERWRITE;
 
   static const int DURATION_TOTAL_SMALLINCREMENT; // second
 
@@ -118,7 +119,7 @@ public:
      POSITIONS_RARM_DEG_UP_SYNC( INIT_VEC(positions_rarm_deg_up_sync,6) ),
 
      ROTATION_ANGLES_HEAD_1(2,DVEC(2)),
-     ROTATION_ANGLES_HEAD_2(3,DVEC(2)),
+     ROTATION_ANGLES_HEAD_2(2,DVEC(2)),
      POSITIONS_TORSO_DEG(2,DVEC(1)),
 
      // WORKSPACE, X NEAR, Y FAR
@@ -133,7 +134,7 @@ public:
      RPY_R_X_FAR_Y_FAR( INIT_VEC(rpy_r_x_far_y_far,3) )
   {
     VEC_COPY(rotation_angles_head_1,ROTATION_ANGLES_HEAD_1,2,2)
-      VEC_COPY(rotation_angles_head_2,ROTATION_ANGLES_HEAD_2,3,2)
+      VEC_COPY(rotation_angles_head_2,ROTATION_ANGLES_HEAD_2,2,2)
       VEC_COPY(positions_torso_deg,POSITIONS_TORSO_DEG,2,1)
       };
 
@@ -290,14 +291,16 @@ public:
 	++positions){
       test_client.set_joint_angles(AbstAcceptanceTest::GRNAME_HEAD,
 				   *positions,
-				   "(1);", TASK_DURATION_HEAD);
+				   "(1);",
+				   TASK_DURATION_HEAD);
     }
     for(std::vector< std::vector<double> >::iterator positions = ROTATION_ANGLES_HEAD_2.begin();
 	positions != ROTATION_ANGLES_HEAD_2.end();
 	++positions){
       test_client.set_joint_angles(AbstAcceptanceTest::GRNAME_HEAD,
 				   *positions,
-				   "(2);", TASK_DURATION_HEAD);
+				   "(2);",
+				   TASK_DURATION_HEAD);
     }
   }
 
@@ -319,13 +322,17 @@ public:
 				 "(1)",
 				 TASK_DURATION_TORSO,
 				 false);
+
+    std::this_thread::sleep_for(std::chrono::milliseconds(SLEEP_OVERWRITE));
+
     test_client.set_joint_angles(
 				 AbstAcceptanceTest::GRNAME_TORSO,
 				 POSITIONS_TORSO_DEG[1],
 				 "(2)",
 				 TASK_DURATION_TORSO,
 				 true);
-    std::this_thread::sleep_for(std::chrono::milliseconds(2000));
+    std::this_thread::sleep_for(std::chrono::milliseconds(SLEEP_OVERWRITE));
+
   }
 
   void overwrite_arm(AbstAcceptanceTest& test_client){
@@ -342,13 +349,16 @@ public:
 				 TASK_DURATION_DEFAULT,
 				 false);
 
-    std::this_thread::sleep_for(std::chrono::milliseconds(2000));
+    std::this_thread::sleep_for(std::chrono::milliseconds(SLEEP_OVERWRITE));
 
     test_client.set_joint_angles(AbstAcceptanceTest::GRNAME_LEFT_ARM,
 				 POSITIONS_LARM_DEG_DOWN,
 				 "(3)",
 				 TASK_DURATION_DEFAULT,
 				 false);
+
+    std::this_thread::sleep_for(std::chrono::milliseconds((int)TASK_DURATION_DEFAULT * 1000));
+
   }
 
   void show_workspace(AbstAcceptanceTest& test_client){
@@ -385,7 +395,7 @@ const double AcceptanceTest_Hiro::positions_rarm_deg_down[6] = {-4.949, -3.372, 
 const double AcceptanceTest_Hiro::positions_larm_deg_up_sync[6] =  {-4.695, -2.009, -117.103, -17.178, 29.138, -3.738};
 const double AcceptanceTest_Hiro::positions_rarm_deg_up_sync[6] =  {4.695, -2.009, -117.103, 17.178, 29.138, 3.738};
 const double AcceptanceTest_Hiro::rotation_angles_head_1[2][2] = {{0.1, 0.0}, {50.0, 10.0}};
-const double AcceptanceTest_Hiro::rotation_angles_head_2[3][2] = {{50, 10}, {-50, -10}, {0, 0}};
+const double AcceptanceTest_Hiro::rotation_angles_head_2[2][2] = { {-50, -10}, {0, 0}};
 const double AcceptanceTest_Hiro::positions_torso_deg[2][1] =  {{130.0}, {-130.0}};
 
 const double AcceptanceTest_Hiro::R_Z_SMALLINCREMENT =  0.0001;
@@ -400,10 +410,11 @@ const double AcceptanceTest_Hiro::rpy_l_x_far_y_far[3] =  {-3.075954857224205, -
 const double AcceptanceTest_Hiro::pos_r_x_far_y_far[3] =  {0.4755337947019357, -0.17242322190721648, 1.0476395479774052};
 const double AcceptanceTest_Hiro::rpy_r_x_far_y_far[3] =  {3.0715850722714944, -1.5690204449882248, -3.071395243174742};
 
-const double AcceptanceTest_Hiro::TASK_DURATION_DEFAULT = 5.0;
+const double AcceptanceTest_Hiro::TASK_DURATION_DEFAULT = 7.0;
 const double AcceptanceTest_Hiro::DURATION_EACH_SMALLINCREMENT = 0.1;
-const double AcceptanceTest_Hiro::TASK_DURATION_TORSO = 4.0;
-const double AcceptanceTest_Hiro::TASK_DURATION_HEAD = 2.5;
+const double AcceptanceTest_Hiro::TASK_DURATION_TORSO = AcceptanceTest_Hiro::TASK_DURATION_DEFAULT;
+const double AcceptanceTest_Hiro::TASK_DURATION_HEAD = AcceptanceTest_Hiro::TASK_DURATION_DEFAULT;
+const int AcceptanceTest_Hiro::SLEEP_OVERWRITE = 2000;
 
 const int AcceptanceTest_Hiro::DURATION_TOTAL_SMALLINCREMENT = 30;  // Second.
 
