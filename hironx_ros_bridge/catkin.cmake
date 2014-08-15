@@ -5,10 +5,10 @@ find_package(catkin REQUIRED COMPONENTS hrpsys_ros_bridge pr2_controllers_msgs r
 find_package(Boost REQUIRED COMPONENTS system)
 
 catkin_package(
-    DEPENDS # TODO
+    CATKIN_DEPENDS std_msgs
     CATKIN_DEPENDS hrpsys_ros_bridge pr2_controllers_msgs roslib #
     INCLUDE_DIRS include
-    LIBRARIES # TODO
+    LIBRARIES acceptancetest_hironx_cpp
 )
 
 catkin_python_setup()
@@ -61,8 +61,11 @@ add_executable(
 
 target_link_libraries(
   acceptancetest_hironx_cpp
-  ros_client_cpp ${catkin_LIBRARIES}
+  ros_client_cpp ${catkin_LIBRARIES} ${Boost_LIBRARIES}
 )
+
+install(TARGETS acceptancetest_hironx_cpp
+        RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
 
 install(DIRECTORY launch DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION} PATTERN ".svn" EXCLUDE)
 install(DIRECTORY scripts DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION} USE_SOURCE_PERMISSIONS PATTERN ".svn" EXCLUDE)
@@ -88,6 +91,17 @@ install(CODE "
   endforeach()
   ")
 
+install(TARGETS acceptancetest_hironx_cpp ros_client_cpp
+        ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+        LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+        RUNTIME DESTINATION ${CATKIN_GLOBAL_BIN_DESTINATION})
+
+install(DIRECTORY include/
+        DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION})
+
+install(DIRECTORY include/
+        DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
+        PATTERN ".svn" EXCLUDE)
 
 add_rostest(test/test-hironx.test)
 add_rostest(test/test-hironx-ros-bridge.test)
