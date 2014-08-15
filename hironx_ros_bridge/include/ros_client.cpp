@@ -126,16 +126,28 @@ public:
   void go_init(double task_duration=7.0)
   {
     ROS_INFO("*** go_init begins ***");
-    std::vector<double> POSITIONS_TORSO_DEG = {0.0};
+    std::vector<double> POSITIONS_TORSO_DEG(1,0.0);
     set_joint_angles_deg(GR_TORSO, POSITIONS_TORSO_DEG, task_duration);
 
-    std::vector<double> POSITIONS_HEAD_DEG = {0.0, 0.0};
+    std::vector<double> POSITIONS_HEAD_DEG(2,0.0);
     set_joint_angles_deg(GR_HEAD, POSITIONS_HEAD_DEG, task_duration);
 
-    std::vector<double> POSITIONS_LARM_DEG = {0.6, 0, -100, -15.2, 9.4, -3.2};
+    std::vector<double> POSITIONS_LARM_DEG(6);
+    POSITIONS_LARM_DEG[0] = 0.6;
+    POSITIONS_LARM_DEG[1] = 0.0;
+    POSITIONS_LARM_DEG[2] =-100;
+    POSITIONS_LARM_DEG[3] =-15.2;
+    POSITIONS_LARM_DEG[4] = 9.4;
+    POSITIONS_LARM_DEG[5] =-3.2;
     set_joint_angles_deg(GR_LARM, POSITIONS_LARM_DEG, task_duration);
 
-    std::vector<double> POSITIONS_RARM_DEG = {-0.6, 0, -100, 15.2, 9.4, 3.2};
+    std::vector<double> POSITIONS_RARM_DEG(6);
+    POSITIONS_RARM_DEG[0] =-0.6;
+    POSITIONS_RARM_DEG[1] =   0;
+    POSITIONS_RARM_DEG[2] =-100;
+    POSITIONS_RARM_DEG[3] =15.2;
+    POSITIONS_RARM_DEG[4] = 9.4;
+    POSITIONS_RARM_DEG[5] = 3.2;
     set_joint_angles_deg(GR_RARM, POSITIONS_RARM_DEG,task_duration, true);
 
     ROS_INFO("*** go_init_ends ***");

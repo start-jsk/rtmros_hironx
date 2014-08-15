@@ -7,19 +7,8 @@
 #include <testutil/abst_acceptancetest.hpp>
 #include <testutil/acceptancetest_ros.hpp>
 
-#include <chrono>
-#include <thread>
-
 #include <sstream>
 
-
-/*
-  I thoght ROS cannot compile with C++11.
-  To change number to string,
-  I write this method.
-  But I can compile this code by C++11.
-  Maybe we don't need this method.
-*/
 template <class T>
 std::string to_string(T a){
   std::stringstream ss;
@@ -44,13 +33,6 @@ class AcceptanceTest_Hiro{
     Prefix for methods 'at' means 'acceptance test'.
 
     All time arguments are second.
-
-
-    #include <chrono>
-    #include <thread>
-    You can use these libraries in C++11 (or C++0x).
-
-    std::this_thread::sleep_for(std::chrono::milliseconds(2000));
 
   */
 public:
@@ -82,6 +64,7 @@ public:
   static const double TASK_DURATION_TORSO;
   static const double DURATION_EACH_SMALLINCREMENT;
   static const double TASK_DURATION_HEAD;
+  static const int SLEEP_TIME;
   static const int SLEEP_OVERWRITE;
 
   static const int DURATION_TOTAL_SMALLINCREMENT; // second
@@ -239,7 +222,7 @@ public:
     arm = AbstAcceptanceTest::GRNAME_RIGHT_ARM;
     test_client.set_joint_angles(arm, POSITIONS_RARM_DEG_DOWN,
 				 "Task1 "+to_string(arm));
-    std::this_thread::sleep_for(std::chrono::milliseconds(2000));
+    ros::Duration(SLEEP_TIME).sleep();
   }
 
   void move_armbyarm_pose(AbstAcceptanceTest& test_client){
@@ -258,10 +241,10 @@ public:
       always moves first, followed immediately by right arm")
     */
     arm = AbstAcceptanceTest::GRNAME_RIGHT_ARM;
-    test_client.set_joint_angles(
-				 arm, POSITIONS_RARM_DEG_DOWN, to_string(arm),
+    test_client.set_joint_angles(arm, POSITIONS_RARM_DEG_DOWN,
+				 to_string(arm),
 				 TASK_DURATION_DEFAULT, false);
-    std::this_thread::sleep_for(std::chrono::milliseconds(2000));
+    ros::Duration(SLEEP_TIME).sleep();
   }
 
   void set_pose_relative(AbstAcceptanceTest& test_client){
@@ -323,7 +306,7 @@ public:
 				 TASK_DURATION_TORSO,
 				 false);
 
-    std::this_thread::sleep_for(std::chrono::milliseconds(SLEEP_OVERWRITE));
+    ros::Duration(SLEEP_OVERWRITE).sleep();
 
     test_client.set_joint_angles(
 				 AbstAcceptanceTest::GRNAME_TORSO,
@@ -331,8 +314,8 @@ public:
 				 "(2)",
 				 TASK_DURATION_TORSO,
 				 true);
-    std::this_thread::sleep_for(std::chrono::milliseconds(SLEEP_OVERWRITE));
 
+    ros::Duration(SLEEP_OVERWRITE).sleep();
   }
 
   void overwrite_arm(AbstAcceptanceTest& test_client){
@@ -349,7 +332,7 @@ public:
 				 TASK_DURATION_DEFAULT,
 				 false);
 
-    std::this_thread::sleep_for(std::chrono::milliseconds(SLEEP_OVERWRITE));
+    ros::Duration(SLEEP_OVERWRITE).sleep();
 
     test_client.set_joint_angles(AbstAcceptanceTest::GRNAME_LEFT_ARM,
 				 POSITIONS_LARM_DEG_DOWN,
@@ -357,7 +340,7 @@ public:
 				 TASK_DURATION_DEFAULT,
 				 false);
 
-    std::this_thread::sleep_for(std::chrono::milliseconds((int)TASK_DURATION_DEFAULT * 1000));
+    ros::Duration((int)TASK_DURATION_DEFAULT).sleep();
 
   }
 
@@ -410,15 +393,14 @@ const double AcceptanceTest_Hiro::rpy_l_x_far_y_far[3] =  {-3.075954857224205, -
 const double AcceptanceTest_Hiro::pos_r_x_far_y_far[3] =  {0.4755337947019357, -0.17242322190721648, 1.0476395479774052};
 const double AcceptanceTest_Hiro::rpy_r_x_far_y_far[3] =  {3.0715850722714944, -1.5690204449882248, -3.071395243174742};
 
-const double AcceptanceTest_Hiro::TASK_DURATION_DEFAULT = 7.0;
+const double AcceptanceTest_Hiro::TASK_DURATION_DEFAULT = 4.0;
 const double AcceptanceTest_Hiro::DURATION_EACH_SMALLINCREMENT = 0.1;
 const double AcceptanceTest_Hiro::TASK_DURATION_TORSO = AcceptanceTest_Hiro::TASK_DURATION_DEFAULT;
 const double AcceptanceTest_Hiro::TASK_DURATION_HEAD = AcceptanceTest_Hiro::TASK_DURATION_DEFAULT;
-const int AcceptanceTest_Hiro::SLEEP_OVERWRITE = 2000;
+const int AcceptanceTest_Hiro::SLEEP_TIME = 2;
+const int AcceptanceTest_Hiro::SLEEP_OVERWRITE = 2;
 
 const int AcceptanceTest_Hiro::DURATION_TOTAL_SMALLINCREMENT = 30;  // Second.
-
-
 int main(int argc,char* argv[]){
   // Init the ROS node
   ros::init(argc,argv,"hironx_ros_client");

@@ -45,7 +45,7 @@ public:
                 double task_duration=7.0,
                 bool do_wait=true,
                 std::string ref_frame_name=""){
-    ROS_INFO("This method has not been implemented yes.");
+    ROS_INFO("This method has not been implemented yet.");
   }
 
   void set_pose_relative(std::string joint_group,
@@ -53,7 +53,7 @@ public:
                          std::string msg_tasktitle="",
                          double task_duration=7.0,
                          bool do_wait=true){
-    ROS_INFO("This method has not been implemented yes.");
+    ROS_INFO("This method has not been implemented yet.");
   }
 
 };

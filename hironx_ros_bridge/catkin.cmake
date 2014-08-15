@@ -50,7 +50,7 @@ add_custom_target(${PROJECT_NAME}_model_files ALL DEPENDS ${PROJECT_SOURCE_DIR}/
 
 include_directories(include ${catkin_INCLUDE_DIRS} ${Boost_INCLUDE_DIRS})
 
-add_definitions("-std=c++0x")
+#add_definitions("-std=c++0x")
 add_library(
   ros_client_cpp include/ros_client.cpp
 )
