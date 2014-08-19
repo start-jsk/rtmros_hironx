@@ -9,7 +9,8 @@ def db_check(msg):
     print "\n* Saving DB..\n"
     try:
         r = requests.post(url, data=form_data, headers=user_agent)
-    except Exception as e:
+    # Using Python 2.5 style. See http://stackoverflow.com/questions/5119751/in-python-whats-the-difference-between-except-exception-as-e-and-except-exc
+    except Exception, e:
         print "".join(map(lambda s: hex(s), [ord(s) for s in e.message.message]))
         return False
     if not r.ok:
