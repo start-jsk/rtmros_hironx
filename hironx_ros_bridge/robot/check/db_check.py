@@ -1,7 +1,15 @@
 #!/usr/bin/env python
 
-import requests
 def db_check(msg):
+
+    try:
+        import requests
+    except ImportError, e:
+        print str(e), ", skipping db_check."
+        # Since failure of db_check does not mean the installability checking failed,
+        # return true here so as not to effect the other checking steps.
+        return True
+
     url = 'https://docs.google.com/forms/d/1FuvFIWQui1dawi9OtPgEo4Q6V729hkhjfRetJKtId3Q/formResponse'
     form_data = {'entry.1561122805':msg}
     user_agent = {'Referer':'https://docs.google.com/forms/d/1FuvFIWQui1dawi9OtPgEo4Q6V729hkhjfRetJKtId3Q/viewform','User-Agent': "Mozilla/5.0 (X11; Linux i686) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/28.0.1500.52 Safari/537.36"}
