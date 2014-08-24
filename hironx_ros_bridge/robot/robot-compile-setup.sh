@@ -39,7 +39,8 @@ wget 'https://docs.google.com/uc?authuser=0&id=0B5hXrFUpyR2iZS0tQlFyXzhjaGc&expo
 (cd ${TMPDIR}; unzip -o rtmros_nextage.zip)
 mkdir -p ${TMPDIR}/opt/jsk/etc
 # zipball retrieved by URL_NXO_LATEST_ZIPBALL yields random folder name. So skip it by asterisk.
-mv ${TMPDIR}/*/nextage_description/ ${TMPDIR}/opt/jsk/etc/HIRONX
+mv ${TMPDIR}/*/nextage_description/ ${TMPDIR}/opt/jsk/etc/HIRONX 
+mv ${TMPDIR}/opt/jsk/etc/HIRONX/models ${TMPDIR}/opt/jsk/etc/HIRONX/model
 tar -C ${TMPDIR} -cvzf ${TMPDIR}/opt-jsk-base-model.tgz ./opt/jsk/
 
 commands="
