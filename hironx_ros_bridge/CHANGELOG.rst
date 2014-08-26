@@ -2,8 +2,8 @@
 Changelog for package hironx_ros_bridge
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.0.22 (2014-08-26)
+-------------------
 * (RTM client) Remove redundant implementation of derived methods. Now the API doc of the methods derived from the super class, we need to refer to `the upstream repository <https://github.com/fkanehiro/hrpsys-base/blob/master/python/hrpsys_config.py>`_ until an alternative solution is introduced (`discussed in <https://github.com/fkanehiro/hrpsys-base/issues/268>`_).
 * Add hironx ros cpp client and its acceptance test by @iory
 * (robot install) Many improvements.
