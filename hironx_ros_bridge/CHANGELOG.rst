@@ -2,6 +2,15 @@
 Changelog for package hironx_ros_bridge
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* (RTM client) Remove redundant implementation of derived methods. Now the API doc of the methods derived from the super class, we need to refer to `the upstream repository <https://github.com/fkanehiro/hrpsys-base/blob/master/python/hrpsys_config.py>`_ until an alternative solution is introduced (`discussed in <https://github.com/fkanehiro/hrpsys-base/issues/268>`_).
+* Add hironx ros cpp client and its acceptance test by @iory
+* (robot install) Many improvements.
+  * Store ssh connection
+* Depency improvement (removed hrpsys trajectory_msgs and pr2_controller_msgs that are transitively handled in hrpsys_ros_bridge, see `#208 <https://github.com/start-jsk/rtmros_hironx/issues/208>`_)
+* Contributors: Isaac I.Y. Saito, Kei Okada, Iory Yanokura
+
 1.0.21 (2014-08-11)
 -------------------
 * (robot installability check) 
