@@ -58,12 +58,12 @@ class AcceptanceTestRTM(AbstAcceptanceTest):
         self._robotclient.setJointAnglesOfGroup(
                          joint_group, joint_angles, task_duration, do_wait)
 
-    def set_pose(self, joint_group, pose, rpy, msg_tasktitle,
-                      task_duration=7.0, do_wait=True, ref_frame_name=None):
+    def set_pose(self, joint_group, position, rpy, msg_tasktitle,
+                 task_duration=7.0, do_wait=True, ref_frame_name=None):
 
         print("== RTM; {} ==".format(msg_tasktitle))
-        self._robotclient.setTargetPose(joint_group, pose, rpy, task_duration,
-                                        ref_frame_name)
+        self._robotclient.setTargetPose(joint_group, position, rpy,
+                                        task_duration, ref_frame_name)
         if do_wait:
             self._robotclient.waitInterpolationOfGroup(joint_group)
 

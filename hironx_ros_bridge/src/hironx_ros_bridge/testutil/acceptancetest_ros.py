@@ -44,7 +44,6 @@ class AcceptanceTestROS(AbstAcceptanceTest):
         @type robot_client: hironx_ros_bridge.ros_client.ROS_Client
         '''
         self._robotclient = robot_client
-        self._robotclient.init_action_clients()
 
     def go_initpos(self, default_task_duration=7.0):
         self._robotclient.go_init(default_task_duration)
@@ -58,9 +57,14 @@ class AcceptanceTestROS(AbstAcceptanceTest):
         self._robotclient.set_joint_angles_deg(
                          joint_group, joint_angles, task_duration, do_wait)
 
-    def set_pose(self, joint_group, pose, rpy, msg_tasktitle=None,
+    def set_pose(self, joint_group, posision, rpy, msg_tasktitle=None,
                  task_duration=7.0, do_wait=True, ref_frame_name=None):
-        rospy.logerr('AcceptanceTestROS) set_pose is not implemented yet.')
+        '''
+        @see: AbstAcceptanceTest.set_pose
+        '''
+        rospy.loginfo('ROS {}'.format(msg_tasktitle))
+        self._robotclient.set_pose(joint_group, posision, rpy, task_duration,
+                                   do_wait, ref_frame_name)
 
     def set_pose_relative(
                         self, joint_group, dx=0, dy=0, dz=0, dr=0, dp=0, dw=0,

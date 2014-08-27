@@ -32,13 +32,19 @@
 # ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
 
+import copy
 import math
 
 import actionlib
+from moveit_commander import MoveGroupCommander
+from moveit_commander import MoveItCommanderException
 import rospy
 from pr2_controllers_msgs.msg import JointTrajectoryAction
 from pr2_controllers_msgs.msg import JointTrajectoryGoal
 from trajectory_msgs.msg import JointTrajectoryPoint
+from tf.transformations import quaternion_from_euler
+
+from hironx_ros_bridge.constant import Constant
 
 _MSG_ASK_ISSUEREPORT = 'Your report to ' + \
                        'https://github.com/start-jsk/rtmros_hironx/issues ' + \
@@ -55,15 +61,9 @@ class ROS_Client(object):
       class.
     '''
 
-    #TODO: Address the following concern.
-    # This duplicates "Group" definition in HIRONX, which is bad.
-    # Need to consider consolidating the definition either in hironx_ros_bridge
-    # or somewhere in the upstream, e.g.:
-    # https://github.com/fkanehiro/hrpsys-base/pull/253
-    _GR_TORSO = 'torso'  # Default values are set.
-    _GR_HEAD = 'head'
-    _GR_LARM = 'larm'
-    _GR_RARM = 'rarm'
+    _MSG_NO_MOVEGROUP_FOUND = ('\nMake sure you\'ve launched MoveGroup ' +
+                               '(e.g. by launching ' +
+                               'moveit_planning_execution.launch)')
 
     def __init__(self, jointgroups=None):
         '''
@@ -72,8 +72,27 @@ class ROS_Client(object):
         rospy.init_node('hironx_ros_client')
         if jointgroups:
             self._set_groupnames(jointgroups)
+        self._init_action_clients()
 
-    def init_action_clients(self):
+        self._movegr_larm = self._movegr_rarm = None
+        try:
+            self._init_moveit_commanders()
+        except RuntimeError as e:
+            rospy.logerr(str(e) + self._MSG_NO_MOVEGROUP_FOUND)
+
+    def _init_moveit_commanders(self):
+        '''
+        @raise RuntimeError: When MoveGroup is not running.
+        '''
+        # left_arm, right_arm are fixed in nextage_moveit_config pkg.
+
+        try:
+            self._movegr_larm = MoveGroupCommander(Constant.GRNAME_LEFT_ARM_MOVEGROUP)
+            self._movegr_rarm = MoveGroupCommander(Constant.GRNAME_RIGHT_ARM_MOVEGROUP)
+        except RuntimeError as e:
+            raise e
+
+    def _init_action_clients(self):
         self._aclient_larm = actionlib.SimpleActionClient(
              '/larm_controller/joint_trajectory_action', JointTrajectoryAction)
         self._aclient_rarm = actionlib.SimpleActionClient(
@@ -119,7 +138,7 @@ class ROS_Client(object):
                                     self._goal_head.trajectory.joint_names,
                                     self._goal_larm.trajectory.joint_names,
                                     self._goal_rarm.trajectory.joint_names))
-        
+
     def _set_groupnames(self, groupnames):
         '''
         @type groupnames: [str]
@@ -146,13 +165,13 @@ class ROS_Client(object):
         '''
         rospy.loginfo('*** go_init begins ***')
         POSITIONS_TORSO_DEG = [0.0]
-        self.set_joint_angles_deg(self._GR_TORSO, POSITIONS_TORSO_DEG, task_duration)
+        self.set_joint_angles_deg(Constant.GRNAME_TORSO, POSITIONS_TORSO_DEG, task_duration)
         POSITIONS_HEAD_DEG = [0.0, 0.0]
-        self.set_joint_angles_deg(self._GR_HEAD, POSITIONS_HEAD_DEG, task_duration)
+        self.set_joint_angles_deg(Constant.GRNAME_HEAD, POSITIONS_HEAD_DEG, task_duration)
         POSITIONS_LARM_DEG = [0.6, 0, -100, -15.2, 9.4, -3.2]
-        self.set_joint_angles_deg(self._GR_LARM, POSITIONS_LARM_DEG, task_duration)
+        self.set_joint_angles_deg(Constant.GRNAME_LEFT_ARM, POSITIONS_LARM_DEG, task_duration)
         POSITIONS_RARM_DEG = [-0.6, 0, -100, 15.2, 9.4, 3.2]
-        self.set_joint_angles_deg(self._GR_RARM, POSITIONS_RARM_DEG,
+        self.set_joint_angles_deg(Constant.GRNAME_RIGHT_ARM, POSITIONS_RARM_DEG,
                                   task_duration, wait=True)
         rospy.loginfo(self._goal_larm.trajectory.points)
 
@@ -165,21 +184,21 @@ class ROS_Client(object):
         @type duration: float
         @type wait: bool
         '''
-        if groupname == self._GR_TORSO:
+        if groupname == Constant.GRNAME_TORSO:
             action_client = self._aclient_torso
             goal = self._goal_torso
-        elif groupname == self._GR_HEAD:
+        elif groupname == Constant.GRNAME_HEAD:
             action_client = self._aclient_head
             goal = self._goal_head
-        elif groupname == self._GR_LARM:
+        elif groupname == Constant.GRNAME_LEFT_ARM:
             action_client = self._aclient_larm
             goal = self._goal_larm
-        elif groupname == self._GR_RARM:
+        elif groupname == Constant.GRNAME_RIGHT_ARM:
             action_client = self._aclient_rarm
             goal = self._goal_rarm
         else:
             #TODO: Throw exception; a valid group name isn't passed.
-            pass
+            rospy.logerr('groupname {} not assigned'.format(groupname))
 
         try:
             pt = JointTrajectoryPoint()
@@ -222,3 +241,62 @@ class ROS_Client(object):
             list_rad.append(rad)
             rospy.logdebug('Position deg={} rad={}'.format(deg, rad))
         return list_rad
+
+    def set_pose(self, joint_group, position, rpy=None, task_duration=7.0,
+                 do_wait=True, ref_frame_name=None):
+        '''
+        Accept pose defined by position and RPY in Cartesian format.
+
+        @type joint_group: str
+        @type position: [float]
+        @param position: x, y, z.
+        @type rpy: [float]
+        @param rpy: If None, keep the current orientation by using
+                    MoveGroupCommander.set_position_target. See:
+                    http://moveit.ros.org/doxygen/classmoveit__commander_1_1move__group_1_1MoveGroupCommander.html#acfe2220fd85eeb0a971c51353e437753
+        @param ref_frame_name: TODO: Not utilized yet. Need to be implemented.
+        '''
+        # Check if MoveGroup is instantiated.
+        if not self._movegr_larm or not self._movegr_rarm:
+            try:
+                self._init_moveit_commanders()
+            except RuntimeError as e:
+                rospy.logerr(self._MSG_NO_MOVEGROUP_FOUND)
+                raise e
+
+        # Locally assign the specified MoveGroup
+        movegr = None
+        rospy.loginfo('Constant.GRNAME_LEFT_ARM={}'.format(Constant.GRNAME_LEFT_ARM))
+        if Constant.GRNAME_LEFT_ARM == joint_group:
+            rospy.loginfo('222')
+            movegr = self._movegr_larm
+        elif Constant.GRNAME_RIGHT_ARM == joint_group:
+            movegr = self._movegr_rarm
+            rospy.loginfo('333')
+        else:
+            rospy.loginfo('444')
+
+        # If no RPY specified, give position and return the method.
+        if not rpy:
+            try:
+                movegr.set_position_target(position)
+            except MoveItCommanderException as e:
+                rospy.logerr(str(e))
+            return
+
+        # Not necessary to convert from rpy to quaternion, since
+        # MoveGroupCommander.set_pose_target can take rpy format too.
+        # orientation_quaternion = quaternion_from_euler(rpy[0], rpy[1], rpy[2])
+        pose = copy.deepcopy(position)
+        pose.extend(rpy)
+        rospy.loginfo('ROS set_pose joint_group={} movegroup={} pose={} position={} rpy={}'.format(
+                                     joint_group, movegr, pose, position, rpy))
+        try:
+            movegr.set_pose_target(pose)
+        except MoveItCommanderException as e:
+            rospy.logerr(str(e))
+        except Exception as e:
+            rospy.logerr(str(e))
+
+        movegr.go(do_wait) or movegr.go(do_wait) or rospy.logerr(
+                          'MoveGroup.go fails; jointgr={}'.format(joint_group))

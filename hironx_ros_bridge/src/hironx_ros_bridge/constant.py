@@ -35,6 +35,8 @@
 
 class Constant():
     GRNAME_LEFT_ARM = 'larm'
+    GRNAME_LEFT_ARM_MOVEGROUP = 'left_arm'
     GRNAME_RIGHT_ARM = 'rarm'
+    GRNAME_RIGHT_ARM_MOVEGROUP = 'right_arm'
     GRNAME_TORSO = 'torso'
     GRNAME_HEAD = 'head'
