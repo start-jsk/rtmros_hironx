@@ -8,7 +8,7 @@ catkin_package(
     CATKIN_DEPENDS std_msgs
     CATKIN_DEPENDS hrpsys_ros_bridge pr2_controllers_msgs roslib #
     INCLUDE_DIRS include
-    LIBRARIES acceptancetest_hironx_cpp
+    LIBRARIES ros_client_cpp
 )
 
 catkin_python_setup()
