@@ -32,50 +32,11 @@
 # ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
 
-import abc
 
-
-class AbstAcceptanceTest():
-
-    _MSG_ERR_NOTIMPLEMENTED = 'The method is not implemented in the derived class'
-
-    def __init__(self, robot_client, default_task_duration=7.0):
-        '''
-        @type robot_client: hironx_ros_bridge.ros_client.ROS_Client or
-                            hrpsys.hrpsys_config.HrpsysConfigurator
-        '''
-        self._robotclient = robot_client
-        self._default_task_duration = default_task_duration
-
-    @abc.abstractmethod
-    def go_initpos(self, default_task_duration=7.0):
-        raise NotImplementedError(self._MSG_ERR_NOTIMPLEMENTED)
-
-    @abc.abstractmethod
-    def set_joint_angles(self, joint_group, joint_angles,
-                  msg_tasktitle=None, task_duration=7.0, do_wait=True):
-        '''
-        Move by passing joint angles of an arm.
-
-        @type joint_group: str
-        @type joint_angles: [double]
-        @type msg_tasktitle: str
-        @type task_duration: double
-        '''
-        raise NotImplementedError(self._MSG_ERR_NOTIMPLEMENTED)
-
-    @abc.abstractmethod
-    def set_pose(self, joint_group, pose, rpy, msg_tasktitle=None,
-                 task_duration=7.0, do_wait=True, ref_frame_name=None):
-        '''
-        @type rpy: [float]
-        @param rpy: In radian.
-        '''
-        raise NotImplementedError(self._MSG_ERR_NOTIMPLEMENTED)
-
-    @abc.abstractmethod
-    def set_pose_relative(
-                        self, joint_group, dx=0, dy=0, dz=0, dr=0, dp=0, dw=0,
-                        msg_tasktitle=None, task_duration=7.0, do_wait=True):
-        '''        '''
-        raise NotImplementedError(self._MSG_ERR_NOTIMPLEMENTED)
+class Constant():
+    GRNAME_LEFT_ARM = 'larm'
+    GRNAME_LEFT_ARM_MOVEGROUP = 'left_arm'
+    GRNAME_RIGHT_ARM = 'rarm'
+    GRNAME_RIGHT_ARM_MOVEGROUP = 'right_arm'
+    GRNAME_TORSO = 'torso'
+    GRNAME_HEAD = 'head'
