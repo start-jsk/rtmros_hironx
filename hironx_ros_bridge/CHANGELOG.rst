@@ -2,8 +2,8 @@
 Changelog for package hironx_ros_bridge
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.0.23 (2014-09-02)
+-------------------
 * (ROS cpp client) Export the right lib file (Fix `#229 <https://github.com/start-jsk/rtmros_hironx/issues/229>`_).
 * (hironx ROS client py) Add cartesian set target method. Acceptance test for it is not working yet.
 * (hironx_ros) Split constants as a class.
