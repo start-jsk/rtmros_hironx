@@ -2,6 +2,13 @@
 Changelog for package hironx_ros_bridge
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* (ROS cpp client) Export the right lib file (Fix `#229 <https://github.com/start-jsk/rtmros_hironx/issues/229>`_).
+* (hironx ROS client py) Add cartesian set target method. Acceptance test for it is not working yet.
+* (hironx_ros) Split constants as a class.
+* Contributors: Isaac I.Y. Saito
+
 1.0.22 (2014-08-26)
 -------------------
 * (RTM client) Remove redundant implementation of derived methods. Now the API doc of the methods derived from the super class, we need to refer to `the upstream repository <https://github.com/fkanehiro/hrpsys-base/blob/master/python/hrpsys_config.py>`_ until an alternative solution is introduced (`discussed in <https://github.com/fkanehiro/hrpsys-base/issues/268>`_).
