@@ -2,6 +2,11 @@
 Changelog for package hironx_moveit_config
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* (hironx moveit) Remove a file added by mistake.
+* Contributors: Isaac IY Saito
+
 1.0.22 (2014-08-26)
 -------------------
 
