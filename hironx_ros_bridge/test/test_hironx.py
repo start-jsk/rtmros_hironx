@@ -577,6 +577,93 @@ class TestHiro(unittest.TestCase):
         # assert false should be returned earlier.
         assert(True)  
 
+    def testGetReferencePose(self):
+        def print_pose(msg, pose):
+            print msg, (pose[3],pose[7],pose[11]), euler_from_matrix([pose[0:3], pose[4:7], pose[8:11]], 'sxyz')
+        self.robot.goInitial()
+        posel1 = self.robot.getReferencePose('LARM_JOINT5')
+        poser1 = self.robot.getReferencePose('RARM_JOINT5')
+        posel2 = self.robot.getReferencePose('LARM_JOINT5:WAIST')
+        poser2 = self.robot.getReferencePose('RARM_JOINT5:WAIST')
+        print_pose("robot.getReferencePose('LARM_JOINT5')", posel1);
+        print_pose("robot.getReferencePose('RARM_JOINT5')", poser1);
+        print_pose("robot.getReferencePose('LARM_JOINT5:WAIST')", posel2);
+        print_pose("robot.getReferencePose('RARM_JOINT5:WAIST')", poser2);
+        numpy.testing.assert_array_almost_equal(numpy.array(posel1),numpy.array(posel2), decimal=3)
+        numpy.testing.assert_array_almost_equal(numpy.array(poser1),numpy.array(poser2), decimal=3)
+
+        posel1 = self.robot.getReferencePose('LARM_JOINT5:CHEST_JOINT0')
+        poser1 = self.robot.getReferencePose('RARM_JOINT5:CHEST_JOINT0')
+        print_pose("robot.getReferencePose('LARM_JOINT5:CHEST_JOINT0')", posel1);
+        print_pose("robot.getReferencePose('RARM_JOINT5:CHEST_JOINT0')", poser1);
+        self.robot.setJointAnglesOfGroup('torso', [45], 1)
+        self.robot.waitInterpolationOfGroup('torso')
+        posel2 = self.robot.getReferencePose('LARM_JOINT5:CHEST_JOINT0')
+        poser2 = self.robot.getReferencePose('RARM_JOINT5:CHEST_JOINT0')
+        print_pose("robot.getReferencePose('LARM_JOINT5:CHEST_JOINT0')", posel2);
+        print_pose("robot.getReferencePose('RARM_JOINT5:CHEST_JOINT0')", poser2);
+        numpy.testing.assert_array_almost_equal(numpy.array(posel1),numpy.array(posel2), decimal=3)
+        numpy.testing.assert_array_almost_equal(numpy.array(poser1),numpy.array(poser2), decimal=3)
+
+        self.robot.setJointAnglesOfGroup('torso', [0], 1)
+        self.robot.waitInterpolationOfGroup('torso')
+        pos1 = self.robot.getReferencePosition('LARM_JOINT5')
+        rot1 = self.robot.getReferenceRotation('LARM_JOINT5')
+        rpy1 = self.robot.getReferenceRPY('LARM_JOINT5')
+
+        self.robot.setJointAnglesOfGroup('torso', [0], 1)
+        self.robot.waitInterpolationOfGroup('torso')
+        pos2 = self.robot.getReferencePosition('LARM_JOINT5', 'CHEST_JOINT0')
+        rot2 = self.robot.getReferenceRotation('LARM_JOINT5', 'CHEST_JOINT0')
+        rpy2 = self.robot.getReferenceRPY('LARM_JOINT5', 'CHEST_JOINT0')
+        numpy.testing.assert_array_almost_equal(numpy.array(pos1),numpy.array(pos2), decimal=3)
+        numpy.testing.assert_array_almost_equal(numpy.array(rot1),numpy.array(rot2), decimal=3)
+        numpy.testing.assert_array_almost_equal(numpy.array(rpy1),numpy.array(rpy2), decimal=3)
+
+
+    def testGetCurrentPose(self):
+        def print_pose(msg, pose):
+            print msg, (pose[3],pose[7],pose[11]), euler_from_matrix([pose[0:3], pose[4:7], pose[8:11]], 'sxyz')
+        self.robot.goInitial()
+        posel1 = self.robot.getCurrentPose('LARM_JOINT5')
+        poser1 = self.robot.getCurrentPose('RARM_JOINT5')
+        posel2 = self.robot.getCurrentPose('LARM_JOINT5:WAIST')
+        poser2 = self.robot.getCurrentPose('RARM_JOINT5:WAIST')
+        print_pose("robot.getCurrentPose('LARM_JOINT5')", posel1);
+        print_pose("robot.getCurrentPose('RARM_JOINT5')", poser1);
+        print_pose("robot.getCurrentPose('LARM_JOINT5:WAIST')", posel2);
+        print_pose("robot.getCurrentPose('RARM_JOINT5:WAIST')", poser2);
+        numpy.testing.assert_array_almost_equal(numpy.array(posel1),numpy.array(posel2), decimal=3)
+        numpy.testing.assert_array_almost_equal(numpy.array(poser1),numpy.array(poser2), decimal=3)
+
+        posel1 = self.robot.getCurrentPose('LARM_JOINT5:CHEST_JOINT0')
+        poser1 = self.robot.getCurrentPose('RARM_JOINT5:CHEST_JOINT0')
+        print_pose("robot.getCurrentPose('LARM_JOINT5:CHEST_JOINT0')", posel1);
+        print_pose("robot.getCurrentPose('RARM_JOINT5:CHEST_JOINT0')", poser1);
+        self.robot.setJointAnglesOfGroup('torso', [45], 1)
+        self.robot.waitInterpolationOfGroup('torso')
+        posel2 = self.robot.getCurrentPose('LARM_JOINT5:CHEST_JOINT0')
+        poser2 = self.robot.getCurrentPose('RARM_JOINT5:CHEST_JOINT0')
+        print_pose("robot.getCurrentPose('LARM_JOINT5:CHEST_JOINT0')", posel2);
+        print_pose("robot.getCurrentPose('RARM_JOINT5:CHEST_JOINT0')", poser2);
+        numpy.testing.assert_array_almost_equal(numpy.array(posel1),numpy.array(posel2), decimal=3)
+        numpy.testing.assert_array_almost_equal(numpy.array(poser1),numpy.array(poser2), decimal=3)
+
+        self.robot.setJointAnglesOfGroup('torso', [0], 1)
+        self.robot.waitInterpolationOfGroup('torso')
+        pos1 = self.robot.getCurrentPosition('LARM_JOINT5')
+        rot1 = self.robot.getCurrentRotation('LARM_JOINT5')
+        rpy1 = self.robot.getCurrentRPY('LARM_JOINT5')
+
+        self.robot.setJointAnglesOfGroup('torso', [0], 1)
+        self.robot.waitInterpolationOfGroup('torso')
+        pos2 = self.robot.getCurrentPosition('LARM_JOINT5', 'CHEST_JOINT0')
+        rot2 = self.robot.getCurrentRotation('LARM_JOINT5', 'CHEST_JOINT0')
+        rpy2 = self.robot.getCurrentRPY('LARM_JOINT5', 'CHEST_JOINT0')
+        numpy.testing.assert_array_almost_equal(numpy.array(pos1),numpy.array(pos2), decimal=3)
+        numpy.testing.assert_array_almost_equal(numpy.array(rot1),numpy.array(rot2), decimal=3)
+        numpy.testing.assert_array_almost_equal(numpy.array(rpy1),numpy.array(rpy2), decimal=3)
+
 #unittest.main()
 if __name__ == '__main__':
     import rostest
