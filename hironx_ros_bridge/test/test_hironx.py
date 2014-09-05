@@ -591,6 +591,10 @@ class TestHiro(unittest.TestCase):
             if re.match(r'frame_name \(.+\) is not supported', e.message):
                 print(e.message + "...this is expected so pass the test")
                 return True
+            elif self.robot.fk.ref.get_component_profile().version <= '315.2.4':
+                print("target version is " + self.robot.fk.ref.get_component_profile().version)
+                print(e.message + "...this is expected so pass the test")
+                return True
             else:
                 raise RuntimeError(e.message)
         print_pose("robot.getReferencePose('LARM_JOINT5')", posel1);
@@ -640,6 +644,10 @@ class TestHiro(unittest.TestCase):
             poser2 = self.robot.getCurrentPose('RARM_JOINT5:WAIST')
         except RuntimeError as e:
             if re.match(r'frame_name \(.+\) is not supported', e.message):
+                print(e.message + "...this is expected so pass the test")
+                return True
+            elif self.robot.fk.ref.get_component_profile().version <= '315.2.4':
+                print("target version is " + self.robot.fk.ref.get_component_profile().version)
                 print(e.message + "...this is expected so pass the test")
                 return True
             else:
