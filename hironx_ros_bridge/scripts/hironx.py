@@ -1,15 +1,20 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-try: # catkin does not requires load_manifest
+
+try:  # catkin does not requires load_manifest
     import roslib
     import hironx_ros_bridge
 except:
-    import roslib; roslib.load_manifest('hironx_ros_bridge')
+    import roslib
+    import roslib.load_manifest('hironx_ros_bridge')
 
 from hironx_ros_bridge import hironx_client
 
-from hrpsys import rtm  # See https://github.com/tork-a/rtmros_nextage/commit/d4268d81ec14a514bb4b3b52614c81e708dd1ecc#diff-20257dd6ad60c0892cfb122c37a8f2ba 
+# See 'https://github.com/tork-a/rtmros_nextage/commit/' +
+#     'd4268d81ec14a514bb4b3b52614c81e708dd1ecc#' +_
+#     'diff-20257dd6ad60c0892cfb122c37a8f2ba'
+from hrpsys import rtm
 import argparse
 
 if __name__ == '__main__':

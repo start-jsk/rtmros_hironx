@@ -94,11 +94,11 @@ class ROS_Client(object):
 
     def _init_action_clients(self):
         self._aclient_larm = actionlib.SimpleActionClient(
-             '/larm_controller/joint_trajectory_action', JointTrajectoryAction)
+            '/larm_controller/joint_trajectory_action', JointTrajectoryAction)
         self._aclient_rarm = actionlib.SimpleActionClient(
-             '/rarm_controller/joint_trajectory_action', JointTrajectoryAction)
+            '/rarm_controller/joint_trajectory_action', JointTrajectoryAction)
         self._aclient_head = actionlib.SimpleActionClient(
-             '/head_controller/joint_trajectory_action', JointTrajectoryAction)
+            '/head_controller/joint_trajectory_action', JointTrajectoryAction)
         self._aclient_torso = actionlib.SimpleActionClient(
             '/torso_controller/joint_trajectory_action', JointTrajectoryAction)
 
@@ -134,10 +134,10 @@ class ROS_Client(object):
 
         rospy.loginfo('Joint names; ' +
                       'Torso: {}\n\tHead: {}\n\tL-Arm: {}\n\tR-Arm: {}'.format(
-                                    self._goal_torso.trajectory.joint_names,
-                                    self._goal_head.trajectory.joint_names,
-                                    self._goal_larm.trajectory.joint_names,
-                                    self._goal_rarm.trajectory.joint_names))
+                          self._goal_torso.trajectory.joint_names,
+                          self._goal_head.trajectory.joint_names,
+                          self._goal_larm.trajectory.joint_names,
+                          self._goal_rarm.trajectory.joint_names))
 
     def _set_groupnames(self, groupnames):
         '''
@@ -197,7 +197,7 @@ class ROS_Client(object):
             action_client = self._aclient_rarm
             goal = self._goal_rarm
         else:
-            #TODO: Throw exception; a valid group name isn't passed.
+            # TODO: Throw exception; a valid group name isn't passed.
             rospy.logerr('groupname {} not assigned'.format(groupname))
 
         try:
@@ -206,12 +206,13 @@ class ROS_Client(object):
             pt.time_from_start = rospy.Duration(duration)
             goal.trajectory.points = [pt]
             goal.trajectory.header.stamp = \
-                             rospy.Time.now() + rospy.Duration(duration)
+                rospy.Time.now() + rospy.Duration(duration)
 
             action_client.send_goal(goal)
             if wait:
-                rospy.loginfo('wait_for_result for the joint group {} = {}'.format(
-                                   groupname, action_client.wait_for_result()))
+                rospy.loginfo(
+                    'wait_for_result for the joint group {} = {}'.format(
+                        groupname, action_client.wait_for_result()))
         except rospy.ROSInterruptException as e:
             rospy.loginfo(e.str())
 
@@ -253,7 +254,9 @@ class ROS_Client(object):
         @type rpy: [float]
         @param rpy: If None, keep the current orientation by using
                     MoveGroupCommander.set_position_target. See:
-                    http://moveit.ros.org/doxygen/classmoveit__commander_1_1move__group_1_1MoveGroupCommander.html#acfe2220fd85eeb0a971c51353e437753
+                     'http://moveit.ros.org/doxygen/' +
+                     'classmoveit__commander_1_1move__group_1_1' +
+                     'MoveGroupCommander.html#acfe2220fd85eeb0a971c51353e437753'
         @param ref_frame_name: TODO: Not utilized yet. Need to be implemented.
         '''
         # Check if MoveGroup is instantiated.
@@ -266,13 +269,10 @@ class ROS_Client(object):
 
         # Locally assign the specified MoveGroup
         movegr = None
-        rospy.loginfo('Constant.GRNAME_LEFT_ARM={}'.format(Constant.GRNAME_LEFT_ARM))
         if Constant.GRNAME_LEFT_ARM == joint_group:
-            rospy.loginfo('222')
             movegr = self._movegr_larm
         elif Constant.GRNAME_RIGHT_ARM == joint_group:
             movegr = self._movegr_rarm
-            rospy.loginfo('333')
         else:
             rospy.loginfo('444')
 
@@ -286,11 +286,10 @@ class ROS_Client(object):
 
         # Not necessary to convert from rpy to quaternion, since
         # MoveGroupCommander.set_pose_target can take rpy format too.
-        # orientation_quaternion = quaternion_from_euler(rpy[0], rpy[1], rpy[2])
         pose = copy.deepcopy(position)
         pose.extend(rpy)
-        rospy.loginfo('ROS set_pose joint_group={} movegroup={} pose={} position={} rpy={}'.format(
-                                     joint_group, movegr, pose, position, rpy))
+        rospy.loginfo('setpose jntgr={} mvgr={} pose={} posi={} rpy={}'.format(
+                      joint_group, movegr, pose, position, rpy))
         try:
             movegr.set_pose_target(pose)
         except MoveItCommanderException as e:
@@ -298,5 +297,5 @@ class ROS_Client(object):
         except Exception as e:
             rospy.logerr(str(e))
 
-        movegr.go(do_wait) or movegr.go(do_wait) or rospy.logerr(
-                          'MoveGroup.go fails; jointgr={}'.format(joint_group))
+        (movegr.go(do_wait) or movegr.go(do_wait) or
+         rospy.logerr('MoveGroup.go fails; jointgr={}'.format(joint_group)))

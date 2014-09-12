@@ -37,7 +37,8 @@ import numpy
 import os
 import time
 
-import roslib; roslib.load_manifest("hrpsys")
+import roslib
+roslib.load_manifest("hrpsys")
 from hrpsys.hrpsys_config import *
 import OpenHRP
 import OpenRTM_aist
@@ -55,14 +56,15 @@ _MSG_ASK_ISSUEREPORT = 'Your report to ' + \
 
 class HIRONX(HrpsysConfigurator):
     '''
-    @see: <a href = "https://github.com/fkanehiro/hrpsys-base/blob/master/python/hrpsys_config.py">HrpsysConfigurator</a>
+    @see: <a href = "https://github.com/fkanehiro/hrpsys-base/blob/master/" +
+                    "python/hrpsys_config.py">HrpsysConfigurator</a>
 
     This class holds methods that are specific to Kawada Industries' dual-arm
     robot called Hiro.
 
-    For the API doc for the derived methods, please see the parent 
+    For the API doc for the derived methods, please see the parent
     class via the link above; nicely formatted api doc web page
-    isn't available yet (discussed in 
+    isn't available yet (discussed in
     https://github.com/fkanehiro/hrpsys-base/issues/268).
     '''
 
@@ -76,25 +78,26 @@ class HIRONX(HrpsysConfigurator):
     '''
     For OffPose and _InitialPose, the angles of each joint are listed in the
     ordered as defined in Groups variable.'''
-    OffPose = [[0], [0, 0],
-                   [25, -139, -157, 45, 0, 0],
-                   [-25, -139, -157, -45, 0, 0],
-                   [0, 0, 0, 0],
-                   [0, 0, 0, 0]]
+    OffPose = [[0],
+               [0, 0],
+               [25, -139, -157, 45, 0, 0],
+               [-25, -139, -157, -45, 0, 0],
+               [0, 0, 0, 0],
+               [0, 0, 0, 0]]
     # With this pose the EEFs level up the tabletop surface.
     _InitialPose = [[0], [0, 0],
-                   [-0.6, 0, -100, 15.2, 9.4, 3.2],
-                   [0.6, 0, -100, -15.2, 9.4, -3.2],
-                   [0, 0, 0, 0],
-                   [0, 0, 0, 0]]
+                    [-0.6, 0, -100, 15.2, 9.4, 3.2],
+                    [0.6, 0, -100, -15.2, 9.4, -3.2],
+                    [0, 0, 0, 0],
+                    [0, 0, 0, 0]]
     # This pose sets joint angles at the factory initial pose. No danger, but
     # no real advange either for in normal usage.
     # See https://github.com/start-jsk/rtmros_hironx/issues/107
     _InitialPose_Factory = [[0], [0, 0],
-                   [-0, 0, -130, 0, 0, 0],
-                   [0, 0, -130, 0, 0, 0],
-                   [0, 0, 0, 0],
-                   [0, 0, 0, 0]]
+                            [-0, 0, -130, 0, 0, 0],
+                            [0, 0, -130, 0, 0, 0],
+                            [0, 0, 0, 0],
+                            [0, 0, 0, 0]]
     INITPOS_TYPE_EVEN = 0
     INITPOS_TYPE_FACTORY = 1
 
@@ -157,9 +160,10 @@ class HIRONX(HrpsysConfigurator):
         ret = True
         for i in range(len(self.Groups)):
             # radangles = [x/180.0*math.pi for x in self._InitialPose[i]]
-            print self.configurator_name, 'self.setJointAnglesOfGroup(', \
-                  self.Groups[i][0], ',', _INITPOSE[i], ', ', tm, \
-                  ',wait=False)'
+            print(
+                '{}, JntAnglesOfGr={}, INITPOSE[i]={}, tm={}, wait={}'.format(
+                    self.configurator_name, self.Groups[i][0], _INITPOSE[i],
+                    tm, wait))
             ret &= self.setJointAnglesOfGroup(self.Groups[i][0],
                                               _INITPOSE[i],
                                               tm, wait=False)
@@ -199,7 +203,7 @@ class HIRONX(HrpsysConfigurator):
         hardcoded value (100mm), by internally calling self.setHandWidth.
 
         @type hand: str
-        @param hand: Name of the hand joint group. In the default 
+        @param hand: Name of the hand joint group. In the default
                      setting of HIRONX, hand joint groups are defined
                      in member 'HandGroups' where 'lhand' and 'rhand'
                      are added.
@@ -209,11 +213,11 @@ class HIRONX(HrpsysConfigurator):
 
     def HandClose(self, hand=None, effort=None):
         '''
-        Close 2-finger hand, by internally calling self.setHandWidth 
+        Close 2-finger hand, by internally calling self.setHandWidth
         setting 0 width.
 
         @type hand: str
-        @param hand: Name of the hand joint group. In the default 
+        @param hand: Name of the hand joint group. In the default
                      setting of HIRONX, hand joint groups are defined
                      in member 'HandGroups' where 'lhand' and 'rhand'
                      are added.
@@ -224,7 +228,7 @@ class HIRONX(HrpsysConfigurator):
     def setHandJointAngles(self, hand, angles, tm=1):
         '''
         @type hand: str
-        @param hand: Name of the hand joint group. In the default 
+        @param hand: Name of the hand joint group. In the default
                      setting of HIRONX, hand joint groups are defined
                      in member 'HandGroups' where 'lhand' and 'rhand'
                      are added.
@@ -246,7 +250,7 @@ class HIRONX(HrpsysConfigurator):
     def setHandWidth(self, hand, width, tm=1, effort=None):
         '''
         @type hand: str
-        @param hand: Name of the hand joint group. In the default 
+        @param hand: Name of the hand joint group. In the default
                      setting of HIRONX, hand joint groups are defined
                      in member 'HandGroups' where 'lhand' and 'rhand'
                      are added.
@@ -319,7 +323,10 @@ class HIRONX(HrpsysConfigurator):
         '''
         Returns the physical state of robot.
 
-        @rtype: <a href = "http://hrpsys-base.googlecode.com/svn/doc/df/d17/structOpenHRP_1_1RobotHardwareService_1_1RobotState.html">OpenHRP::RobotHardwareService::RobotState</a>
+        @rtype: <a href = "http://hrpsys-base.googlecode.com/svn/doc/df/d17/" +
+                          "structOpenHRP_1_1RobotHardwareService_1_1" +
+                          "RobotState.html">
+                          OpenHRP::RobotHardwareService::RobotState</a>
         @return: Robot's hardware status object that contains the following
                  variables accessible: angle, command, torque, servoState,
                  force, rateGyro, accel, voltage, current. See the api doc
@@ -432,7 +439,7 @@ class HIRONX(HrpsysConfigurator):
         #self.rh_svc.power('all', SWITCH_ON)  #do not switch on before goActual
 
         try:
-            waitInputConfirm(\
+            waitInputConfirm(
                 '!! Robot Motion Warning (SERVO_ON) !!\n\n'
                 'Confirm RELAY switched ON\n'
                 'Push [OK] to switch servo ON(%s).' % (jname))
