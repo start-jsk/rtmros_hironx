@@ -197,7 +197,7 @@ public:
     move_armbyarm_jointangles(test_client);
 
     msg_task =
-        "TASK-1. Move each arm separately to the given pose by passing pose in hand space " +
+        "TASK-1. Move each arm separately to the given pose by passing pose in hand space "
         "(i.e. orthogonal coordinate of eef).";
     ROS_INFO("%s", msg_task.c_str());
     msg = msg_type_client + msg_task;
@@ -215,7 +215,7 @@ public:
     wait_input(msg, do_wait_input);
     set_pose_relative(test_client);
 
-    msg_task = "In the beginning you\"ll see the displacement of the previous task." +
+    msg_task = "In the beginning you\"ll see the displacement of the previous task."
         "\nTASK-4. Move head using Joint angles in degree.";
     ROS_INFO("%s", msg_task.c_str());
     msg = msg_type_client + msg_task;
@@ -228,10 +228,10 @@ public:
     wait_input(msg, do_wait_input);
     move_torso(test_client);
 
-    msg_task = std::string("TASK-6. Overwrite ongoing action.\n\t6-1.")
-        + "While rotating torso toward left, it getscanceled and rotate toward"
-        + "right.\n\t6-2. While lifting left hand, right hand also tries to reach"
-            "the same height that gets cancelled so that it stays lower than the left hand.";
+    msg_task = std::string("TASK-6. Overwrite ongoing action.\n\t6-1."
+                           "While rotating torso toward left, it getscanceled and rotate toward "
+                           "right.\n\t6-2. While lifting left hand, right hand also tries to reach "
+			   "the same height that gets cancelled so that it stays lower than the left hand.");
     ROS_INFO("%s", msg_task.c_str());
     msg = msg_type_client + msg_task;
     wait_input(msg, do_wait_input);
@@ -346,9 +346,9 @@ public:
     test_client.set_joint_angles(
         AbstAcceptanceTest::GRNAME_RIGHT_ARM,
         POSITIONS_RARM_DEG_UP_SYNC,
-        std::string("(2) begins. Overwrite previous arm command.\n\t")
-            + "In the beginning both arm starts to move to the\n\tsame height"
-            + "but to the left arm interrupting\ncommand is sent and it goes downward.",
+        std::string("(2) begins. Overwrite previous arm command.\n\t"
+                    "In the beginning both arm starts to move to the\n\tsame height"
+		    "but to the left arm interrupting\ncommand is sent and it goes downward."),
         TASK_DURATION_DEFAULT, false);
 
     ros::Duration(SLEEP_OVERWRITE).sleep();
@@ -356,7 +356,7 @@ public:
     test_client.set_joint_angles(AbstAcceptanceTest::GRNAME_LEFT_ARM, POSITIONS_LARM_DEG_DOWN, "(3)",
                                  TASK_DURATION_DEFAULT, false);
 
-    ros::Duration(<int>TASK_DURATION_DEFAULT).sleep();
+    ros::Duration((int)TASK_DURATION_DEFAULT).sleep();
   }
 
   void show_workspace(AbstAcceptanceTest& test_client)

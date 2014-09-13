@@ -68,14 +68,14 @@ public:
 
   ROS_Client() :
       GR_TORSO("torso"), GR_HEAD("head"), GR_LARM("larm"), GR_RARM("rarm"), MSG_ASK_ISSUEREPORT(
-          "Your report to https://github.com/start-jsk/rtmros_hironx/issues " +
+          "Your report to https://github.com/start-jsk/rtmros_hironx/issues "
           "about the issue you are seeing is appreciated.")
   {
   }
 
   explicit ROS_Client(std::vector<std::string> joingroups) :
       MSG_ASK_ISSUEREPORT(
-          "Your report to https://github.com/start-jsk/rtmros_hironx/issues " +
+          "Your report to https://github.com/start-jsk/rtmros_hironx/issues "
           "about the issue you are seeing is appreciated.")
   {
     set_groupnames(joingroups);
