@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 2.8.3)
 project(hironx_ros_bridge)
 
-find_package(catkin REQUIRED COMPONENTS hrpsys_ros_bridge pr2_controllers_msgs roslib rostest)
+find_package(catkin REQUIRED COMPONENTS hrpsys_ros_bridge pr2_controllers_msgs roslib roslint rostest)
 find_package(Boost REQUIRED COMPONENTS system)
 
 catkin_package(
@@ -105,3 +105,6 @@ install(DIRECTORY include/
 
 add_rostest(test/test-hironx.test)
 add_rostest(test/test-hironx-ros-bridge.test)
+
+roslint_python(scripts/hironx.py src/hironx_ros_bridge/hironx_client.py src/hironx_ros_bridge/ros_client.py src/hironx_ros_bridge/constant.py)
+roslint_cpp()
