@@ -41,6 +41,7 @@ except:
     roslib.load_manifest('hironx_ros_bridge')
 
 from hironx_ros_bridge import hironx_client
+from hironx_ros_bridge.ros_client import ROS_Client
 
 # See 'https://github.com/tork-a/rtmros_nextage/commit/' +
 #     'd4268d81ec14a514bb4b3b52614c81e708dd1ecc#' +_
@@ -71,6 +72,9 @@ if __name__ == '__main__':
         args.modelfile = unknown[1]
     robot = hiro = hironx_client.HIRONX()
     robot.init(robotname=args.robot, url=args.modelfile)
+
+    # ROS Client
+    ros = ROS_Client()
 
 # for simulated robot
 # $ ./hironx.py
