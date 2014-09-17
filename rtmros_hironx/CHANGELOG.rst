@@ -2,8 +2,8 @@
 Changelog for package rtmros_hironx
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.0.24 (2014-09-16)
+-------------------
 * (hironx.py)
 
  * Start ROS_Client in addition to RTM client (HIRONX).
