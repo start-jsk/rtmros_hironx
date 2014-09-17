@@ -6,8 +6,8 @@ Changelog for package rtmros_hironx
 -------------------
 * (hironx.py)
 
- * Start ROS_Client in addition to RTM client (HIRONX).
- * if hrpsys_config.py is not new, then client must know fk version.
+  * Start ROS_Client in addition to RTM client (HIRONX).
+  * if hrpsys_config.py is not new, then client must know fk version.
 * Add roslint. Code cleaned to pass roslint
 * Contributors: Kei Okada, Isaac IY Saito
 
