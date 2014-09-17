@@ -2,6 +2,15 @@
 Changelog for package hironx_ros_bridge
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* (hironx.py)
+
+ * Start ROS_Client in addition to RTM client (HIRONX).
+ * if hrpsys_config.py is not new, then client must know fk version.
+* Add roslint. Code cleaned to pass roslint
+* Contributors: Kei Okada, Isaac IY Saito
+
 1.0.23 (2014-09-02)
 -------------------
 * (ROS cpp client) Export the right lib file (Fix `#229 <https://github.com/start-jsk/rtmros_hironx/issues/229>`_).
