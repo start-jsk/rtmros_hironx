@@ -15,8 +15,10 @@
 
   <buildtool_depend>catkin</buildtool_depend>
 
-  <run_depend>calibration_launch</run_depend>
   <run_depend>calibration_estimation</run_depend>
-  <run_depend>kdl</run_depend>
+  <run_depend>calibration_launch</run_depend>
+
   <run_depend>kdl_parser</run_depend>-->
+  <run_depend>openni2_launch</run_depend>
+  <run_depend>orocos_kdl</run_depend>
 </package>
