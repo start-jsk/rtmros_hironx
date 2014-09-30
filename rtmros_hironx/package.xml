@@ -2,10 +2,11 @@
 <package>
   <name>rtmros_hironx</name>
   <version>1.0.24</version>
-  <description>The rtmros_hironx package</description>
+  <description>The rtmros_hironx package is an operating interface via ROS and OpenRTM, for Hiro and <a href = "http://nextage.kawada.jp/en/">NEXTAGE OPEN</a> dual-armed robots from Kawada Industries Inc.
+  </description> 
 
   <maintainer email="k-okada@jsk.t.u-tokyo.ac.jp">Kei Okada</maintainer>
-  <maintainer email="iisaito@kinugarage.com">Isaac Isao Saito</maintainer>
+  <maintainer email="iisaito@kinugarage.com">Isaac IY Saito</maintainer>
   <author email="k-okada@jsk.t.u-tokyo.ac.jp">Kei Okada</author>
 
   <license>BSD</license>
@@ -15,8 +16,10 @@
 
   <buildtool_depend>catkin</buildtool_depend>
 
+  <run_depend>hironx_calibration</run_depend>
   <run_depend>hironx_moveit_config</run_depend>
   <run_depend>hironx_ros_bridge</run_depend>
+  <run_depend>hironx_tutorial</run_depend>
 
   <export>
     <metapackage/>
