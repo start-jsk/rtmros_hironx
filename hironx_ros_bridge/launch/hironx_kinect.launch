@@ -1,12 +1,17 @@
 <launch>
   <arg name="publish_tf" default="true" />
+  
+  <!-- Static tf coordinate for the headmount camera. See https://github.com/start-jsk/rtmros_hironx/pull/252
+       Head on HIRO014 is customed. Values need to be filled for normal, COTS model robots. -->
+  <arg name="TF_COORD_XYZ_HIRO014" value="0.062367406594775215 0.07536259323525744 0.12330820494245931" />
+  <arg name="TF_COORD_RPY_HIRO014" value="-0.03346088258363324 0.1383150116022393 -0.014468436806528857" />
+  <arg name="TF_COORD" default ="$(arg TF_COORD_XYZ_HIRO014) $(arg TF_COORD_RPY_HIRO014)" />
+
   <include file="$(find openni2_launch)/launch/openni2.launch" >
     <arg name="depth_registration" default="true" />
     <arg name="publish_tf" value="$(arg publish_tf)" />
   </include>
   <node pkg="tf" type="static_transform_publisher" name="head_to_kinect_frame"
-        args="0.062367406594775215 0.07536259323525744 0.12330820494245931
-              -0.03346088258363324 0.1383150116022393 -0.014468436806528857
-              /HEAD_JOINT1_Link /camera_link 100"
+        args="$(arg TF_COORD) /HEAD_JOINT1_Link /camera_link 100"
         if="$(arg publish_tf)" />
 </launch>
