@@ -1,12 +1,12 @@
 cmake_minimum_required(VERSION 2.8.3)
 project(hironx_ros_bridge)
 
-find_package(catkin REQUIRED COMPONENTS hrpsys_ros_bridge pr2_controllers_msgs roslib roslint rostest)
+find_package(catkin REQUIRED COMPONENTS control_msgs hrpsys_ros_bridge roslib roslint rostest)
 find_package(Boost REQUIRED COMPONENTS system)
 
 catkin_package(
     CATKIN_DEPENDS std_msgs
-    CATKIN_DEPENDS hrpsys_ros_bridge pr2_controllers_msgs roslib #
+    CATKIN_DEPENDS control_msgs hrpsys_ros_bridge roslib #
     INCLUDE_DIRS include
     LIBRARIES ros_client_cpp
 )
