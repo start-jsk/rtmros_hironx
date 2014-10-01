@@ -12,6 +12,7 @@
   <arg name="CONF_FILE_COLLISIONDETECT" default="$(find hironx_ros_bridge)/conf/kawada-hironx.conf" /> <!-- Default is simulation -->
   <arg name="USE_COLLISIONCHECK" default="false" /> <!-- For running collsion detection inside the robot (QNX) -->
   <arg name="USE_ROBOTHARDWARE" default="false" />
+  <arg name="USE_IMPEDANCECONTROLLER" default="false"/>
   <arg name="USE_SERVOCONTROLLER" default="false" />
 
   <include file="$(find hrpsys_ros_bridge)/launch/hrpsys_ros_bridge.launch">
@@ -23,8 +24,8 @@
     <arg name="USE_WALKING" value="false" />
     <!-- In hrpsys_ros_bridge.launch, Collision check might be turned on -->
     <arg name="USE_COLLISIONCHECK" value="$(arg USE_COLLISIONCHECK)" />
-    <arg name="USE_IMPEDANCECONTROLLER" value="false" />
     <arg name="USE_ROBOTHARDWARE" value="$(arg USE_ROBOTHARDWARE)" />
+    <arg name="USE_IMPEDANCECONTROLLER" value="$(arg USE_IMPEDANCECONTROLLER)" />
     <arg name="USE_SOFTERRORLIMIT" value="false" />
     <arg name="USE_SERVOCONTROLLER" value="$(arg USE_SERVOCONTROLLER)" />
 
