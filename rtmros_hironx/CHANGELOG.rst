@@ -2,6 +2,15 @@
 Changelog for package rtmros_hironx
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* New package hironx_calibration, hironx_tutorial added.
+* (hironx_ros_bridge)
+
+  * Add impedance controller.
+  * Add Kinect launch file.
+* Contributors: Hiroaki Yaguchi, Isaac IY Saito, Kei Okada
+
 1.0.24 (2014-09-16)
 -------------------
 * (hironx.py)

@@ -2,6 +2,11 @@
 Changelog for package hironx_tutorial
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* New package hironx_tutorial added.
+* Contributors: Isaac IY Saito
+
 0.1.2 (2014-08-26)
 ------------------
 * (stampit) Fix `#11 <https://github.com/tork-a/hironx_tutorial/issues/11>`_ (rtm connect error).
