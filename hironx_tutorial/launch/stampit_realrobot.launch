@@ -1,0 +1,8 @@
+<launch> 	      	  	
+  <include file="$(find hironx_ros_bridge)/launch/hironx_ros_bridge.launch" />
+  <include file="$(find hironx_moveit_config)/launch/moveit_planning_execution.launch" />
+
+  <!-- This py keeps crashing when being called from .launch. So for now this needs to be called
+       separately from command line. -->
+  <!-- <node name="stampit_demo" pkg="hironx_tutorial" type="stampit_demo.py" respawn="true" /> -->
+</launch>
