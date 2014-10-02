@@ -2,8 +2,8 @@
 Changelog for package hironx_calibration
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.0.25 (2014-10-03)
+-------------------
 * New package hironx_calibration added.
 * Contributors: Kei Okada, Isaac IY Saito
 

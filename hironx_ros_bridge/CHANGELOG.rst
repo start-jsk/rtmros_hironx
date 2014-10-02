@@ -2,8 +2,8 @@
 Changelog for package hironx_ros_bridge
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.0.25 (2014-10-03)
+-------------------
 * (hironx_ros_bridge)
 
   * Add impedance controller.
