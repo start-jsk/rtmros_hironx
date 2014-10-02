@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<package>
+  <name>hironx_tutorial</name>
+  <version>0.1.2</version>
+  <description>Sample / demo / tutorial programs for <a href = "http://wiki.ros.org/hironx_ros_bridge">Hiro</a> and 
+   <a href = "http://wiki.ros.org/rtmros_nextage">NEXTAGE OPEN (NXO)</a> robot by Kawada Industries.
+   All sample code that works on Hiro robot should work also on NEXTAGE OPEN. 
+   The opposite is, however, not always true (e.g. gripper operation is different in NXO). 
+  </description>
+  <maintainer email="dev@opensource-robotics.tokyo.jp">Isaac Saito</maintainer>
+  <author email="iisaito@opensource-robotics.tokyo.jp">Isaac IY Saito</author>
+  <license>BSD</license>
+
+  <url type="website">http://wiki.ros.org/hironx_tutorial</url>
+  <url type="website">http://docs.ros.org/hydro/api/hironx_tutorial/html/</url>
+  <url type="repository">https://github.com/tork-a/hironx_tutorial</url>
+  <url type="bugtracker">https://github.com/tork-a/hironx_tutorial/issues</url>
+  
+  <buildtool_depend>catkin</buildtool_depend>
+  <build_depend>geometry_msgs</build_depend>
+  <build_depend>leap_motion</build_depend>
+  <build_depend>moveit_commander</build_depend>
+  <build_depend>nextage_ros_bridge</build_depend>
+  <build_depend>rospy</build_depend>
+  <build_depend>tf</build_depend>
+  <run_depend>hironx_ros_bridge</run_depend>
+  <run_depend>geometry_msgs</run_depend>
+  <run_depend>leap_motion</run_depend>
+  <run_depend>moveit_commander</run_depend>
+  <run_depend>nextage_ros_bridge</run_depend>
+  <run_depend>rospy</run_depend>
+  <run_depend>tf</run_depend>
+
+  <export>
+  	<rosdoc config="rosdoc.yaml" />
+  </export>
+  </package>
