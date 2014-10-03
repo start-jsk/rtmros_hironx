@@ -36,11 +36,11 @@ import copy
 import math
 
 import actionlib
+from control_msgs.msg import FollowJointTrajectoryAction
+from control_msgs.msg import JointTrajectoryGoal
 from moveit_commander import MoveGroupCommander
 from moveit_commander import MoveItCommanderException
 import rospy
-from pr2_controllers_msgs.msg import JointTrajectoryAction
-from pr2_controllers_msgs.msg import JointTrajectoryGoal
 from trajectory_msgs.msg import JointTrajectoryPoint
 from tf.transformations import quaternion_from_euler
 
@@ -94,13 +94,13 @@ class ROS_Client(object):
 
     def _init_action_clients(self):
         self._aclient_larm = actionlib.SimpleActionClient(
-            '/larm_controller/joint_trajectory_action', JointTrajectoryAction)
+            '/larm_controller/joint_trajectory_action', FollowJointTrajectoryAction)
         self._aclient_rarm = actionlib.SimpleActionClient(
-            '/rarm_controller/joint_trajectory_action', JointTrajectoryAction)
+            '/rarm_controller/joint_trajectory_action', FollowJointTrajectoryAction)
         self._aclient_head = actionlib.SimpleActionClient(
-            '/head_controller/joint_trajectory_action', JointTrajectoryAction)
+            '/head_controller/joint_trajectory_action', FollowJointTrajectoryAction)
         self._aclient_torso = actionlib.SimpleActionClient(
-            '/torso_controller/joint_trajectory_action', JointTrajectoryAction)
+            '/torso_controller/joint_trajectory_action', FollowJointTrajectoryAction)
 
         self._aclient_larm.wait_for_server()
         rospy.loginfo('ros_client; 1')

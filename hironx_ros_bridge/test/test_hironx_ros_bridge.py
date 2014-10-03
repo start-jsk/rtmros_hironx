@@ -17,12 +17,11 @@ from tf.transformations import quaternion_matrix, euler_from_matrix
 import unittest
 
 # for catkin compiled environment, pr2_controller_msgs is not catkinized
-roslib.load_manifest('pr2_controllers_msgs')
-import pr2_controllers_msgs.msg
+import control_msgs.msg
 import trajectory_msgs.msg
 
 from sensor_msgs.msg import JointState
-from pr2_controllers_msgs.msg import JointTrajectoryAction
+from control_msgs.msg import FollowJointTrajectory
 from trajectory_msgs.msg import JointTrajectoryPoint
 from hrpsys_ros_bridge.srv import *
 
@@ -90,7 +89,7 @@ class TestHiroROSBridge(unittest.TestCase):
         self.torso.wait_for_result()
 
     def goal_LArm(self):
-        goal = pr2_controllers_msgs.msg.JointTrajectoryGoal()
+        goal = control_msgs.msg.JointTrajectoryGoal()
         goal.trajectory.joint_names.append("LARM_JOINT0")
         goal.trajectory.joint_names.append("LARM_JOINT1")
         goal.trajectory.joint_names.append("LARM_JOINT2")
@@ -100,7 +99,7 @@ class TestHiroROSBridge(unittest.TestCase):
         return goal
 
     def goal_RArm(self):
-        goal = pr2_controllers_msgs.msg.JointTrajectoryGoal()
+        goal = control_msgs.msg.JointTrajectoryGoal()
         goal.trajectory.joint_names.append("RARM_JOINT0")
         goal.trajectory.joint_names.append("RARM_JOINT1")
         goal.trajectory.joint_names.append("RARM_JOINT2")
@@ -110,12 +109,12 @@ class TestHiroROSBridge(unittest.TestCase):
         return goal
 
     def goal_Torso(self):
-        goal = pr2_controllers_msgs.msg.JointTrajectoryGoal()
+        goal = control_msgs.msg.JointTrajectoryGoal()
         goal.trajectory.joint_names.append("CHEST_JOINT0")
         return goal
 
     def goal_Head(self):
-        goal = pr2_controllers_msgs.msg.JointTrajectoryGoal()
+        goal = control_msgs.msg.JointTrajectoryGoal()
         goal.trajectory.joint_names.append("HEAD_JOINT0")
         goal.trajectory.joint_names.append("HEAD_JOINT1")
         return goal
