@@ -1,13 +1,17 @@
 <package>
   <name>hironx_ros_bridge</name>
   <version>1.0.25</version>
-  <description>ROS-OpenRTM interfacing package for Kawada's Hiro dual-arm robot.</description>
+  <description>ROS-OpenRTM interfacing package for the opensource version of Kawada's Hiro/NEXTAGE dual-arm robot.
+
+  NOTE: This package is multi-license -- pay attention to file header in each file where license is declared. For Creative Commons nc 4.0 applied, see <a href = "http://creativecommons.org/licenses/by-nc/4.0">here</a>.
+  </description>
 
   <maintainer email="k-okada@jsk.t.u-tokyo.ac.jp">Kei Okada</maintainer>
   <maintainer email="iisaito@kinugarage.com">Isaac Isao Saito</maintainer>
   <author email="k-okada@jsk.t.u-tokyo.ac.jp">Kei Okada</author>
 
   <license>BSD</license>
+  <license>CreativeCommons-by-nc-4.0</license>
 
   <url type="website">http://ros.org/wiki/hironx_ros_bridge</url>
   <url type="repository">https://github.com/start-jsk/rtmros_hironx</url>
