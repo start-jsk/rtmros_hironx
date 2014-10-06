@@ -180,13 +180,7 @@ class HIRONX(HrpsysConfigurator):
         @rerutrn List of available components. Each element consists of a list
                  of abbreviated and full names of the component.
         '''
-        rmfo_comp = "RemoveForceSensorLinkOffset"
-        rh_version = self.rh.ref.get_component_profile().version
-        # in simulation, rh has version 0.1
-        if rh_version < '315.2.0' and rh_version > '0.1':
-            rmfo_comp = "AbsoluteForceSensor"
-
-        return [
+        rtclist = [
             ['seq', "SequencePlayer"],
             ['sh', "StateHolder"],
             ['fk', "ForwardKinematics"],
@@ -195,8 +189,18 @@ class HIRONX(HrpsysConfigurator):
             # ['co', "CollisionDetector"],
             ['sc', "ServoController"],
             ['log', "DataLogger"],
-            ['rmfo', rmfo_comp]
             ]
+        if hasattr(self, 'rmfo'):
+            try:
+                self.ms.create("RemoveForceSensorLinkOffset")
+                rtclist.append(['rmfo', "RemoveForceSensorLinkOffset"])
+            except:
+                try:
+                    self.ms.create("AbsoluteForceSensor")
+                    rtclist.append(['rmfo', "AbsoluteForceSensor"])
+                except:
+                    print "Component rmfo is not loadable."
+        return rtclist
 
     # hand interface
     # effort: 1~100[%]
