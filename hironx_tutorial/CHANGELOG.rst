@@ -2,6 +2,9 @@
 Changelog for package hironx_tutorial
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+
 1.0.25 (2014-10-03)
 -------------------
 * New package hironx_tutorial added.

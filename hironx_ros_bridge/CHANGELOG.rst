@@ -2,6 +2,13 @@
 Changelog for package hironx_ros_bridge
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* (hironx_calient.py) check if rmfo is defined in HrpsysConfigurator
+* (hironx_ros_bridge) Add hrpiob files under multi-license.
+* (hironx_ros_bridge) add missing run_depend package.
+* Contributors: Hiroaki Yaguchi, Isaac IY Saito, Kei Okada
+
 1.0.25 (2014-10-03)
 -------------------
 * (hironx_ros_bridge)
