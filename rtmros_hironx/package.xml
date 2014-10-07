@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package>
   <name>rtmros_hironx</name>
-  <version>1.0.25</version>
+  <version>1.0.26</version>
   <description>The rtmros_hironx package is an operating interface via ROS and OpenRTM, for Hiro and <a href = "http://nextage.kawada.jp/en/">NEXTAGE OPEN</a> dual-armed robots from Kawada Industries Inc.
   </description> 
 

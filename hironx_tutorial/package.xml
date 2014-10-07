@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package>
   <name>hironx_tutorial</name>
-  <version>1.0.25</version>
+  <version>1.0.26</version>
   <description>Sample / demo / tutorial programs for <a href = "http://wiki.ros.org/hironx_ros_bridge">Hiro</a> and 
    <a href = "http://wiki.ros.org/rtmros_nextage">NEXTAGE OPEN (NXO)</a> robot by Kawada Industries.
    All sample code that works on Hiro robot should work also on NEXTAGE OPEN. 
