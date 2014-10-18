@@ -33,7 +33,7 @@ HRPSYS_VERSION=${3-"315.1.10"}
 DATE=`date +%Y-%m-%d`
 
 wget https://github.com/fkanehiro/hrpsys-base/archive/${HRPSYS_VERSION}.zip -O /tmp/hrpsys-base-${HRPSYS_VERSION}.zip || echo "ERROR:: Failed to download source code"
-(cd ../; tar -cvzf /tmp/hironx-robot-script-$DATE.tgz robot/Makefile robot/*.in robot/*.sav)
+(cd ../; tar -cvzf /tmp/hironx-robot-script-$DATE-$HRPSYS_VERSION.tgz robot/Makefile robot/*.in robot/*.sav)
 
 commands="
   . ~/.profile;
@@ -57,7 +57,7 @@ commands="
   echo \"* Modify codes *\";
   rm /opt/jsk/lib/libhrpIo.so;
   echo \"* Configure robot script files  *\";
-  tar -xkvzf /tmp/hironx-robot-script-$DATE.tgz;
+  tar -xkvzf /tmp/hironx-robot-script-$DATE-$HRPSYS_VERSION.tgz;
   cd robot;
   make configure;
   make install INSTALL_DIR=/opt/jsk/;
@@ -69,7 +69,7 @@ commands="
 echo "comands = $commands"
 read -p "execute compile command @ $HOSTNAME (y/n)? "
 if [ "$REPLY" == "y" ]; then
-    scp /tmp/hrpsys-base-${HRPSYS_VERSION}.zip /tmp/hironx-robot-script-$DATE.tgz $USERID@$HOSTNAME:/tmp/
+    scp /tmp/hrpsys-base-${HRPSYS_VERSION}.zip /tmp/hironx-robot-script-$DATE-$HRPSYS_VERSION.tgz $USERID@$HOSTNAME:/tmp/
     ssh $USERID@$HOSTNAME -t $commands 2>&1 | tee /tmp/robot-compile-hrpsys-`date +"%Y%m%d-%H%M%S"`.log
     echo "====="
     echo "$ tar -xvzf /tmp/hrpsys-${HRPSYS_VERSION}-qnx-${DATE}; cd hrpsys-source-${HRPSYS_VERSION}-${DATE}/build; make install"
