@@ -8,9 +8,11 @@
    The opposite is, however, not always true (e.g. gripper operation is different in NXO). 
   </description>
   <maintainer email="dev@opensource-robotics.tokyo.jp">Isaac Saito</maintainer>
-  <author email="iisaito@opensource-robotics.tokyo.jp">Isaac IY Saito</author>
+  <author email="iiysaito@opensource-robotics.tokyo.jp">Isaac IY Saito</author>
+  <author email="method_aspect_card@yahoo.co.jp">Daiki Maekawa</author>
   <license>BSD</license>
-
+  <license>MIT</license>
+  
   <url type="website">http://wiki.ros.org/hironx_tutorial</url>
   <url type="website">http://docs.ros.org/hydro/api/hironx_tutorial/html/</url>
   <url type="repository">https://github.com/tork-a/hironx_tutorial</url>
