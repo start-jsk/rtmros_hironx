@@ -2,8 +2,8 @@
 Changelog for package rtmros_hironx
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.0.27 (2014-11-04)
+-------------------
 * Add more sample scripts (https://github.com/tork-a/hironx_tutorial/pull/10).
 * (hrpiob) Add missing files.
 * Contributors: Kei Okada, Isaac IY Saito

@@ -2,8 +2,8 @@
 Changelog for package hironx_ros_bridge
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.0.27 (2014-11-04)
+-------------------
 * fix roobt-script-date.tgz name
 * (hrpiob) Add missing files.
 * Contributors: Isaac IY Saito, Kei Okada
