@@ -2,6 +2,12 @@
 Changelog for package hironx_ros_bridge
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* fix roobt-script-date.tgz name
+* (hrpiob) Add missing files.
+* Contributors: Isaac IY Saito, Kei Okada
+
 1.0.26 (2014-10-07)
 -------------------
 * (hironx_calient.py) check if rmfo is defined in HrpsysConfigurator
