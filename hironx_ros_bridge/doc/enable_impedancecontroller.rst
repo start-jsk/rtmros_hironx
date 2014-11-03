@@ -325,7 +325,7 @@ Now the file should look like this::
     ./shm_iob_hiro > /opt/hiro/log/shm_iob_hiro_$DATE.log 2>&1 &
     
     cd /opt/jsk/bin
-    ./jr3_driver > /opt/jsk/var/log/jr3.log & # For nitta force sensor
+    ./jr3_driver > /opt/jsk/var/log/jr3.log 2>&1 & # For nitta force sensor
     ./NameServer.sh
     ./ModelLoader.sh
     /usr/bin/env sleep 3
