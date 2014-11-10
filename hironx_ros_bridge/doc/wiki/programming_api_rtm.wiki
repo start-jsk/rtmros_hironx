@@ -1,0 +1,326 @@
+## For instruction on writing tutorials
+## http://www.ros.org/wiki/WritingTutorials
+####################################
+##FILL ME IN
+####################################
+## for a custom note with links:
+## note =
+## for the canned note of "This tutorial assumes that you have completed the previous tutorials:" just add the links 
+## note.0= 
+## descriptive title for the tutorial
+## title = Programming Hiro / NEXTAGE OPEN (RTM)
+## multi-line description to be displayed in search 
+## description = More OpenRTM-based commands of Hiro (Open) / NEXTAGE OPEN are introduced in scenario-oriented manner. Then how to write your own python script is explained.
+## the next tutorial description (optional)
+## next =
+## links to next tutorial (optional)
+## next.0.link= [[rtmros_nextage/Tutorials/Programming_Hiro_NEXTAGE_OPEN_ROS|Programming Hiro/NEXTAGE OPEN in ROS]]
+## next.1.link=
+## what level user is this tutorial for 
+## level= IntermediateCategory
+## keywords =
+####################################
+
+<<IncludeCSTemplate(TutorialCSHeaderTemplate)>>
+
+<<TableOfContents(4)>>
+
+<<Include(rtmros_nextage/Tutorials/Install NEXTAGE OPEN software on your machine,,from="##begin_terminology",to="##end_terminology")>>
+
+== Intro ==
+[[rtmros_nextage/Tutorials/Operating Hiro, NEXTAGE OPEN|In one of the previous tutorials]] we've already gone through operating the robot via python script on `ipython` terminal. In this tutorial, first we work on more operation based on a sample scenario, which lets you get more sense of the `HiroNX` python API. Then we look into a python sample code that does operation via `HixoNXO` python API.
+
+== More interactive operation ==
+=== More in-detail of interactive operation via python I/F ===
+
+During initialization, robot's client interface class, `HIRONX` / `NextageClient`, is instantiated class as a variable `robot` on `ipython` terminal. Now see what's available inside of `robot` by:
+{{{
+In : robot.
+}}}
+
+You can tab-complete to know what's available:
+{{{
+robot.Groups                            robot.getCurrentRPY                     robot.rh_svc
+robot.HandClose                         robot.getCurrentRotation                robot.saveLog
+robot.HandGroups                        robot.getJointAngles                    robot.sc
+robot.HandOpen                          robot.getRTCInstanceList                robot.sc_svc
+robot.InitialPose                       robot.getRTCList                        robot.sensors
+robot.OffPose                           robot.getReferencePose                  robot.seq
+robot.RtcList                           robot.getReferencePosition              robot.seq_svc
+robot.abc                               robot.getReferenceRPY                   robot.servoOff
+robot.activateComps                     robot.getReferenceRotation              robot.servoOn
+robot.afs                               robot.getSensors                        robot.setHandEffort
+robot.checkEncoders                     robot.goActual                          robot.setHandJointAngles
+robot.clearLog                          robot.goInitial                         robot.setHandWidth
+robot.co                                robot.goOffPose                         robot.setJointAngle
+robot.co_svc                            robot.hand_width2angles                 robot.setJointAngles
+robot.configurator_name                 robot.hgc                               robot.setJointAnglesOfGroup
+robot.connectComps                      robot.ic                                robot.setSelfGroups
+robot.connectLoggerPort                 robot.init                              robot.setTargetPose
+robot.createComp                        robot.isCalibDone                       robot.setupLogger
+robot.createComps                       robot.isServoOn                         robot.sh
+robot.el                                robot.kf                                robot.sh_svc
+robot.el_svc                            robot.lengthDigitalInput                robot.simulation_mode
+robot.ep_svc                            robot.lengthDigitalOutput               robot.st
+robot.findModelLoader                   robot.liftRobotUp                       robot.stOff
+robot.fk                                robot.loadPattern                       robot.tf
+robot.fk_svc                            robot.log                               robot.vs
+robot.flat2Groups                       robot.log_svc                           robot.waitForModelLoader
+robot.getActualState                    robot.moveHand                          robot.waitForRTCManagerAndRoboHardware
+robot.getBodyInfo                       robot.ms                                robot.waitInterpolation
+robot.getCurrentPose                    robot.readDigitalInput                  robot.waitInterpolationOfGroup
+robot.getCurrentPosition                robot.rh                                robot.writeDigitalOutput
+}}}
+
+See the list of joint groups and its member `link`s:
+{{{
+In : robot.Groups
+Out: 
+[['torso', ['CHEST_JOINT0']],
+ ['head', ['HEAD_JOINT0', 'HEAD_JOINT1']],
+ ['rarm',
+  ['RARM_JOINT0',
+   'RARM_JOINT1',
+   'RARM_JOINT2',
+   'RARM_JOINT3',
+   'RARM_JOINT4',
+   'RARM_JOINT5']],
+ ['larm',
+  ['LARM_JOINT0',
+   'LARM_JOINT1',
+   'LARM_JOINT2',
+   'LARM_JOINT3',
+   'LARM_JOINT4',
+   'LARM_JOINT5']]]
+}}}
+
+An advantage of `ipython` as a script interpreter is that you can get API info on itself. Suppose you're looking for how to get the current pose but you have no idea of command, first just guess and tab-complete:
+
+{{{
+In : robot.getCurrent
+robot.getCurrentPose      robot.getCurrentPosition  robot.getCurrentRPY       robot.getCurrentRotation
+}}}
+
+Here you see four options, and clearly `getCurrentPose` sounds like it. You still need to know the arguments of the method. So put "?" at the end of the command:
+
+{{{
+In : robot.getCurrentPose?
+Type:       instancemethod
+Base Class: <type 'instancemethod'>
+String Form:<bound method HIRONX.getCurrentPose of <__main__.HIRONX instance at 0x1f39758>>
+Namespace:  Interactive
+File:       /opt/ros/hydro/lib/python2.7/dist-packages/hrpsys_config.py
+Definition: robot.getCurrentPose(self, lname)
+Docstring:  <no docstring>
+}}}
+
+Here you know `getCurrentPose` takes `lname` (stands for `link name`). So run:
+
+{{{
+In: robot.getCurrentPose('RARM_JOINT0')
+Out: 
+[0.912826202314136,
+ -0.4083482880688395,
+ 0.0,
+ 0.0,
+ 0.39443415756662026,
+ 0.8817224037285941,
+ -0.25881904510252074,
+ -0.145,
+ 0.1056883139872261,
+ 0.2362568060275051,
+ 0.9659258262890683,
+ 0.370296,
+ 0.0,
+ 0.0,
+ 0.0,
+ 1.0]
+}}}
+
+This `getCurrentPose` returns the rotational matrix and the position of the given link in 1 dimensional list. You could also get `position` only by another method:
+
+{{{
+In: robot.getCurrent
+robot.getCurrentPose      robot.getCurrentPosition  robot.getCurrentRPY       robot.getCurrentRotation
+In : robot.getCurrentPosition('RARM_JOINT0')
+Out: [0.0, -0.145, 0.370296]
+}}}
+
+In `hrpsys`, position vector is presented as a list with three elements [ x, y, z ] where:
+
+{{{
+ x: forward 
+ y: left
+ z: upward
+}}}
+ 
+Now let's move an arm. First go to initial pose.
+
+{{{
+In : robot.goInitial()
+}}}
+
+{{{
+In : robot.setTargetPose?
+Type:       instancemethod
+Base Class: <type 'instancemethod'>
+String Form:<bound method HIRONX.setTargetPose of <__main__.HIRONX instance at 0x333b758>>
+Namespace:  Interactive
+File:       /opt/ros/hydro/lib/python2.7/dist-packages/hrpsys/hrpsys_config.py
+Definition: robot.setTargetPose(self, gname, pos, rpy, tm)
+Docstring:  <no docstring>
+}}}
+
+`gname` is the name of the `joint group`. `pos` and `rpy` are in list format. First, store the current values into variables:
+
+{{{
+In : pos = robot.getCurrentPosition('RARM_JOINT3')
+In : rpy = robot.getReferenceRPY('RARM_JOINT3')
+In : tm = 3
+}}}
+
+Current `pose` should look like:
+
+{{http://wiki.ros.org/hironx_ros_bridge?action=AttachFile&do=get&target=hiro_before_move_rarm.png|hiro_before_move_rarm|width="640"}}
+
+Then randomly manipulate `position`, and execute:
+
+{{{
+In : pos[2] = 0.5
+
+In : robot.setTargetPose('rarm', pos, rpy, tm)
+Out: True
+}}}
+
+Now a plan is successfully shown for the right arm to be moved to the specified `pose` like this image.
+
+ {{{#!wiki blue/solid
+NOTE that this image was taken while [[moveit]] was active. Ignore that the arm at the starting is displayed in light green, which id because of `MoveIt!`, and has nothing to do with this tutorial):
+ }}}
+
+{{http://wiki.ros.org/hironx_ros_bridge?action=AttachFile&do=get&target=hiro_after_move_rarm.png|hiro_after_move_rarm|width="640"}}
+
+After awhile, when you're done with the robot, store both arms back to the power off poses by:
+
+{{{
+In : robot.goOffPose()
+}}}
+
+{{http://wiki.ros.org/hironx_ros_bridge?action=AttachFile&do=get&target=hiro_powerOff.png|hiro_powerOff|width="640"}}
+
+=== DIO operation (NEXTAGE OPEN only) ===
+TBF (To be filled)
+
+=== Location of source and document of hrpsys-based API ===
+
+Detail of the API is available in following locations:
+
+ * `Hiro`; hironx_ros_bridge/scripts/[[https://github.com/start-jsk/rtmros_hironx/blob/hydro-devel/hironx_ros_bridge/scripts/hironx.py|hironx.py]]
+ * `NEXTAGE OPEN`; nextage_ros_bridge/script/[[https://github.com/tork-a/rtmros_nextage/blob/hydro-devel/nextage_ros_bridge/src/nextage_ros_bridge/nextage_client.py|nextage.py]]
+
+== Programming via python I/F "HIRONX" ==
+
+=== Re-run sample script (acceptance test) ===
+Now, let's look at a sample code and learn how to write your own application; In [[rtmros_nextage/Tutorials/Quick Start for Robot Users#Run_the_Delivery_Inspection_script|Quick Start Guide]], robot owners ran a set of actions. If you're on simulator, please go through the following portion (that is excepted from there) on your simulation environment, to see how it works first (in particular, "`acceptance.run_tests_rtm()`" is the one we'll look into in this tutorial:
+
+ <<Include(rtmros_nextage/Tutorials/Quick Start for Robot Users,,from="##begin_run_deliveryinspection_script",to="##end_run_deliveryinspection_script")>>
+
+=== Visiting the sample code ===
+
+Let's look into the code. 
+
+First, this sample has 2-step dependency as in the image below.
+
+[[https://docs.google.com/drawings/d/1wNVjZ7LLxJQMpVFkPJeNgMLA99tyJCkQukFo7FnYwXI/pub?w=779&h=282|{{https://docs.google.com/drawings/d/1wNVjZ7LLxJQMpVFkPJeNgMLA99tyJCkQukFo7FnYwXI/pub?w=779&h=282}}]] 
+
+The actions you just ran in the previous section is written in `AcceptanceTest_Hiro` class, which uses [[http://docs.ros.org/hydro/api/hironx_ros_bridge/html/classhironx__ros__bridge_1_1testutil_1_1acceptancetest__rtm_1_1AcceptanceTestRTM.html|`AcceptancetestRTM`]] class to access [[http://docs.ros.org/hydro/api/hironx_ros_bridge/html/classhironx__ros__bridge_1_1hironx__client_1_1HIRONX.html|HIRONX`]] class. What you really want to understand to write your own program is `HIRONX` class.
+
+In short, '''let's look at `AcceptancetestRTM` that directly accesses `HIRONX`'''.
+
+ {{{#!wiki blue/solid
+  If you're curious, the code of `AcceptanceTest_Hiro` can be found [[https://github.com/start-jsk/rtmros_hironx/blob/hydro-devel/hironx_ros_bridge/scripts/acceptancetest_hironx.py|here]]. You might want to know about the 7 tasks being run, all of which are kicked from the `_run_tests` method.
+ }}}
+
+Now here's the entire code:
+
+<<GetCode(https://raw.githubusercontent.com/start-jsk/rtmros_hironx/a7a43e5baf4dcd48e34b94f9781defadfbca03d0/hironx_ros_bridge/src/hironx_ros_bridge/testutil/acceptancetest_rtm.py,#!python)>>
+
+Let's look at a task as an example.
+
+ {{{
+37 from hironx_ros_bridge.constant import Constant
+38 from hironx_ros_bridge.testutil.abst_acceptancetest import AbstAcceptanceTest
+ }}}
+ 
+ You realize that `HIRONX` class, the RTM API we're all interested in, is not imported. No worries, it's taken care of in the following portion:
+
+ {{{
+43 def __init__(self, robot_client):
+44     '''
+45     @type robot_client: hironx_ros_bridge.hironx_client.HIRONX
+46     '''
+47     self._robotclient = robot_client
+ }}}
+
+ Here, the constructor receives `HIRONX` and keeps it as a member `self._robotclient`. So in the rest of this tutorial `self._robotclient` points to an instance of `HIRONX` class.
+
+ The remainder of the code is fundamental methods. For example:
+
+ {{{
+49 def go_initpos(self):
+50     self._robotclient.goInitial()
+51
+ }}}
+
+ Simple enough, all joints move to the preset initial positions. 
+
+ {{{#!wiki blue/solid
+  Later as you progress with your own code, you might want to learn options by looking at API doc of each class and method. In this tutorial we aren't going into detail much so please explore by yourself. For instance `goInitial` method has [[http://docs.ros.org/hydro/api/hironx_ros_bridge/html/classhironx__ros__bridge_1_1hironx__client_1_1HIRONX.html#a295b0b4950cb580273b224dc659c8a23|these options]] as follows:
+
+    def hironx_ros_bridge.hironx_client.HIRONX.goInitial(self, tm = 7, wait = True, init_pose_type = 0)
+ }}}
+
+ Next, 
+
+ {{{
+52 def set_joint_angles(self, joint_group, joint_angles, msg_tasktitle=None, task_duration=7.0, do_wait=True):
+:
+57     self._robotclient.setJointAnglesOfGroup(joint_group, joint_angles, task_duration, do_wait)
+58
+ }}}
+
+ It's also pretty simply calling only the method of `HIRONX` where a lot of things are already handled so that you can write your code in a very simple way like this.
+
+==== To not override actions ====
+
+ By default, some of the commands in `HIRONX` class wait for the commanded action ends before the next action starts. Some don't. It depends on the implementation that is clear from the arguments each method takes. Methods with `wait` argument are capable of waiting or not. Others are not, unless mentioned in their API docs.
+
+ Example of those that have "wait" feature:
+
+ {{{
+70 def set_pose_relative(self, joint_group, dx=0, dy=0, dz=0, dr=0, dp=0, dw=0, msg_tasktitle=None, task_duration=7.0, do_wait=True):
+73     if joint_group == Constant.GRNAME_LEFT_ARM:
+74         eef = 'LARM_JOINT5'
+75     elif joint_group == Constant.GRNAME_RIGHT_ARM:
+76         eef = 'RARM_JOINT5'
+:
+79     self._robotclient.setTargetPoseRelative(
+80         joint_group, eef, dx, dy, dz, dr, dp, dw, task_duration, do_wait)
+ }}}
+
+ Unless you want, generally it would be safe to set `wait=True` by default in your codes.
+
+ In the following, `setTargetPose` doesn't take any wait / interruption signals. In that case you could work it around by calling `HrpsysConfigurator`.[[http://goo.gl/tEkZTW|waitInterpolationOfGroup]]() (`HrpsysConfigurator` is the parent class of `HIRONX`).
+
+ {{{
+61 def set_pose(self, joint_group, position, rpy, msg_tasktitle, task_duration=7.0, do_wait=True, ref_frame_name=None):
+:
+65     self._robotclient.setTargetPose(joint_group, position, rpy, task_duration, ref_frame_name)
+67     if do_wait:
+68         self._robotclient.waitInterpolationOfGroup(joint_group)
+68
+ }}}
+
+## AUTOGENERATED DO NOT DELETE 
+## TutorialCategory
+## FILL IN THE STACK TUTORIAL CATEGORY HERE

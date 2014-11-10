@@ -1,0 +1,140 @@
+## For instruction on writing tutorials
+## http://www.ros.org/wiki/WritingTutorials
+####################################
+##FILL ME IN
+####################################
+## for a custom note with links:
+## note =
+## for the canned note of "This tutorial assumes that you have completed the previous tutorials:" just add the links 
+## note.0= 
+## descriptive title for the tutorial
+## title = Programming Hiro / NEXTAGE OPEN (MoveIt Python Commander)
+## multi-line description to be displayed in search 
+## description = Various APIs of Hiro (Open) / NEXTAGE OPEN (via MoveIt Python commander) are explained in this single tutorial.
+## the next tutorial description (optional)
+## next = 
+## links to next tutorial (optional)
+## next.0.link= [[rtmros_nextage/Tutorials/Using digital IO (NXO only)]]
+## next.1.link=
+## what level user is this tutorial for 
+## level= (BeginnerCategory, IntermediateCategory, AdvancedCategory)
+## keywords =
+####################################
+
+<<IncludeCSTemplate(TutorialCSHeaderTemplate)>>
+
+<<TableOfContents(4)>>
+
+== Setting Up MoveIt ==
+
+You can use `MoveIt!` `RViz` plugin for interactive manipulation on GUI.
+{{{
+$ roslaunch hironx_moveit_config moveit_planning_execution.launch   (HIRO)
+$ roslaunch nextage_moveit_config moveit_planning_execution.launch  (NEXTAGE OPEN)
+}}}
+
+== Operate robot via moveit in Python ==
+[[http://moveit.ros.org/wiki/MoveIt_Commander|moveit_commander]] package offers a capability to write a `MoveIt!` client in `Python` ([[http://docs.ros.org/hydro/api/moveit_commander/html/annotated.html|API doc]]). 
+
+To utilize it, you might want to install `MoveIt!`'s python client interface if you already haven't done so.
+{{{
+$ apt-get install ros-%YOUR_ROS_DISTRO%-moveit-commander
+}}}
+
+You can find an example in [[https://code.google.com/p/rtm-ros-robotics/source/browse/trunk/rtmros_hironx/hironx_ros_bridge/test/test_hironx_moveit.py|test_hironx_moveit.py file in hironx_ros_bridge]], which looks like:
+
+{{{
+from geometry_msgs.msg import Pose, PoseStamped
+from moveit_commander import MoveGroupCommander, conversions
+import rospy
+
+rospy.init_node("test_hironx_moveit")
+
+rarm = MoveGroupCommander("right_arm")
+larm = MoveGroupCommander("left_arm")
+
+rarm_current_pose = rarm.get_current_pose().pose
+larm_current_pose = larm.get_current_pose().pose
+
+
+def _set_target_random(self):
+    '''
+    @type self: moveit_commander.MoveGroupCommander
+    @param self: In this particular test script, the argument "self" is either
+                 'rarm' or 'larm'.
+    '''
+    global current, current2, target
+    current = self.get_current_pose()
+    print "*current*", current
+    target = self.get_random_pose()
+    print "*target*", target
+    self.set_pose_target(target)
+    self.go()
+    current2 = self.get_current_pose()
+    print "*current2*", current2
+
+MoveGroupCommander._set_target_random = _set_target_random
+}}}
+
+    Here goes cody-by-code explanation:
+    {{{
+    from geometry_msgs.msg import Pose, PoseStamped
+    from moveit_commander import MoveGroupCommander, conversions
+    import rospy
+    }}}
+    Python API of MoveIt! is provided via `moveit_commander.MoveGroupCommander`.
+    {{{
+    rospy.init_node("test_hironx_moveit")
+    rarm = MoveGroupCommander("right_arm")
+    larm = MoveGroupCommander("left_arm")
+    }}}
+    We need to run a ROS `Node` (by calling `rospy.init_node()`) in order to use `MoveGroupCommander` from this script.
+    {{{
+    rarm_current_pose = rarm.get_current_pose().pose
+    larm_current_pose = larm.get_current_pose().pose
+    }}}
+    Getting current positions.
+    {{{
+    def _set_target_random(self):
+        '''
+        @type self: moveit_commander.MoveGroupCommander
+        @param self: In this particular test script, the argument "self" is either
+                     'rarm' or 'larm'.
+        '''
+        global current, current2, target
+        current = self.get_current_pose()
+        print "*current*", current
+        target = self.get_random_pose()
+        print "*target*", target
+        self.set_pose_target(target)
+        self.go()
+        current2 = self.get_current_pose()
+        print "*current2*", current2
+    }}}
+    Define a method that randomly moves an arm.
+    {{{
+    MoveGroupCommander._set_target_random = _set_target_random
+    }}}
+    Latch the method to the class (This is very temporary Python solution and is not specific to `MoveIt!` nor to `Hiro`) so that users can call the method per instance of MoveGroupCommander that is created for each arm.
+    
+    Now usage of that file:
+    
+    0 This test script assumes that Hiro simulator is always running on your machine (you can do that by following [[https://code.google.com/p/rtm-ros-robotics/wiki/hironx_ros_bridge_en|this section]]).
+    1 run this script by something like:
+    {{{
+    $ ipython -i `rospack find hironx_ros_bridge`/test/test_hironx_moveit.py
+    }}}
+    2 On `ipython` interpreter, call either method per arm:
+    {{{
+    In : larm._set_target_random()
+    In : rarm._set_target_random()
+    }}}
+    
+    You'll see the planning happens on `RViz`.
+    
+    For a little more methods available in Python, consult [[http://moveit.ros.org/wiki/MoveIt_Commander|moveit_commander wiki]].
+
+
+## AUTOGENERATED DO NOT DELETE 
+## TutorialCategory
+## FILL IN THE STACK TUTORIAL CATEGORY HERE
