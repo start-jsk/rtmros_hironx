@@ -1,0 +1,180 @@
+## For instruction on writing tutorials
+## http://www.ros.org/wiki/WritingTutorials
+####################################
+##FILL ME IN
+####################################
+## for a custom note with links:
+## note =
+## for the canned note of "This tutorial assumes that you have completed the previous tutorials:" just add the links
+## note.0=
+## descriptive title for the tutorial
+## title = Setup ROCON App Manager
+## multi-line description to be displayed in search
+## description = How to control a robot application from Android.
+## the next tutorial description (optional)
+## next =
+## links to next tutorial (optional)
+## next.0.link= [[rtmros_nextage/Tutorials/Setup stereo camera|Setup stereo camera]]
+## next.1.link=
+## what level user is this tutorial for
+## level= (BeginnerCategory, IntermediateCategory, AdvancedCategory)
+## keywords =
+####################################
+<<IncludeCSTemplate(TutorialCSHeaderTemplate)>>
+
+<<TableOfContents(4)>>
+
+See http://wiki.ros.org/rocon_app_manager/Tutorials/hydro for detail
+
+== Setup Workspace ==
+The default source installation uses the stable hydro (not the hydro-devel) branches on [[https://github.com/robotics-in-concert|github]]. If you want the development branches, simply replace hydro with hydro-devel in the rosinstall's url.
+
+=== Ros Preparation ===
+We'll need catkin and a few useful workspace tools.
+
+{{{
+> sudo apt-get install ros-hydro-catkin ros-hydro-rosbash ros-hydro-zeroconf-avahi ros-hydro-rqt
+}}}
+=== Sources ===
+{{{
+> mkdir ~/rocon
+> cd ~/rocon
+> wstool init -j4 src https://raw.github.com/robotics-in-concert/rocon/hydro/rocon.rosinstall
+> rosdep install --from-paths src /opt/ros/hydro --ignore-src --rosdistro hydro -y
+> . /opt/ros/hydro/setup.bash
+> catkin_make
+}}}
+== Test Standalne App Manager ==
+{{{
+> roslaunch rocon_app_manager standalone.launch --screen
+}}}
+To retrieve what apps are runnable (pre-installed in this case):
+
+{{{
+> rosservice call /app_manager/list_apps | grep -v data
+apps:
+  -
+    name: rocon_apps/listener
+    display: Listener
+    description: Default ros style listener tutorial
+    platform: linux.ros.*
+    status: Ready
+  -
+    name: rocon_apps/chirp
+    display: Chirp
+    description: Make an audible "chirp" sound.
+    platform: linux.ros.*
+    status: Ready
+  -
+    name: rocon_apps/talker
+    display: Talker
+    description: Default ros style talker tutorial
+    platform: linux.ros.*
+    status: Ready
+}}}
+Starting a rapp (robot application):
+
+{{{
+> rosservice call /app_manager/start_app rocon_apps/talker []
+> rostopic list
+/app_manager/gateway_info
+/application/chatter
+/rosout
+/rosout_agg
+}}}
+The standalone app manager will always start application connections underneath the ''application'' namespace. Now the second argument in the start app call  is for remapping the connections. By default, the talker app is, of course at chatter, but supposing we wish to start it at ''babble'':
+
+{{{
+> rosservice call /app_manager/start_app rocon_apps/talker ['{remap_from: chatter, remap_to: babble }']
+}}}
+Stopping a rapp (currently needs the resource name, may drop this):
+
+{{{
+> rosservice call /app_manager/stop_app "{}"
+}}}
+== Setup Pairing with Android Client ==
+Launching the robot app manager for pairing through a public master.
+
+{{{
+> rocon_launch rocon_app_manager paired.concert
+}}}
+rocon_launch is a multimaster version of roslaunch.
+
+Open a new shell and drop into the public master.
+
+{{{
+> export ROS_MASTER_URI=http://localhost:11311
+}}}
+{{{
+> rostopic pub /pairing_master/watchdog std_msgs/Bool "data: False"
+> rosservice call /pairing_master/invite "cancel: false"
+}}}
+Next, setup Android.
+
+ * Connect the android to your LAN wireless.
+ * Download [[https://play.google.com/store/apps/details?id=com.github.rosjava.android_remocons.robot_remocon&hl=en|Robot Remocon]] from google's play store.
+ * Launch the Robot Remocon
+ * Scan the network (via zeroconf) for the ''Cybernetic Pirate''.
+ * Enter and run either chirp (no associated android app) or talker (simple textview android app).
+
+== Create Robot Application ==
+Create a rapp application. simply follow the steps below to create your own rapp:
+
+ * Create a folder for your rapp
+ * Copy the interface, rapp and launch file from the talker rapp.
+ * Modify the contents of these to suit your application.
+
+By way of example, Let's create RViz launcher.
+
+{{{
+> roscd rocon_apps/apps/
+> ls
+chirp listener talker
+> mkdir rviz
+> cp talker/* rviz/
+> cd rviz
+> for name in talker.*
+mv $name rviz.${name##*.}
+}}}
+Modify rviz.rapp, rviz.launch and racon.rapps files. Below are the details of the revision.
+
+{{{
+# rviz.launch
+<launch>
+  <node name="viz" pkg="rviz" type="rviz" output="screen"/>
+</launch>
+}}}
+{{{
+# rviz.rapp
+display: RViz
+description: simple RViz launcher.
+platform: linux.ros.*
+launch: rocon_apps/viz.launch
+interface: rocon_apps/viz.interface
+icon: rocon_apps/rviz_icon.png
+pairing_clients:
+ - type: android
+   manager:
+     api-level: 10
+     intent-action: com.github.rosjava.android_apps.listener.Listener
+}}}
+{{{
+# rocon.rapps
+apps:
+ - rocon_apps/chirp
+ - rocon_apps/talker
+ - rocon_apps/listener
+ - rocon_apps/rviz
+}}}
+After that, launch the robot app manager and pairing with Android. On Robot Remocon, you can see RViz icon. If you push RViz icon, rviz will launch.
+
+##begin_swcomponent_rocon_remocon
+{{http://wiki.ros.org/rtmros_nextage/Tutorials/Setup%20ROCON%20App%20Manager?action=AttachFile&do=get&target=rocon_remocon_image.png|rocon_remocon display view}}
+##end_swcomponent_rocon_remocon
+
+As stated above, you can create an robot application.
+
+
+## AUTOGENERATED DO NOT DELETE
+## TutorialCategory
+## FILL IN THE STACK TUTORIAL CATEGORY HERE

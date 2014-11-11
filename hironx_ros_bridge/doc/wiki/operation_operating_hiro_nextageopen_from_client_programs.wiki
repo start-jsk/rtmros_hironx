@@ -1,0 +1,176 @@
+## page was renamed from rtmros_nextage/Tutorials/Operating Hiro, NEXTAGE OPEN from Client Pograms
+## page was renamed from rtmros_nextage/Tutorials/Operating Hiro/NEXTAGE OPEN from Client Programs
+## For instruction on writing tutorials
+## http://www.ros.org/wiki/WritingTutorials
+####################################
+##FILL ME IN
+####################################
+## for a custom note with links:
+## note =
+## for the canned note of "This tutorial assumes that you have completed the previous tutorials:" just add the links 
+## note.0= 
+## descriptive title for the tutorial
+## title = Running ROS process, operating via scripts and GUI.
+## multi-line description to be displayed in search 
+## description = Fire up some particular processes on Ubuntu to use applications. Also learn interactive operation using pythong script on ipython terminal.
+## the next tutorial description (optional)
+## next =
+## links to next tutorial (optional)
+## next.0.link= [[rtmros_nextage/Tutorials/Monitoring, operating via GUI|Monitoring, operating via GUI]]
+## next.1.link=
+## what level user is this tutorial for 
+## level= BeginnerCategory
+## keywords = rtm_ros_bridge
+####################################
+
+<<IncludeCSTemplate(TutorialCSHeaderTemplate)>>
+<<TableOfContents(5)>>
+
+== Overview ==
+
+In nutshell, you need to run the following few things to operate the robot:
+
+ * Run "RTM-ROS bridge" (simulation users should have already launched this if you came from the [[rtmros_nextage/Tutorials/Run simulation|previous tutorial]]).
+ * Run [[http://moveit.ros.org|MoveIt!]] if necessary.
+
+The following shows how to do these.
+
+== Steps ==
+
+=== Run rtm_ros_bridge ===
+ 1. (Simulation users don't need this; it should be done already) Run:
+
+ {{{
+$ roslaunch hironx_ros_bridge hironx_ros_bridge_real.launch nameserver:=%HOSTNAME%    (HIRO)
+$ roslaunch nextage_ros_bridge nextage_ros_bridge.launch nameserver:=%HOSTNAME%  (NEXTAGE OPEN)
+ }}}
+
+ Replace `%HOSTNAME%` with an appropriate value in your environment; eg. `hiro001`, `nxc011`;
+
+ {{{#!wiki blue/solid
+  Inside of `QNX`, the processes that accept connection from `Ubuntu` should be already running. So you only have to launch what we call as `rtm_ros_bridge` (or sometimes just `ros_bridge`, but don't get confused with other `bridge`rs. E.g. [[rosbridge]], [[ros_arduino_bridge]]).
+ }}}
+
+ That's it.
+
+ 2. (Optional) You might want to check what ROS nodes are running:
+
+ {{{
+$ rosnode list
+/diagnostic_aggregator
+/hrpsys_profile
+/hrpsys_ros_diagnostics
+/hrpsys_state_publisher
+/rosout
+ }}}
+
+=== Run MoveIt! ===
+
+At the time of writing (`rtmros_hironx` 1.0.23), [[MoveIt]]! processes need to be separately started. This gives the users a choice to run it or not; MoveIt! processes are costly performance-wise (though negligible on the most of the new machines).
+
+ 0. (Only first time) You might want to install packages that might be missing:
+ {{{
+$ apt-get install ros-%YOUR_ROS_DISTRO%-moveit-planners-ompl
+ }}}
+
+ 1. Run:
+ {{{
+$ roslaunch hironx_moveit_config moveit_planning_execution.launch   (HIRO)
+$ roslaunch nextage_moveit_config moveit_planning_execution.launch  (NEXTAGE OPEN)
+ }}}
+
+ {{http://wiki.ros.org/hironx_moveit_config?action=AttachFile&do=get&target=snap_tutorial_hironx_moveitRvizPlugin.png|tutorial_hironx_moveitRvizPlugin|width="640"}}
+
+ This spawns a new `ROS Node` called "`move_group`" that provides an interface between your robot and `MoveIt!` services. [[rqt_graph]] now shows it too:
+ {{http://wiki.ros.org/hironx_ros_bridge?action=AttachFile&do=get&target=snap_rqt_moveit_hironx.png|rqt_moveit_hironx|width="640"}}
+
+Refer to [[http://moveit.ros.org/wiki/PR2/Rviz_Plugin/Quick_Start|plugin usage page]] for how to operate MoveIt! via [[RViz]] plugin (the page uses info specific to `PR2` personal robot, but you can get the essense).
+
+Note: [[http://wiki.ros.org/interactive_markers|Interactive Markers]] have not really been implemented with `Hiro`. Patch from YOU is welcomed :).
+
+== Run python script for interactive operation ==
+
+=== Establish connection ===
+
+There's a script that allows you to interactively work with robot. Here are the steps.
+
+ 1. Run:
+
+ {{{
+$ ipython -i `rospack find hironx_ros_bridge`/scripts/hironx.py -- --host hiro014
+$ ipython -i `rospack find nextage_ros_bridge`/script/nextage.py -- --host nextage101
+:  (same initialization step as simulation)
+[hrpsys.py]  initialized successfully
+ }}}
+
+For simulation, simply remove arguments:
+
+ {{{
+$ ipython -i `rospack find hironx_ros_bridge`/scripts/hironx.py                       
+$ ipython -i `rospack find nextage_ros_bridge`/script/nextage.py
+ }}}
+
+ {{{#!wiki blue/solid
+  What happens during the initialization process includes:
+
+    * Find `RTCManager` (a class in [[openrtm_aist|OpenRTM]] that starts `RT components`) and `RobotHardware` (an `RT component` defined in [[hrpsys]] that interfaces with robot's hardware).
+    * Create, connect to, and activate the `RT Components` necessary for `hrpsys` controller to run.
+    * Start logger.
+    * (Specific to `Hiro/NXOpen`) Assign joint groups.
+ }}}
+
+  Alternatively, you can specify other values (only if you need to):
+  {{{
+$ ipython -i `rospack find hironx_ros_bridge`/scripts/hironx.py -- --modelfile /opt/jsk/etc/HIRONX/model/main.wrl --host hiro014 --port 15005
+$ ipython -i `rospack find nextage_ros_bridge`/script/nextage.py -- --modelfile /opt/jsk/etc/HIRONX/model/main.wrl --host nextage101 --port 15005
+  }}}
+
+=== Some common commands ===
+
+Now, here are some methods particular for a real robot. In addtion to the following brief introduction, you're recommended to go through the [[http://docs.ros.org/hydro/api/hironx_ros_bridge/html/classhironx__ros__bridge_1_1hironx__client_1_1HIRONX.html|API doc]] of `HIRONX` class. 
+
+/!\ With the real robot, robot moves per some of the commands from here, which means that you're required to keep the relay switch handy (see [[http://wiki.ros.org/rtmros_nextage/Tutorials/Quick%20Start%20for%20Robot%20Users#Requirement|Quick start guide]]). 
+
+ * Run calibration. Note that body moves with this.
+
+ {{{
+ipython>>> robot.checkEncoders()
+ }}}
+
+  This can be done only when the robot is not calibrated (most likely the robot state indicator lights on its chest blink green. Please be sure to consult hardware manual if this is correct).
+ 
+ * Transition to the initial pose.
+
+ {{{
+ipython>>> robot.goInitial()
+ }}}
+
+ * Move to end-of-day pose. Once it stalls, the servo tunrs off. So it's good to call this before you restart/shutdown the system.
+
+ {{{
+ipython>>> robot.goOffPose()
+ }}}
+
+ * Turn on servo. 
+
+ {{{
+ipython>>> robot.servoOn()
+ }}}
+
+    You need to turn servo on manually after you turned it off by:
+     * Running `goOffPose`, `servoOn`.
+     * Hit the relay switch (you first need to run `servoOff` in this case).
+     * Giving problematic commands to the robot so that it emergency-stopped.
+    This also adjusts commanded angle values with the physical state of the joints (by internally calling `goActual()` method).
+
+ * Turn off servo.
+    
+ {{{
+ipython>>> robot.servoOff()
+ }}}
+
+    Other than the situation where you want to explicitly turn the servo off, you also have to use this command when you hit the relay switch.
+
+## AUTOGENERATED DO NOT DELETE 
+## TutorialCategory
+## FILL IN THE STACK TUTORIAL CATEGORY HERE

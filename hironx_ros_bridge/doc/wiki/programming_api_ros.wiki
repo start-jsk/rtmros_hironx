@@ -1,0 +1,177 @@
+## For instruction on writing tutorials
+## http://www.ros.org/wiki/WritingTutorials
+####################################
+##FILL ME IN
+####################################
+## for a custom note with links:
+## note =
+## for the canned note of "This tutorial assumes that you have completed the previous tutorials:" just add the links 
+## note.0= 
+## descriptive title for the tutorial
+## title = Programming Hiro / NEXTAGE OPEN (ROS)
+## multi-line description to be displayed in search 
+## description = Out of 3 levels of ROS APIs introduced, ROS_Client, the dedicated ROS interface for HiroNXO, is mainly explained.
+## the next tutorial description (optional)
+## next =
+## links to next tutorial (optional)
+## next.0.link= [[rtmros_nextage/Tutorials/Programming_Hiro_NEXTAGE_OPEN_GUI|Programming Hiro/NEXTAGE OPEN through GUI]]
+## next.1.link=
+## what level user is this tutorial for 
+## level= IntermediateCategory
+## keywords =
+####################################
+
+<<IncludeCSTemplate(TutorialCSHeaderTemplate)>>
+
+<<TableOfContents(4)>>
+<<Include(rtmros_nextage/Tutorials/Install NEXTAGE OPEN software on your machine,,from="##begin_terminology",to="##end_terminology")>>
+
+== Introduction ==
+
+In this tutorial we'll mainly use `ROS_Client` (Python) to manipulate the robot via ROS.
+
+=== Levels of ROS APIs ===
+
+`RTM-ROS-bridge` allows you to send status and control signals via ROS to the robot, in particular over [[joint_state_publisher]], [[trajectory_msgs]]. Based on these pipelines, higher level apps, e.g. [[moveit|MoveIt!]] can work without any restriction. Also, those lower level APIs are made to allow maximum flexibility, meaning that they are not necessarilly simple to use. [[http://docs.ros.org/hydro/api/hironx_ros_bridge/html/classhironx__ros__bridge_1_1ros__client_1_1ROS__Client.html|ROS_Client]] is a dedicated client class right for the `HiroNXO` users to mine the gap. 
+
+  [[https://docs.google.com/drawings/d/1H1GLYfBmZ7JRnBhKubCrptav34fCfZzn3W9PEO_5pgI/pub?w=960&h=720|{{https://docs.google.com/drawings/d/1H1GLYfBmZ7JRnBhKubCrptav34fCfZzn3W9PEO_5pgI/pub?w=720}}]]
+  Fig. List of the API revisited. "Lower level APIs" mentioned earlier corresponds to `Joint Trajectory Action` in this diagram.
+
+Advanced users can write programms using lower / higher (`MoveIt!`) APIs (`ROS_Client` has certainly only limited functionality).
+
+In fact you can most likely not work only with `ROS` I/F and you mix with RTM I/F. See [[rtmros_nextage/Tutorials/Programming#Which_API_to_use|the rationale here]] for more background. In this tutorial we only assume the tasks manageable by `ROS` client.
+
+== Don't forget when you use ROS ==
+
+Once again before using ROS, make sure [[http://wiki.ros.org/rtmros_nextage/Tutorials/Operating%20Hiro%2C%20NEXTAGE%20OPEN#Run_rtm_ros_bridge|RTM-ROS-bridge is running]].
+
+== Run interactively ==
+
+'''NOTE''': The feature in this section requires [[hironx_ros_bridge]] package version 1.0.24 or greter.
+
+Let's run the ROS client via a python script, just as we did for RTM client in [[rtmros_nextage/Tutorials/Programming_Hiro_NEXTAGE_OPEN_RTM|the previous tutorial]].
+
+ {{{
+$ ipython -i `rospack find hironx_ros_bridge`/scripts/hironx.py
+ }}}
+
+ Actually, you're running the same script `hironx.py` from the previous tutorial to run ROS client; it launches both `RTM` and `ROS` clients.
+
+ {{{
+:
+[hrpsys.py]  initialized successfully
+[INFO] [WallTime: 1410918126.749067] [206.795000] Joint names; Torso: ['CHEST_JOINT0']
+	Head: ['HEAD_JOINT0', 'HEAD_JOINT1']
+	L-Arm: ['LARM_JOINT0', 'LARM_JOINT1', 'LARM_JOINT2', 'LARM_JOINT3', 'LARM_JOINT4', 'LARM_JOINT5']
+	R-Arm: ['RARM_JOINT0', 'RARM_JOINT1', 'RARM_JOINT2', 'RARM_JOINT3', 'RARM_JOINT4', 'RARM_JOINT5']
+[ERROR] [1410918130.900627643, 210.289999999]: Robot semantic description not found. Did you forget to define or remap '/robot_description_semantic'?
+[ INFO] [1410918130.900757547, 210.289999999]: Loading robot model 'HiroNX'...
+[ INFO] [1410918130.900794422, 210.289999999]: No root joint specified. Assuming fixed joint
+[FATAL] [1410918131.991522557, 211.249999999]: Group 'left_arm' was not found.
+[ERROR] [WallTime: 1410918132.006310] [211.285000] Group 'left_arm' was not found.
+Make sure you've launched MoveGroup (e.g. by launching moveit_planning_execution.launch)
+ }}}
+
+ If you see the errors like above, that means you are not running [[moveit|MoveIt!]] service. Go back to [[rtmros_nextage/Tutorials/Operating Hiro%2C NEXTAGE OPEN#Run_MoveIt.21|the earlier tutorial]] and launch it. OR, if you know you won't need MoveIt!, just leave it; some methods in ROS client still works without MoveIt!.
+
+ Now, check what commands are available.
+
+ {{{
+In [1]: ros.
+ros.go_init               ros.set_joint_angles_rad  
+ros.set_joint_angles_deg  ros.set_pose              
+
+ }}}
+
+ ROS client via this script is available by `ros` object. At the time of writing (Sep 2014) only 4 methods above are available (as warned in the earlier section), and `set_pose` is the one that requires `MoveIt!`.
+
+ {{{
+In [1]: ros.go_init()
+[INFO] [WallTime: 1410918153.591171] [226.790000] *** go_init begins ***
+[INFO] [WallTime: 1410918165.419528] [233.825000] wait_for_result for the joint group rarm = True
+[INFO] [WallTime: 1410918165.423372] [233.825000] [positions: [0.010471975511965976, 0.0, -1.7453292519943295, -0.26529004630313807, 0.16406094968746698, -0.05585053606381855]
+velocities: []
+accelerations: []
+effort: []
+time_from_start: 
+  secs: 7
+  nsecs: 0]
+ }}}
+
+ Robot moving to the initial pose.
+
+ {{{
+In [2]: ros.go_init?
+Type:       instancemethod
+Base Class: <type 'instancemethod'>
+String Form:<bound method ROS_Client.go_init of <hironx_ros_bridge.ros_client.ROS_Client object at 0x49b7210>>
+Namespace:  Interactive
+File:       /home/n130s/link/ROS/hydro_precise/cws_hiro_nxo/src/start-jsk/rtmros_hironx/hironx_ros_bridge/src/hironx_ros_bridge/ros_client.py
+Definition: ros.go_init(self, task_duration=7.0)
+Docstring:
+Init positions are taken from HIRONX.
+TODO: Need to add factory position too that's so convenient when
+      working with the manufacturer.
+@type task_duration: float
+ }}}
+
+ Likewise, using `ipython`'s feature, you can take a look at each command's api document.
+
+== Write ROS Client Program in Python ==
+
+=== Using ROS_Client ===
+
+Let's look at [[rtmros_nextage/Tutorials/Programming_Hiro_NEXTAGE_OPEN_RTM#Re-run_sample_script_.28acceptance_test.29|the sample program that we also used in the previous tutorial with RTM client]]. This program implements the same tasks both via RTM client and ROS client. Now, run it with ROS client just to confirm how it works.
+
+ {{{
+$ ipython -i `rospack find hironx_ros_bridge`/scripts/acceptancetest_hironx.py -- --host %HOSTNAME%
+:
+IN [1]: acceptance.run_tests_ros()
+ }}}
+
+The entire code:
+
+<<GetCode(https://raw.githubusercontent.com/start-jsk/rtmros_hironx/9d7c2b1d801450b09e814b12093e1cf1986b5565/hironx_ros_bridge/src/hironx_ros_bridge/testutil/acceptancetest_ros.py,#!python)>>
+
+ First, you need to instantiate `ROS_Client`, which is done [[https://github.com/start-jsk/rtmros_hironx/blob/be5fb8d5a5b8339d9507f3c287edb406ca48c9c9/hironx_ros_bridge/scripts/acceptancetest_hironx.py#L103|here outside of this code above]]; simply do like:
+
+ {{{
+ self._robotclient = ROS_Client()
+ }}}
+
+ Going to initial pose is the simplest 1 line:
+
+ {{{
+  48  def go_initpos(self, default_task_duration=7.0):
+  49    self._robotclient.go_init(default_task_duration)
+ }}}
+
+ Giving positions to the joints is also done in a single line.
+
+ {{{
+  51 def set_joint_angles(self, joint_group, joint_angles, msg_tasktitle=None, task_duration=7.0, do_wait=True):
+  :
+  57    self._robotclient.set_joint_angles_deg(joint_group, joint_angles, task_duration, do_wait)
+ }}}
+
+ You can also use pose in Cartesian coordinate. This requires MoveIt! service to be running.
+
+ {{{
+  60 def set_pose(self, joint_group, posision, rpy, msg_tasktitle=None, task_duration=7.0, do_wait=True, ref_frame_name=None):
+  :
+  66     self._robotclient.set_pose(joint_group, posision, rpy, task_duration, do_wait, ref_frame_name)
+ }}}
+
+=== Using low level API of ROS ===
+
+See [[https://github.com/start-jsk/rtmros_hironx/blob/hydro-devel/hironx_ros_bridge/src/hironx_ros_bridge/ros_client.py|hironx_ros_bridge/ros_client.py]].
+
+Or there's a tutorial available [[pr2_controllers/Tutorials/Moving the arm using the Joint Trajectory Action|in PR2 page]].
+
+== Write ROS Client Program in C++ ==
+
+(To be filled.)
+
+## AUTOGENERATED DO NOT DELETE 
+## TutorialCategory
+## FILL IN THE STACK TUTORIAL CATEGORY HERE

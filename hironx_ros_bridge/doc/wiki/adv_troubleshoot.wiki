@@ -1,0 +1,167 @@
+## For instruction on writing tutorials
+## http://www.ros.org/wiki/WritingTutorials
+####################################
+##FILL ME IN
+####################################
+## for a custom note with links:
+## note =
+## for the canned note of "This tutorial assumes that you have completed the previous tutorials:" just add the links 
+## note.0= 
+## descriptive title for the tutorial
+## title = Troubleshooting
+## multi-line description to be displayed in search 
+## description = This is not a tutorial -- this page is there for the sake of search engine. Troubles and possible solutions/workarounds are recorded here.
+## the next tutorial description (optional)
+## next =
+## links to next tutorial (optional)
+## next.0.link= 
+## next.1.link=
+## what level user is this tutorial for 
+## level= BeginnerCategory
+## keywords =
+####################################
+
+<<IncludeCSTemplate(TutorialCSHeaderTemplate)>>
+<<TableOfContents(4)>>
+
+= Support Guideline for Hiro / NEXTAGE OPEN Opensource Controller =
+
+Contact a support provider if you have contracted to the service (called `Subscription Service`).
+
+Else, you still have several options to get support from opensource community:
+
+ * In general, consulting [[Support|ROS support guideline]] is a good idea.
+ * [[http://google.com|Google]] the erroroneous output. 
+   * The more error reports accumulate, the larger chance you will find similar issue somewhere online with possibly keys to solutions.
+ * Refer to [[rtmros_nextage/Tutorials/Known Troubleshoots#Known_Issues|Known Issues]] and see if you find similar troubles / erroroneous output.
+
+= Known Issues =
+== With wstool ==
+=== ERROR in config: Error processing ===
+Upon `wstool update` the error might happen. Try removing the folder you're getting error with.
+
+At the moment, a lot of tweaks are needed [[http://code.google.com/p/rtm-ros-robotics/issues/detail?id=175|as reported in this thread]].
+
+== hrpsys_ros_bridge fails to build ==
+{{{
+-------------------------------------------------------------------------------}
+[ rosmake ] Output from build of package hrpsys_ros_bridge written to:
+[ rosmake ]    /home/leus/.ros/rosmake/rosmake_output-20130823-115337/hrpsys_ros_bridge/build_output.log
+[rosmake-0] Finished <<< hrpsys_ros_bridge [FAIL] [ 143.86 seconds ]                                                           
+[ rosmake ] Halting due to failure in package hrpsys_ros_bridge. 
+[ rosmake ] Waiting for other threads to complete.           
+[ rosmake ] Results:                                                                                                           
+[ rosmake ] Built 75 packages with 1 failure
+
+(roscd hrpsys_ros_bridge; make)
+}}}
+
+== AttributeError: 'module' object has no attribute 'get_sysinfo' ==
+
+{{{
+$ simulation.launch 
+:
+Traceback (most recent call last):
+  File "/home/leus/ros/groovy/rtm-ros-robotics/rtmros_common/hrpsys_ros_bridge/scripts/rtmlaunch", line 3, in <module>
+    import os,psutil,subprocess,socket,sys
+  File "/opt/ros/groovy/lib/python2.7/dist-packages/psutil/__init__.py", line 65, in <module>
+    import psutil._pslinux as _psplatform
+  File "/opt/ros/groovy/lib/python2.7/dist-packages/psutil/_pslinux.py", line 90, in <module>
+    TOTAL_PHYMEM = _psutil_linux.get_sysinfo()[0]
+AttributeError: 'module' object has no attribute 'get_sysinfo'
+}}}
+
+If you see this error,
+{{{
+$ sudo apt-get remove ros-groovy-rqt-top
+}}}
+
+== No moveit! found? ==
+{{{
+$ roslaunch hironx_moveit_config moveit_planning_execution.launch
+}}}
+
+If you see error with this, then:
+
+{{{
+$ sudo apt-get install ros-groovy-moveit-full-pr2
+}}}
+
+== [rospack] Error: stack/package collada_tools not found ==
+{{{
+[rospack] Error: stack/package collada_tools not found
+make[2]: *** [/home/leus/catkin_ws/src/rtmros_hironx/hironx_moveit_config/models/HiroNX.urdf] Error 2
+make[1]: *** [rtmros_hironx/hironx_moveit_config/CMakeFiles/hironx_moveit_config_HiroNX_urdf.dir/all] Error 2
+}}}
+Then do:
+{{{
+$ mv src/rtmros_hironx .
+}}}
+
+== [rospack] Error: package/stack 'collada_tools' depends on non-existent package ==
+{{{
+[rospack] Error: package/stack 'collada_tools' depends on non-existent package 'colladadom' and rosdep claims that it is not a system dependency. Check the ROS_PACKAGE_PATH or try calling 'rosdep update'
+}}}
+Then comment out in `collada_tools/manifest.xml`:
+{{{
+<!-- <depend package="colladadom"/> -->
+}}}
+
+== rtm/idl/SDOPackageSkel.h:35:33: Fatal: rtm/idl/SDOPackage.hh: ==
+{{{
+$ rosmake hironx_ros_bridge
+../../../../src/lib/rtm/idl/SDOPackageSkel.h:35:33: Fatal: rtm/idl/SDOPackage.hh: not found
+}}}
+Then,
+{{{
+$ rosdep install hironx_ros_bridge
+}}}
+
+Then before rosmake-ing,
+{{{
+$ roscd openrtm_aist
+$ make clean
+}}}
+
+== Halt at [hrpsys.py]  waiting ModelLoader ==
+When you run and see:
+{{{
+$ roscd hironx_ros_bridge/scripts
+$ ./hironx.py
+[hrpsys.py]  waiting ModelLoader
+}}}
+
+Then define environmental variable by running:
+{{{
+export RTCTREE_NAMESERVERS=localhost:5005
+export ORBInitRef="NameService=corbaloc:iiop:localhost:15005/NameService"
+}}}
+
+== run_id on parameter server does not match declared run_id: ==
+If you see a message like this while trying to run with MoveIt!, check if your computer is able to communicate with your real robot.
+{{{
+run_id on parameter server does not match declared run_id: e6ff428e-0ec8-11e3-a8cf-88532e0fe6e6 vs e8491bd8-0ec8-11e3-9deb-88532e0fe6e6
+}}}
+
+== Upon initialization "TRANSIENT: CORBA.TRANSIENT" ==
+{{{
+TRANSIENT: CORBA.TRANSIENT(omniORB.TRANSIENT_ConnectFailed, CORBA.COMPLETED_NO)
+}}}
+
+Run hironx by:
+{{{
+$ rtmlaunch hironx_ros_bridge hironx_startup.launch
+}}}
+
+== No or less tf published ==
+There could be various cases with `Hiro` or `Nextage Open` where [[tf]] isn't sufficiently published. Some possibilities:
+
+ * Make sure `ros_bridge` is running on Vision PC (Ubuntu) ([[http://wiki.ros.org/rtmros_nextage/Tutorials/Operating%20Hiro%2C%20NEXTAGE%20OPEN%20from%20Client%20Pograms#Run_RTM_ROS_bridge|see]]).
+
+ * Vision PC (Ubuntu) is using other than `eth0` ([[https://github.com/start-jsk/rtmros_hironx/issues/33|reference]]).
+
+ * Similarly, Vision PC (Ubuntu) is using `eth0` but other application that adds virtual `NIC` is running ([[https://github.com/start-jsk/rtmros_hironx/issues/33#issuecomment-48887651|see]]).
+
+## AUTOGENERATED DO NOT DELETE 
+## TutorialCategory
+## FILL IN THE STACK TUTORIAL CATEGORY HERE

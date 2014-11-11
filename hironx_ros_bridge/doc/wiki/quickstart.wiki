@@ -1,0 +1,177 @@
+## For instruction on writing tutorials
+## http://www.ros.org/wiki/WritingTutorials
+####################################
+##FILL ME IN
+####################################
+## for a custom note with links:
+## note =
+## for the canned note of "This tutorial assumes that you have completed the previous tutorials:" just add the links
+## note.0=
+## descriptive title for the tutorial
+## title = Quick Start for Robot Users
+## multi-line description to be displayed in search
+## description = A QuickStart guide to help the users who purchased the `Nextage Open` robot to jump start; this tutorial will show how to fire up, do the simplest task with arms, and to run existing sample codes. Virtual users (who don't have the real robot) can start from the next tutorial.
+## the next tutorial description (optional)
+## next =
+## links to next tutorial (optional)
+## next.0.link= 
+## next.1.link=
+## what level user is this tutorial for
+## level= BeginnerCategory
+## keywords =
+####################################
+<<IncludeCSTemplate(TutorialCSHeaderTemplate)>>
+
+<<TableOfContents(4)>>
+
+== Requirement ==
+'''Please do consult the hardware manual first, and do whatever you're advised to do in advance.''' As per the title, this tutorial will walk your through the simplest path of using the robot, meaning there will be minimum hardware usage included. But we assume that you've already completed all the required chores as stated in the manual.
+
+In particular, when the robot moves be ready to use relay button. In this tutorial, a symbol /!\ is used to indicate tasks linked to physical robot motion.
+
+{{http://wiki.ros.org/rtmros_nextage/Tutorials/Quick Start for Robot Users?action=AttachFile&do=get&target=nxo_runstop_relayswitch.jpg|Run-stop switch.|width="250"}} Relay (run-stop switch); Rest assured, non-Japanese customers should get one with labels written in English.
+
+=== Workstation environment ===
+Your `Nextage Open` robot comes with two computers on board:
+
+ * `QNX` 6.5.0, or called `Controller Box` in `Nextage Open` system.
+
+`UI Control Box` is where you do your work on. You can also use any machine for your development as long as it satisfies the [[rtmros_nextage/Tutorials/Install NEXTAGE OPEN software on your machine#Development_workstation_environment|requirement]]. This tutorial assumes you're on `UI Control Box`.
+
+== Power up the computers ==
+ 0. There is a knob on the button of the pedestal that moves the casters up and down. Turn this knob counter clockwise to anchor the robot down to the floor. (TODO)
+
+ 0. The AC power plugin should come out of the pedestal like this (TODO).
+
+ 0. (If you are using air equipment) Attach the air pipe here. (TODO)
+
+ 0. Connect your keyboard and mouse to the `UI Control Box`. (Of the two computers, the one on the top is the UI Control Box.) {{http://wiki.ros.org/rtmros_nextage/Tutorials/Quick Start for Robot Users?action=AttachFile&do=get&target=powerbutton_ubuntu.jpg|KB and Mouse connected here on UCB.|width="300"}}
+
+ 0. Connect your display monitor to the UI Control Box.
+ {{http://wiki.ros.org/rtmros_nextage/Tutorials/Quick Start for Robot Users?action=AttachFile&do=get&target=rgbconnector_ubuntu.jpg|RGB Connector to UI Control Box|width="300"}}
+
+ 0. Plug in AC power. (The main switch on the Controller Box will light up red.)
+ {{http://wiki.ros.org/rtmros_nextage/Tutorials/Quick Start for Robot Users?action=AttachFile&do=get&target=ac_adaptor.jpg|AC IN to QNX|width="300"}}
+
+ 0. Connect the switch box to the back of the robot.
+ {{http://wiki.ros.org/rtmros_nextage/Tutorials/Quick Start for Robot Users?action=AttachFile&do=get&target=relay_box.jpg|Connect Relay box|width="300"}}
+
+ 0. Press the green button on the back of the robot. You will hear a beeping noise for about a minute. All the four LED lights on the robot’s chest will be blinking.
+ {{http://wiki.ros.org/rtmros_nextage/Tutorials/Quick Start for Robot Users?action=AttachFile&do=get&target=nxo_powerbutton_green.jpg|Main power button.|width="300"}} {{http://wiki.ros.org/rtmros_nextage/Tutorials/Quick Start for Robot Users?action=AttachFile&do=get&target=nxo_lamp_chest.jpg|Chest lamps|width="300"}}
+
+ 0. Press the blue button on the back of the robot. When only the green and white LED lights are blinking, the robot is ready to go!
+ {{http://wiki.ros.org/rtmros_nextage/Tutorials/Quick Start for Robot Users?action=AttachFile&do=get&target=nxo_powerbutton_blue.jpg|Sub blue button|width="300"}}
+
+(Gloves are optional)
+
+== Update controller software ==
+After being shipped, there may or may not be newer controller software update. So open a terminal and update them by a single line of command (you'll be asked root password that you should have received off-line).
+
+{{{
+$ sudo apt-get update && sudo apt-get dist-upgrade
+}}}
+== Connect to the robot ==
+On the same terminal, then type following commands to run ROS software (replace %HOSTNAME% with your Nextage robot's hostname).
+
+{{{
+$ roslaunch nextage_ros_bridge nextage_ros_bridge_real.launch nameserver:=%HOSTNAME%
+}}}
+This program should remain running while you operate the robot from the program.
+
+== Do the simplest moves ==
+/!\ On another terminal, start Nextage command line interface, and do calibration. '''CAUTION!!!''' this commands moves robot arm.
+
+{{{
+$ ipython -i `rospack find nextage_ros_bridge`/script/nextage.py -- --host %HOSTNAME%
+In [1]: robot.checkEncoders()
+}}}
+By running this command, the arms will move,
+
+FROM: {{http://wiki.ros.org/rtmros_nextage/Tutorials/Quick Start for Robot Users?action=AttachFile&do=get&target=nxo_offPose.jpg|Arms at off-pose.|width="200"}}
+
+TO: {{http://wiki.ros.org/rtmros_nextage/Tutorials/Quick Start for Robot Users?action=AttachFile&do=get&target=nxo_initPose_factory.jpg|Arms at off-pose.|width="200"}}
+
+/!\ Go to init pose.
+
+{{{
+In [2]: robot.goInitial()
+}}}
+By running this, arms go to this pose, which we often call `init pose`.
+
+{{http://wiki.ros.org/rtmros_nextage/Tutorials/Quick Start for Robot Users?action=AttachFile&do=get&target=nxo_initPose.jpg|Arms at off-pose.|width="250"}}
+
+##begin_relative
+/!\ Move right arm now.
+
+{{{
+In [3]: robot.setTargetPoseRelative('rarm', 'RARM_JOINT5', dz=0.05, tm=5)
+}}}
+##end_relative
+
+== Run sample codes ==
+
+=== Run the Delivery Inspection script ===
+##begin_run_deliveryinspection_script
+
+ 1. Open one more terminal (this should be at least 3rd terminal opened), then open `ipython` again:
+
+ {{{
+$ ipython -i `rospack find hironx_ros_bridge`/scripts/acceptancetest_hironx.py -- --host %HOSTNAME%
+ }}}
+
+ Then on `ipython` command line, run the sample that does '''TODO explain'''.
+
+ 2. /!\ The following command runs these tasks via [[hrpsys]] interface:
+
+ {{{
+IN [1]: acceptance.run_tests_rtm()
+ }}}
+
+ You can also run task-by-task:
+ {{{
+IN [1]: acceptance.run_tests_rtm(do_wait_input=True)
+ }}}
+
+    NOTE: If you're using [[hironx_ros_bridge]] version older than 1.0.20 (check by command `$ rosversion hironx_ros_bridge`), name of the command is different as following:
+
+    {{{
+$ ipython -i `rospack find hironx_ros_bridge`/test/acceptancetest_hironx.py -- --host %HOSTNAME%
+
+IN [1]: acceptance_test.run_tests_hrpsys()
+    }}}
+
+ 3. /!\ The following command runs these tasks via ROS interface:
+
+ {{{
+IN [1]: acceptance.run_tests_ros()
+ }}}
+
+ 4. When you're done with work on `ipython`, press `Ctrl-d` to escape its command line.
+
+##end_run_deliveryinspection_script
+
+=== More samples ===
+
+'''TODO add code from hironx_tutorial too as a more task-oriented example'''
+
+== At the end of the day ==
+When you're done with the work:
+
+ 1. /!\ Tuck the arm, turn off the servo. On `ipython` terminal:
+ {{{
+IN [4]: robot.goOffpose()
+}}}
+ Arms should now tucked like the pose that we saw earlier:
+ {{http://wiki.ros.org/rtmros_nextage/Tutorials/Quick Start for Robot Users?action=AttachFile&do=get&target=nxo_offPose.jpg|Arms at off-pose.|width="250"}}
+
+ 1. Close all the program you started. You can simply close all terminals you opened along with this guide.
+
+ 1. Shutdown `QNX` by using `NextageOpenSupervisor` tool that you should be able to find on the Desktop on `Ubuntu`.
+
+ 1. Shutdown Ubuntu by `$ sudo shutdown now`.
+
+You may keep the computers on even during your absense; follow the manufacturer's instruction.
+
+## AUTOGENERATED DO NOT DELETE
+## TutorialCategory
+## FILL IN THE STACK TUTORIAL CATEGORY HER

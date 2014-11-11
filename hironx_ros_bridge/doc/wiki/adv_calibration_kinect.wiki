@@ -1,0 +1,155 @@
+## For instruction on writing tutorials
+## http://www.ros.org/wiki/WritingTutorials
+####################################
+##FILL ME IN
+####################################
+## for a custom note with links:
+## note =
+## for the canned note of "This tutorial assumes that you have completed the previous tutorials:" just add the links 
+## note.0= 
+## descriptive title for the tutorial
+## title = Calibrate Hand-Camera coordinates
+## multi-line description to be displayed in search 
+## description = This tutorial uses hironx_calibration package to calibrate hand-camera coordinates
+## the next tutorial description (optional)
+## next =
+## links to next tutorial (optional)
+## next.0.link= [[rtmros_nextage/Tutorials/Known Troubleshoots|Known Troubleshoots]]
+## next.1.link=
+## what level user is this tutorial for 
+## level= AdvancedCategory
+## keywords =
+####################################
+
+<<IncludeCSTemplate(TutorialCSHeaderTemplate)>>
+
+<<TableOfContents(4)>>
+
+== Overview ==
+
+After going through this tutorial, you get a modified [[urdf|URDF]] with links supporing a camera. And if you with you can put the calibration data into a new dedicated package.
+
+== Before Calibration  ==
+
+Manually edit [[https://github.com/start-jsk/rtmros_hironx/blob/hydro-devel/hironx_moveit_config/models/HiroNX.urdf|HiroNX.urdf]] temporarily to add camera frames, joints and links.
+
+{{{
++++ b/hironx_moveit_config/models/HiroNX.urdf
+        @@ -652,4 +652,37 @@
+             <limit lower="-0.523599" upper="0.523599" effort="100"
+        velocity="0.5" />
+             <dynamics damping="0.2" friction="0" />
+           </joint>
+        +
+        +  <link name="camera_link"/>
+        +  <link name="camera_depth_frame"/>
+        +  <link name="camera_rgb_frame"/>
+        +  <link name="camera_depth_optical_frame"/>
+        +  <link name="camera_rgb_optical_frame"/>
+        +
+        +  <joint name="head_to_kinect_joint" type="fixed">
+        +    <origin rpy="0 0 0" xyz="0.05 0.08 0.1"/>
+        +    <parent link="HEAD_JOINT1_Link" />
+        +    <child link="camera_link"/>
+        +  </joint>
+        +  <joint name="camera_base_link" type="fixed">
+        +    <origin rpy="0 0 0" xyz="0 -0.02 0"/>
+        +    <parent link="camera_link"/>
+        +    <child link="camera_depth_frame"/>
+        +  </joint>
+        +  <joint name="camera_base_link1" type="fixed">
+        +    <origin rpy="0 0 0" xyz="0 -0.045 0"/>
+        +    <parent link="camera_link"/>
+        +    <child link="camera_rgb_frame"/>
+}}}
+
+== Do calibration ==
+=== Collect Calibration Data ===
+
+First, upload `URDF` to [[robot_description]] to the [[Parameter Server]]. This will overwrite default `robot_description` (generated from `COLLADA` file without kinect frames) (TODO: which collada file?)
+{{{
+$ roslaunch hironx_calibration upload_urdf.launch
+}}}
+
+Since this changes URDF model and need to run [[robot_state_publisher]] to publish `tf` with updated `URDF`. We also need to run kinect without `tf` publisher:
+
+{{{
+$ rosrun robot_state_publisher robot_state_publisher __name:=hrpsys_state_publisher
+$ roslaunch hironx_kinect.launch publish_tf:=false
+}}}
+
+Finally, run capture data. /!\ This will move robot arm and be careful, and this motion may cause self collision. Please watch the robot carefully and be ready to push emergency stop button.
+{{{
+$ roslaunch hironx_calibration capture_data.launch
+}}}
+
+=== Run calibration step ===
+
+Run calibration program, this program uses a file stored under `tmp` (ie. `/tmp/hironx_calibration/cal_measurements.bag`), meaning that if you reboot the computer, then you have to restart from the previous step.
+
+{{{
+$ roslaunch hironx_calibration calibrate_hironx.launch
+}}}
+
+Finally we get following results (in this example, errors in `head_camera` is no small enough...)
+
+{{{
+        Computing Jacobian.. (cycle #7)         RMS error: 0.962    
+        Errors Breakdown:
+          head_camera: 9.528937
+          arm_chain: 0.007444
+        [INFO] [WallTime: 1411546682.199861] Writing original urdf to
+        robot_uncalibrated_2014_09_24_17_15.xml
+        Joint removed: arm_chain_cb
+         xyz: [-0.08738123167896214, 0.0, -0.001496522196753334]
+         rpy: (-1.6950600508827331, 0.29224067030639833, -0.057327689173656195)
+        Updating xyz for head_to_kinect_joint 
+         old: [0.0, 0.0, 0.1] 
+         new: [0.062367406594775215, 0.07536259323525744, 0.12330820494245931]
+        Updating rpy for head_to_kinect_joint 
+         old: [0.0, 0.0, 0.0] 
+         new: (-0.03346088258363324, 0.1383150116022393, -0.014468436806528857)
+        The following joints weren't updated:
+}}}
+
+And change arguments of static_tf_publisher at 
+https://github.com/start-jsk/rtmros_hironx/pull/252/files#diff-921a60a71a65fcd10fcb361bcd0971b2R8
+
+=== Scenes from calibration with the robot ===
+
+The image below is before the calibration (with no offset between head and camera):
+{{https://cloud.githubusercontent.com/assets/493276/4385494/3abf7d4e-43c5-11e4-9b90-be205e128898.png||width="640"}}
+
+Post calibration (not accurate enough maybe due to using `xtion` (`carmine`)...)
+{{https://cloud.githubusercontent.com/assets/493276/4385505/4db15774-43c5-11e4-87d2-2648b9e34796.png||width="640"}}
+
+Checker board is held like this through the entire process. NOTE that the head is replaced with `xtion` with a custom cover.
+
+{{https://cloud.githubusercontent.com/assets/493276/4386658/b3145a82-43d2-11e4-96ca-34b6bea430e4.JPG||width="640"}}
+
+=== Restart everything ===
+
+It is safe to restart everything after calibration since we have changed `robot_description` and killed default [[robot_state_publisher]]).
+
+== (Advanced) Create calibration package ==
+
+Run [[calibration_setup_helper]] script to generate packages
+
+{{{
+$ rosrun calibration_setup_helper calibration_setup_helper.py /home/k-okada/ros/hydro/src/rtm-ros-robotics/rtmros_hironx/hironx_moveit_config/config/HiroNX.urdf --base-link CHEST_JOINT0_Link --arm-tip-link RARM_JOINT5_Link --head-tip-link HEAD_JOINT1_Link  --arm-controller=rarm_controller/command  --head-controller=head_controller/command --head-camera-frame camera_rgb_optical_frame  --head-camera-joint head_to_kinect_joint
+}}}
+
+Make samples. At first, make sure you servo off all joint except CHEST_JOINT0 (in `ipython` terminal below):
+{{{
+IN[1]: robot.servoOff()
+IN[2]: robot.servoOn('CHESET_JOINT0')
+}}}
+
+And move arm and press enter to store samples, usually we take 15-30 samples but not sure about appropriate number of samples.
+{{{
+$ rosrun hironx_calibration make_samples.py
+}}}
+
+## AUTOGENERATED DO NOT DELETE 
+## TutorialCategory
+## FILL IN THE STACK TUTORIAL CATEGORY HERE

@@ -1,0 +1,101 @@
+## For instruction on writing tutorials
+## http://www.ros.org/wiki/WritingTutorials
+####################################
+##FILL ME IN
+####################################
+## for a custom note with links:
+## for the canned note of "This tutorial assumes that you have completed the previous tutorials:" just add the links 
+## note.0=
+## descriptive title for the tutorial
+## title = Install Hironx/NEXTAGE OPEN API software on your machine
+## multi-line description to be displayed in search 
+## description = Installation described here can be applied to both Hironx and NEXTAGE OPEN robots. Also illustrated here is the role of the two computers that come with the robot (QNX, Ubuntu).
+## the next tutorial description (optional)
+## next = 
+## links to next tutorial (optional)
+## next.0.link= [[rtmros_nextage/Tutorials/Run simulation|Run simulation]]
+## what level user is this tutorial for 
+## level= BeginnerCategory
+## keywords = Hiro, Hironx, NEXTAGE OPEN
+####################################
+
+<<IncludeCSTemplate(TutorialCSHeaderTemplate)>>
+<<TableOfContents(4)>>
+
+== Introduction ==
+=== Two control computers ===
+`Kawada`'s `Hiro` and `NEXTAGE OPEN` robots run on two computers. For those who don't have an access to the product manual, brief description of both are:
+
+ * "Controller Box" (as officially called) that runs on `QNX` realtime OS. Hardware control is done here. 
+   * Software here are NOT installable / modifiable by default. Please consult the business rep at the software service provider (see [[http://wiki.ros.org/rtmros_nextage/Tutorials/To%20Contribute%20Back#Professional_support|this section]]) if you wish. For those who have an access to `QNX`, some daily operational tasks [[rtmros_nextage/Tutorials/Operation on QNX|are available in another tutorial]].
+ * "UI Controller Box" or "Vision PC" that runs on `Ubuntu`. Higher level application runs here.
+
+In this tutorial, only the basic and recommended installation method is introduced. For advanced way of doing it (e.g. source install), please [[rtmros_nextage/Tutorials/Advanced way to install Hironx-NEXTAGE OPEN software|consult another tutorial]].
+
+=== Overall software components ===
+
+##begin_swcomponent_hironx_nxo
+[[https://docs.google.com/drawings/d/12jyX6fGuVDiIJpACxixHhZ_Z8IdO1yIcJhkkrJ7B0Pk/edit|{{https://docs.google.com/drawings/d/12jyX6fGuVDiIJpACxixHhZ_Z8IdO1yIcJhkkrJ7B0Pk/pub?w=840&h=600}}]]
+    Fig. (click to magnify) Software components diagram both on `QNX` and `Ubuntu` for `Hiro/NEXTAGE OPEN`. You can see that users can write their own software to control the robot through `ROS` and [[hrpsys]], how ever they like.
+##end_swcomponent_hironx_nxo
+
+The tutorial page gives a full list of the tasks to install necessary software on `Ubuntu`, the application server that is commonly called as "`Vision PC`" by the manufacturer.
+
+=== Installation and usage on QNX ===
+
+<<Include(rtmros_nextage/Tutorials/Operation on QNX,,from="##BEGIN_INTRO_QNX_OPERATION",to="##END_INTRO_QNX_OPERATION")>>
+
+There's [[rtmros_nextage/Tutorials/Operation on QNX|another tutorial page for that purpose]].
+
+=== Terminology ===
+
+##begin_terminology
+'''''NOTE''''': All the tutorials available under the URL [[http://wiki.ros.org/rtmros_nextage/Tutorials|http://wiki.ros.org/rtmros_nextage/Tutorials]] are applicable to the different product of Kawada Industries, `Hiro` (only with opensource software installed) and `NEXTAGE OPEN`. To simplify the notation in the rest of the tutorials, we use '''''HiroNXO''''' to appoint the two types of the robots above.
+##end_terminology
+
+##begin_howto_install_rtmros_nextage
+== Requirement ==
+=== Prerequiste work ===
+ * Install ROS. Follow [[ROS/Installation]] to install `ROS` on your machine if you haven't done so yet. For available `ROS` distro, please consult [[rtmros_nextage]] and see what "distro" buttons are there (eg. `groovy`, `hydro`).
+
+ * Finish [[http://wiki.ros.org/ROS/Tutorials|ROS fundamental tutorials]]. Focus on the build tool you would use (`catkin` or `rosbuild`)
+
+ * If you're working with real robots, please contact business representative of the manufacturer to see if your robot is compatible with this set of software.
+
+##begin_workstation_env
+=== Development workstation environment ===
+  * (Robot owner only) Connected to `QNX` over the `Ethernet`. 
+    * You can verify by running a single command: `ping nextage`. See manufacturer's manual if this fails.
+  * `Intel i5` or above.
+  * 4GB RAM or above.
+  * 15GB free disk space.
+  * Ubuntu 12.04
+  * [[hydro|ROS Hydro]]. Necessary controller software on top of ROS must be already installed.
+##end_workstation_env
+
+== Install via debian binary (RECOMMENDED) ==
+`.deb` binary is available only in `ROS` [[groovy]] and later.
+
+Install by downloading via `apt`.
+{{{
+$ apt-get update
+$ apt-get install ros-hydro-rtmros-hironx ros-%ROS_DISTRO%-rtmros-nextage ros-%ROS_DISTRO%-moveit-ros-visualization ros-%ROS_DISTRO%-moveit-planners-ompl
+(eg.)
+$ apt-get install ros-hydro-rtmros-hironx ros-hydro-rtmros-nextage ros-hydro-moveit-ros-visualization ros-hydro-moveit-planners-ompl
+}}}
+
+Doing so will automatically install some dependency including [[openrtm_aist_core]], [[openhrp3]], [[hrpsys]], [[rtmros_common]], and [[rtmros_hironx]] and their sub packages.
+
+=== Update Binaries ===
+When you know that newer binary version is available,
+
+{{{
+$ sudo apt-get update && sudo apt-get dist-upgrade
+}}}
+
+This will install newer version of what's already installed if available. 
+##end_howto_install_rtmros_nextage
+
+## AUTOGENERATED DO NOT DELETE 
+## TutorialCategory
+## FILL IN THE STACK TUTORIAL CATEGORY HERE
