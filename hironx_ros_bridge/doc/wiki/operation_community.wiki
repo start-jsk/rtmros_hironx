@@ -27,6 +27,17 @@
 
 <<Include(rtmros_nextage/Tutorials/Install NEXTAGE OPEN software on your machine,,from="##begin_terminology",to="##end_terminology")>>
 
+== Support == 
+=== Free Support via Community ===
+Users without professional support service contract (if you don't own the `HiroNXO`robot you definitely fall into this category) still can get a limited level of assistance:
+
+ * Software update notice will be announced via rtm-ros-robotics community. We strongly encourage you subscribe to it.
+ * Official QA forum for general ROS questions http://answers.ros.org (13 new questions on average, 70% of them get resolved) 
+ * Request for troubleshooting / enhancement can be opened at the repository of each software package (locations are available from the wiki pages of each package). 
+
+=== Professional support services ===
+(TBD)
+
 == Type of Contribution ==
 For `HiroNX` software, there are a number of ways to contribute back on an opensource basis. 
 
