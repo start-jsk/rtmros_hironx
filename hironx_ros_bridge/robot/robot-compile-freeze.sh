@@ -15,8 +15,33 @@
 ##
 # set -x
 
+HRPSYS_VERSION_DEFAULT=315.2.8
+
+function usage {
+    echo >&2 "usage: $0 [version_hrpsys (default:$HRPSYS_VERSION_DEFAULT)]
+    echo >&2 "          [-h|--help] print this message"
+    exit 0
+}
+
 trap 'exit 1', ERR
 
+# command line parse
+OPT=`getopt -o h -l help -- $*`
+if [ $? != 0 ]; then
+    usage
+fi
+
+eval set -- $OPT
+
+while [ -n "$1" ] ; do
+    case $1 in
+        -h|--help) usage ;;
+        --) shift; break;;
+        *) echo "Unknown option($1)"; usage;;
+    esac
+done
+
+HRPSYS_VERSION=${3-"$HRPSYS_VERSION_DEFAULT"}
 ## Path of freeze.py on QNX.jenkins.jsk. This should better be taken from argument in the future. 
 FREEZE=/home/sam/hiro-nxo_sys-check/freeze_bin/usr/share/doc/python2.7/examples/Tools/freeze/freeze.py
 TMPDIR=`mktemp -d`
@@ -27,7 +52,7 @@ cd $TMPDIR
 ## Create a "opt_jsk_hex.h" file that encapsulates the streamlined /opt/jsk tarball 
 python <<EOF
 import binascii
-f_exe = open("/tmp/opt_jsk_315.1.10.tgz", 'r');
+f_exe = open("/tmp/opt_jsk_$HRPSYS_VERSION.tgz", 'r');
 f_txt = open('opt_jsk_hex.h', 'w')
 f_txt.write('std::string bin_data="')
 f_txt.write(binascii.hexlify(f_exe.read()))
