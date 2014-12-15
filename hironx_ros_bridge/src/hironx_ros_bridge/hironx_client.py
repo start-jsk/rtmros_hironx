@@ -674,29 +674,29 @@ class HIRONX(HrpsysConfigurator):
         self.rh_svc.removeForceSensorOffset()
 
     def getCurrentPose(self, lname=None, frame_name='WAIST'):
-        HrpsysConfigurator.getCurrentPose(self, lname, frame_name)
+        return HrpsysConfigurator.getCurrentPose(self, lname, frame_name)
     
     def getCurrentPosition(self, lname=None, frame_name='WAIST'):
-        HrpsysConfigurator.getCurrentPosition(self, lname, frame_name)
+        return HrpsysConfigurator.getCurrentPosition(self, lname, frame_name)
 
     def getCurrentRotation(self, lname=None, frame_name='WAIST'):
-        HrpsysConfigurator.getCurrentRotation(self, lname, frame_name)
+        return HrpsysConfigurator.getCurrentRotation(self, lname, frame_name)
     
     def getCurrentRPY(self, lname, frame_name='WAIST'):
-        HrpsysConfigurator.getCurrentRPY(self, lname, frame_name)
+        return HrpsysConfigurator.getCurrentRPY(self, lname, frame_name)
 
     def getReferencePose(self, lname, frame_name='WAIST'):
-        HrpsysConfigurator.getReferencePose(self, lname, frame_name)
+        return HrpsysConfigurator.getReferencePose(self, lname, frame_name)
 
     def getReferencePosition(self, lname, frame_name='WAIST'):
-        HrpsysConfigurator.getReferencePosition(self, lname, frame_name)
+        return HrpsysConfigurator.getReferencePosition(self, lname, frame_name)
 
     def getReferenceRotation(self, lname, frame_name='WAIST'):
-        HrpsysConfigurator.getReferenceRotation(self, lname, frame_name)
+        return HrpsysConfigurator.getReferenceRotation(self, lname, frame_name)
 
     def getReferenceRPY(self, lname, frame_name='WAIST'):
-        HrpsysConfigurator.getReferenceRPY(self, lname, frame_name)
+        return HrpsysConfigurator.getReferenceRPY(self, lname, frame_name)
 
     def setTargetPose(self, gname, pos, rpy, tm, frame_name='WAIST'):
-        HrpsysConfigurator.setTargetPose(self, gname, pos, rpy, tm, frame_name)
+        return HrpsysConfigurator.setTargetPose(self, gname, pos, rpy, tm, frame_name)
 
