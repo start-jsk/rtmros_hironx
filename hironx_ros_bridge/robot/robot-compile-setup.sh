@@ -65,7 +65,7 @@ commands="
   echo \"* If /opt/jsk is a symlink, remove it (it'll be generated later within this script. *\";
   echo \"* Else if /opt/jsk is a directory, not a symlink, it's a folder containing OSS controller libraries. *\";
   echo \"* So move it aside with hrpsys version and the timestamp as a part of dir name (eg. /opt/jsk_315.2.0_20141214). *\";
-  test -L /opt/jsk && su -c 'rm -fr /opt/jsk' || su -c 'mv /opt/jsk /opt/jsk/$(strings RobotHardware.so | grep ^[0-9]*\\.[0-9]*\\.[0-9]*$)_$(date +%Y%m%d)'
+  test -L /opt/jsk && su -c 'rm -fr /opt/jsk' || su -c 'mv /opt/jsk /opt/jsk/lib/$(strings RobotHardware.so | grep ^[0-9]*\\.[0-9]*\\.[0-9]*$)_$(date +%Y%m%d)'
   echo \"* setup /opt/jsk/$hrpsys_version directory *\";
   cd /;
   su -c 'tar -xvzf /tmp/opt-jsk-base-model.tgz';
