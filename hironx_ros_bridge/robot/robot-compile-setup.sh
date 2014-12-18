@@ -54,6 +54,10 @@ mv ${TMPDIR}/opt/jsk/${hrpsys_version}/etc/HIRONX/models ${TMPDIR}/opt/jsk/${hrp
 mv ${TMPDIR}/opt/jsk/${hrpsys_version}/etc/NEXTAGE/models ${TMPDIR}/opt/jsk/${hrpsys_version}/etc/NEXTAGE/model
 tar -C ${TMPDIR} -cvzf ${TMPDIR}/opt-jsk-base-model.tgz ./opt/jsk/${hrpsys_version}/
 
+# Get the version of hrpsys that is working inside of QNX.
+scp $userid@$hostname:/opt/jsk/lib/RobotHardware.so /tmp
+HRPSYS_PREV_INSTALLED=$(strings /tmp/RobotHardware.so  | grep ^[0-9]*\\.[0-9]*\\.[0-9]*$)
+
 # Command that gets run on QNX. 
 # Assumption: NO /opt/jsk directory exists on QNX.
 # Writing into new directory that's created by root requires root privilege.
@@ -64,8 +68,8 @@ commands="
   set +x;
   echo \"* If /opt/jsk is a symlink, remove it (it'll be generated later within this script. *\";
   echo \"* Else if /opt/jsk is a directory, not a symlink, it's a folder containing OSS controller libraries. *\";
-  echo \"* So move it aside with hrpsys version and the timestamp as a part of dir name (eg. /opt/jsk_315.2.0_20141214). *\";
-  test -L /opt/jsk && su -c 'rm -fr /opt/jsk' || su -c 'mv /opt/jsk /opt/jsk/lib/$(strings RobotHardware.so | grep ^[0-9]*\\.[0-9]*\\.[0-9]*$)_$(date +%Y%m%d)'
+  echo \"* So move it aside with hrpsys version and the timestamp as a part of dir name (eg. /opt/jsk/315.2.0_20141214). *\";
+  test -L /opt/jsk && su -c 'rm -fr /opt/jsk' || (su -c 'mkdir /opt/jsk/$HRPSYS_PREV_INSTALLED' && su -c 'mv /opt/jsk/* /opt/jsk/$HRPSYS_PREV_INSTALLED');
   echo \"* setup /opt/jsk/$hrpsys_version directory *\";
   cd /;
   su -c 'tar -xvzf /tmp/opt-jsk-base-model.tgz';
