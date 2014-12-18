@@ -31,20 +31,27 @@ hrpsys_version=${hrpsys_version:="315.2.8"}
 
 DATE=`date +%Y-%m-%d`
 
-TMPDIR=/tmp/HOGE
-URL_NXO_LATEST_ZIPBALL=https://github.com/tork-a/rtmros_nextage/archive/0.2.14.zip
+TMPDIR=/tmp/HiroNXO_install
+URL_HIRONX_ZIPBALL=https://github.com/start-jsk/rtmros_hironx/archive/1.0.27.zip
+URL_NXO_ZIPBALL_STABLE=https://github.com/tork-a/rtmros_nextage/archive/0.2.14.zip
 mkdir -p ${TMPDIR}/opt/jsk_${hrpsys_version}
-# Download NEXTAGE model files.
-wget ${URL_NXO_LATEST_ZIPBALL} -O ${TMPDIR}/rtmros_nextage.zip || echo "ERROR:: Failed to download source code"
-# Download 'base' libraries for QNX that don't be affected by the hrpsys version  
-wget 'https://docs.google.com/uc?authuser=0&id=0B5hXrFUpyR2iZS0tQlFyXzhjaGc&export=download' -O ${TMPDIR}/opt-jsk-base.tgz || echo "ERROR:: Failed to download source code"
+# Download model files.
+wget ${URL_HIRONX_ZIPBALL} -O ${TMPDIR}/rtmros_hironx.zip || echo "ERROR:: Failed to download hironx zipball."
+wget ${URL_NXO_ZIPBALL_STABLE} -O ${TMPDIR}/rtmros_nextage.zip || echo "ERROR:: Failed to download nxo zipball."
+# Download 'base' libraries for QNX that don't be affected by the hrpsys version
+wget 'https://docs.google.com/uc?authuser=0&id=0B5hXrFUpyR2iZS0tQlFyXzhjaGc&export=download' -O ${TMPDIR}/opt-jsk-base.tgz || echo "ERROR:: Failed to download opt-jsk-base.tgz."
 
 (cd ${TMPDIR}; tar -xvzf opt-jsk-base.tgz)
+(cd ${TMPDIR}; unzip -o rtmros_hironx.zip)
 (cd ${TMPDIR}; unzip -o rtmros_nextage.zip)
+# The tarball above (opt-jsk-base.tgz) contains `include` and `lib` folders, only. So from here we'll create other folders.
 mkdir -p ${TMPDIR}/opt/jsk_${hrpsys_version}/etc
-# zipball retrieved by URL_NXO_LATEST_ZIPBALL yields random folder name. So skip it by asterisk.
-mv ${TMPDIR}/*/nextage_description/ ${TMPDIR}/opt/jsk_${hrpsys_version}/etc/HIRONX 
+mv ${TMPDIR}/*/hironx_ros_bridge/ ${TMPDIR}/opt/jsk_${hrpsys_version}/etc/HIRONX
+# zipball retrieved by URL_NXO_ZIPBALL_STABLE yields random folder name. So skip it by asterisk.
+mv ${TMPDIR}/*/nextage_description/ ${TMPDIR}/opt/jsk_${hrpsys_version}/etc/NEXTAGE
+# Folder names from nextage_description and the one used internal to QNX is different. See https://github.com/start-jsk/rtmros_hironx/issues/160#issuecomment-48572336
 mv ${TMPDIR}/opt/jsk_${hrpsys_version}/etc/HIRONX/models ${TMPDIR}/opt/jsk_${hrpsys_version}/etc/HIRONX/model
+mv ${TMPDIR}/opt/jsk_${hrpsys_version}/etc/NEXTAGE/models ${TMPDIR}/opt/jsk_${hrpsys_version}/etc/NEXTAGE/model
 tar -C ${TMPDIR} -cvzf ${TMPDIR}/opt-jsk-base-model.tgz ./opt/jsk_${hrpsys_version}/
 
 # Command that gets run on QNX. 
