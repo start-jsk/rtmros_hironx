@@ -72,7 +72,7 @@ commands="
   echo \"* Create supplemental folder '/opt/jsk/$hrpsys_version/var/log' *\";
   su -c 'mkdir -p /opt/jsk/$hrpsys_version/var/log';
   echo \"* Symbolic link from folders in /opt/jsk to the ones that contain specific hrpsys version. *\";
-  cd /opt/jsk
+  cd /opt/jsk;
   su -c 'ln -sf /opt/jsk/$hrpsys_version/* .';
   "
 
