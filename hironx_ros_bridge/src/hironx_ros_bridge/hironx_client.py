@@ -674,29 +674,53 @@ class HIRONX(HrpsysConfigurator):
         self.rh_svc.removeForceSensorOffset()
 
     def getCurrentPose(self, lname=None, frame_name='WAIST'):
+        if ':' in lname:
+            frame_name = None
+        
         return HrpsysConfigurator.getCurrentPose(self, lname, frame_name)
     
     def getCurrentPosition(self, lname=None, frame_name='WAIST'):
+        if ':' in lname:
+            frame_name = None
+
         return HrpsysConfigurator.getCurrentPosition(self, lname, frame_name)
 
     def getCurrentRotation(self, lname=None, frame_name='WAIST'):
+        if ':' in lname:
+            frame_name = None
+        
         return HrpsysConfigurator.getCurrentRotation(self, lname, frame_name)
     
     def getCurrentRPY(self, lname, frame_name='WAIST'):
+        if ':' in lname:
+            frame_name = None
+
         return HrpsysConfigurator.getCurrentRPY(self, lname, frame_name)
 
     def getReferencePose(self, lname, frame_name='WAIST'):
+        if ':' in lname:
+            frame_name = None
+        
         return HrpsysConfigurator.getReferencePose(self, lname, frame_name)
 
     def getReferencePosition(self, lname, frame_name='WAIST'):
+        if ':' in lname:
+            frame_name = None
+        
         return HrpsysConfigurator.getReferencePosition(self, lname, frame_name)
 
     def getReferenceRotation(self, lname, frame_name='WAIST'):
+        if ':' in lname:
+            frame_name = None
+        
         return HrpsysConfigurator.getReferenceRotation(self, lname, frame_name)
 
     def getReferenceRPY(self, lname, frame_name='WAIST'):
+        if ':' in lname:
+            frame_name = None
+        
         return HrpsysConfigurator.getReferenceRPY(self, lname, frame_name)
-
+    
     def setTargetPose(self, gname, pos, rpy, tm, frame_name='WAIST'):
         return HrpsysConfigurator.setTargetPose(self, gname, pos, rpy, tm, frame_name)
 
