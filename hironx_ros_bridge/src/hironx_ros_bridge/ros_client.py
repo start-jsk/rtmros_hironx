@@ -36,8 +36,7 @@ import copy
 import math
 
 import actionlib
-from moveit_commander import MoveGroupCommander
-from moveit_commander import MoveItCommanderException
+from moveit_commander import MoveGroupCommander, MoveItCommanderException, RobotCommander
 import rospy
 from pr2_controllers_msgs.msg import JointTrajectoryAction
 from pr2_controllers_msgs.msg import JointTrajectoryGoal
@@ -51,13 +50,14 @@ _MSG_ASK_ISSUEREPORT = 'Your report to ' + \
                        'about the issue you are seeing is appreciated.'
 
 
-class ROS_Client(object):
+class ROS_Client(RobotCommander):
     '''
-    This class:
-
-    - holds methods that are specific to Kawada Industries' dual-arm
+    This class holds methods that are specific to Kawada Industries' dual-arm
     robot called Hiro, via ROS.
-    - As of July 2014, this class is only intended to be used through HIRONX
+
+    @since: December 2014: Now this class is replacing the default programming interface
+            with HIRONX (hironx_client.py).
+    @since: July 2014: this class is only intended to be used through HIRONX
       class.
     '''
 
@@ -69,6 +69,8 @@ class ROS_Client(object):
         '''
         @type jointgroups: [str]
         '''
+        super(ROS_Client, self).__init__()
+
         # if we do not have ros running, return 
         try:
             rospy.get_master().getSystemState()
@@ -95,12 +97,17 @@ class ROS_Client(object):
         except RuntimeError as e:
             rospy.logerr(str(e) + self._MSG_NO_MOVEGROUP_FOUND)
 
+#    def __getattr__(self, name):
+#        '''
+#        Trying to resolve https://github.com/start-jsk/rtmros_hironx/issues/300
+#        '''
+#        return object.__getattr__(self, name)
+
     def _init_moveit_commanders(self):
         '''
         @raise RuntimeError: When MoveGroup is not running.
         '''
         # left_arm, right_arm are fixed in nextage_moveit_config pkg.
-
         try:
             self._movegr_larm = MoveGroupCommander(Constant.GRNAME_LEFT_ARM_MOVEGROUP)
             self._movegr_rarm = MoveGroupCommander(Constant.GRNAME_RIGHT_ARM_MOVEGROUP)

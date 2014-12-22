@@ -10,6 +10,7 @@
   <arg name="SIMULATOR_NAME" default="RobotHardware0" />
   <arg name="corbaport" default="15005" />
   <arg name="CONF_FILE_COLLISIONDETECT" default="$(find hironx_ros_bridge)/conf/kawada-hironx.conf" /> <!-- Default is simulation -->
+  <arg name="RUN_MOVEIT" default="true" />
   <arg name="USE_COLLISIONCHECK" default="false" /> <!-- For running collsion detection inside the robot (QNX) -->
   <arg name="USE_ROBOTHARDWARE" default="false" />
   <arg name="USE_IMPEDANCECONTROLLER" default="false"/>
@@ -50,4 +51,10 @@
     <arg name="SIMULATOR_NAME" value="$(arg SIMULATOR_NAME)" />
     <arg name="COLLISIONDETECTOR_INSTANCE_NAME" default="CollisionDetector0" />
   </include>
+
+  <!-- Since Dec 2014, the default programming I/F is replaced with the one that's based on RobotCommander in MoveIt!.
+       Therefore MoveIt! is started by default with rtm-ros bridge. -->
+  <group if="$(arg RUN_MOVEIT)">
+    <include file="$(find hironx_moveit_config)/launch/moveit_planning_execution.launch" />
+  </group>
 </launch>
