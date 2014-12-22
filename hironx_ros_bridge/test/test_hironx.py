@@ -686,6 +686,68 @@ class TestHiro(unittest.TestCase):
         numpy.testing.assert_array_almost_equal(numpy.array(pos1),numpy.array(pos2), decimal=3)
         numpy.testing.assert_array_almost_equal(numpy.array(rot1),numpy.array(rot2), decimal=3)
         numpy.testing.assert_array_almost_equal(numpy.array(rpy1),numpy.array(rpy2), decimal=3)
+    
+    def testGetterByFrame(self):
+        def print_pose(msg, pose):
+            print msg, (pose[3],pose[7],pose[11]), euler_from_matrix([pose[0:3], pose[4:7], pose[8:11]], 'sxyz')
+
+        self.robot.goInitial()
+        
+        posel1 = self.robot.getCurrentPose('LARM_JOINT5')
+        posel2 = self.robot.getCurrentPose('LARM_JOINT5', 'WAIST')
+        numpy.testing.assert_array_almost_equal(numpy.array(posel1),numpy.array(posel2), decimal=3)
+        
+        print_pose("robot.getCurrentPose(LARM_JOINT5:DEFAULT)", posel1)
+        print_pose("robot.getCurrentPose(LARM_JOINT5:WAIST)", posel2)
+
+        posl1 = self.robot.getCurrentPosition('LARM_JOINT5')
+        posl2 = self.robot.getCurrentPosition('LARM_JOINT5', 'WAIST')
+        numpy.testing.assert_array_almost_equal(numpy.array(posl1),numpy.array(posl2), decimal=3)
+        
+        print "robot.getCurrentPosition(LARM_JOINT5:DEFAULT)", posl1
+        print "robot.getCurrentPosition(LARM_JOINT5:WAIST)", posl2
+
+        rotl1 = self.robot.getCurrentRotation('LARM_JOINT5')
+        rotl2 = self.robot.getCurrentRotation('LARM_JOINT5', 'WAIST')
+        numpy.testing.assert_array_almost_equal(numpy.array(rotl1),numpy.array(rotl2), decimal=3)
+        
+        print "robot.getCurrentRotation(LARM_JOINT5:DEFAULT)", rotl1
+        print "robot.getCurrentRotation(LARM_JOINT5:WAIST)", rotl2
+
+        rpyl1 = self.robot.getCurrentRPY('LARM_JOINT5')
+        rpyl2 = self.robot.getCurrentRPY('LARM_JOINT5', 'WAIST')
+        numpy.testing.assert_array_almost_equal(numpy.array(rpyl1),numpy.array(rpyl2), decimal=3)
+        
+        print "robot.getCurrentRPY(LARM_JOINT5:DEFAULT)", rpyl1
+        print "robot.getCurrentRPY(LARM_JOINT5:WAIST)", rpyl2
+
+        ref_posel1 = self.robot.getReferencePose('LARM_JOINT5')
+        ref_posel2 = self.robot.getReferencePose('LARM_JOINT5', 'WAIST')
+        numpy.testing.assert_array_almost_equal(numpy.array(ref_posel1),numpy.array(ref_posel2), decimal=3)
+        
+        print "robot.getReferencePose(LARM_JOINT5:DEFAULT)", ref_posel1
+        print "robot.getReferencePose(LARM_JOINT5:WAIST)", ref_posel2
+
+        ref_posl1 = self.robot.getReferencePosition('LARM_JOINT5')
+        ref_posl2 = self.robot.getReferencePosition('LARM_JOINT5', 'WAIST')
+        numpy.testing.assert_array_almost_equal(numpy.array(ref_posl1),numpy.array(ref_posl2), decimal=3)
+        
+        print "robot.getReferencePosition(LARM_JOINT5:DEFAULT)", ref_posl1
+        print "robot.getReferencePosition(LARM_JOINT5:WAIST)", ref_posl2
+
+        ref_rotl1 = self.robot.getReferenceRotation('LARM_JOINT5')
+        ref_rotl2 = self.robot.getReferenceRotation('LARM_JOINT5', 'WAIST')
+        numpy.testing.assert_array_almost_equal(numpy.array(ref_rotl1),numpy.array(ref_rotl2), decimal=3)
+        
+        print "robot.getReferenceRotation(LARM_JOINT5:DEFAULT)", ref_rotl1
+        print "robot.getReferenceRotation(LARM_JOINT5:WAIST)", ref_rotl2
+
+        ref_rpyl1 = self.robot.getReferenceRPY('LARM_JOINT5')
+        ref_rpyl2 = self.robot.getReferenceRPY('LARM_JOINT5', 'WAIST')
+        numpy.testing.assert_array_almost_equal(numpy.array(ref_rpyl1),numpy.array(ref_rpyl2), decimal=3)
+        
+        print "robot.getReferenceRPY(LARM_JOINT5:DEFAULT)", ref_rpyl1
+        print "robot.getReferenceRPY(LARM_JOINT5:WAIST)", ref_rpyl2
 
 #unittest.main()
 if __name__ == '__main__':
