@@ -127,7 +127,6 @@ int main(int argc, char *argv[])
   ros::init(argc, argv, "collision_checker");
   ros::AsyncSpinner spinner(1);
   spinner.start();
-  //ros::Rate r(5);
 
   //ActionBasedControllerHandle<control_msgs::FollowJointTrajectoryAction> action_controller = ActionBasedControllerHandle(, "larm_controller")
   
@@ -180,26 +179,16 @@ int main(int argc, char *argv[])
                  it->first.first.c_str(),
                  it->first.second.c_str());
       }
-
-      group_r.clearPoseTargets();
-      group_l.clearPoseTargets();
       
-      /*
-      group_r.setPoseTarget(pose_r);
-      moveit::planning_interface::MoveGroup::Plan my_plan1;
-      bool success1 = group_r.plan(my_plan1);
-
-      moveit::planning_interface::MoveGroup::Plan my_plan2;
-      group_l.setPoseTarget(pose_l);
-      bool success2 = group_l.plan(my_plan2);
-      */
-
-      /*
       if(!old_collision_result.collision && collision_result.collision){
-        group_r.setPoseTarget(group_r.getCurrentPose());
-        group_l.setPoseTarget(group_l.getCurrentPose());
+        group_r.clearPoseTargets();
+        group_l.clearPoseTargets();
+        
+        //TODO: Stop Motion
+        
+        //group_r.setPoseTarget(group_r.getCurrentPose());
+        //group_l.setPoseTarget(group_l.getCurrentPose());
       }
-      */
 
       old_collision_result = collision_result;
     }
