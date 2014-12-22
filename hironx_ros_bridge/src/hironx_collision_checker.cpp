@@ -38,7 +38,9 @@
 
 #include <moveit/robot_model_loader/robot_model_loader.h>
 #include <moveit/planning_scene/planning_scene.h>
+#include <control_msgs/FollowJointTrajectoryAction.h>
 #include <moveit/move_group_interface/move_group.h>
+#include <moveit/controller_manager/controller_manager.h>
 
 #include <moveit/kinematic_constraints/utils.h>
 #include <eigen_conversions/eigen_msg.h>
@@ -46,12 +48,88 @@
 #include <moveit/planning_scene_monitor/current_state_monitor.h>
 #include <moveit/planning_scene_monitor/planning_scene_monitor.h>
 
+/*
+
+template<typename T>
+class ActionBasedControllerHandle : public moveit_controller_manager::MoveItControllerHandle
+{
+public:
+ActionBasedControllerHandle(const std::string &name, const std::string &ns) :
+moveit_controller_manager::MoveItControllerHandle(name),
+namespace_(ns),
+done_(true)
+{
+controller_action_client_.reset(new actionlib::SimpleActionClient<T>(name_ +"/" + namespace_, true));
+unsigned int attempts = 0;
+while (ros::ok() && !controller_action_client_->waitForServer(ros::Duration(5.0)) && ++attempts < 3)
+ROS_INFO_STREAM("Waiting for " << name_ + "/" + namespace_ << " to come up");
+if (!controller_action_client_->isServerConnected())
+{
+ROS_ERROR_STREAM("Action client not connected: " << name_ + "/" + namespace_);
+controller_action_client_.reset();
+}
+last_exec_ = moveit_controller_manager::ExecutionStatus::SUCCEEDED;
+}
+bool isConnected() const
+{
+return controller_action_client_;
+}
+virtual bool cancelExecution()
+{
+if (!controller_action_client_)
+return false;
+if (!done_)
+{
+ROS_INFO_STREAM("Cancelling execution for " << name_);
+controller_action_client_->cancelGoal();
+last_exec_ = moveit_controller_manager::ExecutionStatus::PREEMPTED;
+done_ = true;
+}
+return true;
+}
+virtual bool waitForExecution(const ros::Duration &timeout = ros::Duration(0))
+{
+if (controller_action_client_ && !done_)
+return controller_action_client_->waitForResult(timeout);
+return true;
+}
+virtual moveit_controller_manager::ExecutionStatus getLastExecutionStatus()
+{
+return last_exec_;
+}
+protected:
+    void finishControllerExecution(const actionlib::SimpleClientGoalState& state)
+    {
+        ROS_DEBUG_STREAM("Controller " << name_ << " is done with state " << state.toString() << ": " << state.getText());
+        if (state == actionlib::SimpleClientGoalState::SUCCEEDED)
+        last_exec_ = moveit_controller_manager::ExecutionStatus::SUCCEEDED;
+        else
+        if (state == actionlib::SimpleClientGoalState::ABORTED)
+        last_exec_ = moveit_controller_manager::ExecutionStatus::ABORTED;
+        else
+        if (state == actionlib::SimpleClientGoalState::PREEMPTED)
+        last_exec_ = moveit_controller_manager::ExecutionStatus::PREEMPTED;
+        else
+        last_exec_ = moveit_controller_manager::ExecutionStatus::FAILED;
+        done_ = true;
+    }
+
+    moveit_controller_manager::ExecutionStatus last_exec_;
+    std::string namespace_;
+    bool done_;
+    boost::shared_ptr<actionlib::SimpleActionClient<T> > controller_action_client_;
+};
+
+*/
+
 int main(int argc, char *argv[])
 {
   ros::init(argc, argv, "collision_checker");
   ros::AsyncSpinner spinner(1);
   spinner.start();
   //ros::Rate r(5);
+
+  //ActionBasedControllerHandle<control_msgs::FollowJointTrajectoryAction> action_controller = ActionBasedControllerHandle(, "larm_controller")
   
   moveit::planning_interface::MoveGroup group_r("right_arm");
   moveit::planning_interface::MoveGroup group_l("left_arm");
@@ -82,7 +160,9 @@ int main(int argc, char *argv[])
   }
 
   collision_detection::CollisionResult old_collision_result;
-  
+  geometry_msgs::PoseStamped pose_r = group_r.getCurrentPose();
+  geometry_msgs::PoseStamped pose_l = group_l.getCurrentPose();
+
   while(ros::ok()){
     if(psm.getStateMonitor()->waitForCurrentState(1.0)){
       collision_result.clear();
@@ -101,10 +181,25 @@ int main(int argc, char *argv[])
                  it->first.second.c_str());
       }
 
+      group_r.clearPoseTargets();
+      group_l.clearPoseTargets();
+      
+      /*
+      group_r.setPoseTarget(pose_r);
+      moveit::planning_interface::MoveGroup::Plan my_plan1;
+      bool success1 = group_r.plan(my_plan1);
+
+      moveit::planning_interface::MoveGroup::Plan my_plan2;
+      group_l.setPoseTarget(pose_l);
+      bool success2 = group_l.plan(my_plan2);
+      */
+
+      /*
       if(!old_collision_result.collision && collision_result.collision){
         group_r.setPoseTarget(group_r.getCurrentPose());
         group_l.setPoseTarget(group_l.getCurrentPose());
       }
+      */
 
       old_collision_result = collision_result;
     }
