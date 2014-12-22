@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 2.8.3)
 project(hironx_ros_bridge)
 
-find_package(catkin REQUIRED COMPONENTS hrpsys_ros_bridge pr2_controllers_msgs roslib roslint rostest)
+find_package(catkin REQUIRED COMPONENTS hrpsys_ros_bridge pr2_controllers_msgs roslib roslint rostest moveit_core moveit_ros_planning moveit_ros_planning_interface)
 find_package(Boost REQUIRED COMPONENTS system)
 
 catkin_package(
@@ -56,7 +56,16 @@ add_library(
 )
 
 add_executable(
-    acceptancetest_hironx_cpp src/acceptancetest_hironx.cpp
+  acceptancetest_hironx_cpp src/acceptancetest_hironx.cpp
+)
+
+add_executable(
+  hironx_collision_checker_cpp src/hironx_collision_checker.cpp
+)
+
+target_link_libraries(
+  hironx_collision_checker_cpp
+  ${catkin_LIBRARIES}
 )
 
 target_link_libraries(
@@ -91,7 +100,7 @@ install(CODE "
   endforeach()
   ")
 
-install(TARGETS acceptancetest_hironx_cpp ros_client_cpp
+install(TARGETS acceptancetest_hironx_cpp ros_client_cpp hironx_collision_checker_cpp
         ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
         LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
         RUNTIME DESTINATION ${CATKIN_GLOBAL_BIN_DESTINATION})
