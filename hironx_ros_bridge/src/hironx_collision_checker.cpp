@@ -32,10 +32,13 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
+#include <vector>
+
 #include <ros/ros.h>
 
 #include <moveit/robot_model_loader/robot_model_loader.h>
 #include <moveit/planning_scene/planning_scene.h>
+#include <moveit/move_group_interface/move_group.h>
 
 #include <moveit/kinematic_constraints/utils.h>
 #include <eigen_conversions/eigen_msg.h>
@@ -48,8 +51,11 @@ int main(int argc, char *argv[])
   ros::init(argc, argv, "collision_checker");
   ros::AsyncSpinner spinner(1);
   spinner.start();
-  ros::Rate r(5);
+  //ros::Rate r(5);
   
+  moveit::planning_interface::MoveGroup group_r("right_arm");
+  moveit::planning_interface::MoveGroup group_l("left_arm");
+
   robot_model_loader::RobotModelLoader robot_model_loader("robot_description");
   robot_model::RobotModelPtr kinematic_model = robot_model_loader.getModel();
   planning_scene::PlanningScene planning_scene(kinematic_model);
@@ -70,16 +76,13 @@ int main(int argc, char *argv[])
   planning_state.setVariablePositions(pos);
   planning_scene.checkCollision(collision_request, collision_result, *current_state, acm);
   collision_detection::CollisionResult::ContactMap::const_iterator it;
-  for(it = collision_result.contacts.begin(); 
-      it != collision_result.contacts.end();
-      ++it)
-  {
+  for(it = collision_result.contacts.begin(); it != collision_result.contacts.end(); ++it){
     acm.setEntry(it->first.first, it->first.second, true);
-    ROS_INFO("Contact between: %s and %s now allowed.",
-                it->first.first.c_str(),
-                it->first.second.c_str());
+    ROS_INFO("Contact between: %s and %s now allowed.", it->first.first.c_str(), it->first.second.c_str());
   }
 
+  collision_detection::CollisionResult old_collision_result;
+  
   while(ros::ok()){
     if(psm.getStateMonitor()->waitForCurrentState(1.0)){
       collision_result.clear();
@@ -92,16 +95,19 @@ int main(int argc, char *argv[])
                       << (collision_result.collision ? "in" : "not in")
                       << " self collision");
 
-      for(it = collision_result.contacts.begin();
-          it != collision_result.contacts.end();
-          ++it)
-      {
+      for(it = collision_result.contacts.begin(); it != collision_result.contacts.end(); ++it){
         ROS_INFO("Contact between: %s and %s",
                  it->first.first.c_str(),
                  it->first.second.c_str());
       }
+
+      if(!old_collision_result.collision && collision_result.collision){
+        group_r.setPoseTarget(group_r.getCurrentPose());
+        group_l.setPoseTarget(group_l.getCurrentPose());
+      }
+
+      old_collision_result = collision_result;
     }
-    r.sleep();
   }
 
   return 0;
