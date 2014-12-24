@@ -59,8 +59,9 @@ add_executable(
   acceptancetest_hironx_cpp src/acceptancetest_hironx.cpp
 )
 
-add_executable(
-  hironx_collision_checker_cpp src/hironx_collision_checker.cpp
+add_executable(hironx_collision_checker_cpp 
+  include/hironx_collision_checker.h
+  src/hironx_collision_checker.cpp
 )
 
 target_link_libraries(
