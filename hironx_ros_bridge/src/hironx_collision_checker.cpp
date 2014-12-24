@@ -28,14 +28,10 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include <vector>
-
 #include <ros/ros.h>
 
-#include <moveit/robot_model_loader/robot_model_loader.h>
-#include <moveit/planning_scene/planning_scene.h>
-#include <control_msgs/FollowJointTrajectoryAction.h>
-#include <moveit/move_group_interface/move_group.h>
+#include <hironx_collision_checker.h>
+
 #include <moveit/controller_manager/controller_manager.h>
 
 #include <moveit/kinematic_constraints/utils.h>
@@ -44,19 +40,27 @@
 #include <moveit/planning_scene_monitor/current_state_monitor.h>
 #include <moveit/planning_scene_monitor/planning_scene_monitor.h>
 
-int main(int argc, char *argv[])
-{
-  ros::init(argc, argv, "collision_checker");
-  ros::AsyncSpinner spinner(1);
-  spinner.start();
-  
-  moveit::planning_interface::MoveGroup group_r("right_arm");
-  moveit::planning_interface::MoveGroup group_l("left_arm");
+#include <vector>
 
+#include <moveit/robot_model_loader/robot_model_loader.h>
+#include <moveit/planning_scene/planning_scene.h>
+#include <control_msgs/FollowJointTrajectoryAction.h>
+
+namespace hironx_ros_bridge
+{
+
+HiroNXCollisionChecker::HiroNXCollisionChecker() : 
+  group_r_("right_arm"),
+  group_l_("left_arm")
+{
+
+}
+
+void HiroNXCollisionChecker::spin(){
   robot_model_loader::RobotModelLoader robot_model_loader("robot_description");
   robot_model::RobotModelPtr kinematic_model = robot_model_loader.getModel();
   planning_scene::PlanningScene planning_scene(kinematic_model);
-  
+
   planning_scene_monitor::PlanningSceneMonitor psm("robot_description");
   psm.startStateMonitor("joint_states");
   collision_detection::AllowedCollisionMatrix acm = planning_scene.getAllowedCollisionMatrix();
@@ -79,8 +83,8 @@ int main(int argc, char *argv[])
   }
 
   collision_detection::CollisionResult old_collision_result;
-  geometry_msgs::PoseStamped pose_r = group_r.getCurrentPose();
-  geometry_msgs::PoseStamped pose_l = group_l.getCurrentPose();
+  geometry_msgs::PoseStamped pose_r = group_r_.getCurrentPose();
+  geometry_msgs::PoseStamped pose_l = group_l_.getCurrentPose();
 
   while(ros::ok()){
     if(psm.getStateMonitor()->waitForCurrentState(1.0)){
@@ -101,18 +105,31 @@ int main(int argc, char *argv[])
       }
       
       if(!old_collision_result.collision && collision_result.collision){
-        group_r.clearPoseTargets();
-        group_l.clearPoseTargets();
+        group_r_.clearPoseTargets();
+        group_l_.clearPoseTargets();
         
         //TODO: Stop Motion
         
-        //group_r.setPoseTarget(group_r.getCurrentPose());
-        //group_l.setPoseTarget(group_l.getCurrentPose());
+        //group_r_.setPoseTarget(group_r_.getCurrentPose());
+        //group_l_.setPoseTarget(group_l_.getCurrentPose());
       }
 
       old_collision_result = collision_result;
     }
   }
+}
 
+}; //namespace hironx_ros_bridge
+
+int main(int argc, char *argv[])
+{
+  ros::init(argc, argv, "collision_checker");
+  ros::AsyncSpinner spinner(1);
+  spinner.start();
+  
+  hironx_ros_bridge::HiroNXCollisionChecker collision_checker;
+  collision_checker.spin();
+  
   return 0;
-} 
+}
+
