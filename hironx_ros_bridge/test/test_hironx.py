@@ -682,7 +682,17 @@ class TestHiro(unittest.TestCase):
         self.robot.waitInterpolationOfGroup('torso')
         pos2 = self.robot.getCurrentPosition('LARM_JOINT5', 'CHEST_JOINT0')
         rot2 = self.robot.getCurrentRotation('LARM_JOINT5', 'CHEST_JOINT0')
-        rpy2 = self.robot.getCurrentRPY('LARM_JOINT5', 'CHEST_JOINT0')
+        try:
+            rpy2 = self.robot.getCurrentRPY('LARM_JOINT5', 'CHEST_JOINT0')
+        except RuntimeError as e:
+            if re.match(r'frame_name \(.+\) is not supported', e.message):
+                print(e.message + "...this is expected so pass the test")
+            elif self.robot.fk.ref.get_component_profile().version <= '315.2.4':
+                print("target hrpsys version is " + self.robot.fk.ref.get_component_profile().version)
+                print(e.message + "...this is expected so pass the test")
+                return True
+            else:
+                raise RuntimeError(e.message)
         numpy.testing.assert_array_almost_equal(numpy.array(pos1),numpy.array(pos2), decimal=3)
         numpy.testing.assert_array_almost_equal(numpy.array(rot1),numpy.array(rot2), decimal=3)
         numpy.testing.assert_array_almost_equal(numpy.array(rpy1),numpy.array(rpy2), decimal=3)
@@ -694,7 +704,17 @@ class TestHiro(unittest.TestCase):
         self.robot.goInitial()
         
         posel1 = self.robot.getCurrentPose('LARM_JOINT5')
-        posel2 = self.robot.getCurrentPose('LARM_JOINT5', 'WAIST')
+        try:
+            posel2 = self.robot.getCurrentPose('LARM_JOINT5', 'WAIST')
+        except RuntimeError as e:
+            if re.match(r'frame_name \(.+\) is not supported', e.message):
+                print(e.message + "...this is expected so pass the test")
+            elif self.robot.fk.ref.get_component_profile().version <= '315.2.4':
+                print("target hrpsys version is " + self.robot.fk.ref.get_component_profile().version)
+                print(e.message + "...this is expected so pass the test")
+                return True
+            else:
+                raise RuntimeError(e.message)
         numpy.testing.assert_array_almost_equal(numpy.array(posel1),numpy.array(posel2), decimal=3)
         
         print_pose("robot.getCurrentPose(LARM_JOINT5:DEFAULT)", posel1)
@@ -715,7 +735,17 @@ class TestHiro(unittest.TestCase):
         print "robot.getCurrentRotation(LARM_JOINT5:WAIST)", rotl2
 
         rpyl1 = self.robot.getCurrentRPY('LARM_JOINT5')
-        rpyl2 = self.robot.getCurrentRPY('LARM_JOINT5', 'WAIST')
+        try:
+            rpyl2 = self.robot.getCurrentRPY('LARM_JOINT5', 'WAIST')
+        except RuntimeError as e:
+            if re.match(r'frame_name \(.+\) is not supported', e.message):
+                print(e.message + "...this is expected so pass the test")
+            elif self.robot.fk.ref.get_component_profile().version <= '315.2.4':
+                print("target hrpsys version is " + self.robot.fk.ref.get_component_profile().version)
+                print(e.message + "...this is expected so pass the test")
+                return True
+            else:
+                raise RuntimeError(e.message)
         numpy.testing.assert_array_almost_equal(numpy.array(rpyl1),numpy.array(rpyl2), decimal=3)
         
         print "robot.getCurrentRPY(LARM_JOINT5:DEFAULT)", rpyl1
