@@ -53,11 +53,11 @@ mkdir -p ${TMPDIR}/opt/jsk/${hrpsys_version}/etc
 # zipball retrieved by URL_NXO_ZIPBALL_STABLE yields random folder name. So skip it by asterisk.
 mv ${TMPDIR}/*/nextage_description/ ${TMPDIR}/opt/jsk/${hrpsys_version}/etc/NEXTAGE
 # VRML model file of Hiro is not opensourced yet. It should be found in /opt/jsk/etc/HIRONX in each robot.
-#mv ${TMPDIR}/opt/jsk/${hrpsys_version}/etc/HIRONX/models ${TMPDIR}/opt/jsk/${hrpsys_version}/etc/HIRONX/model
+# If Hiro, fetch tarball of /opt/hiro to the /tmp/hiro_wrl.tgz on the local machine, then extract the content.
 ssh $userid@$hostname ls /opt/hiro && (export IS_TARGET_HIRO="true"; ssh $userid@$hostname "tar cfvz /tmp/hiro_wrl.tgz /opt/jsk/etc/HIRONX;"; scp $userid@$hostname:/tmp/hiro_wrl.tgz /tmp/hiro_wrl.tgz; cd ${TMPDIR} && tar xfvz /tmp/hiro_wrl.tgz ${TMPDIR}/opt/jsk/${hrpsys_version}/etc/; ls ${TMPDIR}) || echo "The robot you're dealing with now is NEXTAGE."
-##HIRO_COPY_MODEL="echo 'It is Hiro, so use existing model files.'; cp -R /opt/jsk/$HRPSYS_PREV_INSTALLED/etc/HIRONX /opt/jsk/$hrpsys_version/etc;" || echo "The robot you're dealing with now is NEXTAGE."
 # Folder names from nextage_description and the one used internal to QNX is different. See https://github.com/start-jsk/rtmros_hironx/issues/160#issuecomment-48572336
 mv ${TMPDIR}/opt/jsk/${hrpsys_version}/etc/NEXTAGE/models ${TMPDIR}/opt/jsk/${hrpsys_version}/etc/NEXTAGE/model
+# Create a tarball that contains model files of both Hiro and NXO.
 tar -C ${TMPDIR} -cvzf ${TMPDIR}/opt-jsk-base-model.tgz ./opt/jsk/${hrpsys_version}/
 
 # Get the version of hrpsys that is working inside of QNX.
