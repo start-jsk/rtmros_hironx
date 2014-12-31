@@ -758,8 +758,8 @@ class HIRONX(HrpsysConfigurator):
     
     def setTargetPose(self, gname, pos, rpy, tm, frame_name='WAIST'):
         if self.hrpsys_version <= '315.2.4':
-            print "\033[33m getTargetPose({}, {}, {}, {}, {}) is not supported on {}\033[0m".format(gname, pos, rpy, tm, frame_name, self.hrpsys_version)
-            return HrpsysConfigurator.getTargetPose(self, gname, pos, rpy, tm)
+            print "\033[33m setTargetPose({}, {}, {}, {}, {}) is not supported on {}\033[0m".format(gname, pos, rpy, tm, frame_name, self.hrpsys_version)
+            return HrpsysConfigurator.setTargetPose(self, gname, pos, rpy, tm)
         else:
             return HrpsysConfigurator.setTargetPose(self, gname, pos, rpy, tm, frame_name)
 
