@@ -1,6 +1,12 @@
 #!/bin/sh
 
 ##
+## robot-compile-freeze.sh creates an ELF32 binary. It's named as `robot-install-qnx-%MAC_ADDR_QNX%`
+## that runs on QNX to install hrpsys (and its other required libraries). 
+## The binary doesn't specify the path where the binary files get installed 
+## (that is up to users' manual operation in the later process).
+## Currently it's assumed to run only on QNX.jenkins.jsk (paths are hardcoded). 
+##
 ## ssh to target QNX
 ## $ tar -cvzf /tmp/opt_jsk_<hrpsys_version>.tgz /opt/jsk_<hrspys_version>
 ## run this script 
@@ -9,18 +15,45 @@
 ##
 # set -x
 
+HRPSYS_VERSION_DEFAULT=315.2.8
+
+function usage {
+    echo >&2 "usage: $0 [version_hrpsys (default:$HRPSYS_VERSION_DEFAULT)]
+    echo >&2 "          [-h|--help] print this message"
+    exit 0
+}
+
 trap 'exit 1', ERR
 
+# command line parse
+OPT=`getopt -o h -l help -- $*`
+if [ $? != 0 ]; then
+    usage
+fi
+
+eval set -- $OPT
+
+while [ -n "$1" ] ; do
+    case $1 in
+        -h|--help) usage ;;
+        --) shift; break;;
+        *) echo "Unknown option($1)"; usage;;
+    esac
+done
+
+HRPSYS_VERSION=${3-"$HRPSYS_VERSION_DEFAULT"}
+## Path of freeze.py on QNX.jenkins.jsk. This should better be taken from argument in the future. 
 FREEZE=/home/sam/hiro-nxo_sys-check/freeze_bin/usr/share/doc/python2.7/examples/Tools/freeze/freeze.py
 TMPDIR=`mktemp -d`
 OUTDIR=`pwd`
 
 cd $TMPDIR
 
+## Create a "opt_jsk_hex.h" file that encapsulates the streamlined /opt/jsk tarball 
 python <<EOF
 import binascii
-f_exe = open("/tmp/opt_jsk_315.1.10.tgz", 'r');
-f_txt = open('opt_jsk_hex.h','w')
+f_exe = open("/tmp/opt_jsk_$HRPSYS_VERSION.tgz", 'r');
+f_txt = open('opt_jsk_hex.h', 'w')
 f_txt.write('std::string bin_data="')
 f_txt.write(binascii.hexlify(f_exe.read()))
 f_txt.write('";')
@@ -28,11 +61,13 @@ f_exe.close()
 f_txt.close()
 EOF
 
+## Read MAC address, generate md5 checksum for it.
 echo -n "input password = (MAC address) "
 read PASS
 CHECK=`python -c "import hashlib; m=hashlib.md5(); m.update(\"$PASS\"); print m.hexdigest()"`;
 echo "check sum ... $CHECK"
 
+## Write the following text between 2 EOFs into robot-install.cpp
 cat <<EOF > robot-install.cpp
 
 #include <string>
@@ -84,6 +119,7 @@ int main () {
     struct sockaddr_dl *sdl = NULL;
     char iface[] = "wm0";
 
+    // TODO: What's this check for? 
     if (getifaddrs(&ifaphead) != 0) {
       perror("get_if_name: getifaddrs() failed");
       exit(1);
@@ -92,7 +128,7 @@ int main () {
     for (ifap = ifaphead; ifap && !found; ifap = ifap->ifa_next) {
       if ((ifap->ifa_addr->sa_family == AF_LINK)) {
         if (strlen(ifap->ifa_name) == strlen(iface))
-          if (strcmp(ifap->ifa_name,iface) == 0) {
+          if (strcmp(ifap->ifa_name, iface) == 0) {
             found = 1;
             sdl = (struct sockaddr_dl *)ifap->ifa_addr;
             if (sdl) {
@@ -105,7 +141,7 @@ int main () {
       }
     }
     if (!found) {
-      fprintf (stderr,"Can't find interface %s.\n",iface);
+      fprintf (stderr, "Can't find interface %s.\n", iface);
       if(ifaphead)
           freeifaddrs(ifaphead);
       exit(1);
@@ -117,6 +153,7 @@ int main () {
    if(ifaphead)
      freeifaddrs(ifaphead);
 
+    // TODO: Indentation is ambiguous from here.
     cerr << "mac = " << buffer << endl;
 
     // md5sum
@@ -126,6 +163,7 @@ int main () {
     for(i =0; i < MD5_DIGEST_LENGTH; i++ )
       sprintf(&buffer[i*2], "%02x", result[i]);
     cerr << "md5sum = " << buffer << endl;
+    // TODO: Comparing something with MAC address, and return error if not match??? 
     if (string(buffer) != string("$CHECK") ) {
        cerr << "invalid password" << endl;       
        remove_all(tmpdir);
@@ -136,7 +174,7 @@ int main () {
     string filename = string(tmpdir) + "/out.tgz";
     ofstream fout(filename.c_str(), ios::app);
     for (string::size_type i=0; i<bin_data.length(); i+=2) {
-        unsigned char b = (unsigned char) strtoul(bin_data.substr(i,2).c_str(), NULL, 16);
+        unsigned char b = (unsigned char) strtoul(bin_data.substr(i, 2).c_str(), NULL, 16);
         fout << b;
     }
     fout.close();
@@ -159,5 +197,3 @@ qcc -o robot-install -I/usr/pkg/include robot-install.cpp -L/usr/pkg/lib -lboost
 cp robot-install ${OUTDIR}/robot-install-${PASS}
 
 rm -fr $TMPDIR
-
-
