@@ -224,12 +224,12 @@ class TestHiroROSBridge(unittest.TestCase):
         goal = self.goal_LArm()
         for av in [[  25,-139,-157,  45,   0,   0]]:
             goal = self.setup_Positions(goal, [av])
-            self.rarm.send_goal_and_wait(goal)
+            self.larm.send_goal_and_wait(goal)
             # check if tf and current link is same
             rospy.sleep(1)
             now = rospy.Time.now()
             self.listener.waitForTransform("WAIST", "LARM_JOINT5_Link", now, rospy.Duration(1.0))
-            (pos_tf, rot_tf) = self.listener.lookupTransform("WAIST", "RARM_JOINT5_Link", now)
+            (pos_tf, rot_tf) = self.listener.lookupTransform("WAIST", "LARM_JOINT5_Link", now)
             rot_tf = quaternion_matrix(rot_tf)[0:3,0:3]
             pos_c = self.robot.getCurrentPosition('LARM_JOINT5','WAIST')
             rot_c = self.robot.getCurrentRotation('LARM_JOINT5','WAIST')
