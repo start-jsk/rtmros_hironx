@@ -10,6 +10,7 @@ except:
     import roslib; roslib.load_manifest(PKG)
     import hironx_ros_bridge
 
+from hironx_ros_bridge import hironx_client as hironx
 import rospy, actionlib, math, numpy
 import tf
 from tf.transformations import quaternion_matrix, euler_from_matrix
@@ -43,6 +44,9 @@ class TestHiroROSBridge(unittest.TestCase):
         self.joint_states_sub = rospy.Subscriber("joint_states", JointState, self.joint_states_cb)
         self.filename_base = tempfile.mkstemp()[1]
         self.filenames = []
+
+        self.robot = hironx.HIRONX()
+        self.robot.init()
 
     @classmethod
     def setUpClass(self):
@@ -200,6 +204,37 @@ class TestHiroROSBridge(unittest.TestCase):
                                                 numpy.array([[ 0, 0,-1],
                                                              [ 0, 1, 0],
                                                              [ 1, 0, 0]]), decimal=2)
+
+    def test_tf_and_controller(self):
+        goal = self.goal_RArm()
+        for av in [[  25,-139,-157,  45,   0,   0]]:
+            goal = self.setup_Positions(goal, [av])
+            self.rarm.send_goal_and_wait(goal)
+            # check if tf and current link is same
+            rospy.sleep(1)
+            now = rospy.Time.now()
+            self.listener.waitForTransform("WAIST", "RARM_JOINT5_Link", now, rospy.Duration(1.0))
+            (pos_tf, rot_tf) = self.listener.lookupTransform("WAIST", "RARM_JOINT5_Link", now)
+            rot_tf = quaternion_matrix(rot_tf)[0:3,0:3]
+            pos_c = self.robot.getCurrentPosition('RARM_JOINT5','WAIST')
+            rot_c = self.robot.getCurrentRotation('RARM_JOINT5','WAIST')
+            numpy.testing.assert_array_almost_equal(pos_tf, pos_c, decimal=3)
+            numpy.testing.assert_array_almost_equal(rot_tf, rot_c, decimal=2)
+
+        goal = self.goal_LArm()
+        for av in [[  25,-139,-157,  45,   0,   0]]:
+            goal = self.setup_Positions(goal, [av])
+            self.larm.send_goal_and_wait(goal)
+            # check if tf and current link is same
+            rospy.sleep(1)
+            now = rospy.Time.now()
+            self.listener.waitForTransform("WAIST", "LARM_JOINT5_Link", now, rospy.Duration(1.0))
+            (pos_tf, rot_tf) = self.listener.lookupTransform("WAIST", "LARM_JOINT5_Link", now)
+            rot_tf = quaternion_matrix(rot_tf)[0:3,0:3]
+            pos_c = self.robot.getCurrentPosition('LARM_JOINT5','WAIST')
+            rot_c = self.robot.getCurrentRotation('LARM_JOINT5','WAIST')
+            numpy.testing.assert_array_almost_equal(pos_tf, pos_c, decimal=3)
+            numpy.testing.assert_array_almost_equal(rot_tf, rot_c, decimal=2)
 
     def test_Torso(self):
         goal = self.goal_Torso()
