@@ -29,10 +29,12 @@ rootuser_qnx=${rootuser_qnx:="hiro"}
 NEW_USER_QNX='tork'
 NEW_USER_QNX_CAPITAL='TORK'
 OSS_FOLDER='/opt/jsk'
+TMP_FOLDER='/tmp'
 
 # Command that gets run on QNX. 
 # - Create tork user,
 # - Assign write access for tork user to /opt/jsk folder recursively.
+# - 777 to /tmp. Ref: http://unix.stackexchange.com/a/71674/14968
 commands="
   . ~/.profile;
   env;
@@ -44,6 +46,8 @@ commands="
   echo \"* If OSS folder '$OSS_FOLDER' exists (which should exist), change its owner to '$NEW_USER_QNX'. *\";
   su -c 'chown -R '$NEW_USER_QNX' $OSS_FOLDER';
   ls -lh $OSS_FOLDER;
+  echo \"* Permit write access to $TMP_FOLDER folder. *\";
+  chmod -R a=rwx,o+t $TMP_FOLDER
   "
 
 read -p "Run the command @ $hostname (y/n)? "
