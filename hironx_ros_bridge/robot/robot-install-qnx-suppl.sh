@@ -70,4 +70,3 @@ backedup="
   "
 ssh $USERNAME_QNX@$HOSTNAME_QNX -t $commands 2>&1 | tee /tmp/robot-install-qnx-suppl-`date +"%Y%m%d-%H%M%S"`.log
 
-rm -fr ${TMPDIR}
