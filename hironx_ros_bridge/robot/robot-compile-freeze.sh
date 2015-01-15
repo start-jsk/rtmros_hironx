@@ -44,10 +44,10 @@ done
 HRPSYS_VERSION=${3-"$HRPSYS_VERSION_DEFAULT"}
 ## Path of freeze.py on QNX.jenkins.jsk. This should better be taken from argument in the future. 
 FREEZE=/home/sam/hiro-nxo_sys-check/freeze_bin/usr/share/doc/python2.7/examples/Tools/freeze/freeze.py
-TMPDIR=`mktemp -d`
+TMP_FOLDER=`mktemp -d`
 OUTDIR=`pwd`
 
-cd $TMPDIR
+cd $TMP_FOLDER
 
 ## Create a "opt_jsk_hex.h" file that encapsulates the streamlined /opt/jsk tarball 
 python <<EOF
@@ -196,4 +196,4 @@ qcc -o robot-install -I/usr/pkg/include robot-install.cpp -L/usr/pkg/lib -lboost
 # ./robot-install
 cp robot-install ${OUTDIR}/robot-install-${PASS}
 
-rm -fr $TMPDIR
+rm -fr $TMP_FOLDER

@@ -62,4 +62,4 @@ else
     echo "EXITTING.."
 fi
 
-rm -fr ${TMPDIR}
+rm -fr ${TMP_FOLDER}
