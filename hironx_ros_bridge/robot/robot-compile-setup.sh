@@ -102,8 +102,7 @@ echo "Necessary files are prepared on your host and now ready to run these comma
 read -p "execute installation command @ $HOSTNAME_QNX (y/n)? "
 if [ "$REPLY" == "y" ]; then
     echo "scp ${TMP_FOLDER}/opt-jsk-base-model.tgz into $HOSTNAME_QNX"
-    scp ${TMP_FOLDER}/opt-jsk-base-model.tgz $USERNAME_QNX@$HOSTNAME_QNX:${TMP_FOLDER}
-    ssh $USERNAME_QNX@$HOSTNAME_QNX -t $commands 2>&1 | tee -a ${NAME_LOGFILE} 
+    { scp ${TMP_FOLDER}/opt-jsk-base-model.tgz $USERNAME_QNX@$HOSTNAME_QNX:${TMP_FOLDER} && ssh $USERNAME_QNX@$HOSTNAME_QNX -t $commands 2>&1 | tee -a ${NAME_LOGFILE}; } || echo "Aborted."
     echo "====="
 else
     echo "DO NOT RUN"
