@@ -42,7 +42,7 @@ commands="
   set +x;
   echo \"* If tork user already exists, exit. *\";
   echo \"* Else, create tork user, the one that can write into the folder where OSS gets installed. *\";
-  test -e /home/$NEW_USER_QNX && (echo \"** Looks like the user '$NEW_USER_QNX' already exists. Installer exits. **\" && exit 0) || (echo \"** Looks like the user '$NEW_USER_QNX' does not exist. So let's create the user.\n   Keep using default values by pressing enter key, except for:\n\t(1) user name='$NEW_USER_QNX_CAPITAL'\n\t(2) password='$NEW_USER_QNX'.\n**\" && su -c 'passwd $NEW_USER_QNX');
+  test -e /home/$NEW_USER_QNX && { echo \"** Looks like the user '$NEW_USER_QNX' already exists. Installer exits. **\" && exit 0; } || { echo \"** Looks like the user '$NEW_USER_QNX' does not exist. So let's create the user.\n   Keep using default values by pressing enter key, except for:\n\t(1) user name='$NEW_USER_QNX_CAPITAL'\n\t(2) password='$NEW_USER_QNX'.\n**\" && su -c 'passwd $NEW_USER_QNX'; };
   echo \"* If OSS folder '$OSS_FOLDER' exists (which should exist), change its owner to '$NEW_USER_QNX'. *\";
   su -c 'chown -R '$NEW_USER_QNX' $OSS_FOLDER';
   ls -lh $OSS_FOLDER;
