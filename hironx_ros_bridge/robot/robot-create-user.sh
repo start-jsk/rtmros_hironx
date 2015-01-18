@@ -71,5 +71,3 @@ else
     echo "----"
     echo "EXITTING.."
 fi
-
-rm -fr ${TMP_FOLDER}
