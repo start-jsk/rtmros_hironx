@@ -47,7 +47,7 @@ wget ${URL_NXO_ZIPBALL_STABLE} -O ${TMP_FOLDER}/rtmros_nextage.zip || echo "ERRO
 # Download 'base' libraries for QNX that don't be affected by the hrpsys version
 wget 'https://docs.google.com/uc?authuser=0&id=0B5hXrFUpyR2iZS0tQlFyXzhjaGc&export=download' -O ${TMP_FOLDER}/${TARBALL_OSS_COMMON} || { echo "ERROR:: Failed to download ${TARBALL_OSS_COMMON}. Abort."; exit 1; }
 # Move files in the tarball above to ${HRPSYS_VER}. TARBALL_OSS_COMMON extracts to ./opt/jsk/* directories.
-tar -C ${TMP_FOLDER} -xvzf ${TARBALL_OSS_COMMON}; { mv ./opt/jsk/include ${TMP_FOLDER}/opt/jsk/${HRPSYS_VER}; mv ./opt/jsk/lib ${TMP_FOLDER}/opt/jsk/${HRPSYS_VER}; } || { echo 'ERROR happened while moving ${TARBALL_OSS_COMMON} contents. Abort.'; exit 1; }
+tar -C ${TMP_FOLDER} -xvzf ${TARBALL_OSS_COMMON}; { mv ./opt/jsk/include ${TMP_FOLDER}/opt/jsk/${HRPSYS_VER}; mv ./opt/jsk/lib ${TMP_FOLDER}/opt/jsk/${HRPSYS_VER}; } || { echo "ERROR happened while moving ${TARBALL_OSS_COMMON} contents. Abort."; exit 1; }
 
 # The tarball above (${TARBALL_OSS_COMMON}) contains `include` and `lib` folders, only. So from here we'll create other folders.
 mkdir -p ${TMP_FOLDER}/opt/jsk/${HRPSYS_VER}/etc
@@ -61,7 +61,7 @@ IS_QNX_HIRO=is_qnx_hiro
 commands_check_hiro="
   ls /opt/hiro && { echo 'Ok, the robot on QNX is Hiro.' && tar cfvz $TMP_FOLDER/hiro_wrl.tgz /opt/jsk/etc/HIRONX && true; } || { echo 'No, this robot on QNX is NXO.'; false; } && echo 'true' > $TMP_FOLDER/$IS_QNX_HIRO;
   "
-{ ssh $USERNAME_QNX@$HOSTNAME_QNX -t $commands_check_hiro; echo '----$commands_check_hiro is over.----'; } 2>&1 | tee -a ${NAME_LOGFILE}
+{ ssh $USERNAME_QNX@$HOSTNAME_QNX -t $commands_check_hiro; echo "----$commands_check_hiro is over.----"; } 2>&1 | tee -a ${NAME_LOGFILE}
 #    Then get the tarball from Hiro.
 if [ -e $TMP_FOLDER/$IS_QNX_HIRO ];
 then
@@ -71,7 +71,7 @@ else
 fi
 # Folder names from nextage_description and the one used internal to QNX is different. See https://github.com/start-jsk/rtmros_hironx/issues/160#issuecomment-48572336
 mv ${TMP_FOLDER}/opt/jsk/${HRPSYS_VER}/etc/NEXTAGE/models ${TMP_FOLDER}/opt/jsk/${HRPSYS_VER}/etc/NEXTAGE/model
-echo 'Creating ${TMP_FOLDER}/${TARBALL_MODELS}'; tar -C ${TMP_FOLDER} -cvzf ${TMP_FOLDER}/${TARBALL_MODELS} ./opt/jsk/${HRPSYS_VER}/
+echo "Creating ${TMP_FOLDER}/${TARBALL_MODELS}"; tar -C ${TMP_FOLDER} -cvzf ${TARBALL_MODELS} ./opt/jsk/${HRPSYS_VER}/
 
 # Get the version of hrpsys that is working inside of QNX.
 scp $USERNAME_QNX@$HOSTNAME_QNX:/opt/jsk/lib/RobotHardware.so ${TMP_FOLDER}
@@ -85,10 +85,12 @@ commands="
   env;
   trap 'exit 1' ERR;
   set +x;
+
+  mkdir ${TMP_FOLDER} && mv /tmp/${TARBALL_MODELS} ${TMP_FOLDER};
   echo \"* If /opt/jsk is a symlink, remove it (it'll be generated later within this script. *\";
   echo \"* Else if /opt/jsk is a directory, not a symlink, it's a folder containing OSS controller libraries. *\";
   echo \"* So move it aside with hrpsys version and the timestamp as a part of dir name (eg. /opt/jsk/315.2.0_20141214). *\";
-  test -L /opt/jsk && su -c 'rm -fr /opt/jsk' || { mkdir ${TMP_FOLDER}/$HRPSYS_PREV_INSTALLED && su -c 'mv /opt/jsk/* ${TMP_FOLDER}/$HRPSYS_PREV_INSTALLED'; echo 'ls /opt/jsk' && ls /opt/jsk && su -c 'mv ${TMP_FOLDER}/$HRPSYS_PREV_INSTALLED /opt/jsk'; };
+  test -L /opt/jsk && su -c 'rm -fr /opt/jsk' || mkdir ${TMP_FOLDER}/${HRPSYS_PREV_INSTALLED} && { su -c 'mv /opt/jsk/* ${TMP_FOLDER}/${HRPSYS_PREV_INSTALLED}' && echo 'ls /opt/jsk' && ls /opt/jsk && su -c 'mv ${TMP_FOLDER}/$HRPSYS_PREV_INSTALLED /opt/jsk'; } || { echo 'Failed to create ${TMP_FOLDER}/${HRPSYS_PREV_INSTALLED}'; exit 1; };
   echo \"* setup /opt/jsk/$HRPSYS_VER directory *\";
   cd /;
   su -c 'tar -xvzf ${TMP_FOLDER}/${TARBALL_MODELS}';
@@ -96,14 +98,14 @@ commands="
   su -c 'mkdir -p /opt/jsk/$HRPSYS_VER/var/log';
   echo \"* Note: Symbolic link from folders in /opt/jsk to the ones that contain specific hrpsys version. Sym-linking didn't work from the directory. *\";
   cd /opt/jsk;
-  su -c 'ln -sf /opt/jsk/$HRPSYS_VER/* .' && { echo '===== Done. /opt/jsk is now structured as follows: ====='; ls -l /opt/jsk; };
+  su -c 'ln -sf /opt/jsk/$HRPSYS_VER/* .' && { echo '===== Done. /opt/jsk is now structured as follows: ====='; ls -l /opt/jsk; rm -fr ${TMP_FOLDER}; };
   "
 
 echo "Necessary files are prepared on your host and now ready to run these commands inside the robot = $commands"
 read -p "execute installation command @ $HOSTNAME_QNX (y/n)? "
 if [ "$REPLY" == "y" ]; then
     echo "scp ${TMP_FOLDER}/${TARBALL_MODELS} into $HOSTNAME_QNX"
-    { scp ${TMP_FOLDER}/${TARBALL_MODELS} $USERNAME_QNX@$HOSTNAME_QNX:${TMP_FOLDER} && ssh $USERNAME_QNX@$HOSTNAME_QNX -t $commands 2>&1 | tee -a ${NAME_LOGFILE}; } || echo "Aborted."
+    { scp ${TMP_FOLDER}/${TARBALL_MODELS} $USERNAME_QNX@$HOSTNAME_QNX:/tmp && ssh $USERNAME_QNX@$HOSTNAME_QNX -t $commands 2>&1 | tee -a ${NAME_LOGFILE}; } || echo "Aborted."
     echo "====="
 else
     echo "DO NOT RUN"
