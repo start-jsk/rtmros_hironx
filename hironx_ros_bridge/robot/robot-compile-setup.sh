@@ -96,7 +96,7 @@ commands="
   su -c 'mkdir -p /opt/jsk/$HRPSYS_VER/var/log';
   echo \"* Note: Symbolic link from folders in /opt/jsk to the ones that contain specific hrpsys version. Sym-linking didn't work from the directory. *\";
   cd /opt/jsk;
-  su -c 'ln -sf /opt/jsk/$HRPSYS_VER/* .';
+  su -c 'ln -sf /opt/jsk/$HRPSYS_VER/* .' && { echo '===== Done. /opt/jsk is now structured as follows: ====='; ls -l /opt/jsk; };
   "
 
 echo "Necessary files are prepared on your host and now ready to run these commands inside the robot = $commands"
