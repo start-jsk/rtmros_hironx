@@ -43,24 +43,34 @@ commands="
   env;
   trap 'exit 1' ERR;
   set +x;
+
   echo '* If tork user already exists, exit. *';
   echo '* Else, create tork user, the one that can write into the folder where OSS gets installed. *';
-  test -e /home/$NEW_USER_QNX && echo '** Looks like the user $NEW_USER_QNX already exists. **' || { echo '** Looks like the user $NEW_USER_QNX does not exist. So let us create the user.\n   Keep using default values by pressing enter key, except for:\n\t(1) user name=$NEW_USER_QNX_CAPITAL\n\t(2) password=$NEW_USER_QNX.\n**' && su -c 'passwd $NEW_USER_QNX' || { echo 'Creation of user ${NEW_USER_QNX} failed. See the error message that should be printed.'; exit 1; }; };
+  test -e /home/$NEW_USER_QNX && echo '** Looks like the user $NEW_USER_QNX already exists. **' || { echo '** Looks like the user $NEW_USER_QNX does not exist. So let us create the user.\n   Keep using default values by pressing enter key, except for:\n\t* user name=$NEW_USER_QNX_CAPITAL\n\t* password=$NEW_USER_QNX.\n**' && su -c 'passwd $NEW_USER_QNX' || { echo 'Creation of user ${NEW_USER_QNX} failed. See the error message that should be printed.'; exit 1; }; };
 
   echo '* If oss group already exists, exit. Else, create one. If creation fails, abort.\n  NOTE: Group existence checking is not perfect. *';
-  egrep -i ${NEW_GROUPS_QNX} /etc/group | grep ${NEW_GROUP_ID_QNX} && echo 'Group ${NEW_GROUPS_QNX} already exists.' || { { echo 'Group ${NEW_GROUPS_QNX} not exist, create one.'; su -c 'echo 'oss:x:${NEW_GROUP_ID_QNX}:${NEW_USER_QNX}' >> /etc/group' && { echo 'Group added to /etc/group'; cat /etc/group; } || { echo 'Something happened while creating a new group. Check if groupd id ${NEW_GROUP_ID_QNX} is not taken in /etc/group. Abort.'; exit 1; }; }; };
+  egrep -i ${NEW_GROUPS_QNX} /etc/group | grep ${NEW_GROUP_ID_QNX} && echo '** Group ${NEW_GROUPS_QNX} already exists.' || { { echo 'Group ${NEW_GROUPS_QNX} not exist, create one.'; su -c 'echo 'oss:x:${NEW_GROUP_ID_QNX}:${NEW_USER_QNX}' >> /etc/group' && { echo 'Group added to /etc/group'; cat /etc/group; } || { echo 'Something happened while creating a new group. Check if groupd id ${NEW_GROUP_ID_QNX} is not taken in /etc/group. Abort.'; exit 1; }; }; };
 
   echo '* If OSS folder '$OSS_FOLDER' exists (which should exist), change its group to '${NEW_GROUPS_QNX}'. *';
   su -c 'chgrp -R ${NEW_GROUPS_QNX} $OSS_FOLDER' && ls -lh $OSS_FOLDER || { echo 'Folder $OSS_FOLDER was not be able to be assinged the group ${NEW_GROUPS_QNX}.'; exit 1; };
 
   echo '* Change group of ${TMP_FOLDER} folder to ${NEW_GROUPS_QNX}. *';
   su -c 'chgrp -R ${NEW_GROUPS_QNX} ${TMP_FOLDER}' && ls -lh / | grep tmp || { echo 'Change group failed.'; exit 1; };
+  echo '*****************************';
+  echo '*** Operation successful. ***';
+  echo '*****************************';
   "
+
+IS_SUCCESS=1
+LOGFOLDERNAME=/tmp/log_hironxo_install
+LOGFILENAME=${LOGFOLDERNAME}/hironxo-${hostname}_robot-create-user-`date +"%Y%m%d-%H%M%S"`.log
+mkdir ${LOGFOLDERNAME}
 
 read -p "Run the command @ $hostname (y/n)? "
 if [ "$REPLY" == "y" ]; then
-    ssh $rootuser_qnx@$hostname -t $commands 2>&1 | tee /tmp/robot-create-user-`date +"%Y%m%d-%H%M%S"`.log
+    ssh $rootuser_qnx@$hostname -t $commands 2>&1 | tee ${LOGFILENAME}
     echo "====="
+    IS_SUCCESS=0
 else
     echo "DO NOT RUN"
     echo "----"
@@ -68,3 +78,6 @@ else
     echo "----"
     echo "EXITTING.."
 fi
+
+if [ "${IS_SUCCESS}" -eq 1 ]; then
+    echo "Operation unsuccessful. Send back log file: ${LOGFILENAME}"
