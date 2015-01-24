@@ -35,6 +35,7 @@ TMP_FOLDER_SETUP=$TMP_FOLDER/Setup
 NAME_LOGFILE=${TMP_FOLDER}/robot-compile-setup_${HOSTNAME_QNX}_${DATE}.log
 TARBALL_OSS_COMMON=opt-jsk-base.tgz      # Base, common files of OSS controller
 TARBALL_MODELS=opt-jsk-base-model.tgz  # model files of both Hiro and NXO.
+OSS_FOLDER='/opt/jsk'
 
 URL_HIRONX_ZIPBALL=https://github.com/start-jsk/rtmros_hironx/archive/1.0.27.zip
 URL_NXO_ZIPBALL_STABLE=https://github.com/tork-a/rtmros_nextage/archive/0.2.14.zip
@@ -76,6 +77,7 @@ echo "Creating ${TMP_FOLDER_SETUP}/${TARBALL_MODELS}"; tar -C ${TMP_FOLDER_SETUP
 # Get the version of hrpsys that is working inside of QNX.
 scp $USERNAME_QNX@$HOSTNAME_QNX:/opt/jsk/lib/RobotHardware.so ${TMP_FOLDER_SETUP}
 HRPSYS_PREV_INSTALLED=$(strings ${TMP_FOLDER_SETUP}/RobotHardware.so | grep ^[0-9]*\\.[0-9]*\\.[0-9]*$)
+if [ -z ${HRPSYS_PREV_INSTALLED} ]; then HRPSYS_PREV_INSTALLED=315.1.7; fi # getting version above might fail with older hrpsys. Add dummy version. See https://github.com/fkanehiro/hrpsys-base/issues/423#issuecomment-71299696
 
 # Command that gets run on QNX. 
 # Assumption: NO /opt/jsk directory exists on QNX.
@@ -92,15 +94,16 @@ commands="
   trap 'exit 1' ERR;
   set +x;
 
-  mkdir -p ${TMP_FOLDER_SETUP} && { echo 'Foder ${TMP_FOLDER_SETUP} is created.'; mv /home/$USERNAME_QNX/${TARBALL_MODELS} ${TMP_FOLDER_SETUP}; } || echo \"Failed to create folder ${TMP_FOLDER_SETUP}\";
+  mkdir -p ${TMP_FOLDER_SETUP} && { echo '** Foder ${TMP_FOLDER_SETUP} is created.'; mv /home/$USERNAME_QNX/${TARBALL_MODELS} ${TMP_FOLDER_SETUP}; } || echo \"Failed to either create folder ${TMP_FOLDER_SETUP}, or mv failed 'mv /home/$USERNAME_QNX/${TARBALL_MODELS} ${TMP_FOLDER_SETUP}' \";
   echo \"* If /opt/jsk is a symlink, remove it (it'll be generated later within this script. *\";
   echo \"* Else if /opt/jsk is a directory, not a symlink, it's a folder containing OSS controller libraries. *\";
   echo \"* So move it aside with hrpsys version and the timestamp as a part of dir name (eg. /opt/jsk/315.2.0_20141214). *\";
-  test -L /opt/jsk && rm -fr /opt/jsk || mkdir -p ${TMP_FOLDER_SETUP}/${HRPSYS_PREV_INSTALLED} && { mv /opt/jsk/* ${TMP_FOLDER_SETUP}/${HRPSYS_PREV_INSTALLED} && { echo '* ls /opt/jsk'; ls /opt/jsk; mv ${TMP_FOLDER_SETUP}/$HRPSYS_PREV_INSTALLED /opt/jsk; } || { echo 'Move ${TMP_FOLDER_SETUP}/$HRPSYS_PREV_INSTALLED to /opt/jsk failed somehow. Abort'; exit 1; } || echo '** Something did not go well during moving previous version of hrpsys back to /opt/jsk. Make sure that the groups setting is oss in /opt/jsk/'; } || { echo '* Failed to create ${TMP_FOLDER_SETUP}/${HRPSYS_PREV_INSTALLED}'; exit 1; };
+  test -L /opt/jsk && rm -fr /opt/jsk || mkdir -p ${TMP_FOLDER_SETUP}/${HRPSYS_PREV_INSTALLED} && { mv /opt/jsk/* ${TMP_FOLDER_SETUP}/${HRPSYS_PREV_INSTALLED} && { echo '* ls /opt/jsk'; ls -l /opt/jsk && mv ${TMP_FOLDER_SETUP}/$HRPSYS_PREV_INSTALLED /opt/jsk || { echo 'ls /opt/jsk does not exist. Abort.'; exit 1; } } || { echo 'Move ${TMP_FOLDER_SETUP}/$HRPSYS_PREV_INSTALLED to /opt/jsk failed somehow. Abort'; exit 1; } || echo '** Something did not go well during moving previous version of hrpsys back to /opt/jsk. Make sure that the groups setting is oss in /opt/jsk/'; } || { echo '* Failed to create ${TMP_FOLDER_SETUP}/${HRPSYS_PREV_INSTALLED}'; exit 1; };
 
-  echo \"* setup /opt/jsk/$HRPSYS_VER directory *\"; cd /opt/jsk;
+  echo \"* setup /opt/jsk/$HRPSYS_VER directory *\"; cd /opt/jsk || { echo '** cd /opt/jsk failed. Abort.'; exit 1; };
   tar -xvzf ${TMP_FOLDER_SETUP}/${TARBALL_MODELS} || { echo \"** tar -xvzf ${TMP_FOLDER_SETUP}/${TARBALL_MODELS} failed.\"; exit 1; };
   echo \"* Create supplemental folder '/opt/jsk/$HRPSYS_VER/var/log' *\"; mkdir -p /opt/jsk/$HRPSYS_VER/var/log;
+  su -c 'chmod -R 775 ${OSS_FOLDER}' && { echo '* chmod ${OSS_FOLDER} successful.'; ls -lh ${OSS_FOLDER}; } || { echo '** chmod -R 775 ${OSS_FOLDER} failed. abort.'; exit 1; };
   echo '*****************************';
   echo '*** Operation successful. ***';
   echo '*****************************';
