@@ -10,7 +10,7 @@
         <statustip>Plugins related to specific robots.</statustip>
       </group>
       <group>
-        <label>Hironx</label>
+        <label>Hrpsys</label>
         <icon type="theme">folder</icon>
         <statustip>Plugins related to the hrpsys robot.</statustip>
       </group>
