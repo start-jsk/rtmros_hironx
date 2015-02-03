@@ -103,16 +103,13 @@ class ROS_Client(object):
             '/torso_controller/joint_trajectory_action', JointTrajectoryAction)
 
         self._aclient_larm.wait_for_server()
-        rospy.loginfo('ros_client; 1')
         self._goal_larm = JointTrajectoryGoal()
-        rospy.loginfo('ros_client; 2')
         self._goal_larm.trajectory.joint_names.append("LARM_JOINT0")
         self._goal_larm.trajectory.joint_names.append("LARM_JOINT1")
         self._goal_larm.trajectory.joint_names.append("LARM_JOINT2")
         self._goal_larm.trajectory.joint_names.append("LARM_JOINT3")
         self._goal_larm.trajectory.joint_names.append("LARM_JOINT4")
         self._goal_larm.trajectory.joint_names.append("LARM_JOINT5")
-        rospy.loginfo('ros_client; 3')
 
         self._aclient_rarm.wait_for_server()
         self._goal_rarm = JointTrajectoryGoal()
