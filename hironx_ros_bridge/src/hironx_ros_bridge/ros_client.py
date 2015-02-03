@@ -81,6 +81,9 @@ class ROS_Client(object):
             self._set_groupnames(jointgroups)
         self._init_action_clients()
 
+        if not rospy.has_param('robot_description_semantic'):
+            rospy.logwarn('Moveit is not started yet, if you want to use MoveIt!' + self._MSG_NO_MOVEGROUP_FOUND)
+            return
         self._movegr_larm = self._movegr_rarm = None
         try:
             self._init_moveit_commanders()
