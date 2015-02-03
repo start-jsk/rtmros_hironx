@@ -22,13 +22,13 @@ while [ -n "$1" ] ; do
     esac
 done
 
-TMPDIR=tmp.$$
+TMP_FOLDER=tmp.$$
 commands="
   . ~/.profile;
   env;
   trap 'RET=\$?; exit \${RET}' 0;
-  ls -al /tmp/$TMPDIR/robot-system-check-base;
-  /tmp/$TMPDIR/robot-system-check-base;
+  ls -al /tmp/$TMP_FOLDER/robot-system-check-base;
+  /tmp/$TMP_FOLDER/robot-system-check-base;
 "
 
 hostname=$1
@@ -48,10 +48,10 @@ getent ahosts $hostname || (echo -e "-- [ERROR] Could not find IP address/Host n
 
 # http://www.linuxquestions.org/questions/programming-9/multiple-scp-ssh-in-one-bash-script-836919/
 # http://unix.stackexchange.com/questions/14270/get-exit-status-of-process-thats-piped-to-another
-echo ";; Copying check script to $userid@$hostname:$TMPDIR"
+echo ";; Copying check script to $userid@$hostname:$TMP_FOLDER"
 ssh -NfM -o 'ControlPath=~/.ssh/%r@%h:%p.conn' "$userid@$hostname"
-ssh -o 'ControlPath=~/.ssh/%r@%h:%p.conn'  $userid@$hostname "mkdir -p /tmp/$TMPDIR"
-scp -o 'ControlPath=~/.ssh/%r@%h:%p.conn'  ./robot-system-check-base $userid@$hostname:/tmp/$TMPDIR/
+ssh -o 'ControlPath=~/.ssh/%r@%h:%p.conn'  $userid@$hostname "mkdir -p /tmp/$TMP_FOLDER"
+scp -o 'ControlPath=~/.ssh/%r@%h:%p.conn'  ./robot-system-check-base $userid@$hostname:/tmp/$TMP_FOLDER/
 echo ";; Execute check scripts"
 ssh -o 'ControlPath=~/.ssh/%r@%h:%p.conn'  $userid@$hostname -t $commands 2>&1 | tee robot-system-check-$hostname.log
 RESULT=${PIPESTATUS[0]}
