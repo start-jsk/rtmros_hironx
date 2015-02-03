@@ -69,11 +69,21 @@ class ROS_Client(object):
         '''
         @type jointgroups: [str]
         '''
+        # if we do not have ros running, return 
+        try:
+            rospy.get_master().getSystemState()
+        except Exception:
+            print('[ros_client] ros master is not running, so do not create ros client...')
+            return
+
         rospy.init_node('hironx_ros_client')
         if jointgroups:
             self._set_groupnames(jointgroups)
         self._init_action_clients()
 
+        if not rospy.has_param('robot_description_semantic'):
+            rospy.logwarn('Moveit is not started yet, if you want to use MoveIt!' + self._MSG_NO_MOVEGROUP_FOUND)
+            return
         self._movegr_larm = self._movegr_rarm = None
         try:
             self._init_moveit_commanders()
@@ -103,16 +113,13 @@ class ROS_Client(object):
             '/torso_controller/joint_trajectory_action', JointTrajectoryAction)
 
         self._aclient_larm.wait_for_server()
-        rospy.loginfo('ros_client; 1')
         self._goal_larm = JointTrajectoryGoal()
-        rospy.loginfo('ros_client; 2')
         self._goal_larm.trajectory.joint_names.append("LARM_JOINT0")
         self._goal_larm.trajectory.joint_names.append("LARM_JOINT1")
         self._goal_larm.trajectory.joint_names.append("LARM_JOINT2")
         self._goal_larm.trajectory.joint_names.append("LARM_JOINT3")
         self._goal_larm.trajectory.joint_names.append("LARM_JOINT4")
         self._goal_larm.trajectory.joint_names.append("LARM_JOINT5")
-        rospy.loginfo('ros_client; 3')
 
         self._aclient_rarm.wait_for_server()
         self._goal_rarm = JointTrajectoryGoal()
