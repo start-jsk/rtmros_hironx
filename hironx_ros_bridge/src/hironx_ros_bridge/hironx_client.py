@@ -124,6 +124,12 @@ class HIRONX(HrpsysConfigurator):
         HrpsysConfigurator.init(self, robotname=robotname, url=url)
         self.setSelfGroups()
         self.hrpsys_version = self.fk.ref.get_component_profile().version
+        # connect ic if needed
+        for sensor in ['lhsensor' , 'rhsensor']:
+            if self.ic and self.ic.port(sensor) and self.ic.port(sensor).get_port_profile() and \
+                    not self.ic.port(sensor).get_port_profile().connector_profiles :
+                connectPorts(self.rh.port(sensor), self.ic.port(sensor))
+
 
     def goOffPose(self, tm=7):
         '''
