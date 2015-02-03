@@ -19,12 +19,7 @@
   <url type="bugtracker">https://github.com/tork-a/hironx_tutorial/issues</url>
   
   <buildtool_depend>catkin</buildtool_depend>
-  <build_depend>geometry_msgs</build_depend>
-  <build_depend>leap_motion</build_depend>
-  <build_depend>moveit_commander</build_depend>
-  <build_depend>nextage_ros_bridge</build_depend>
-  <build_depend>rospy</build_depend>
-  <build_depend>tf</build_depend>
+
   <run_depend>hironx_ros_bridge</run_depend>
   <run_depend>geometry_msgs</run_depend>
   <run_depend>leap_motion</run_depend>
