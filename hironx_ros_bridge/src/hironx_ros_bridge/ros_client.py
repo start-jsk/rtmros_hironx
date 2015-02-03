@@ -69,6 +69,13 @@ class ROS_Client(object):
         '''
         @type jointgroups: [str]
         '''
+        # if we do not have ros running, return 
+        try:
+            rospy.get_master().getSystemState()
+        except Exception:
+            print('[ros_client] ros master is not running, so do not create ros client...')
+            return
+
         rospy.init_node('hironx_ros_client')
         if jointgroups:
             self._set_groupnames(jointgroups)
