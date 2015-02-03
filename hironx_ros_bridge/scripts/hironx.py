@@ -56,6 +56,7 @@ if __name__ == '__main__':
     parser.add_argument('--modelfile', help='robot model file nmae')
     parser.add_argument('--robot', help='robot modlule name (RobotHardware0 for real robot, Robot()')
     args, unknown = parser.parse_known_args()
+    unknown = [u for u in unknown if u[:2] != '__'] # filter out ros arguments
 
     if args.host:
         rtm.nshost = args.host
