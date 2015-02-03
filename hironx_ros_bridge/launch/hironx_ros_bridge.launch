@@ -45,5 +45,6 @@
     <arg name="corbaport" default="$(arg corbaport)" />
     <arg name="nameserver" value="$(arg nameserver)" />
     <arg name="SIMULATOR_NAME" value="$(arg SIMULATOR_NAME)" />
+    <arg name="COLLISIONDETECTOR_INSTANCE_NAME" default="CollisionDetector0" />
   </include>
 </launch>
