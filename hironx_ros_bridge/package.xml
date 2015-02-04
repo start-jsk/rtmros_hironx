@@ -43,6 +43,6 @@
   <!-- <test_depend>hrpsys_ros_bridge</test_depend> -->
 
   <export>
-
+    <rqt_gui plugin="${prefix}/rqt_plugin.xml"/>
   </export>
 </package>
