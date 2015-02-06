@@ -2,6 +2,16 @@
 Changelog for package hironx_ros_bridge
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Add rqt hironx_dashboard.
+* Now users can pecify a reference frame with set/get* methods of hrpsys_config.
+* Now hironx.py is called from launch file so that hrpsys init process can be completed only by launch file. Also if robot_description_semantic is not found, warn and do not start ros_client.
+* Better handling force sensor (See `#462 <https://github.com/fkanehiro/hrpsys-base/pull/462>`_).
+* Enormous improvement for QNX installer.
+* (doc) Add backup text files of tutorial (http://wiki.ros.org/rtmros_nextage/Tutorials).
+* Contributors: Kei Okada, Shunichi Nozawa, Daiki Maekawa, Isaac IY Saito
+
 1.0.27 (2014-11-04)
 -------------------
 * fix roobt-script-date.tgz name
