@@ -2,8 +2,8 @@
 Changelog for package rtmros_hironx
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.0.28 (2015-02-06)
+-------------------
 * Add rqt hironx_dashboard.
 * Now users can pecify a reference frame with set/get* methods of hrpsys_config.
 * Now hironx.py is called from launch file so that hrpsys init process can be completed only by launch file. Also if robot_description_semantic is not found, warn and do not start ros_client.
