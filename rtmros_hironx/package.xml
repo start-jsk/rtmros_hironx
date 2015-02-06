@@ -19,7 +19,6 @@
   <run_depend>hironx_calibration</run_depend>
   <run_depend>hironx_moveit_config</run_depend>
   <run_depend>hironx_ros_bridge</run_depend>
-  <run_depend>hironx_tutorial</run_depend>
 
   <export>
     <metapackage/>
