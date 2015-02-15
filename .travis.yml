@@ -52,8 +52,16 @@ install: # Use this to install any prerequisites or dependencies necessary to ru
   # Create workspace
   - mkdir -p ~/ros/ws_$REPOSITORY_NAME/src
   - cd ~/ros/ws_$REPOSITORY_NAME/src
+  - env
   - if [ $USE_DEB == false -o $BUILDER == rosbuild ]; then $ROSWS init .   ; fi
   - if [ $USE_DEB == false ]; then $ROSWS merge http://raw.github.com/$TRAVIS_REPO_SLUG/$TRAVIS_BRANCH/.rosinstall ; fi
+  ##
+  - if [ $USE_DEB == false ]; then $ROSWS rm rtm-ros-robotics/openrtm_common/rtshell_core; fi
+  - if [ $USE_DEB == false ]; then $ROSWS rm rtm-ros-robotics/openrtm_common/openrtm_aist_core; fi
+  - if [ $USE_DEB == false ]; then $ROSWS rm rtm-ros-robotics/openrtm_common/openhrp3; fi
+  - if [ $USE_DEB == false ]; then $ROSWS rm rtm-ros-robotics/openrtm_common/hrpsys; fi
+  - if [ $USE_DEB == false ]; then $ROSWS set rtm-ros-robotics/hrpsys https://github.com/fkanehiro/hrpsys-base --git -y; fi
+  ## due to install openhrp3 from deb
   ##
   - if [ $USE_DEB == false -o $BUILDER == rosbuild ]; then if [ $ROSWS == rosws ]; then $ROSWS merge /opt/ros/$ROS_DISTRO/.rosinstall; fi  ; fi
   - if [ $USE_DEB == false ]; then sed -i "s@^\(.*github.com/$TRAVIS_REPO_SLUG.*\)@#\1@" .rosinstall               ; fi # comment out current repo
