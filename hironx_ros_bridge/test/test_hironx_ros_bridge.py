@@ -207,7 +207,7 @@ class TestHiroROSBridge(unittest.TestCase):
 
     def test_tf_and_controller(self):
         goal = self.goal_RArm()
-        for av in [[  25,-139,-157,  45,   0,   0]]:
+        for av in [[-0.6, 0, -100, 15.2, 9.4, 3.2]]: #[  25,-139,-157,  45,   0,   0]]:
             goal = self.setup_Positions(goal, [av])
             self.rarm.send_goal_and_wait(goal)
             # check if tf and current link is same
@@ -222,7 +222,7 @@ class TestHiroROSBridge(unittest.TestCase):
             numpy.testing.assert_array_almost_equal(rot_tf, rot_c, decimal=2)
 
         goal = self.goal_LArm()
-        for av in [[  25,-139,-157,  45,   0,   0]]:
+        for av in [[0.6, 0, -100, -15.2, 9.4, -3.2]]: #[  25,-139,-157,  45,   0,   0]]:
             goal = self.setup_Positions(goal, [av])
             self.larm.send_goal_and_wait(goal)
             # check if tf and current link is same
