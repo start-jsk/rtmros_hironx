@@ -48,22 +48,12 @@ before_install: # Use this to prepare the system to install prerequisites or dep
   - sudo rosdep init
   - rosdep update; while [ $? != 0 ]; do sleep 1; rosdep update; done
   ##
-  ## install openhrp3 from deb
-  ##
-  - sudo apt-get install -qq -y ros-$ROS_DISTRO-openhrp3 ros-$ROS_DISTRO-openrtm-aist-python
-  ##
 install: # Use this to install any prerequisites or dependencies necessary to run your build
   # Create workspace
   - mkdir -p ~/ros/ws_$REPOSITORY_NAME/src
   - cd ~/ros/ws_$REPOSITORY_NAME/src
   - if [ $USE_DEB == false -o $BUILDER == rosbuild ]; then $ROSWS init .   ; fi
   - if [ $USE_DEB == false ]; then $ROSWS merge http://raw.github.com/$TRAVIS_REPO_SLUG/$TRAVIS_BRANCH/.rosinstall ; fi
-  ##
-  ## due to install openhrp3 from deb
-  ##
-  - if [ $USE_DEB == false ]; then $ROSWS rm rtm-ros-robotics/openrtm_common/openrtm_aist_core; fi
-  - if [ $USE_DEB == false ]; then $ROSWS rm rtm-ros-robotics/openrtm_common/openhrp3; fi
-  - if [ $USE_DEB == false ]; then $ROSWS rm rtm-ros-robotics/openrtm_common/rtshell_core; fi
   ##
   - if [ $USE_DEB == false -o $BUILDER == rosbuild ]; then if [ $ROSWS == rosws ]; then $ROSWS merge /opt/ros/$ROS_DISTRO/.rosinstall; fi  ; fi
   - if [ $USE_DEB == false ]; then sed -i "s@^\(.*github.com/$TRAVIS_REPO_SLUG.*\)@#\1@" .rosinstall               ; fi # comment out current repo
