@@ -33,7 +33,7 @@ before_install: # Use this to prepare the system to install prerequisites or dep
   # Define some config vars
   - export CI_SOURCE_PATH=$(pwd)
   - export REPOSITORY_NAME=${PWD##*/}
-  - export ROS_PARALLEL_JOBS="-j2 -l2"
+  - export ROS_PARALLEL_JOBS="-j1 -l1"
   - echo "Testing branch $TRAVIS_BRANCH of $REPOSITORY_NAME"
   - sudo sh -c 'echo "deb http://packages.ros.org/ros-shadow-fixed/ubuntu precise main" > /etc/apt/sources.list.d/ros-latest.list'
   - wget http://packages.ros.org/ros.key -O - | sudo apt-key add -
