@@ -8,7 +8,8 @@
    /home/k-okada/catkin_ws/ws_calibration/src/calibration/calibration_setup_helper/scripts/calibration_setup_helper.py /home/k-okada/ros/hydro/src/rtm-ros-robotics/rtmros_hironx/hironx_moveit_config/HiroNX.urdf --base-link CHEST_JOINT0_Link --arm-tip-link RARM_JOINT5_Link --head-tip-link HEAD_JOINT1_Link --arm-controller=rarm_controller/command --head-controller=head_controller/command --head-camera-frame camera_rgb_optical_frame --head-camera-joint head_to_kinect_joint
   </description>
   <author>Calibration Setup Helper</author>
-  <maintainer email="kei.okada@gmail.com">Calibration Setup Helper</maintainer>
+  <author>Kei Okada</author>
+  <maintainer email="dev@opensource-robotics.tokyo.jp">TORK</maintainer>
 
   <license>BSD</license>
   <url>http://ros.org/wiki/hironx_calibration</url>
