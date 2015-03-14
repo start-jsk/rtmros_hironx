@@ -101,6 +101,12 @@ class TestHiroIK(unittest.TestCase):
         ret = self.robot.setTargetPose("larm", [0.3255627368715471, 0.1823638733778268, 0.07462449717662004+0.2], [-3.0732189053889805, -1.5690225912054285, 3.0730289207320203], 5, "CHEST_JOINT0")
         self.assertTrue(ret)
 
+    def test_set_target_pose_relative_319(self): # https://github.com/start-jsk/rtmros_hironx/issues/319
+        self.robot.goInitial(tm=3)
+        ret = self.robot.setTargetPoseRelative('larm', 'LARM_JOINT5', dz=0.01, tm=0.5)
+        self.assertTrue(ret)
+        ret = self.robot.setTargetPoseRelative('larm', 'LARM_JOINT5', dz=0, tm=0.5)
+        self.assertTrue(ret)
 
 # for debug
 # $ python -m unittest test_hironx_ik.TestHiroIK.test_set_target_pose
