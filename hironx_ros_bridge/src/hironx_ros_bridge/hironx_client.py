@@ -650,10 +650,10 @@ class HIRONX(HrpsysConfigurator):
                 avoid_gain = avoid_gain,
                 reference_gain = reference_gain,
                 manipulability_limit = manipulability_limit))
-        self.ic_svc.startImpedanceController(arm)
+        return self.ic_svc.startImpedanceController(arm)
 
     def stopImpedance(self, arm):
-        self.ic_svc.stopImpedanceController(arm)
+        return self.ic_svc.stopImpedanceController(arm)
 
     def removeForceSensorOffset(self):
         self.rh_svc.removeForceSensorOffset()

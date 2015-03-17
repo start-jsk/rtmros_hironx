@@ -2504,6 +2504,24 @@ available at http://www.eclipse.org/legal/epl-v10.html
 					<axis_info axis="robot1_kinematics/axis_info_inst23"/>
 				</technique_common>
 			</motion>
+			<extra name="lhsensor" type="attach_sensor">
+				<technique profile="OpenRAVE">
+					<instance_sensor url="#sensor0"/>
+					<frame_origin link="kmodel1/link19">
+						<translate>0 0 0</translate>
+						<rotate>0.57737 0.57735 0.57735 2.0944</rotate>
+					</frame_origin>
+				</technique>
+			</extra>
+			<extra name="rhsensor" type="attach_sensor">
+				<technique profile="OpenRAVE">
+					<instance_sensor url="#sensor1"/>
+					<frame_origin link="kmodel1/link9">
+						<translate>0 0 0</translate>
+						<rotate>0.57737 0.57735 0.57735 2.0944</rotate>
+					</frame_origin>
+				</technique>
+			</extra>
 			<extra name="rightarm" type="manipulator">
 				<technique profile="OpenRAVE">
 					<frame_origin link="kmodel1/link1"/>
@@ -4006,6 +4024,15 @@ available at http://www.eclipse.org/legal/epl-v10.html
 		</instance_kinematics_scene>
 	</scene>
 	<extra id="sensors" type="library_sensors">
-		<technique profile="OpenRAVE"/>
+		<technique profile="OpenRAVE">
+			<sensor id="sensor0" sid="0" type="base_force6d">
+				<load_range_force>-1.000000 -1.000000 -1.000000</load_range_force>
+				<load_range_torque>-1.000000 -1.000000 -1.000000</load_range_torque>
+			</sensor>
+			<sensor id="sensor1" sid="1" type="base_force6d">
+				<load_range_force>-1.000000 -1.000000 -1.000000</load_range_force>
+				<load_range_torque>-1.000000 -1.000000 -1.000000</load_range_torque>
+			</sensor>
+		</technique>
 	</extra>
 </COLLADA>
