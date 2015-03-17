@@ -779,6 +779,14 @@ class TestHiro(unittest.TestCase):
         print "robot.getReferenceRPY(LARM_JOINT5:DEFAULT)", ref_rpyl1
         print "robot.getReferenceRPY(LARM_JOINT5:WAIST)", ref_rpyl2
 
+    def test_impedance_controller(self): # https://github.com/start-jsk/rtmros_hironx/issues/337
+        # although this is not stable rtc, we'll test them
+        self.robot.goInitial(tm=1)
+        ret = self.robot.startImpedance('rarm') # this returns ret, this is bug
+        ret = self.robot.stopImpedance('rarm')
+        self.assertTrue(True) # this is dummy, current simulate hiro does not have force sensor so it retunrs None
+
+
 #unittest.main()
 if __name__ == '__main__':
     import rostest
