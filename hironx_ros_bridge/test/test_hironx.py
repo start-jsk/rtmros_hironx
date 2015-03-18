@@ -779,7 +779,41 @@ class TestHiro(unittest.TestCase):
         print "robot.getReferenceRPY(LARM_JOINT5:DEFAULT)", ref_rpyl1
         print "robot.getReferenceRPY(LARM_JOINT5:WAIST)", ref_rpyl2
 
-#unittest.main()
+    # https://github.com/fkanehiro/hrpsys-base/blob/master/sample/SampleRobot/samplerobot_impedance_controller.py.in
+    def test_impedance_controller(self): # https://github.com/start-jsk/rtmros_hironx/issues/337
+        # although this is not stable rtc, we'll test them
+        self.robot.goInitial(tm=1)
+        ret = self.robot.startImpedance('rarm') # this returns ret, this is bug
+        #self.assertTrue(ret)
+        ret = self.robot.seq_svc.setWrenches([0,0,0,0,0,0,
+                                              10,0,0,0,0,0,], 2.0);
+        #self.assertTrue(ret)
+        self.robot.seq_svc.waitInterpolation();
+        ret = self.robot.seq_svc.setWrenches([0,0,0,0,0,0,
+                                              0,0,0,0,0,0,], 2.0);
+        #self.assertTrue(ret)
+        self.robot.seq_svc.waitInterpolation();
+        ret = self.robot.seq_svc.setWrenches([0,0,0,0,0,0,
+                                              0,10,0,0,0,0,], 2.0);
+        #self.assertTrue(ret)
+        self.robot.seq_svc.waitInterpolation();
+        ret = self.robot.seq_svc.setWrenches([0,0,0,0,0,0,
+                                              0,0,0,0,0,0,], 2.0);
+        #self.assertTrue(ret)
+        self.robot.seq_svc.waitInterpolation();
+        ret = self.robot.seq_svc.setWrenches([0,0,0,0,0,0,
+                                              0,0,10,0,0,0,], 2.0);
+        #self.assertTrue(ret)
+        self.robot.seq_svc.waitInterpolation();
+        #self.assertTrue(ret)
+        ret = self.robot.stopImpedance('rarm')
+        #self.assertTrue(ret)
+        self.assertTrue(True) # this is dummy, current simulate hiro does not have force sensor so it retunrs None
+
+
+# for debug
+# $ python -m unittest test_hironx.TestHiro.test_impedance_controller
+#
 if __name__ == '__main__':
     import rostest
     rostest.rosrun(PKG, 'test_hronx', TestHiro) 
