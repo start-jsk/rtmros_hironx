@@ -781,6 +781,9 @@ class TestHiro(unittest.TestCase):
 
     # https://github.com/fkanehiro/hrpsys-base/blob/master/sample/SampleRobot/samplerobot_impedance_controller.py.in
     def test_impedance_controller(self): # https://github.com/start-jsk/rtmros_hironx/issues/337
+        if not self.robot.ic or self.robot.ic.ref.get_component_profile().version < '315.3.0':
+            self.assertTrue(True)
+            return True
         # although this is not stable rtc, we'll test them
         self.robot.goInitial(tm=1)
         ret = self.robot.startImpedance('rarm') # this returns ret, this is bug
