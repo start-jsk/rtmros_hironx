@@ -12,8 +12,15 @@
     <arg name="corbaport" value="$(arg corbaport)" />
   </include>
 
-  <test type="test_hironx.py" pkg="hironx_ros_bridge" test-name="test_hironx" time-limit="1000"
+  <test type="test_hironx_fullbody.py" pkg="hironx_ros_bridge" test-name="test_hironx_fullbody" time-limit="1000" retry="2"
         args="-ORBInitRef NameService=corbaloc:iiop:localhost:2809/NameService" />
+  <test type="test_hironx_limb.py" pkg="hironx_ros_bridge" test-name="test_hironx_limb" time-limit="1000" retry="2"
+        args="-ORBInitRef NameService=corbaloc:iiop:localhost:2809/NameService" />
+  <test type="test_hironx_target.py" pkg="hironx_ros_bridge" test-name="test_hironx_target" time-limit="1000" retry="2"
+        args="-ORBInitRef NameService=corbaloc:iiop:localhost:2809/NameService" />
+  <test type="test_hironx_controller.py" pkg="hironx_ros_bridge" test-name="test_hironx_controller" time-limit="1000" retry="2"
+        args="-ORBInitRef NameService=corbaloc:iiop:localhost:2809/NameService" />
+
   <test type="test_hironx_ik.py" pkg="hironx_ros_bridge" test-name="test_hironx_ik" time-limit="3000" 
         args="-ORBInitRef NameService=corbaloc:iiop:localhost:2809/NameService" />
 </launch>
