@@ -15,7 +15,11 @@
   <param name="joint_states_test/hzerror" value="10" />
   <param name="joint_states_test/test_duration" value="5.0" />
 
-  <!-- test test-name="joint_states_test" pkg="rostest" type="hztest" name="joint_states_test" / -->
-  <test type="test_hironx_ros_bridge.py" pkg="hironx_ros_bridge" test-name="test_hironx_ros_bridge" time-limit="1000" retry="2"
+  <test test-name="joint_states_test" pkg="rostest" type="hztest" name="joint_states_test" />
+  <test type="test_hironx_ros_bridge_pose.py" pkg="hironx_ros_bridge" test-name="test_hironx_ros_bridge_pose" time-limit="1000" retry="2"
+        args="-ORBInitRef NameService=corbaloc:iiop:localhost:2809/NameService" />
+  <test type="test_hironx_ros_bridge_send.py" pkg="hironx_ros_bridge" test-name="test_hironx_ros_bridge_send" time-limit="1000" retry="2"
+        args="-ORBInitRef NameService=corbaloc:iiop:localhost:2809/NameService" />
+  <test type="test_hironx_ros_bridge_controller.py" pkg="hironx_ros_bridge" test-name="test_hironx_ros_bridge_controller" time-limit="1000" retry="2"
         args="-ORBInitRef NameService=corbaloc:iiop:localhost:2809/NameService" />
 </launch>
