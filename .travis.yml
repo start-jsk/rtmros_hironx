@@ -12,6 +12,7 @@ compiler:
 env:
   - ROS_DISTRO=hydro  ROSWS=wstool BUILDER=catkin    USE_DEB=true
   - ROS_DISTRO=hydro  ROSWS=wstool BUILDER=catkin    USE_DEB=false
+  - TEST_TYPE=work_with_315_1_10
 matrix:
   allow_failures:
 notifications:
@@ -23,6 +24,13 @@ notifications:
     on_failure: always #[always|never|change] # default: always
 before_install: # Use this to prepare the system to install prerequisites or dependencies
   # Define some config vars
+  - if [ "$TEST_TYPE" == work_with_315_1_10 ]; then mkdir -p ~/catkin_ws/src; ln -sf `pwd` ~/catkin_ws/src/rtmros_hironx; fi
+  - if [ "$TEST_TYPE" == work_with_315_1_10 ]; then cd ~/; git clone http://github.com/fkanehiro/hrpsys-base --depth 1; cd hrpsys-base  ; fi
+  - if [ "$TEST_TYPE" == work_with_315_1_10 ]; then wget https://raw.githubusercontent.com/k-okada/hrpsys-base/fix_for_travis/.travis.sh -O work_with_315_1_10_test.sh; fi
+  - if [ "$TEST_TYPE" == work_with_315_1_10 ]; then sed -i 's@wstool set rtmros_common http://github.com/start-jsk/rtmros_common --git -y@@' work_with_315_1_10_test.sh; fi
+  - if [ "$TEST_TYPE" == work_with_315_1_10 ]; then sed -i 's@wstool set rtmros_hironx http://github.com/start-jsk/rtmros_hironx --git -y@@' work_with_315_1_10_test.sh; fi
+  - if [ "$TEST_TYPE" == work_with_315_1_10 ]; then sed -i 's@wstool set rtmros_nextage http://github.com/tork-a/rtmros_nextage --git -y@@' work_with_315_1_10_test.sh; fi
+  - if [ "$TEST_TYPE" == work_with_315_1_10 ]; then TEST_TYPE=work_with_315_1_10  TEST_PACKAGE=hironx-ros-bridge bash ./work_with_315_1_10_test.sh; exit $?  ; fi
   - export CI_SOURCE_PATH=$(pwd)
   - export REPOSITORY_NAME=${PWD##*/}
   - export ROS_PARALLEL_JOBS="-j1 -l1"
