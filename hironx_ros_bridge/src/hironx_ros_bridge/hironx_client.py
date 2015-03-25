@@ -200,15 +200,14 @@ class HIRONX(HrpsysConfigurator):
             ['log', "DataLogger"],
             ]
         if hasattr(self, 'rmfo'):
-            try:
-                self.ms.create("RemoveForceSensorLinkOffset")
+            self.ms.load("RemoveForceSensorLinkOffset")
+            self.ms.load("AbsoluteForceSensor")
+            if "RemoveForceSensorLinkOffset" in self.ms.get_factory_names():
                 rtclist.append(['rmfo', "RemoveForceSensorLinkOffset"])
-            except:
-                try:
-                    self.ms.create("AbsoluteForceSensor")
-                    rtclist.append(['rmfo', "AbsoluteForceSensor"])
-                except:
-                    print "Component rmfo is not loadable."
+            elif "AbsoluteForceSensor" in self.ms.get_factory_names():
+                rtclist.append(['rmfo', "AbsoluteForceSensor"])
+            else:
+                print "Component rmfo is not loadable."
         return rtclist
 
     # hand interface
