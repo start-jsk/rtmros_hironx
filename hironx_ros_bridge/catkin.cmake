@@ -106,6 +106,9 @@ install(DIRECTORY include/
 
 add_rostest(test/test-hironx.test)
 add_rostest(test/test-hironx-ros-bridge.test)
+add_rostest(test/test-hironx-ros-bridge-send.test)
+add_rostest(test/test-hironx-ros-bridge-pose.test)
+add_rostest(test/test-hironx-ros-bridge-controller.test)
 
 roslint_python(scripts/hironx.py src/hironx_ros_bridge/hironx_client.py src/hironx_ros_bridge/ros_client.py src/hironx_ros_bridge/constant.py)
 roslint_cpp()
