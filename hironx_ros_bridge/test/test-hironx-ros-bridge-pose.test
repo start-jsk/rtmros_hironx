@@ -10,11 +10,6 @@
     <arg name="corbaport" value="$(arg corbaport)" />
   </include>
 
-  <param name="joint_states_test/topic" value="/joint_states" />
-  <param name="joint_states_test/hz" value="200" />
-  <param name="joint_states_test/hzerror" value="10" />
-  <param name="joint_states_test/test_duration" value="5.0" />
-
-  <test test-name="joint_states_test" pkg="rostest" type="hztest" name="joint_states_test" />
-
+  <test type="test_hironx_ros_bridge_pose.py" pkg="hironx_ros_bridge" test-name="test_hironx_ros_bridge_pose" time-limit="400" retry="2"
+        args="-ORBInitRef NameService=corbaloc:iiop:localhost:2809/NameService" />
 </launch>
