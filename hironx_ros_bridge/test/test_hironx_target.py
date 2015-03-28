@@ -239,6 +239,73 @@ class TestHiroTarget(TestHiro):
         print "robot.getReferenceRPY(LARM_JOINT5:DEFAULT)", ref_rpyl1
         print "robot.getReferenceRPY(LARM_JOINT5:WAIST)", ref_rpyl2
 
+    def test_setTargetPoseRelative_rpy(self):
+        '''
+        Test if with setTargetPoseRelative with RPY values the arm pose becomes as intended.
+        Contributed by Naoki Fuse (Daido Steel).
+        '''
+
+        print "goInitial", self.robot.getCurrentRPY('RARM_JOINT5'), self.robot.getCurrentRPY('LARM_JOINT5')
+        r_eef = 'RARM_JOINT5'
+        l_eef = 'LARM_JOINT5'
+
+        init_l = (-0.1790, -1.57002, 0.17790)
+        init_r = (-0.1790, -1.57002, 0.17790)
+        roll_l_post = (1.3913, -1.5700, 0.1779)
+        roll_r_post = (1.3913, -1.5700, 0.1779)
+        pitch_l_post = (-0.1794, -0.7854, 0.1782)
+        pitch_r_post = (0.1794, -0.7854, -0.1782)
+        yaw_l_post = (-0.17944, -1.57002, 1.74874)  # Not what's expected. We need the right values 
+        yaw_r_post = (0.17944, -1.57002, 1.39232)   # once https://github.com/start-jsk/rtmros_hironx/issues/335 gets fixed
+
+        # roll motion
+        self.robot.goInitial(2)
+        for i in range(0, 5):  # Repeat the same movement 5 times
+        	self.robot.setTargetPoseRelative('rarm', r_eef, dr=math.pi/2, tm=0.5, wait=False)
+        	self.robot.setTargetPoseRelative('larm', l_eef, dr=math.pi/2, tm=0.5, wait=True)
+        	roll_l_post_now = self.robot.getCurrentRPY(l_eef)
+        	roll_r_post_now = self.robot.getCurrentRPY(r_eef)
+                numpy.testing.assert_array_almost_equal(numpy.array(roll_l_post),numpy.array(roll_l_post_now), decimal=3)
+                numpy.testing.assert_array_almost_equal(numpy.array(roll_r_post),numpy.array(roll_r_post_now), decimal=3)
+        	self.robot.setTargetPoseRelative('rarm', r_eef, dr=-math.pi/2, dw=0, tm=0.5, wait=False)
+        	self.robot.setTargetPoseRelative('larm', l_eef, dr=-math.pi/2, dw=0, tm=0.5, wait=True)
+        	init_l_now = self.robot.getCurrentRPY(l_eef)
+        	init_r_now = self.robot.getCurrentRPY(r_eef)
+                numpy.testing.assert_array_almost_equal(numpy.array(init_l),numpy.array(init_l_now), decimal=3)
+                numpy.testing.assert_array_almost_equal(numpy.array(init_r),numpy.array(init_r_now), decimal=3)
+
+        # pitch motion
+        self.robot.goInitial(2)
+        for i in range(0, 5):
+        	self.robot.setTargetPoseRelative('rarm', r_eef, dp=math.pi/4, tm=0.5, wait=False)
+        	self.robot.setTargetPoseRelative('larm', l_eef, dp=math.pi/4, tm=0.5, wait=True)
+        	pitch_l_post_now = self.robot.getCurrentRPY(l_eef)
+        	pitch_r_post_now = self.robot.getCurrentRPY(r_eef)
+                numpy.testing.assert_array_almost_equal(numpy.array(pitch_l_post),numpy.array(pitch_l_post_now), decimal=3)
+                numpy.testing.assert_array_almost_equal(numpy.array(pitch_r_post),numpy.array(pitch_r_post_now), decimal=3)
+        	self.robot.setTargetPoseRelative('rarm', r_eef, dr=-math.pi/4, dw=0, tm=0.5, wait=False)
+        	self.robot.setTargetPoseRelative('larm', l_eef, dr=-math.pi/4, dw=0, tm=0.5, wait=True)
+        	init_l_now = self.robot.getCurrentRPY(l_eef)
+        	init_r_now = self.robot.getCurrentRPY(r_eef)
+                numpy.testing.assert_array_almost_equal(numpy.array(init_l),numpy.array(init_l_now), decimal=3)
+                numpy.testing.assert_array_almost_equal(numpy.array(init_r),numpy.array(init_r_now), decimal=3)
+
+        # yaw motion
+        self.robot.goInitial(2)
+        for i in range(0, 5):
+        	self.robot.setTargetPoseRelative('rarm', r_eef, dp=math.pi/4, tm=0.5, wait=False)
+        	self.robot.setTargetPoseRelative('larm', l_eef, dp=math.pi/4, tm=0.5, wait=True)
+        	yaw_l_post_now = self.robot.getCurrentRPY(l_eef)
+        	yaw_r_post_now = self.robot.getCurrentRPY(r_eef)
+                numpy.testing.assert_array_almost_equal(numpy.array(yaw_l_post),numpy.array(yaw_l_post_now), decimal=3)
+                numpy.testing.assert_array_almost_equal(numpy.array(yaw_r_post),numpy.array(yaw_r_post_now), decimal=3)
+        	self.robot.setTargetPoseRelative('rarm', r_eef, dr=-math.pi/4, dw=0, tm=0.5, wait=False)
+        	self.robot.setTargetPoseRelative('larm', l_eef, dr=-math.pi/4, dw=0, tm=0.5, wait=True)
+        	init_l_now = self.robot.getCurrentRPY(l_eef)
+        	init_r_now = self.robot.getCurrentRPY(r_eef)
+                numpy.testing.assert_array_almost_equal(numpy.array(init_l),numpy.array(init_l_now), decimal=3)
+                numpy.testing.assert_array_almost_equal(numpy.array(init_r),numpy.array(init_r_now), decimal=3)
+
 if __name__ == '__main__':
     import rostest
     rostest.rosrun(PKG, 'test_hronx_target', TestHiroTarget) 
