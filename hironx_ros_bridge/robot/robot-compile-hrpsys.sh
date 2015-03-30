@@ -64,6 +64,7 @@ commands="
   cd /tmp;
   echo \"* make tarball *\";
   tar -czf hrpsys-${HRPSYS_VERSION}-qnx-${DATE}.tgz ./hrpsys-source-${HRPSYS_VERSION}-${DATE}/;
+  rm -fr ./hrpsys-source-${HRPSYS_VERSION}-${DATE}/;
   "
 
 echo "comands = $commands"
