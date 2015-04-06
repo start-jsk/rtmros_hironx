@@ -2,8 +2,8 @@
 Changelog for package hironx_ros_bridge
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.0.29 (2015-04-06)
+-------------------
 * Feature
 
  * [robot-compile-hrpsys.sh] Optimization (remove downloaded source file, this consumes hdd spaces)
