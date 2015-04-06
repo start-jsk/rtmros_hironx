@@ -2,6 +2,29 @@
 Changelog for package hironx_ros_bridge
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Feature
+
+ * [robot-compile-hrpsys.sh] Optimization (remove downloaded source file, this consumes hdd spaces)
+ * [kawada-hironx.dae, test_hironx.py] add forcesensor in dae model and update test_impedance_Controller
+
+* Fix
+
+ * [hironx_client.py] Enable to work on older hrpsys (possible fix to `#337 <https://github.com/start-jsk/rtmros_hironx/issues/337>`_)
+ * Let the build of JR3 driver pass (by reverting unnecessary lint-ization (fix `#271 <https://github.com/start-jsk/rtmros_hironx/issues/271>`_))
+ * [hironx_ros_bridge] hironx_ros_bridge.launch: collision detector use component, not plugin so instance name is not co, but CollisionDetector
+
+* UnitTest
+ * [*.test] short time-limit because travis raise error if we do get any output for 10 min
+ * [hironx_ros_bridge/test] Modularize test cases
+ * [test-hironx-ros-bridge.test] add retry=2 for test_hironx_ros_bridge.py
+ * [test_hironx.py] Check version of hrpsys for impedance_controller
+ * [test_hironx_ik.py] add test code to check `#319 <https://github.com/start-jsk/rtmros_hironx/issues/319>`_
+ * relax test code, that `#287 <https://github.com/start-jsk/rtmros_hironx/issues/287>`_ is not closed
+
+* Contributors: Kei Okada, Isaac IY Saito
+
 1.0.28 (2015-02-06)
 -------------------
 * Add rqt hironx_dashboard.
