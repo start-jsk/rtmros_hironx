@@ -30,6 +30,7 @@ before_install: # Use this to prepare the system to install prerequisites or dep
   - if [ "$TEST_TYPE" == work_with_315_1_10 ]; then sed -i 's@wstool set rtmros_common http://github.com/start-jsk/rtmros_common --git -y@@' work_with_315_1_10_test.sh; fi
   - if [ "$TEST_TYPE" == work_with_315_1_10 ]; then sed -i 's@wstool set rtmros_hironx http://github.com/start-jsk/rtmros_hironx --git -y@@' work_with_315_1_10_test.sh; fi
   - if [ "$TEST_TYPE" == work_with_315_1_10 ]; then sed -i 's@wstool set rtmros_nextage http://github.com/tork-a/rtmros_nextage --git -y@@' work_with_315_1_10_test.sh; fi
+  - if [ "$TEST_TYPE" == work_with_315_1_10 ]; then sed -i 's@sudo dpkg -r --force-depends ros-hydro-hrpsys@@' work_with_315_1_10_test.sh; fi
   - if [ "$TEST_TYPE" == work_with_315_1_10 ]; then TEST_TYPE=work_with_315_1_10  TEST_PACKAGE=hironx-ros-bridge bash ./work_with_315_1_10_test.sh; exit $?  ; fi
   - export CI_SOURCE_PATH=$(pwd)
   - export REPOSITORY_NAME=${PWD##*/}
