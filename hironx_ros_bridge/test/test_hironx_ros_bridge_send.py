@@ -33,6 +33,7 @@ class TestHiroROSBridgeSend(TestHiroROSBridge):
 
     def test_send_goal_and_nowait(self):
         clear_time = [4.5, 4.0, 3.5, 3.0, 2.5, 2.0, 1.5, 1.0]
+        clear_time = [4.5, 3.0, 1.0]
         for i in range(len(clear_time)):
             self.rarm.send_goal(self.setup_Positions(self.goal_RArm(), [[-0.6, 0, -120, 15.2, 9.4, 3.2]], 5))
             self.rarm.wait_for_result()
@@ -60,6 +61,7 @@ class TestHiroROSBridgeSend(TestHiroROSBridge):
     def test_send_goal_and_clear(self):
         clear_time = [1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5]
         clear_time = [4.5, 4.0, 3.5, 3.0, 2.5, 2.0, 1.5, 1.0]
+        clear_time = [4.5, 3.0, 1.0]
         for i in range(len(clear_time)):
             self.rarm.send_goal(self.setup_Positions(self.goal_RArm(), [[-0.6, 0, -100, 15.2, 9.4, 3.2]], 5))
             self.rarm.wait_for_result()
