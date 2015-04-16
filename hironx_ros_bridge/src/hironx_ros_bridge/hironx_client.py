@@ -744,19 +744,59 @@ class HIRONX(HrpsysConfigurator):
                 manipulability_limit = manipulability_limit))
         return self.ic_svc.startImpedanceController(arm)
 
+    def startImpedance_315_3(self, arm,
+                       M_p = 100.0,
+                       D_p = 100.0,
+                       K_p = 100.0,
+                       M_r = 100.0,
+                       D_r = 2000.0,
+                       K_r = 2000.0,
+                       force_gain = [1, 1, 1],
+                       moment_gain = [0, 0, 0],
+                       sr_gain = 1.0,
+                       avoid_gain = 0.0,
+                       reference_gain = 0.0,
+                       manipulability_limit = 0.1,
+                       controller_mode = OpenHRP.ImpedanceControllerService.MODE_IMP):
+        self.ic_svc.setImpedanceControllerParam(
+            arm,
+            OpenHRP.ImpedanceControllerService.impedanceParam(
+                M_p = M_p,
+                D_p = D_p,
+                K_p = K_p,
+                M_r = M_r,
+                D_r = D_r,
+                K_r = K_r,
+                force_gain = force_gain,
+                moment_gain = moment_gain,
+                sr_gain = sr_gain,
+                avoid_gain = avoid_gain,
+                reference_gain = reference_gain,
+                manipulability_limit = manipulability_limit,
+                controller_mode = controller_mode))
+        return self.ic_svc.startImpedanceController(arm)
+
     def stopImpedance_315_2(self, arm):
+        return self.ic_svc.stopImpedanceController(arm)
+
+    def stopImpedance_315_3(self, arm):
         return self.ic_svc.stopImpedanceController(arm)
 
     def startImpedance(self, arm, **kwargs):
         if self.hrpsys_version < '315.2.0':
             self.startImpedance_315_1(arm, **kwargs)
-        else:
+        elif self.hrpsys_version < '315.3.0':
             self.startImpedance_315_2(arm, **kwargs)
+        else:
+            self.startImpedance_315_3(arm, **kwargs)
+
     def stopImpedance(self, arm):
         if self.hrpsys_version < '315.2.0':
             self.stopImpedance_315_1(arm)
-        else:
+        elif self.hrpsys_version < '315.3.0':
             self.stopImpedance_315_2(arm)
+        else:
+            self.stopImpedance_315_3(arm)
 
     def removeForceSensorOffset(self):
         self.rh_svc.removeForceSensorOffset()
