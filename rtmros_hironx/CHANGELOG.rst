@@ -2,6 +2,9 @@
 Changelog for package rtmros_hironx
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+
 1.0.29 (2015-04-06)
 -------------------
 * Feature

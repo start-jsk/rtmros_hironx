@@ -2,6 +2,14 @@
 Changelog for package hironx_ros_bridge
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* [hironx_client.py] fix due to API changes https://github.com/fkanehiro/hrpsys-base/pull/555/files
+* [test/test-hirionx-ros-bridge-send-pose.launch] remove some of test sequence to pass travis
+* [test/test-hirionx-ros-bridge-send-test.launch] remove some of test sequence to pass travis
+* (robot) Add OSS log files on QNX fetch script.
+* Contributors: Isaac IY Saito, Kei Okada
+
 1.0.29 (2015-04-06)
 -------------------
 * Feature
