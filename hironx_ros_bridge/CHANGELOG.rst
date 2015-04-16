@@ -2,8 +2,8 @@
 Changelog for package hironx_ros_bridge
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.0.30 (2015-04-16)
+-------------------
 * [hironx_client.py] fix due to API changes https://github.com/fkanehiro/hrpsys-base/pull/555/files
 * [test/test-hirionx-ros-bridge-send-pose.launch] remove some of test sequence to pass travis
 * [test/test-hirionx-ros-bridge-send-test.launch] remove some of test sequence to pass travis
