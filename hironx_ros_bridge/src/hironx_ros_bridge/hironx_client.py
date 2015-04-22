@@ -776,6 +776,38 @@ class HIRONX(HrpsysConfigurator):
                 controller_mode = controller_mode))
         return self.ic_svc.startImpedanceController(arm)
 
+    def startImpedance_315_3(self, arm,
+                       M_p = 100.0,
+                       D_p = 100.0,
+                       K_p = 100.0,
+                       M_r = 100.0,
+                       D_r = 2000.0,
+                       K_r = 2000.0,
+                       force_gain = [1, 1, 1],
+                       moment_gain = [0, 0, 0],
+                       sr_gain = 1.0,
+                       avoid_gain = 0.0,
+                       reference_gain = 0.0,
+                       manipulability_limit = 0.1):
+        r, p = self.ic_svc.getImpedanceControllerParam(arm)
+        if not r:
+            print('{}, Failt to getImpedanceControllerParam({})'.format(self.configurator_name, arm))
+            return False
+        if M_p != None: p.M_p = M_p
+        if D_p != None: p.M_p = D_p
+        if K_p != None: p.M_p = K_p
+        if M_r != None: p.M_r = M_r
+        if D_r != None: p.M_r = D_r
+        if K_r != None: p.M_r = K_r
+        if force_gain != None: p.force_gain = force_gain
+        if moment_gain != None: p.moment_gain = moment_gain
+        if sr_gain != None: p.sr_gain = sr_gain
+        if avoid_gain != None: p.avoid_gain = avoid_gain
+        if reference_gain != None: p.reference_gain = reference_gain
+        if manipulability_limit != None: p.manipulability_limit = manipulability_limit
+        self.ic_svc.setImpedanceControllerParam(arm, p)
+        return self.ic_svc.startImpedanceController(arm)
+
     def stopImpedance_315_2(self, arm):
         return self.ic_svc.stopImpedanceController(arm)
 
