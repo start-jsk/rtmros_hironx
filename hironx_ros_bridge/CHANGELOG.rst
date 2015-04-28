@@ -2,8 +2,8 @@
 Changelog for package hironx_ros_bridge
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.0.31 (2015-04-28)
+-------------------
 * (Improvement) [hironx_client.py] need to support newer version of idl (https://github.com/fkanehiro/hrpsys-base/pull/580)
 * Contributors: Kei Okada
 
