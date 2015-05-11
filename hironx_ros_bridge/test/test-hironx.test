@@ -23,4 +23,6 @@
 
   <test type="test_hironx_ik.py" pkg="hironx_ros_bridge" test-name="test_hironx_ik" time-limit="200" 
         args="-ORBInitRef NameService=corbaloc:iiop:localhost:2809/NameService" />
+  <test type="test_hironx_ik_noinit.py" pkg="hironx_ros_bridge" test-name="test_hironx_ik_noinit" time-limit="3000"
+        args="-ORBInitRef NameService=corbaloc:iiop:localhost:2809/NameService" />
 </launch>
