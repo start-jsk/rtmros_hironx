@@ -1,5 +1,6 @@
-Launch files
-=============
+
+Launch files, testus
+==========================
 
 The following two launch files are the main components for this robot. Users usually don't launch neither of them directly (instead, use the ones explained later).
 
@@ -12,12 +13,12 @@ As mentioned, users don't directly launch neither of above; launch one of the fo
  * `hironx_ros_bridge_simulation.launch` for the simulation.
 
 Unit tests
-============
+------------
 
 There are multiple usecases for tests. So far with this package we aim two of them: stress tests and acceptance tests. They are separated into different `rostest` files (`.test`). Most of the files relevant to testing are available in `/test` folder. 
 
 Stress tests
-----------------
+###############
 
 Test cases in these suites are relatively aggressive.
 Similar to the `.launch`, `rostest` (`.test`) files are separated per `ROS` and `hrpsys` as follows:
@@ -28,8 +29,12 @@ Similar to the `.launch`, `rostest` (`.test`) files are separated per `ROS` and 
 NOTE: these stress tests are currently intended for the simulation only (see the reasoning[1_]. Run on the **REAL ROBOT WITH EXTRA CARE**.
 
 Acceptance tests
-------------------
+##############################
 
 (TBD)
+
+Config files
+==============
+`hironx_ros_bridge/conf/*.in` files are the template files that are used during compile process, and the generated files will be used by `hrpsys`. ROS won't take use of those.
 
 .. _1: https://github.com/start-jsk/rtmros_hironx/issues/81#issuecomment-41697482
