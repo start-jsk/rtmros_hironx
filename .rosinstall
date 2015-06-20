@@ -1,9 +1,14 @@
 - git:
-    uri: https://github.com/fkanehiro/hrpsys-base
-    local-name: rtm-ros-robotics/hrpsys
+    uri: https://github.com/start-jsk/rtmros_hironx.git
+    local-name: start-jsk/rtmros_hironx
+    version: indigo-devel
+
+#### The following packages are tentatively built from source. Once https://github.com/start-jsk/rtmros_hironx/issues/366 is addressed, we can remove these entries.
 - git:
-    uri: https://github.com/start-jsk/rtmros_common
-    local-name: rtm-ros-robotics/rtmros_common
+    uri: https://github.com/ros-visualization/rviz.git
+    local-name: ros-visualization/rviz
+    version: indigo-devel
 - git:
-    uri: https://github.com/start-jsk/rtmros_hironx
-    local-name: rtm-ros-robotics/rtmros_hironx
+    uri: https://github.com/ros-planning/moveit_ros.git
+    local-name: ros-planning/moveit_ros
+    version: indigo-devel
