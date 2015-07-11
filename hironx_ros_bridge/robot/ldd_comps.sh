@@ -38,9 +38,13 @@ commands="
   trap 'exit 1' ERR;
   set -x;
 
-  find /opt/jsk/bin/ -iname \"*Comp\" -print -exec ldd {}\; ;
+  df;
 
-  find /opt/jsk/lib/ -iname \"*.so\" -print -exec ldd {}\; ;
+  find /opt/jsk -not -type d -exec ls -al {}\; ;
+
+  find /opt/jsk/bin/ -iname \"*Comp\" -exec ls -al {} \; -exec ldd {} \; ;
+
+  find /opt/jsk/lib/ -iname \"*.so\" -exec ls -al {} \; -exec ldd {} \; ;
 
   exit;
   "
