@@ -2,8 +2,8 @@
 Changelog for package rtmros_hironx
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.0.32 (2015-07-16)
+-------------------
 * [feat] force compensation for old hrpsys version
 * [Doc] Indigo update. hironx clarification for conf files.
 * [sys] Remove manifest.xml from hironx_ros_bridge package.
