@@ -2,6 +2,13 @@
 Changelog for package rtmros_hironx
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* [feat] force compensation for old hrpsys version
+* [Doc] Indigo update. hironx clarification for conf files.
+* [sys] Remove manifest.xml from hironx_ros_bridge package.
+* Contributors: Kei Okada, TORK Developer 534, Isaac I.Y. Saito
+
 1.0.31 (2015-04-28)
 -------------------
 * (Improvement) [hironx_client.py] need to support newer version of idl (https://github.com/fkanehiro/hrpsys-base/pull/580)
