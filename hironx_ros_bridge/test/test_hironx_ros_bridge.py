@@ -45,11 +45,10 @@ class TestHiroROSBridge(unittest.TestCase):
         self.filename_base = tempfile.mkstemp()[1]
         self.filenames = []
 
-        self.robot = hironx.HIRONX()
-        self.robot.init()
-
     @classmethod
     def setUpClass(self):
+        self.robot = hironx.HIRONX()
+        self.robot.init()
 
         self.listener = tf.TransformListener()
 
