@@ -2,7 +2,7 @@
   <arg name="CONF_FILE_COLLISIONDETECT" default="$(find hironx_ros_bridge)/conf/hironx_realrobot_fixedpath.conf" />
   <arg name="corbaport" default="15005" />
   <arg name="MODEL_FILE" default="/opt/jsk/etc/HIRONX/model/main.wrl" /> <!-- This shouldn't be changed unless you know what you're doing -->
-  <arg name="nameserver" default="nx003" />
+  <arg name="nameserver" default="hiro" />
   <env name="RTCTREE_NAMESERVERS" value="$(arg nameserver):$(arg corbaport)" />
   <arg name="USE_ROBOTHARDWARE" default="true" />
   <arg name="USE_SERVOCONTROLLER" default="true" />
