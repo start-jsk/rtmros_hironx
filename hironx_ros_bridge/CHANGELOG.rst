@@ -2,6 +2,13 @@
 Changelog for package hironx_ros_bridge
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* [fix] Fix unusual Hironx robot host name in launch file.
+* [fix] Cleaner tf frame (BODY_LINK to WAIST)
+* [sys] More robust unit test 
+* Contributors: Ryosuke, Shunichi Nozawa, Isaac IY Saito
+
 1.0.32 (2015-07-16)
 -------------------
 * [feat] force compensation for old hrpsys version
