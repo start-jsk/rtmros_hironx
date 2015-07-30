@@ -2,8 +2,8 @@
 Changelog for package rtmros_hironx
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.0.33 (2015-07-30)
+-------------------
 * [fix] Fix unusual Hironx robot host name in launch file.
 * [fix] Cleaner tf frame (BODY_LINK to WAIST)
 * [sys] More robust unit test 

@@ -1,6 +1,6 @@
 <package>
   <name>hironx_ros_bridge</name>
-  <version>1.0.32</version>
+  <version>1.0.33</version>
   <description>ROS-OpenRTM interfacing package for the opensource version of Kawada's Hiro/NEXTAGE dual-arm robot.
 
   NOTE: This package is multi-license -- pay attention to file header in each file where license is declared. For Creative Commons nc 4.0 applied, see <a href = "http://creativecommons.org/licenses/by-nc/4.0">here</a>.
