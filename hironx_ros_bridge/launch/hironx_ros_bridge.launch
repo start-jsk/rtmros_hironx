@@ -22,6 +22,7 @@
     <arg name="COLLADA_FILE" value="$(arg COLLADA_FILE)" />
 
     <arg name="USE_WALKING" value="false" />
+    <arg name="BASE_LINK" value="WAIST"/>
     <!-- In hrpsys_ros_bridge.launch, Collision check might be turned on -->
     <arg name="USE_COLLISIONCHECK" value="$(arg USE_COLLISIONCHECK)" />
     <arg name="USE_ROBOTHARDWARE" value="$(arg USE_ROBOTHARDWARE)" />
