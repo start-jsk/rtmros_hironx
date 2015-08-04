@@ -2,6 +2,11 @@
 Changelog for package rtmros_hironx
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* [fix] Don't initialize ROS client if robot_description is not found
+* Contributors: Kei Okada
+
 1.0.33 (2015-07-30)
 -------------------
 * [fix] Fix unusual Hironx robot host name in launch file.
