@@ -2,8 +2,8 @@
 Changelog for package hironx_ros_bridge
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.0.34 (2015-08-04)
+-------------------
 * [fix] Don't initialize ROS client if robot_description is not found
 * Contributors: Kei Okada
 
