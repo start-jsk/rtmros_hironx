@@ -79,6 +79,11 @@ class ROS_Client(object):
         rospy.init_node('hironx_ros_client')
         if jointgroups:
             self._set_groupnames(jointgroups)
+
+        if not rospy.has_param('robot_description'):
+            rospy.logwarn('ROS Bridge is not started yet, Assuming you want just to use RTM')
+            return
+
         self._init_action_clients()
 
         if not rospy.has_param('robot_description_semantic'):
