@@ -152,7 +152,14 @@ class HIRONX(HrpsysConfigurator):
         # reload for hrpsys 315.1.8
         HrpsysConfigurator.waitForModelLoader(self)
         HrpsysConfigurator.waitForRTCManagerAndRoboHardware(self, robotname=robotname)
-        if len(self.ms.ref.get_component_profiles()) > 0 and self.ms.ref.get_component_profiles()[0].version < '315.2.0':
+        print self.configurator_name, "Hrpsys controller version info: "
+        if self.ms :
+            print self.configurator_name, "  ms = ", self.ms
+        if self.ms and self.ms.ref :
+            print self.configurator_name, "  ref = ", self.ms.ref
+        if self.ms and self.ms.ref and len(self.ms.ref.get_component_profiles()) > 0:
+            print self.configurator_name, "  version  = ", self.ms.ref.get_component_profiles()[0].version
+        if self.ms and self.ms.ref and len(self.ms.ref.get_component_profiles()) > 0 and self.ms.ref.get_component_profiles()[0].version < '315.2.0':
             sys.path.insert(0, os.path.join(os.path.dirname(os.path.realpath(__file__)), 'hrpsys_315_1_9/hrpsys'))
             delete_module('ImpedanceControllerService_idl')
             import AbsoluteForceSensorService_idl
