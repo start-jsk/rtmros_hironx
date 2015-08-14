@@ -48,6 +48,9 @@ _SEC_WAIT_BETWEEN_TESTCASES = 3
 
 class TestHironxMoveit(unittest.TestCase):
 
+    def __init__(self, *args, **kwargs):
+        super(TestHironxMoveit, self).__init__(*args, **kwargs)
+
     @classmethod
     def setUpClass(self):
 
@@ -55,9 +58,26 @@ class TestHironxMoveit(unittest.TestCase):
 
         self.rarm = MoveGroupCommander("right_arm")
         self.larm = MoveGroupCommander("left_arm")
+        self.botharms = MoveGroupCommander("both_arm")
+
+        self._botharms_joints = ['LARM_JOINT0', 'LARM_JOINT1',
+                                 'LARM_JOINT2', 'LARM_JOINT3',
+                                 'LARM_JOINT4', 'LARM_JOINT5',
+                                 'RARM_JOINT0', 'RARM_JOINT1',
+                                 'RARM_JOINT2', 'RARM_JOINT3',
+                                 'RARM_JOINT4', 'RARM_JOINT5']
 
         self.rarm_current_pose = self.rarm.get_current_pose().pose
         self.larm_current_pose = self.larm.get_current_pose().pose
+        # For botharms get_current_pose ends with no eef error.
+
+        self.init_rtm_jointvals = [0.010471975511965976, 0.0, -1.7453292519943295, -0.26529004630313807, 0.16406094968746698, -0.05585053606381855, -0.010471975511965976, 0.0, -1.7453292519943295, 0.26529004630313807, 0.16406094968746698, 0.05585053606381855]
+
+        # These represent a pose as in the image https://goo.gl/hYa15h
+        self.banzai_pose_larm_goal = [-0.0280391167993, 0.558512828409, 0.584801820449, 0.468552399035, -0.546097642377, -0.449475560632, 0.529346516701]
+        self.banzai_pose_rarm_goal = [0.0765219167208, -0.527210000725, 0.638387081642, -0.185009037721, -0.683111796219, 0.184872589841, 0.681873929223]
+        self.banzai_jointvals_goal = [1.3591412928962834, -1.5269810342586994, -1.5263864987632225, -0.212938998306429, -0.19093239258017988, -1.5171864827145887,
+                          -0.7066724299606867, -1.9314110634425135, -1.4268663042616962, 1.0613942164863952, 0.9037643195141568, 1.835342100423069]
 
     def _set_target_random(self):
         '''
@@ -100,6 +120,31 @@ class TestHironxMoveit(unittest.TestCase):
         self.rarm.set_pose_target(target2)
         self.rarm.go()
         time.sleep(_SEC_WAIT_BETWEEN_TESTCASES)
+
+    def test_botharms_compare_joints(self):
+        self.assertEqual(sorted(self.botharms.get_joints()), sorted(self._botharms_joints))
+
+    def test_botharms_get_joint_values(self):
+        '''
+        "both_arm" move group can't set pose target for now (July, 2015) due to 
+        missing eef in the moveit config. Here checking if get_joint_values is working.
+        '''
+
+        self.larm.set_pose_target(self.banzai_pose_larm_goal)
+        self.rarm.set_pose_target(self.banzai_pose_rarm_goal)
+        self.assertAlmostEqual(self.botharms.get_current_joint_values(), self.banzai_jointvals_goal, places=3)
+
+    def test_botharms_set_named_target(self):
+        '''
+        Test if moveit_commander.set_named_target brings the arms to the init_rtm pose defined in HiroNx.srdf.
+        '''
+        # Move the arms to non init pose.
+        self.larm.set_pose_target(self.banzai_pose_larm_goal)
+        self.rarm.set_pose_target(self.banzai_pose_rarm_goal)
+
+        self.botharms.set_named_target('init_rtm')
+        self.assertAlmostEqual(self.botharms.get_current_joint_values(), self.init_rtm_jointvals, places=3)
+
 
 if __name__ == '__main__':
     import rostest
