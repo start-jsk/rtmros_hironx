@@ -2,8 +2,8 @@
 Changelog for package hironx_ros_bridge
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.0.35 (2015-08-14)
+-------------------
 * [feat] show Hrpsys host controller version info
 * [sys] Install missing older IDL (hrpsys_315_1_9.hrpsys) to increase compatibility with older version of hrpsys host
 * [test] Generalization, add some robust tests (test_set_target_pose_relative_333 will be fail for old hrpsys https://github.com/start-jsk/rtmros_hironx/pull/334)
