@@ -26,11 +26,14 @@ before_install: # Use this to prepare the system to install prerequisites or dep
   # Define some config vars
   - if [ "$TEST_TYPE" == work_with_315_1_10 ]; then mkdir -p ~/catkin_ws/src; ln -sf `pwd` ~/catkin_ws/src/rtmros_hironx; fi
   - if [ "$TEST_TYPE" == work_with_315_1_10 ]; then cd ~/; git clone http://github.com/fkanehiro/hrpsys-base --depth 1; cd hrpsys-base  ; fi
-  - if [ "$TEST_TYPE" == work_with_315_1_10 ]; then wget https://raw.githubusercontent.com/fkanehiro/hrpsys-base/fc7cc0b52a1f810eb66e246ed64b220305d00f5b/.travis.sh -O work_with_315_1_10_test.sh; fi
+  - if [ "$TEST_TYPE" == work_with_315_1_10 ]; then wget https://raw.githubusercontent.com/fkanehiro/hrpsys-base/d7c339e7e8ed64bd4004ed6510ebb4a4179fd8a7/.travis.sh -O work_with_315_1_10_test.sh; fi
   - if [ "$TEST_TYPE" == work_with_315_1_10 ]; then sed -i 's@wstool set rtmros_common http://github.com/start-jsk/rtmros_common --git -y@@' work_with_315_1_10_test.sh; fi
   - if [ "$TEST_TYPE" == work_with_315_1_10 ]; then sed -i 's@wstool set rtmros_hironx http://github.com/start-jsk/rtmros_hironx --git -y@@' work_with_315_1_10_test.sh; fi
   - if [ "$TEST_TYPE" == work_with_315_1_10 ]; then sed -i 's@wstool set rtmros_nextage http://github.com/tork-a/rtmros_nextage --git -y@@' work_with_315_1_10_test.sh; fi
-  - if [ "$TEST_TYPE" == work_with_315_1_10 ]; then sed -i 's@sudo dpkg -r --force-depends ros-hydro-hrpsys@@' work_with_315_1_10_test.sh; fi
+  - if [ "$TEST_TYPE" == work_with_315_1_10 ]; then sed -i 's@sudo dpkg -r --force-depends ros-hydro-hrpsys@sudo dpkg -r --force-depends ros-hydro-hrpsys; sudo mkdir -p /opt/ros/hydro/include/hrpsys/idl@' work_with_315_1_10_test.sh; fi
+  - if [ "$TEST_TYPE" == work_with_315_1_10 ]; then sed -i 's%cat hrpsys/catkin.cmake%sed -i "s@foreach(_bin_file \\${_bin_files})@list(REMOVE_DUPLICATES _bin_files)\\nforeach(_bin_file \\${_bin_files})@" hrpsys/catkin.cmake\n            cat hrpsys/catkin.cmake%' work_with_315_1_10_test.sh; fi
+  - if [ "$TEST_TYPE" == work_with_315_1_10 ]; then sed -i 's@catkin_make_isolated -j1 -l1 --install --only-pkg-with-deps@catkin_make_isolated -j1 -l1 --install --only-pkg-with-deps hrpsys@' work_with_315_1_10_test.sh; fi
+  - if [ "$TEST_TYPE" == work_with_315_1_10 ]; then sed -i 's@git clone http://github.com/fkanehiro/hrpsys-base --depth 1 -b 315.1.9 ../build_isolated/hrpsys/build/hrpsys-base-source@(git clone http://github.com/fkanehiro/hrpsys-base ../build_isolated/hrpsys/build/hrpsys-base-source; cd ../build_isolated/hrpsys/build/hrpsys-base-source; git checkout 315.1.9)@' work_with_315_1_10_test.sh; fi
   - if [ "$TEST_TYPE" == work_with_315_1_10 ]; then TEST_TYPE=work_with_315_1_10  TEST_PACKAGE=hironx-ros-bridge bash ./work_with_315_1_10_test.sh; exit $?  ; fi
   - export CI_SOURCE_PATH=$(pwd)
   - export REPOSITORY_NAME=${PWD##*/}

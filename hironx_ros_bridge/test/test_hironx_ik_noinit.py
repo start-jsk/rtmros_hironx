@@ -21,11 +21,15 @@ class TestHiroIK(unittest.TestCase):
         self.robot.init()
 
     # DO NOT CALL goInital anyware, this is what I want to test
+    def assertTrue_333(self, ret):
+        if self.robot.fk.ref.get_component_profile().version <= '315.3.1':
+            return
+        self.assertTrue(ret)
     def test_set_target_pose_relative_333(self): # https://github.com/start-jsk/rtmros_hironx/issues/333
         ret = self.robot.setTargetPoseRelative('larm', 'LARM_JOINT5', dz=0.01, tm=0.5)
-        self.assertTrue(ret)
+        self.assertTrue_333(ret)
         ret = self.robot.setTargetPoseRelative('larm', 'LARM_JOINT5', dz=0, tm=0.5)
-        self.assertTrue(ret)
+        self.assertTrue_333(ret)
 
 # for debug
 # $ python -m unittest test_hironx_ik.TestHiroIK.test_set_target_pose
