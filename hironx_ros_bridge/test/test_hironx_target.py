@@ -61,8 +61,8 @@ class TestHiroTarget(TestHiro):
         print_pose("robot.getReferencePose('RARM_JOINT5')", poser1);
         print_pose("robot.getReferencePose('LARM_JOINT5:WAIST')", posel2);
         print_pose("robot.getReferencePose('RARM_JOINT5:WAIST')", poser2);
-        numpy.testing.assert_array_almost_equal(numpy.array(posel1),numpy.array(posel2), decimal=3)
-        numpy.testing.assert_array_almost_equal(numpy.array(poser1),numpy.array(poser2), decimal=3)
+        numpy.testing.assert_array_almost_equal(numpy.array(posel1), numpy.array(posel2), decimal=3)
+        numpy.testing.assert_array_almost_equal(numpy.array(poser1), numpy.array(poser2), decimal=3)
 
         posel1 = self.robot.getReferencePose('LARM_JOINT5:CHEST_JOINT0')
         poser1 = self.robot.getReferencePose('RARM_JOINT5:CHEST_JOINT0')
@@ -74,8 +74,8 @@ class TestHiroTarget(TestHiro):
         poser2 = self.robot.getReferencePose('RARM_JOINT5:CHEST_JOINT0')
         print_pose("robot.getReferencePose('LARM_JOINT5:CHEST_JOINT0')", posel2);
         print_pose("robot.getReferencePose('RARM_JOINT5:CHEST_JOINT0')", poser2);
-        numpy.testing.assert_array_almost_equal(numpy.array(posel1),numpy.array(posel2), decimal=3)
-        numpy.testing.assert_array_almost_equal(numpy.array(poser1),numpy.array(poser2), decimal=3)
+        numpy.testing.assert_array_almost_equal(numpy.array(posel1), numpy.array(posel2), decimal=3)
+        numpy.testing.assert_array_almost_equal(numpy.array(poser1), numpy.array(poser2), decimal=3)
 
         self.robot.setJointAnglesOfGroup('torso', [0], 1)
         self.robot.waitInterpolationOfGroup('torso')
@@ -88,9 +88,9 @@ class TestHiroTarget(TestHiro):
         pos2 = self.robot.getReferencePosition('LARM_JOINT5', 'CHEST_JOINT0')
         rot2 = self.robot.getReferenceRotation('LARM_JOINT5', 'CHEST_JOINT0')
         rpy2 = self.robot.getReferenceRPY('LARM_JOINT5', 'CHEST_JOINT0')
-        numpy.testing.assert_array_almost_equal(numpy.array(pos1),numpy.array(pos2), decimal=3)
-        numpy.testing.assert_array_almost_equal(numpy.array(rot1),numpy.array(rot2), decimal=3)
-        numpy.testing.assert_array_almost_equal(numpy.array(rpy1),numpy.array(rpy2), decimal=3)
+        numpy.testing.assert_array_almost_equal(numpy.array(pos1), numpy.array(pos2), decimal=3)
+        numpy.testing.assert_array_almost_equal(numpy.array(rot1), numpy.array(rot2), decimal=3)
+        numpy.testing.assert_array_almost_equal(numpy.array(rpy1), numpy.array(rpy2), decimal=3)
 
 
     def testGetCurrentPose(self):
@@ -116,8 +116,8 @@ class TestHiroTarget(TestHiro):
         print_pose("robot.getCurrentPose('RARM_JOINT5')", poser1);
         print_pose("robot.getCurrentPose('LARM_JOINT5:WAIST')", posel2);
         print_pose("robot.getCurrentPose('RARM_JOINT5:WAIST')", poser2);
-        numpy.testing.assert_array_almost_equal(numpy.array(posel1),numpy.array(posel2), decimal=3)
-        numpy.testing.assert_array_almost_equal(numpy.array(poser1),numpy.array(poser2), decimal=3)
+        numpy.testing.assert_array_almost_equal(numpy.array(posel1), numpy.array(posel2), decimal=3)
+        numpy.testing.assert_array_almost_equal(numpy.array(poser1), numpy.array(poser2), decimal=3)
 
         posel1 = self.robot.getCurrentPose('LARM_JOINT5:CHEST_JOINT0')
         poser1 = self.robot.getCurrentPose('RARM_JOINT5:CHEST_JOINT0')
@@ -129,8 +129,8 @@ class TestHiroTarget(TestHiro):
         poser2 = self.robot.getCurrentPose('RARM_JOINT5:CHEST_JOINT0')
         print_pose("robot.getCurrentPose('LARM_JOINT5:CHEST_JOINT0')", posel2);
         print_pose("robot.getCurrentPose('RARM_JOINT5:CHEST_JOINT0')", poser2);
-        numpy.testing.assert_array_almost_equal(numpy.array(posel1),numpy.array(posel2), decimal=3)
-        numpy.testing.assert_array_almost_equal(numpy.array(poser1),numpy.array(poser2), decimal=3)
+        numpy.testing.assert_array_almost_equal(numpy.array(posel1), numpy.array(posel2), decimal=3)
+        numpy.testing.assert_array_almost_equal(numpy.array(poser1), numpy.array(poser2), decimal=3)
 
         self.robot.setJointAnglesOfGroup('torso', [0], 1)
         self.robot.waitInterpolationOfGroup('torso')
@@ -153,9 +153,9 @@ class TestHiroTarget(TestHiro):
                 return True
             else:
                 raise RuntimeError(e.message)
-        numpy.testing.assert_array_almost_equal(numpy.array(pos1),numpy.array(pos2), decimal=3)
-        numpy.testing.assert_array_almost_equal(numpy.array(rot1),numpy.array(rot2), decimal=3)
-        numpy.testing.assert_array_almost_equal(numpy.array(rpy1),numpy.array(rpy2), decimal=3)
+        numpy.testing.assert_array_almost_equal(numpy.array(pos1), numpy.array(pos2), decimal=3)
+        numpy.testing.assert_array_almost_equal(numpy.array(rot1), numpy.array(rot2), decimal=3)
+        numpy.testing.assert_array_almost_equal(numpy.array(rpy1), numpy.array(rpy2), decimal=3)
     
     def testGetterByFrame(self):
         def print_pose(msg, pose):
@@ -175,21 +175,21 @@ class TestHiroTarget(TestHiro):
                 return True
             else:
                 raise RuntimeError(e.message)
-        numpy.testing.assert_array_almost_equal(numpy.array(posel1),numpy.array(posel2), decimal=3)
+        numpy.testing.assert_array_almost_equal(numpy.array(posel1), numpy.array(posel2), decimal=3)
         
         print_pose("robot.getCurrentPose(LARM_JOINT5:DEFAULT)", posel1)
         print_pose("robot.getCurrentPose(LARM_JOINT5:WAIST)", posel2)
 
         posl1 = self.robot.getCurrentPosition('LARM_JOINT5')
         posl2 = self.robot.getCurrentPosition('LARM_JOINT5', 'WAIST')
-        numpy.testing.assert_array_almost_equal(numpy.array(posl1),numpy.array(posl2), decimal=3)
+        numpy.testing.assert_array_almost_equal(numpy.array(posl1), numpy.array(posl2), decimal=3)
         
         print "robot.getCurrentPosition(LARM_JOINT5:DEFAULT)", posl1
         print "robot.getCurrentPosition(LARM_JOINT5:WAIST)", posl2
 
         rotl1 = self.robot.getCurrentRotation('LARM_JOINT5')
         rotl2 = self.robot.getCurrentRotation('LARM_JOINT5', 'WAIST')
-        numpy.testing.assert_array_almost_equal(numpy.array(rotl1),numpy.array(rotl2), decimal=3)
+        numpy.testing.assert_array_almost_equal(numpy.array(rotl1), numpy.array(rotl2), decimal=3)
         
         print "robot.getCurrentRotation(LARM_JOINT5:DEFAULT)", rotl1
         print "robot.getCurrentRotation(LARM_JOINT5:WAIST)", rotl2
@@ -206,35 +206,35 @@ class TestHiroTarget(TestHiro):
                 return True
             else:
                 raise RuntimeError(e.message)
-        numpy.testing.assert_array_almost_equal(numpy.array(rpyl1),numpy.array(rpyl2), decimal=3)
+        numpy.testing.assert_array_almost_equal(numpy.array(rpyl1), numpy.array(rpyl2), decimal=3)
         
         print "robot.getCurrentRPY(LARM_JOINT5:DEFAULT)", rpyl1
         print "robot.getCurrentRPY(LARM_JOINT5:WAIST)", rpyl2
 
         ref_posel1 = self.robot.getReferencePose('LARM_JOINT5')
         ref_posel2 = self.robot.getReferencePose('LARM_JOINT5', 'WAIST')
-        numpy.testing.assert_array_almost_equal(numpy.array(ref_posel1),numpy.array(ref_posel2), decimal=3)
+        numpy.testing.assert_array_almost_equal(numpy.array(ref_posel1), numpy.array(ref_posel2), decimal=3)
         
         print "robot.getReferencePose(LARM_JOINT5:DEFAULT)", ref_posel1
         print "robot.getReferencePose(LARM_JOINT5:WAIST)", ref_posel2
 
         ref_posl1 = self.robot.getReferencePosition('LARM_JOINT5')
         ref_posl2 = self.robot.getReferencePosition('LARM_JOINT5', 'WAIST')
-        numpy.testing.assert_array_almost_equal(numpy.array(ref_posl1),numpy.array(ref_posl2), decimal=3)
+        numpy.testing.assert_array_almost_equal(numpy.array(ref_posl1), numpy.array(ref_posl2), decimal=3)
         
         print "robot.getReferencePosition(LARM_JOINT5:DEFAULT)", ref_posl1
         print "robot.getReferencePosition(LARM_JOINT5:WAIST)", ref_posl2
 
         ref_rotl1 = self.robot.getReferenceRotation('LARM_JOINT5')
         ref_rotl2 = self.robot.getReferenceRotation('LARM_JOINT5', 'WAIST')
-        numpy.testing.assert_array_almost_equal(numpy.array(ref_rotl1),numpy.array(ref_rotl2), decimal=3)
+        numpy.testing.assert_array_almost_equal(numpy.array(ref_rotl1), numpy.array(ref_rotl2), decimal=3)
         
         print "robot.getReferenceRotation(LARM_JOINT5:DEFAULT)", ref_rotl1
         print "robot.getReferenceRotation(LARM_JOINT5:WAIST)", ref_rotl2
 
         ref_rpyl1 = self.robot.getReferenceRPY('LARM_JOINT5')
         ref_rpyl2 = self.robot.getReferenceRPY('LARM_JOINT5', 'WAIST')
-        numpy.testing.assert_array_almost_equal(numpy.array(ref_rpyl1),numpy.array(ref_rpyl2), decimal=3)
+        numpy.testing.assert_array_almost_equal(numpy.array(ref_rpyl1), numpy.array(ref_rpyl2), decimal=3)
         
         print "robot.getReferenceRPY(LARM_JOINT5:DEFAULT)", ref_rpyl1
         print "robot.getReferenceRPY(LARM_JOINT5:WAIST)", ref_rpyl2
@@ -265,14 +265,14 @@ class TestHiroTarget(TestHiro):
         	self.robot.setTargetPoseRelative('larm', l_eef, dr=math.pi/2, tm=0.5, wait=True)
         	roll_l_post_now = self.robot.getCurrentRPY(l_eef)
         	roll_r_post_now = self.robot.getCurrentRPY(r_eef)
-                numpy.testing.assert_array_almost_equal(numpy.array(roll_l_post),numpy.array(roll_l_post_now), decimal=3)
-                numpy.testing.assert_array_almost_equal(numpy.array(roll_r_post),numpy.array(roll_r_post_now), decimal=3)
+                numpy.testing.assert_array_almost_equal(numpy.array(roll_l_post), numpy.array(roll_l_post_now), decimal=3)
+                numpy.testing.assert_array_almost_equal(numpy.array(roll_r_post), numpy.array(roll_r_post_now), decimal=3)
         	self.robot.setTargetPoseRelative('rarm', r_eef, dr=-math.pi/2, dw=0, tm=0.5, wait=False)
         	self.robot.setTargetPoseRelative('larm', l_eef, dr=-math.pi/2, dw=0, tm=0.5, wait=True)
         	init_l_now = self.robot.getCurrentRPY(l_eef)
         	init_r_now = self.robot.getCurrentRPY(r_eef)
-                numpy.testing.assert_array_almost_equal(numpy.array(init_l),numpy.array(init_l_now), decimal=3)
-                numpy.testing.assert_array_almost_equal(numpy.array(init_r),numpy.array(init_r_now), decimal=3)
+                numpy.testing.assert_array_almost_equal(numpy.array(init_l), numpy.array(init_l_now), decimal=3)
+                numpy.testing.assert_array_almost_equal(numpy.array(init_r), numpy.array(init_r_now), decimal=3)
 
         # pitch motion
         self.robot.goInitial(2)
@@ -281,14 +281,14 @@ class TestHiroTarget(TestHiro):
         	self.robot.setTargetPoseRelative('larm', l_eef, dp=math.pi/4, tm=0.5, wait=True)
         	pitch_l_post_now = self.robot.getCurrentRPY(l_eef)
         	pitch_r_post_now = self.robot.getCurrentRPY(r_eef)
-                numpy.testing.assert_array_almost_equal(numpy.array(pitch_l_post),numpy.array(pitch_l_post_now), decimal=3)
-                numpy.testing.assert_array_almost_equal(numpy.array(pitch_r_post),numpy.array(pitch_r_post_now), decimal=3)
+                numpy.testing.assert_array_almost_equal(numpy.array(pitch_l_post), numpy.array(pitch_l_post_now), decimal=3)
+                numpy.testing.assert_array_almost_equal(numpy.array(pitch_r_post), numpy.array(pitch_r_post_now), decimal=3)
         	self.robot.setTargetPoseRelative('rarm', r_eef, dr=-math.pi/4, dw=0, tm=0.5, wait=False)
         	self.robot.setTargetPoseRelative('larm', l_eef, dr=-math.pi/4, dw=0, tm=0.5, wait=True)
         	init_l_now = self.robot.getCurrentRPY(l_eef)
         	init_r_now = self.robot.getCurrentRPY(r_eef)
-                numpy.testing.assert_array_almost_equal(numpy.array(init_l),numpy.array(init_l_now), decimal=3)
-                numpy.testing.assert_array_almost_equal(numpy.array(init_r),numpy.array(init_r_now), decimal=3)
+                numpy.testing.assert_array_almost_equal(numpy.array(init_l), numpy.array(init_l_now), decimal=3)
+                numpy.testing.assert_array_almost_equal(numpy.array(init_r), numpy.array(init_r_now), decimal=3)
 
         # yaw motion
         self.robot.goInitial(2)
@@ -297,14 +297,14 @@ class TestHiroTarget(TestHiro):
         	self.robot.setTargetPoseRelative('larm', l_eef, dp=math.pi/4, tm=0.5, wait=True)
         	yaw_l_post_now = self.robot.getCurrentRPY(l_eef)
         	yaw_r_post_now = self.robot.getCurrentRPY(r_eef)
-                numpy.testing.assert_array_almost_equal(numpy.array(yaw_l_post),numpy.array(yaw_l_post_now), decimal=3)
-                numpy.testing.assert_array_almost_equal(numpy.array(yaw_r_post),numpy.array(yaw_r_post_now), decimal=3)
+                numpy.testing.assert_array_almost_equal(numpy.array(yaw_l_post), numpy.array(yaw_l_post_now), decimal=3)
+                numpy.testing.assert_array_almost_equal(numpy.array(yaw_r_post), numpy.array(yaw_r_post_now), decimal=3)
         	self.robot.setTargetPoseRelative('rarm', r_eef, dr=-math.pi/4, dw=0, tm=0.5, wait=False)
         	self.robot.setTargetPoseRelative('larm', l_eef, dr=-math.pi/4, dw=0, tm=0.5, wait=True)
         	init_l_now = self.robot.getCurrentRPY(l_eef)
         	init_r_now = self.robot.getCurrentRPY(r_eef)
-                numpy.testing.assert_array_almost_equal(numpy.array(init_l),numpy.array(init_l_now), decimal=3)
-                numpy.testing.assert_array_almost_equal(numpy.array(init_r),numpy.array(init_r_now), decimal=3)
+                numpy.testing.assert_array_almost_equal(numpy.array(init_l), numpy.array(init_l_now), decimal=3)
+                numpy.testing.assert_array_almost_equal(numpy.array(init_r), numpy.array(init_r_now), decimal=3)
 
 if __name__ == '__main__':
     import rostest
