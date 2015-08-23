@@ -8,6 +8,8 @@ import re
 from test_hironx import euler_from_matrix, TestHiro
 
 PKG = 'hironx_ros_bridge'
+RTM_JOINTGRP_LEFT_ARM = 'larm'
+RTM_JOINTGRP_RIGHT_ARM = 'rarm'
 
 
 class TestHiroTarget(TestHiro):
@@ -27,18 +29,18 @@ class TestHiroTarget(TestHiro):
         posl2[2] -= 0.07
         # Til here initializing.
 
-        if not self.robot.setTargetPose('larm', posl1, rpyl1, tm):
+        if not self.robot.setTargetPose(RTM_JOINTGRP_LEFT_ARM, posl1, rpyl1, tm):
             assert(False)
-        if not self.robot.setTargetPose('rarm', posr1, rpyr1, tm):
+        if not self.robot.setTargetPose(RTM_JOINTGRP_RIGHT_ARM, posr1, rpyr1, tm):
             assert(False)
         print('Before waitInterpolationOfGroup(larm) begins.')
-        self.robot.waitInterpolationOfGroup('larm')
+        self.robot.waitInterpolationOfGroup(RTM_JOINTGRP_LEFT_ARM)
         print('waitInterpolationOfGroup(larm) returned.')
-        self.robot.waitInterpolationOfGroup('rarm')  # just to make sure
+        self.robot.waitInterpolationOfGroup(RTM_JOINTGRP_RIGHT_ARM)  # just to make sure
         print('waitInterpolationOfGroup(rarm) returned.')
-        if not self.robot.setTargetPose('larm', posl2, rpyl1, tm):
+        if not self.robot.setTargetPose(RTM_JOINTGRP_LEFT_ARM, posl2, rpyl1, tm):
             assert(False)
-        if not self.robot.setTargetPose('rarm', posr2, rpyr1, tm):
+        if not self.robot.setTargetPose(RTM_JOINTGRP_RIGHT_ARM, posr2, rpyr1, tm):
             assert(False)
 
         # Making sure if reached here. If any error occurred. If not reached
@@ -98,7 +100,6 @@ class TestHiroTarget(TestHiro):
         numpy.testing.assert_array_almost_equal(numpy.array(pos1), numpy.array(pos2), decimal=3)
         numpy.testing.assert_array_almost_equal(numpy.array(rot1), numpy.array(rot2), decimal=3)
         numpy.testing.assert_array_almost_equal(numpy.array(rpy1), numpy.array(rpy2), decimal=3)
-
 
     def testGetCurrentPose(self):
         def print_pose(msg, pose):
@@ -253,8 +254,8 @@ class TestHiroTarget(TestHiro):
         '''
 
         print "goInitial", self.robot.getCurrentRPY('RARM_JOINT5'), self.robot.getCurrentRPY('LARM_JOINT5')
-        r_eef = 'RARM_JOINT5'
         l_eef = 'LARM_JOINT5'
+        r_eef = 'RARM_JOINT5'
 
         init_l = (-3.073, -1.57002, -3.073)  # goInit (not factory setting) pose
         init_r = (3.073, -1.57002, -3.073)  # goInit (not factory setting) pose
@@ -268,14 +269,14 @@ class TestHiroTarget(TestHiro):
         # roll motion
         self.robot.goInitial(2)
         for i in range(0, 5):  # Repeat the same movement 5 times
-            self.robot.setTargetPoseRelative('rarm', r_eef, dr=math.pi / 2, tm=0.5, wait=False)
-            self.robot.setTargetPoseRelative('larm', l_eef, dr=math.pi / 2, tm=0.5, wait=True)
+            self.robot.setTargetPoseRelative(RTM_JOINTGRP_LEFT_ARM, l_eef, dr=math.pi / 2, tm=0.5, wait=True)
+            self.robot.setTargetPoseRelative(RTM_JOINTGRP_RIGHT_ARM, r_eef, dr=math.pi / 2, tm=0.5, wait=False)
             roll_l_post_now = self.robot.getCurrentRPY(l_eef)
             roll_r_post_now = self.robot.getCurrentRPY(r_eef)
             numpy.testing.assert_array_almost_equal(numpy.array(roll_l_post), numpy.array(roll_l_post_now), decimal=3)
             numpy.testing.assert_array_almost_equal(numpy.array(roll_r_post), numpy.array(roll_r_post_now), decimal=3)
-            self.robot.setTargetPoseRelative('rarm', r_eef, dr=-math.pi / 2, dw=0, tm=0.5, wait=False)
-            self.robot.setTargetPoseRelative('larm', l_eef, dr=-math.pi / 2, dw=0, tm=0.5, wait=True)
+            self.robot.setTargetPoseRelative(RTM_JOINTGRP_LEFT_ARM, l_eef, dr=-math.pi / 2, dw=0, tm=0.5, wait=True)
+            self.robot.setTargetPoseRelative(RTM_JOINTGRP_RIGHT_ARM, r_eef, dr=-math.pi / 2, dw=0, tm=0.5, wait=False)
             init_l_now = self.robot.getCurrentRPY(l_eef)
             init_r_now = self.robot.getCurrentRPY(r_eef)
             numpy.testing.assert_array_almost_equal(numpy.array(init_l), numpy.array(init_l_now), decimal=3)
@@ -284,14 +285,14 @@ class TestHiroTarget(TestHiro):
         # pitch motion
         self.robot.goInitial(2)
         for i in range(0, 5):
-            self.robot.setTargetPoseRelative('rarm', r_eef, dp=math.pi / 4, tm=0.5, wait=False)
-            self.robot.setTargetPoseRelative('larm', l_eef, dp=math.pi / 4, tm=0.5, wait=True)
+            self.robot.setTargetPoseRelative(RTM_JOINTGRP_LEFT_ARM, l_eef, dp=math.pi / 4, tm=0.5, wait=True)
+            self.robot.setTargetPoseRelative(RTM_JOINTGRP_RIGHT_ARM, r_eef, dp=math.pi / 4, tm=0.5, wait=False)
             pitch_l_post_now = self.robot.getCurrentRPY(l_eef)
             pitch_r_post_now = self.robot.getCurrentRPY(r_eef)
             numpy.testing.assert_array_almost_equal(numpy.array(pitch_l_post), numpy.array(pitch_l_post_now), decimal=3)
             numpy.testing.assert_array_almost_equal(numpy.array(pitch_r_post), numpy.array(pitch_r_post_now), decimal=3)
-            self.robot.setTargetPoseRelative('rarm', r_eef, dr=-math.pi / 4, dw=0, tm=0.5, wait=False)
-            self.robot.setTargetPoseRelative('larm', l_eef, dr=-math.pi / 4, dw=0, tm=0.5, wait=True)
+            self.robot.setTargetPoseRelative(RTM_JOINTGRP_LEFT_ARM, l_eef, dr=-math.pi / 4, dw=0, tm=0.5, wait=True)
+            self.robot.setTargetPoseRelative(RTM_JOINTGRP_RIGHT_ARM, r_eef, dr=-math.pi / 4, dw=0, tm=0.5, wait=False)
             init_l_now = self.robot.getCurrentRPY(l_eef)
             init_r_now = self.robot.getCurrentRPY(r_eef)
             numpy.testing.assert_array_almost_equal(numpy.array(init_l), numpy.array(init_l_now), decimal=3)
@@ -300,14 +301,14 @@ class TestHiroTarget(TestHiro):
         # yaw motion
         self.robot.goInitial(2)
         for i in range(0, 5):
-            self.robot.setTargetPoseRelative('rarm', r_eef, dy=math.pi / 4, tm=0.5, wait=False)
-            self.robot.setTargetPoseRelative('larm', l_eef, dy=math.pi / 4, tm=0.5, wait=True)
+            self.robot.setTargetPoseRelative(RTM_JOINTGRP_LEFT_ARM, l_eef, dy=math.pi / 4, tm=0.5, wait=True)
+            self.robot.setTargetPoseRelative(RTM_JOINTGRP_RIGHT_ARM, r_eef, dy=math.pi / 4, tm=0.5, wait=False)
             yaw_l_post_now = self.robot.getCurrentRPY(l_eef)
             yaw_r_post_now = self.robot.getCurrentRPY(r_eef)
             numpy.testing.assert_array_almost_equal(numpy.array(yaw_l_post), numpy.array(yaw_l_post_now), decimal=3)
             numpy.testing.assert_array_almost_equal(numpy.array(yaw_r_post), numpy.array(yaw_r_post_now), decimal=3)
-            self.robot.setTargetPoseRelative('rarm', r_eef, dy=-math.pi / 4, dw=0, tm=0.5, wait=False)
-            self.robot.setTargetPoseRelative('larm', l_eef, dy=-math.pi / 4, dw=0, tm=0.5, wait=True)
+            self.robot.setTargetPoseRelative(RTM_JOINTGRP_LEFT_ARM, l_eef, dy=-math.pi / 4, dw=0, tm=0.5, wait=True)
+            self.robot.setTargetPoseRelative(RTM_JOINTGRP_RIGHT_ARM, r_eef, dy=-math.pi / 4, dw=0, tm=0.5, wait=False)
             init_l_now = self.robot.getCurrentRPY(l_eef)
             init_r_now = self.robot.getCurrentRPY(r_eef)
             numpy.testing.assert_array_almost_equal(numpy.array(init_l), numpy.array(init_l_now), decimal=3)
