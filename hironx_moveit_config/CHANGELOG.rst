@@ -2,6 +2,13 @@
 Changelog for package hironx_moveit_config
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* [feat] Add dual-arm moveit group
+* [feat] Add init pose to moveit_config
+* [test] Add unit test cases for dual-arm group
+* Contributors: Isaac IY Saito
+
 1.0.35 (2015-08-14)
 -------------------
 
