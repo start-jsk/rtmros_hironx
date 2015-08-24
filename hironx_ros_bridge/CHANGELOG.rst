@@ -2,8 +2,8 @@
 Changelog for package hironx_ros_bridge
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.0.36 (2015-08-24)
+-------------------
 * [feat] Add dual-arm moveit group
 * Contributors: Isaac IY Saito
 
