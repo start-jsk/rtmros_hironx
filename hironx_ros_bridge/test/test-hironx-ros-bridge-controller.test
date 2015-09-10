@@ -7,6 +7,6 @@
     <arg name="corbaport" value="$(arg corbaport)" />
   </include>
 
-  <test type="test_hironx_ros_bridge_controller.py" pkg="hironx_ros_bridge" test-name="test_hironx_ros_bridge_controller" time-limit="200" retry="4"
+  <test type="test_hironx_ros_bridge_controller.py" pkg="hironx_ros_bridge" test-name="test_hironx_ros_bridge_controller" time-limit="100" retry="4"
         args="-ORBInitRef NameService=corbaloc:iiop:localhost:2809/NameService" />
 </launch>

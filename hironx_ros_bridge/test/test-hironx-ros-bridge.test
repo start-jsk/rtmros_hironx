@@ -12,6 +12,6 @@
   <param name="joint_states_test/hzerror" value="10" />
   <param name="joint_states_test/test_duration" value="5.0" />
 
-  <test test-name="joint_states_test" pkg="rostest" type="hztest" name="joint_states_test" />
+  <test test-name="joint_states_test" pkg="rostest" type="hztest" name="joint_states_test" time-limit="100"/>
 
 </launch>
