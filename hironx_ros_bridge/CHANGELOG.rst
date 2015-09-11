@@ -2,8 +2,8 @@
 Changelog for package hironx_ros_bridge
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.0.37 (2015-09-11)
+-------------------
 * [test] Optimize rostest time-limit 
 * Contributors: Shunichi Nozawa
 
