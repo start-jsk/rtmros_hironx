@@ -1,0 +1,4 @@
+- git:
+    uri: https://github.com/start-jsk/rtmros_hironx
+    local-name: rtm-ros-robotics/rtmros_hironx
+    version: hydro-devel
