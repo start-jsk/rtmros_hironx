@@ -1,25 +1,20 @@
-# Travis Continuous Integration Configuration File, based on ..
-#   Generic MoveIt Travis Continuous Integration Configuration File
-#   Works with all MoveIt! repositories/branches
-#   Author: Dave Coleman, Jonathan Bohren
-language:
-  - cpp
-  - python
-python:
-  - "2.7"
+#   Original Author: Kei Okada, William Woodall, Mani Monajjemi
+sudo: required
+dist: trusty
+# Force travis to use its minimal image with default Python settings
+language: generic
 compiler:
   - gcc
 env:
-  - ROS_DISTRO=hydro  ROSWS=wstool BUILDER=catkin    USE_DEB=true
-  - ROS_DISTRO=hydro  ROSWS=wstool BUILDER=catkin    USE_DEB=false
+  - ROS_DISTRO=indigo  ROSWS=wstool BUILDER=catkin    USE_DEB=true
+  - ROS_DISTRO=indigo  ROSWS=wstool BUILDER=catkin    USE_DEB=false
   - TEST_TYPE=work_with_315_1_10
 matrix:
   allow_failures:
 notifications:
   email:
     recipients:
-      - k-okada@jsk.t.u-tokyo.ac.jp
-      - iisaito@opensource-robotics.tokyo.jp
+      - dev@opensource-robotics.tokyo.jp
     on_success: always #[always|never|change] # default: change
     on_failure: always #[always|never|change] # default: always
 before_install: # Use this to prepare the system to install prerequisites or dependencies
@@ -39,7 +34,7 @@ before_install: # Use this to prepare the system to install prerequisites or dep
   - export REPOSITORY_NAME=${PWD##*/}
   - export ROS_PARALLEL_JOBS="-j1 -l1"
   - echo "Testing branch $TRAVIS_BRANCH of $REPOSITORY_NAME"
-  - sudo sh -c 'echo "deb http://packages.ros.org/ros-shadow-fixed/ubuntu precise main" > /etc/apt/sources.list.d/ros-latest.list'
+  - sudo sh -c 'echo "deb http://packages.ros.org/ros-shadow-fixed/ubuntu trusty main" > /etc/apt/sources.list.d/ros-latest.list'
   - wget http://packages.ros.org/ros.key -O - | sudo apt-key add -
   - sudo apt-get update -qq
   - sudo apt-get install -qq -y python-catkin-pkg python-rosdep python-wstool ros-$ROS_DISTRO-catkin
@@ -105,4 +100,3 @@ after_failure:
   - if [ $BUILDER == rosbuild ]; then find ${HOME}/.ros/rosmake/ -type f -exec echo "=== {} ===" \; -exec cat {} \; ; fi
   - find ${HOME}/.ros/test_results -type f -exec echo "=== {} ===" \; -exec cat {} \;
   - for file in ${HOME}/.ros/log/rostest-*; do echo "=== $file ==="; cat $file; done
-
