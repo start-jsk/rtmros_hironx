@@ -42,7 +42,7 @@ before_install: # Use this to prepare the system to install prerequisites or dep
   - if [ $BUILDER == rosbuild ]; then sudo apt-get install -qq -y ros-$ROS_DISTRO-rosmake ; fi
   - if [ "$EXTRA_DEB" ]; then sudo apt-get install -q -qq -y $EXTRA_DEB;  fi
   # MongoDB hack - I don't fully understand this but its for moveit_warehouse
-  - sudo apt-get remove -qq -y mongodb mongodb-10gen
+  - sudo apt-get remove -qq -y mongodb
   - sudo apt-get install -qq -y mongodb-clients mongodb-server -o Dpkg::Options::="--force-confdef" # default actions
   # Setup rosdep
   - sudo rosdep init
