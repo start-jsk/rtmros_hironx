@@ -10,3 +10,6 @@ install(DIRECTORY capture_data estimate_params # view_results
   USE_SOURCE_PERMISSIONS
 )
 
+install(FILES upload_urdf.launch
+  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
+)
