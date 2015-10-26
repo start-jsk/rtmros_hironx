@@ -52,6 +52,7 @@ SWITCH_OFF = OpenHRP.RobotHardwareService.SWITCH_OFF
 _MSG_ASK_ISSUEREPORT = 'Your report to ' + \
                        'https://github.com/start-jsk/rtmros_hironx/issues ' + \
                        'about the issue you are seeing is appreciated.'
+_MSG_RESTART_QNX = 'You may want to restart QNX/ControllerBox afterward'
 
 def delete_module(modname, paranoid=None):
     from sys import modules
@@ -559,7 +560,15 @@ class HIRONX(HrpsysConfigurator):
         # turn on hand motors
         print 'Turn on Hand Servo'
         if self.sc_svc:
-            self.sc_svc.servoOn()
+            is_servoon = self.sc_svc.servoOn()
+            print('Hands Servo on: ' + is_servoon)
+            if not is_servoon:
+                print('One or more hand servos failed to turn on. Make sure all hand modules are properly cabled ('
+                      + _MSG_RESTART_QNX + ') and run the command again.')
+                return -1
+        else:
+            print('hrpsys ServoController not found. ' + _MSG_RESTART_QNX + ' and run the command again.')
+            return -1
 
         return 1
 
