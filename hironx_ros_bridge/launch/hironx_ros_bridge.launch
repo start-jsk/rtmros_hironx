@@ -14,12 +14,14 @@
   <arg name="USE_ROBOTHARDWARE" default="false" />
   <arg name="USE_IMPEDANCECONTROLLER" default="false"/>
   <arg name="USE_SERVOCONTROLLER" default="false" />
+  <arg name="USE_ROBOT_POSE_EKF" default="false" />
 
   <include file="$(find hrpsys_ros_bridge)/launch/hrpsys_ros_bridge.launch">
     <arg name="SIMULATOR_NAME" value="$(arg SIMULATOR_NAME)" />
     <arg name="nameserver" value="$(arg nameserver)" />
     <arg name="MODEL_FILE" value="$(arg MODEL_FILE)" />
     <arg name="COLLADA_FILE" value="$(arg COLLADA_FILE)" />
+    <arg name="USE_ROBOT_POSE_EKF" value="$(arg USE_ROBOT_POSE_EKF)" />
 
     <arg name="USE_WALKING" value="false" />
     <arg name="BASE_LINK" value="WAIST"/>
