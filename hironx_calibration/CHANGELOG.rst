@@ -2,8 +2,8 @@
 Changelog for package hironx_calibration
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.1.1 (2015-11-02)
+------------------
 * [fix] Install a missing launch file
 * Contributors: Isaac I.Y. Saito
 
