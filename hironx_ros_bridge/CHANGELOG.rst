@@ -2,6 +2,12 @@
 Changelog for package hironx_ros_bridge
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+1.1.1 (2015-11-02)
+------------------
+* [improved] Elaborate print message upon hands servo-on failure
+* [fix] Disable EKF that causes unnecessary error (unless robot moves)
+* Contributors: Isaac I.Y. Saito
+
 1.0.37 (2015-09-11)
 -------------------
 * [test] Optimize rostest time-limit 
