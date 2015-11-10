@@ -5,6 +5,8 @@ import math
 import numpy
 import re
 
+from tf.transformations import quaternion_from_euler
+
 from test_hironx import euler_from_matrix, TestHiro
 
 PKG = 'hironx_ros_bridge'
@@ -257,62 +259,74 @@ class TestHiroTarget(TestHiro):
         l_eef = 'LARM_JOINT5'
         r_eef = 'RARM_JOINT5'
 
-        init_l = (-3.073, -1.57002, 3.073)  # goInit (not factory setting) pose
-        init_r = (3.073, -1.57002, -3.073)  # goInit (not factory setting) pose
-        roll_l_post = (-1.502, -1.5700, 3.073)  # dr=math.pi / 2 from init pose
-        roll_r_post = (-1.639, -1.5700, -3.073)  # dr=math.pi / 2 from init pose
-        pitch_l_post = (-0.000, -0.787, -4.924e-05)  # dp=math.pi / 4 from init pose
-        pitch_r_post = (0.000, -0.787, 4.827e-05)  # dp=math.pi / 4 from init pose
-        yaw_l_post = (-1.575, -1.178, 1.574)  # dw=math.pi from init pose
-        yaw_r_post = (-1.575, 0.000, 1.575)  # dw=math.pi from init pose
+        init_l = quaternion_from_euler(-3.073, -1.57002, 3.073)  # goInit (not factory setting) pose
+        init_r = quaternion_from_euler(3.073, -1.57002, -3.073)  # goInit (not factory setting) pose
+        roll_l_post = quaternion_from_euler(-1.502, -1.5700, 3.073)  # dr=math.pi / 2 from init pose
+        roll_r_post = quaternion_from_euler(-1.639, -1.5700, -3.073)  # dr=math.pi / 2 from init pose
+        pitch_l_post = quaternion_from_euler(-0.000, -0.787, -4.924e-05)  # dp=math.pi / 4 from init pose
+        pitch_r_post = quaternion_from_euler(0.000, -0.787, 4.827e-05)  # dp=math.pi / 4 from init pose
+        yaw_l_post = quaternion_from_euler(-1.573, -4.205e-05, 1.571)  # dw=math.pi / 2 from init pose
+        yaw_r_post = quaternion_from_euler(-1.573, -0.000, 1.571)  # dw=math.pi / 2 from init pose
 
         # roll motion
         self.robot.goInitial(2)
         for i in range(0, 5):  # Repeat the same movement 5 times
             self.robot.setTargetPoseRelative(RTM_JOINTGRP_LEFT_ARM, l_eef, dr=math.pi / 2, tm=0.5, wait=False)
             self.robot.setTargetPoseRelative(RTM_JOINTGRP_RIGHT_ARM, r_eef, dr=math.pi / 2, tm=0.5, wait=True)
-            roll_l_post_now = self.robot.getCurrentRPY(l_eef)
-            roll_r_post_now = self.robot.getCurrentRPY(r_eef)
-            numpy.testing.assert_array_almost_equal(numpy.array(roll_l_post), numpy.array(roll_l_post_now), decimal=2)
-            numpy.testing.assert_array_almost_equal(numpy.array(roll_r_post), numpy.array(roll_r_post_now), decimal=2)
+            roll_l_post_now_rpy = self.robot.getCurrentRPY(l_eef)
+            roll_l_post_now = quaternion_from_euler(roll_l_post_now_rpy[0], roll_l_post_now_rpy[1], roll_l_post_now_rpy[2])
+            roll_r_post_now_rpy = self.robot.getCurrentRPY(r_eef)
+            roll_r_post_now = quaternion_from_euler(roll_r_post_now_rpy[0], roll_r_post_now_rpy[1], roll_r_post_now_rpy[2])
+            numpy.testing.assert_array_almost_equal(roll_l_post, roll_l_post_now, decimal=2)
+            numpy.testing.assert_array_almost_equal(roll_r_post, roll_r_post_now, decimal=2)
             self.robot.setTargetPoseRelative(RTM_JOINTGRP_LEFT_ARM, l_eef, dr=-math.pi / 2, dw=0, tm=0.5, wait=False)
             self.robot.setTargetPoseRelative(RTM_JOINTGRP_RIGHT_ARM, r_eef, dr=-math.pi / 2, dw=0, tm=0.5, wait=True)
-            init_l_now = self.robot.getCurrentRPY(l_eef)
-            init_r_now = self.robot.getCurrentRPY(r_eef)
-            numpy.testing.assert_array_almost_equal(numpy.array(init_l), numpy.array(init_l_now), decimal=2)
-            numpy.testing.assert_array_almost_equal(numpy.array(init_r), numpy.array(init_r_now), decimal=2)
+            init_l_now_rpy = self.robot.getCurrentRPY(l_eef)
+            init_l_now = quaternion_from_euler(init_l_now_rpy[0], init_l_now_rpy[1], init_l_now_rpy[2])
+            init_r_now_rpy = self.robot.getCurrentRPY(r_eef)
+            init_r_now = quaternion_from_euler(init_r_now_rpy[0], init_r_now_rpy[1], init_r_now_rpy[2])
+            numpy.testing.assert_array_almost_equal(init_l, init_l_now, decimal=2)
+            numpy.testing.assert_array_almost_equal(init_r, init_r_now, decimal=2)
 
         # pitch motion
         self.robot.goInitial(2)
         for i in range(0, 5):
             self.robot.setTargetPoseRelative(RTM_JOINTGRP_LEFT_ARM, l_eef, dp=math.pi / 4, tm=0.5, wait=False)
             self.robot.setTargetPoseRelative(RTM_JOINTGRP_RIGHT_ARM, r_eef, dp=math.pi / 4, tm=0.5, wait=True)
-            pitch_l_post_now = self.robot.getCurrentRPY(l_eef)
-            pitch_r_post_now = self.robot.getCurrentRPY(r_eef)
-            numpy.testing.assert_array_almost_equal(numpy.array(pitch_l_post), numpy.array(pitch_l_post_now), decimal=2)
-            numpy.testing.assert_array_almost_equal(numpy.array(pitch_r_post), numpy.array(pitch_r_post_now), decimal=2)
+            pitch_l_post_now_rpy = self.robot.getCurrentRPY(l_eef)
+            pitch_l_post_now = quaternion_from_euler(pitch_l_post_now_rpy[0], pitch_l_post_now_rpy[1], pitch_l_post_now_rpy[2])
+            pitch_r_post_now_rpy = self.robot.getCurrentRPY(r_eef)
+            pitch_r_post_now = quaternion_from_euler(pitch_r_post_now_rpy[0], pitch_r_post_now_rpy[1], pitch_r_post_now_rpy[2])
+            numpy.testing.assert_array_almost_equal(pitch_l_post, pitch_l_post_now, decimal=2)
+            numpy.testing.assert_array_almost_equal(pitch_r_post, pitch_r_post_now, decimal=2)
             self.robot.setTargetPoseRelative(RTM_JOINTGRP_LEFT_ARM, l_eef, dp=-math.pi / 4, dw=0, tm=0.5, wait=False)
             self.robot.setTargetPoseRelative(RTM_JOINTGRP_RIGHT_ARM, r_eef, dp=-math.pi / 4, dw=0, tm=0.5, wait=True)
-            init_l_now = self.robot.getCurrentRPY(l_eef)
-            init_r_now = self.robot.getCurrentRPY(r_eef)
-            numpy.testing.assert_array_almost_equal(numpy.array(init_l), numpy.array(init_l_now), decimal=2)
-            numpy.testing.assert_array_almost_equal(numpy.array(init_r), numpy.array(init_r_now), decimal=2)
+            init_l_now_rpy = self.robot.getCurrentRPY(l_eef)
+            init_l_now = quaternion_from_euler(init_l_now_rpy[0], init_l_now_rpy[1], init_l_now_rpy[2])
+            init_r_now_rpy = self.robot.getCurrentRPY(r_eef)
+            init_r_now = quaternion_from_euler(init_r_now_rpy[0], init_r_now_rpy[1], init_r_now_rpy[2])
+            numpy.testing.assert_array_almost_equal(init_l, init_l_now, decimal=2)
+            numpy.testing.assert_array_almost_equal(init_r, init_r_now, decimal=2)
 
         # yaw motion
         self.robot.goInitial(2)
         for i in range(0, 5):
-            self.robot.setTargetPoseRelative(RTM_JOINTGRP_LEFT_ARM, l_eef, dw=math.pi / 4, tm=0.5, wait=False)
-            self.robot.setTargetPoseRelative(RTM_JOINTGRP_RIGHT_ARM, r_eef, dw=math.pi / 4, tm=0.5, wait=True)
-            yaw_l_post_now = self.robot.getCurrentRPY(l_eef)
-            yaw_r_post_now = self.robot.getCurrentRPY(r_eef)
-            numpy.testing.assert_array_almost_equal(numpy.array(yaw_l_post), numpy.array(yaw_l_post_now), decimal=2)
-            numpy.testing.assert_array_almost_equal(numpy.array(yaw_r_post), numpy.array(yaw_r_post_now), decimal=2)
-            self.robot.setTargetPoseRelative(RTM_JOINTGRP_LEFT_ARM, l_eef, dw=-math.pi / 4, tm=0.5, wait=False)
-            self.robot.setTargetPoseRelative(RTM_JOINTGRP_RIGHT_ARM, r_eef, dw=-math.pi / 4, tm=0.5, wait=True)
-            init_l_now = self.robot.getCurrentRPY(l_eef)
-            init_r_now = self.robot.getCurrentRPY(r_eef)
-            numpy.testing.assert_array_almost_equal(numpy.array(init_l), numpy.array(init_l_now), decimal=2)
-            numpy.testing.assert_array_almost_equal(numpy.array(init_r), numpy.array(init_r_now), decimal=2)
+            self.robot.setTargetPoseRelative(RTM_JOINTGRP_LEFT_ARM, l_eef, dw=math.pi / 2, tm=0.5, wait=False)
+            self.robot.setTargetPoseRelative(RTM_JOINTGRP_RIGHT_ARM, r_eef, dw=math.pi / 2, tm=0.5, wait=True)
+            yaw_l_post_now_rpy = self.robot.getCurrentRPY(l_eef)
+            yaw_l_post_now = quaternion_from_euler(yaw_l_post_now_rpy[0], yaw_l_post_now_rpy[1], yaw_l_post_now_rpy[2])
+            yaw_r_post_now_rpy = self.robot.getCurrentRPY(r_eef)
+            yaw_r_post_now = quaternion_from_euler(yaw_r_post_now_rpy[0], yaw_r_post_now_rpy[1], yaw_r_post_now_rpy[2])
+            numpy.testing.assert_array_almost_equal(yaw_l_post, yaw_l_post_now, decimal=2)
+            numpy.testing.assert_array_almost_equal(yaw_r_post, yaw_r_post_now, decimal=2)
+            self.robot.setTargetPoseRelative(RTM_JOINTGRP_LEFT_ARM, l_eef, dw=-math.pi / 2, tm=0.5, wait=False)
+            self.robot.setTargetPoseRelative(RTM_JOINTGRP_RIGHT_ARM, r_eef, dw=-math.pi / 2, tm=0.5, wait=True)
+            init_l_now_rpy = self.robot.getCurrentRPY(l_eef)
+            init_l_now = quaternion_from_euler(init_l_now_rpy[0], init_l_now_rpy[1], init_l_now_rpy[2])
+            init_r_now_rpy = self.robot.getCurrentRPY(r_eef)
+            init_r_now = quaternion_from_euler(init_r_now_rpy[0], init_r_now_rpy[1], init_r_now_rpy[2])
+            numpy.testing.assert_array_almost_equal(init_l, init_l_now, decimal=2)
+            numpy.testing.assert_array_almost_equal(init_r, init_r_now, decimal=2)
 
 if __name__ == '__main__':
     import rostest
