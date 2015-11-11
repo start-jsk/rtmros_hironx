@@ -2,6 +2,14 @@
 Changelog for package rtmros_hironx
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* [sys] Add a testcase for checking `#335 <https://github.com/start-jsk/rtmros_hironx/issues/335>`_
+* [sys] add DEBUG_HRPSYS argument
+* [sys] Remove redundant install rule
+* [sys][travis] Drop rosbuild checking for Indigo onward
+* Contributors: Isaac I.Y. Saito, Kei Okada
+
 1.1.1 (2015-11-02)
 ------------------
 * [improved] Elaborate print message upon hands servo-on failure
