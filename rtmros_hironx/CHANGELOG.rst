@@ -2,8 +2,8 @@
 Changelog for package rtmros_hironx
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.1.2 (2015-11-11)
+------------------
 * [sys] Add a testcase for checking `#335 <https://github.com/start-jsk/rtmros_hironx/issues/335>`_
 * [sys] add DEBUG_HRPSYS argument
 * [sys] Remove redundant install rule
