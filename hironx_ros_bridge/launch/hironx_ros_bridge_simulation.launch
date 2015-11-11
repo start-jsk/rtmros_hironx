@@ -4,6 +4,7 @@
   <arg name="MODEL_FILE" default="$(find hironx_ros_bridge)/models/kawada-hironx.dae" />
   <arg name="CONF_FILE" default="$(find hironx_ros_bridge)/conf/kawada-hironx.conf" />
   <arg name="CONF_FILE_COLLISIONDETECT" default="$(find hironx_ros_bridge)/conf/kawada-hironx.conf" />
+  <arg name="DEBUG_HRPSYS" default="false" />
 
   <!-- Set model file to parameter server  -->
   <param name="hironx/collada_model_filepath" value="$(arg MODEL_FILE)" />
@@ -13,6 +14,7 @@
     <arg name="MODEL_FILE" value="$(arg MODEL_FILE)" />
     <arg name="corbaport" default="$(arg corbaport)" />
     <arg name="CONF_FILE" value="$(arg CONF_FILE)" />    
+    <arg name="DEBUG_HRPSYS" value="$(arg DEBUG_HRPSYS)" />
   </include>
   <include file="$(find hironx_ros_bridge)/launch/hironx_ros_bridge.launch" >
     <arg name="nameserver" value="localhost" />
