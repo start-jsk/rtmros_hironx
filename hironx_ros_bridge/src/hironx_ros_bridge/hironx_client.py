@@ -199,9 +199,9 @@ class HIRONX(HrpsysConfigurator):
         @type tm: float
         @param tm: Second to complete.
         @type wait: bool
-        @param wait: If true, SequencePlayer.waitInterpolationOfGroup gets run.
-                     (TODO: Elaborate what this means...Even after having taken
-                     a look at its source code I can't tell what it means.)
+        @param wait: If true, other command to the robot's joints wait until
+                     this command returns (done by running
+                     SequencePlayer.waitInterpolationOfGroup).
         @type init_pose_type: int
         @param init_pose_type: 0: default init pose (specified as _InitialPose)
                                1: factory init pose (specified as
@@ -422,13 +422,19 @@ class HIRONX(HrpsysConfigurator):
 
     def isServoOn(self, jname='any'):
         '''
-        Check whether servo control has been turned on.
+        Check whether servo control has been turned on. Check is done by
+        HIRONX.getActualState().servoState.
         @type jname: str
         @param jname: Name of a link (that can be obtained by "hiro.Groups"
                       as lists of groups).
-        @rtype bool
-        '''
 
+                      Reserved values:
+                      - any: This command will check all servos available.
+                      - all: Same as 'any'.
+        @rtype bool
+        @return: If jname is specified either 'any' or 'all', return False
+                 if the control of any of servos isn't available.
+        '''
         if self.simulation_mode:
             return True
         else:
