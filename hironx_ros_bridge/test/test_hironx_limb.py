@@ -192,6 +192,39 @@ class TestHiroLimb(TestHiro):
 
         self.robot.el_svc.setServoErrorLimit("all", 0.18) # default is 0.18
 
+    def test_movejoints_neck_waist(self):
+        '''
+        Move neck and waist joints to the positional limit defined in
+        the user's manual (with an arbitrary safety coefficient)
+        using hrpsys commands.
+
+        This test is originally made to catch issues like
+        https://github.com/start-jsk/rtmros_hironx/issues/411
+        '''
+        safety_coeffiecient = 0.8
+        durtion_operation = 10
+        # Values claimed by manufacturer
+        max_neck_pitch = 0.63
+        min_neck_pitch = -0.4
+        max_neck_yaw = 1.22
+        min_neck_yaw = -1.22
+        max_waist_yaw = 2.84
+        min_waist_yaw = -2.84
+
+        self.limbbody_init()
+        # Here multiplied by safety coefficient to avoid the robot tries
+        # the maximum angles, in case this test is used with real robots.
+        self.assertTrue(self.robot.setTargetPoseRelative('head', 'HEAD_JOINT1', dp=max_neck_pitch*safety_coeffiecient, tm=durtion_operation))
+        self.robot.goInitial()
+        self.assertTrue(self.robot.setTargetPoseRelative('head', 'HEAD_JOINT1', dp=min_neck_pitch*safety_coeffiecient, tm=durtion_operation))
+        self.robot.goInitial()
+        self.assertTrue(self.robot.setTargetPoseRelative('head', 'HEAD_JOINT0', dw=max_neck_yaw*safety_coeffiecient, tm=durtion_operation))
+        self.robot.goInitial()
+        self.assertTrue(self.robot.setTargetPoseRelative('head', 'HEAD_JOINT0', dw=min_neck_yaw*safety_coeffiecient, tm=durtion_operation))
+        self.robot.goInitial()
+        self.assertTrue(self.robot.setTargetPoseRelative('torso', 'CHEST_JOINT0', dw=max_waist_yaw*safety_coeffiecient, tm=durtion_operation))
+        self.robot.goInitial()
+        self.assertTrue(self.robot.setTargetPoseRelative('torso', 'CHEST_JOINT0', dw=min_waist_yaw*safety_coeffiecient, tm=durtion_operation))
 
 if __name__ == '__main__':
     import rostest
