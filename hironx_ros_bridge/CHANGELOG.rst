@@ -2,6 +2,12 @@
 Changelog for package hironx_ros_bridge
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* [fix] add error msg when checkEncoders did not go well
+* [sys] add test for head and waste joints
+* Contributors: Isaac I.Y. Saito
+
 1.1.2 (2015-11-11)
 ------------------
 * [sys] Add a testcase for checking `#335 <https://github.com/start-jsk/rtmros_hironx/issues/335>`_
