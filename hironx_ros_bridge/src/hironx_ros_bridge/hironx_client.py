@@ -667,13 +667,20 @@ class HIRONX(HrpsysConfigurator):
             self.rh_svc.power('all', SWITCH_OFF)
             return 0
 
+        is_result_hw = True
         print self.configurator_name, 'calib-joint ' + jname + ' ' + option
-        self.rh_svc.initializeJointAngle(jname, option)
+        is_result_hw = is_result_hw and self.rh_svc.initializeJointAngle(jname, option)
         print self.configurator_name, 'done'
-        self.rh_svc.power('all', SWITCH_OFF)
+        is_result_hw = is_result_hw and self.rh_svc.power('all', SWITCH_OFF)
         self.goActual()  # This needs to happen before turning servo on.
         time.sleep(0.1)
-        self.rh_svc.servo(jname, SWITCH_ON)
+        is_result_hw = is_result_hw and self.rh_svc.servo(jname, SWITCH_ON)
+        if not is_result_hw:
+            # The step described in the following msg is confirmed by the manufacturer 12/14/2015
+            print('Turning servos ({}) failed. This is likely because of issues ' +
+                  "happening in lower level. Please check if the Kawada's " +
+                  "proprietary tool NextageOpenSupervisor returns without issue " +
+                  "or not. If the issue persists, contact the manufacturer.".format(jname))
 
         # turn on hand motors
         print 'Turn on Hand Servo'
