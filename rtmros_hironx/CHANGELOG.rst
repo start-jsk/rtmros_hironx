@@ -2,8 +2,8 @@
 Changelog for package rtmros_hironx
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.1.3 (2015-12-16)
+------------------
 * [fix] add error msg when checkEncoders did not go well
 * [sys] add test for head and waste joints
 * Contributors: Isaac I.Y. Saito
