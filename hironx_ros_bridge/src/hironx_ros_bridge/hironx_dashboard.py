@@ -39,6 +39,8 @@ from python_qt_binding.QtGui import QMessageBox, QLabel, QPalette
 from hrpsys_ros_bridge.hrpsys_dashboard import HrpsysDashboard
 from rqt_robot_dashboard.widgets import MenuDashWidget
 
+from hironx_ros_bridge.command_widget import HironxoCommandPanel
+
 
 class HiroNXNameLabel(QLabel):
     def __init__(self, name):
@@ -55,6 +57,8 @@ class HiroNXDashboard(HrpsysDashboard):
         self._imp_button = None
         self._pose_button = None
         self._name_label = HiroNXNameLabel("HiroNX " + os.environ["ROS_MASTER_URI"] + " ")
+        self._command_panel = HironxoCommandPanel(self, self.context)
+        context.add_widget(self._command_panel)
 
     def get_widgets(self):
         widgets = super(HiroNXDashboard, self).get_widgets()
