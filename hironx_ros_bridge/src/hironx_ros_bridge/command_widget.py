@@ -50,6 +50,13 @@ PKG_NAME = 'hironx_ros_bridge'
 
 
 class HironxoCommandPanel(QWidget):
+    '''
+    Design decisions:
+
+    - joint_state_publisher is dropped, since hrpsys_ros_bridge seems to set
+    `robot_description` param using COLLADA (see https://goo.gl/aLpILa)
+    instead of URDF, which joint_state_publisher is not capable of.
+    '''
 
     def __init__(self, parent, guicontext):
         '''
@@ -77,13 +84,26 @@ class HironxoCommandPanel(QWidget):
         self.pushButton_goInitial.clicked[bool].connect(self._go_initial)
         self.pushButton_goInitial_factoryval.clicked[bool].connect(self._go_initial_factoryval)
         self.pushButton_goOffPose.clicked[bool].connect(self._go_offPose)
-        self.pushButton_servoOn.clicked[bool].connect(self._servo_on)
+        self.pushButton_startImpedance.clicked[bool].connect(self._impedance_on)
+        self.pushButton_stopImpedance.clicked[bool].connect(self._impedance_off)
 
     def _get_duration(self):
         '''
         @rtype float
         '''
         return float(self.doubleSpinBox_duration.text())
+
+    def _get_arm_impedance(self):
+        '''
+        @rtype str
+        @return: Returns a name of arm group that is checked on GUI. None by default.
+        '''
+        checked_arm = None
+        if self.radioButton_impedance_left.isChecked():
+            checked_arm = 'larm'
+        elif self.radioButton_impedance_right.isChecked():
+            checked_arm = 'rarm'
+        return checked_arm
 
     def _check_encoders(self):
         self._rtm.checkEncoders()
@@ -98,14 +118,25 @@ class HironxoCommandPanel(QWidget):
     def _go_offPose(self):
         self._rtm.goOffPose(tm=self._get_duration())
 
-    def _servo_on(self):
-        self._rtm.servoOn()
-
-    def _servo_off(self):
-        self._rtm.servoOff()
+    def _impedance_on_off(self, do_on=True):
+        '''
+        Start/stop impedance control for the specified arm group.
+        Arm group to operate impedance control is automatically obtained from
+        GUI internally within this method.
+        @raise AttributeError: When no arm group is specified.
+        @type do_on: bool
+        @param do_on: On/off of impedance control
+        '''
+        armgroup = self._get_arm_impedance()
+        if not armgroup:
+            raise AttributeError('No arm is specified for impedance control to start.')
+        if do_on:
+            self._rtm.startImpedance(armgroup)
+        elif not do_on:
+            self._rtm.stopImpedance(armgroup)
 
     def _impedance_on(self):
-        self._rtm.startImpedance()
+        self._impedance_on_off()
 
-    def _imdedance_off(self):
-        self._rtm.stopImpedance()
+    def _impedance_off(self):
+        self._impedance_on_off(do_on=False)
