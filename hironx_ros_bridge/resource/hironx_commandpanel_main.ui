@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>557</width>
-    <height>255</height>
+    <height>271</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -15,9 +15,9 @@
   </property>
   <layout class="QGridLayout" name="gridLayout">
    <item row="0" column="0">
-    <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="5,5">
+    <layout class="QHBoxLayout" name="horizontalLayout_top" stretch="5,5">
      <item>
-      <layout class="QVBoxLayout" name="verticalLayout" stretch="1,0,1">
+      <layout class="QVBoxLayout" name="verticalLayout" stretch="0,0">
        <property name="spacing">
         <number>6</number>
        </property>
@@ -31,128 +31,160 @@
         <number>1</number>
        </property>
        <item>
-        <widget class="QPushButton" name="pushButton_checkEncoders">
-         <property name="toolTip">
-          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;HIRONX.checkEncoders&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-         </property>
-         <property name="text">
-          <string>Calibration</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <layout class="QGridLayout" name="gridLayout_2" rowstretch="0" columnstretch="7,3">
+        <layout class="QGridLayout" name="gridLayout_2" rowstretch="0" columnstretch="0">
          <item row="0" column="0">
-          <layout class="QVBoxLayout" name="verticalLayout_4">
+          <layout class="QVBoxLayout" name="verticalLayout_init_off_pose_top" stretch="1,1,2">
            <item>
-            <widget class="QPushButton" name="pushButton_goInitial">
+            <widget class="QLabel" name="label_sectiontitle_init_off_pose">
+             <property name="text">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Init/Off Operations&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="pushButton_checkEncoders">
              <property name="toolTip">
-              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;HIRONX.goInitial&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;HIRONX.checkEncoders&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
              </property>
              <property name="text">
-              <string>Goto init pose</string>
+              <string>Joint calibration</string>
              </property>
             </widget>
            </item>
            <item>
-            <widget class="QPushButton" name="pushButton_goInitial_factoryval">
-             <property name="toolTip">
-              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;HIRONX.goInitial(init_pose_type=&lt;span style=&quot; font-family:'Courier New,courier';&quot;&gt;_InitialPose_Factory)&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-             </property>
-             <property name="text">
-              <string>Goto init pose (factory)</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QPushButton" name="pushButton_goOffPose">
-             <property name="toolTip">
-              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;goOffPose&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-             </property>
-             <property name="text">
-              <string>Goto power-off pose</string>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </item>
-         <item row="0" column="1">
-          <layout class="QVBoxLayout" name="verticalLayout_5">
-           <item>
-            <widget class="QLabel" name="label_duration">
-             <property name="text">
-              <string>Duration (sec)</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QDoubleSpinBox" name="doubleSpinBox_duration">
-             <property name="toolTip">
-              <string>Set the time (second) to complete the operation.</string>
-             </property>
-             <property name="decimals">
-              <number>1</number>
-             </property>
-             <property name="minimum">
-              <double>2.000000000000000</double>
-             </property>
-             <property name="value">
-              <double>7.000000000000000</double>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QLabel" name="label_spacer_1">
-             <property name="text">
-              <string/>
-             </property>
-            </widget>
+            <layout class="QHBoxLayout" name="horizontalLayout_init_off_operations" stretch="5,5">
+             <item>
+              <layout class="QVBoxLayout" name="verticalLayout_init_off_operations_buttons">
+               <item>
+                <widget class="QPushButton" name="pushButton_goInitial">
+                 <property name="toolTip">
+                  <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;HIRONX.goInitial&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                 </property>
+                 <property name="text">
+                  <string>Goto init pose</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QPushButton" name="pushButton_goInitial_factoryval">
+                 <property name="toolTip">
+                  <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;HIRONX.goInitial(init_pose_type=&lt;span style=&quot; font-family:'Courier New,courier';&quot;&gt;_InitialPose_Factory)&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                 </property>
+                 <property name="text">
+                  <string>Goto init pose (factory)</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QPushButton" name="pushButton_goOffPose">
+                 <property name="toolTip">
+                  <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;goOffPose&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                 </property>
+                 <property name="text">
+                  <string>Goto power-off pose</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+             <item>
+              <layout class="QVBoxLayout" name="verticalLayout_5">
+               <item>
+                <widget class="QLabel" name="label_duration">
+                 <property name="text">
+                  <string>Duration (sec)</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QDoubleSpinBox" name="doubleSpinBox_duration">
+                 <property name="toolTip">
+                  <string>Set the time (second) to complete the operation.</string>
+                 </property>
+                 <property name="decimals">
+                  <number>1</number>
+                 </property>
+                 <property name="minimum">
+                  <double>2.000000000000000</double>
+                 </property>
+                 <property name="value">
+                  <double>7.000000000000000</double>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLabel" name="label_spacer_1">
+                 <property name="text">
+                  <string/>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+            </layout>
            </item>
           </layout>
          </item>
         </layout>
        </item>
        <item>
-        <layout class="QGridLayout" name="gridLayout_impedance" rowstretch="0" columnstretch="6,4">
+        <layout class="QGridLayout" name="gridLayout_impedance" rowstretch="0" columnstretch="0">
          <item row="0" column="0">
-          <layout class="QVBoxLayout" name="verticalLayout_3">
+          <layout class="QVBoxLayout" name="verticalLayout_impedance">
            <item>
-            <widget class="QPushButton" name="pushButton_startImpedance">
-             <property name="toolTip">
-              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;startImpedance&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-             </property>
+            <widget class="QLabel" name="label_sectiontitle_impedance">
              <property name="text">
-              <string>Impedance start</string>
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Impedance control&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
              </property>
             </widget>
            </item>
            <item>
-            <widget class="QPushButton" name="pushButton_stopImpedance">
-             <property name="toolTip">
-              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;stopImpedance&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            <layout class="QHBoxLayout" name="horizontalLayout_impedance_armselect">
+             <property name="leftMargin">
+              <number>1</number>
              </property>
-             <property name="text">
-              <string>Impedance stop</string>
+             <property name="rightMargin">
+              <number>1</number>
              </property>
-            </widget>
+             <item>
+              <widget class="QRadioButton" name="radioButton_impedance_left">
+               <property name="text">
+                <string>Left arm</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QRadioButton" name="radioButton_impedance_right">
+               <property name="text">
+                <string>Right arm</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
            </item>
-          </layout>
-         </item>
-         <item row="0" column="1">
-          <layout class="QVBoxLayout" name="verticalLayout_6">
            <item>
-            <widget class="QRadioButton" name="radioButton_impedance_left">
-             <property name="text">
-              <string>Left arm</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QRadioButton" name="radioButton_impedance_right">
-             <property name="text">
-              <string>Right arm</string>
-             </property>
-            </widget>
+            <layout class="QHBoxLayout" name="horizontalLayout_impedance_operation">
+             <item>
+              <widget class="QPushButton" name="pushButton_startImpedance">
+               <property name="toolTip">
+                <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;startImpedance&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+               </property>
+               <property name="text">
+                <string>Start</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="pushButton_stopImpedance">
+               <property name="toolTip">
+                <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;stopImpedance&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+               </property>
+               <property name="text">
+                <string>Stop</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
            </item>
           </layout>
          </item>
