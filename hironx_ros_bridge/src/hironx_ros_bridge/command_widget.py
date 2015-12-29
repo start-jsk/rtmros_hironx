@@ -78,6 +78,8 @@ class HironxoCommandPanel(QWidget):
                                'hironx_commandpanel_main.ui')
         loadUi(ui_file, self, {'HironxoCommandPanel': HironxoCommandPanel})
 
+        self._precision_output = 4  # Default degree order to be used to print values
+
         # Assign callback methods
         self.pushButton_checkEncoders.clicked[bool].connect(self._check_encoders)
         self.pushButton_goInitial.clicked[bool].connect(self._go_initial)
@@ -86,12 +88,19 @@ class HironxoCommandPanel(QWidget):
         self.pushButton_goOffPose.clicked[bool].connect(self._go_offPose)
         self.pushButton_startImpedance.clicked[bool].connect(self._impedance_on)
         self.pushButton_stopImpedance.clicked[bool].connect(self._impedance_off)
+        self.pushButton_actualPose_l.clicked[bool].connect(self._actual_pose_l)
+        self.pushButton_actualPose_r.clicked[bool].connect(self._actual_pose_r)
+        self.spinBox_precision_output.valueChanged[int].connect(self._get_precision_output)
+        self.pushButton_groups.clicked[bool].connect(self._show_groups)
 
     def _get_duration(self):
         '''
         @rtype float
         '''
         return float(self.doubleSpinBox_duration.text())
+
+    def _get_precision_output(self):
+        self._precision_output = self.spinBox_precision_output.value()
 
     def _get_arm_impedance(self):
         '''
@@ -140,3 +149,47 @@ class HironxoCommandPanel(QWidget):
 
     def _impedance_off(self):
         self._impedance_on_off(do_on=False)
+
+    def _show_actual_pose(self, list_pose):
+        '''
+        @type list_pose: [str]
+        @param list_pose: list of str that represent angles (in radian)
+        '''
+        # Print the section line. This creates '---- ---- ---- ---- '
+        section_line_piece = '-'
+        text_single_line = section_line_piece * self._precision_output + '\t'
+        self.textBrowser_output.append(text_single_line * 4)
+
+        text_single_line = ''
+        i = 0
+        for fl in list_pose:
+            val = str(round(fl, self._precision_output))
+
+            # Format the diagonal
+            text_single_line += val
+            print('DEBUG) #{}: text_single_line: {}'.format(i, text_single_line))
+            # If num of elements in a single line reaches 4,
+            # or if cursor reaches the end of the list.
+            # Also, We want to add the 1st element into the 1st line.
+            if (i != 0 and i % 4 == 3) or i+1 == len(list_pose):
+                self.textBrowser_output.append(text_single_line)
+                text_single_line = ''  # Clear the text for a single line
+            else:
+                text_single_line += '\t'
+            i += 1
+
+    def _actual_pose_l(self):
+        self._show_actual_pose(self._rtm.getCurrentPose('LARM_JOINT5'))
+
+    def _actual_pose_r(self):
+        self._show_actual_pose(self._rtm.getCurrentPose('RARM_JOINT5'))
+
+    def _show_groups(self):
+        groups = self._rtm.Groups
+        text = ''
+        for g in groups:
+            text += g[0]
+            str_elems = ''.join(str('\t' + e + '\n') for e in g[1])
+            text += str_elems
+
+        self.textBrowser_output.append(text)
