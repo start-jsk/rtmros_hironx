@@ -58,7 +58,7 @@
                <item>
                 <widget class="QPushButton" name="pushButton_goInitial">
                  <property name="toolTip">
-                  <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;HIRONX.goInitial&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                  <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Using HIRONX.goInitial, all joints move to the pre-defined initial pose.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                  </property>
                  <property name="text">
                   <string>Goto init pose</string>
@@ -78,7 +78,7 @@
                <item>
                 <widget class="QPushButton" name="pushButton_goOffPose">
                  <property name="toolTip">
-                  <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;goOffPose&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                  <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Using HIRONX.goOffPose, all joints move to the pose that is the safest and you can turn off the power of the robot.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                  </property>
                  <property name="text">
                   <string>Goto power-off pose</string>
@@ -239,7 +239,7 @@
            <item>
             <widget class="QPushButton" name="pushButton_actualPose_l">
              <property name="toolTip">
-              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;actualPose&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Shows the pose of the eef w.r.t the waist link.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
              </property>
              <property name="text">
               <string>L-arm</string>
@@ -249,7 +249,7 @@
            <item>
             <widget class="QPushButton" name="pushButton_actualPose_r">
              <property name="toolTip">
-              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;actualPose&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Shows the pose of the eef w.r.t the waist link.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
              </property>
              <property name="text">
               <string>R-arm</string>
@@ -263,7 +263,7 @@
        <item>
         <widget class="QPushButton" name="pushButton_groups">
          <property name="toolTip">
-          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Groups&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Shows the kinematic groups and elements of each group.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
          </property>
          <property name="text">
           <string>Show kinematic groups</string>
