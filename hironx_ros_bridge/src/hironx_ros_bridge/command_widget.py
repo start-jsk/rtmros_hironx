@@ -93,6 +93,9 @@ class HironxoCommandPanel(QWidget):
         self.spinBox_precision_output.valueChanged[int].connect(self._get_precision_output)
         self.pushButton_groups.clicked[bool].connect(self._show_groups)
 
+    def _print_command(self, command_str):
+        self.textBrowser_output.append('***Command used***\n\t' + command_str)
+
     def _get_duration(self):
         '''
         @rtype float
@@ -115,16 +118,20 @@ class HironxoCommandPanel(QWidget):
         return checked_arm
 
     def _check_encoders(self):
+        self._print_command('checkEncoders()')
         self._rtm.checkEncoders()
 
     def _go_initial(self):
+        self._print_command('goInitial(tm={})'.format(self._get_duration()))
         self._rtm.goInitial(tm=self._get_duration())
 
     def _go_initial_factoryval(self):
+        self._print_command('goInitial(init_pose_type=1, tm={})'.format(self._get_duration()))
         self._rtm.goInitial(init_pose_type=self._rtm.INITPOS_TYPE_FACTORY,
                             tm=self._get_duration())
 
     def _go_offPose(self):
+        self._print_command('goOffPose(tm={})'.format(self._get_duration()))
         self._rtm.goOffPose(tm=self._get_duration())
 
     def _impedance_on_off(self, do_on=True):
@@ -140,8 +147,10 @@ class HironxoCommandPanel(QWidget):
         if not armgroup:
             raise AttributeError('No arm is specified for impedance control to start.')
         if do_on:
+            self._print_command('startImpedance({})'.format(armgroup))
             self._rtm.startImpedance(armgroup)
         elif not do_on:
+            self._print_command('stopImpedance({})'.format(armgroup))
             self._rtm.stopImpedance(armgroup)
 
     def _impedance_on(self):
@@ -179,10 +188,14 @@ class HironxoCommandPanel(QWidget):
             i += 1
 
     def _actual_pose_l(self):
-        self._show_actual_pose(self._rtm.getCurrentPose('LARM_JOINT5'))
+        target_joint = 'LARM_JOINT5'
+        self._print_command('getCurrentPose({})'.format(target_joint))
+        self._show_actual_pose(self._rtm.getCurrentPose(target_joint))
 
     def _actual_pose_r(self):
-        self._show_actual_pose(self._rtm.getCurrentPose('RARM_JOINT5'))
+        target_joint = 'LARM_JOINT5'
+        self._print_command('getCurrentPose({})'.format(target_joint))
+        self._show_actual_pose(self._rtm.getCurrentPose(target_joint))
 
     def _show_groups(self):
         groups = self._rtm.Groups
@@ -192,4 +205,5 @@ class HironxoCommandPanel(QWidget):
             str_elems = ''.join(str('\t' + e + '\n') for e in g[1])
             text += str_elems
 
+        self._print_command('Groups')
         self.textBrowser_output.append(text)
