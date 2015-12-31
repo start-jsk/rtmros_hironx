@@ -83,7 +83,6 @@ class HironxoCommandPanel(QWidget):
         # Assign callback methods
         self.pushButton_checkEncoders.clicked[bool].connect(self._check_encoders)
         self.pushButton_goInitial.clicked[bool].connect(self._go_initial)
-        self.pushButton_goInitial.clicked[bool].connect(self._go_initial)
         self.pushButton_goInitial_factoryval.clicked[bool].connect(self._go_initial_factoryval)
         self.pushButton_goOffPose.clicked[bool].connect(self._go_offPose)
         self.pushButton_startImpedance.clicked[bool].connect(self._impedance_on)
