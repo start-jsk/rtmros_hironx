@@ -292,7 +292,8 @@ class ROS_Client(object):
         elif Constant.GRNAME_RIGHT_ARM == joint_group:
             movegr = self._movegr_rarm
         else:
-            rospy.loginfo('444')
+            rospy.logerr('joint_group must be either %s or %s'%(Constant.GRNAME_LEFT_ARM,Constant.GRNAME_RIGHT_ARM))
+            return
 
         # set reference frame
         if ref_frame_name :
