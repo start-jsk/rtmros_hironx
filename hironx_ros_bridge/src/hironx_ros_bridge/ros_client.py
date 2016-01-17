@@ -99,6 +99,8 @@ class ROS_Client(object):
         try:
             self._movegr_larm = MoveGroupCommander(Constant.GRNAME_LEFT_ARM_MOVEGROUP)
             self._movegr_rarm = MoveGroupCommander(Constant.GRNAME_RIGHT_ARM_MOVEGROUP)
+            self._movegr_rarm.set_planner_id("RRTConnectkConfigDefault");
+            self._movegr_larm.set_planner_id("RRTConnectkConfigDefault");
             self._movegr_larm_ref_frame = self._movegr_larm.get_pose_reference_frame()
             self._movegr_rarm_ref_frame = self._movegr_rarm.get_pose_reference_frame()
         except RuntimeError as e:
