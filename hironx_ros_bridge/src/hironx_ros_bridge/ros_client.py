@@ -289,6 +289,8 @@ class ROS_Client(object):
                 movegr.set_position_target(position)
             except MoveItCommanderException as e:
                 rospy.logerr(str(e))
+            (movegr.go(do_wait) or movegr.go(do_wait) or
+             rospy.logerr('MoveGroup.go fails; jointgr={}'.format(joint_group)))
             return
 
         # Not necessary to convert from rpy to quaternion, since
