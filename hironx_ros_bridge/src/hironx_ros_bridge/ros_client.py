@@ -99,6 +99,8 @@ class ROS_Client(object):
         try:
             self._movegr_larm = MoveGroupCommander(Constant.GRNAME_LEFT_ARM_MOVEGROUP)
             self._movegr_rarm = MoveGroupCommander(Constant.GRNAME_RIGHT_ARM_MOVEGROUP)
+            self._movegr_larm_ref_frame = self._movegr_larm.get_pose_reference_frame()
+            self._movegr_rarm_ref_frame = self._movegr_rarm.get_pose_reference_frame()
         except RuntimeError as e:
             raise e
 
@@ -278,10 +280,16 @@ class ROS_Client(object):
         movegr = None
         if Constant.GRNAME_LEFT_ARM == joint_group:
             movegr = self._movegr_larm
+            default_ref_frame_name = self._movegr_larm_ref_frame
         elif Constant.GRNAME_RIGHT_ARM == joint_group:
             movegr = self._movegr_rarm
+            default_ref_frame_name = self._movegr_rarm_ref_frame
         else:
             rospy.loginfo('444')
+
+        # set reference frame
+        if ref_frame_name :
+            movegr.set_pose_reference_frame(ref_frame_name)
 
         # If no RPY specified, give position and return the method.
         if not rpy:
@@ -305,6 +313,10 @@ class ROS_Client(object):
             rospy.logerr(str(e))
         except Exception as e:
             rospy.logerr(str(e))
+
+        # back to default frame
+        if ref_frame_name :
+            movegr.set_pose_reference_frame(default_ref_frame_name)
 
         (movegr.go(do_wait) or movegr.go(do_wait) or
          rospy.logerr('MoveGroup.go fails; jointgr={}'.format(joint_group)))
