@@ -272,6 +272,11 @@ class ROS_Client(object):
                      'MoveGroupCommander.html#acfe2220fd85eeb0a971c51353e437753'
         @param ref_frame_name: reference frame for target pose, i.e. "LARM_JOINT5_Link".
         '''
+        # convert to tuple to list
+        position = list(position)
+        if not rpy is None:
+            rpy = list(rpy)
+        #
         # Check if MoveGroup is instantiated.
         if not self._movegr_larm or not self._movegr_rarm:
             try:
