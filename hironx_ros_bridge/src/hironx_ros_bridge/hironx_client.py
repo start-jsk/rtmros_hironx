@@ -52,6 +52,7 @@ SWITCH_OFF = OpenHRP.RobotHardwareService.SWITCH_OFF
 _MSG_ASK_ISSUEREPORT = 'Your report to ' + \
                        'https://github.com/start-jsk/rtmros_hironx/issues ' + \
                        'about the issue you are seeing is appreciated.'
+_MSG_RESTART_QNX = 'You may want to restart QNX/ControllerBox afterward'
 
 def delete_module(modname, paranoid=None):
     from sys import modules
@@ -198,9 +199,9 @@ class HIRONX(HrpsysConfigurator):
         @type tm: float
         @param tm: Second to complete.
         @type wait: bool
-        @param wait: If true, SequencePlayer.waitInterpolationOfGroup gets run.
-                     (TODO: Elaborate what this means...Even after having taken
-                     a look at its source code I can't tell what it means.)
+        @param wait: If true, other command to the robot's joints wait until
+                     this command returns (done by running
+                     SequencePlayer.waitInterpolationOfGroup).
         @type init_pose_type: int
         @param init_pose_type: 0: default init pose (specified as _InitialPose)
                                1: factory init pose (specified as
@@ -421,13 +422,19 @@ class HIRONX(HrpsysConfigurator):
 
     def isServoOn(self, jname='any'):
         '''
-        Check whether servo control has been turned on.
+        Check whether servo control has been turned on. Check is done by
+        HIRONX.getActualState().servoState.
         @type jname: str
         @param jname: Name of a link (that can be obtained by "hiro.Groups"
                       as lists of groups).
-        @rtype bool
-        '''
 
+                      Reserved values:
+                      - any: This command will check all servos available.
+                      - all: Same as 'any'.
+        @rtype bool
+        @return: If jname is specified either 'any' or 'all', return False
+                 if the control of any of servos isn't available.
+        '''
         if self.simulation_mode:
             return True
         else:
@@ -559,7 +566,15 @@ class HIRONX(HrpsysConfigurator):
         # turn on hand motors
         print 'Turn on Hand Servo'
         if self.sc_svc:
-            self.sc_svc.servoOn()
+            is_servoon = self.sc_svc.servoOn()
+            print('Hands Servo on: ' + is_servoon)
+            if not is_servoon:
+                print('One or more hand servos failed to turn on. Make sure all hand modules are properly cabled ('
+                      + _MSG_RESTART_QNX + ') and run the command again.')
+                return -1
+        else:
+            print('hrpsys ServoController not found. ' + _MSG_RESTART_QNX + ' and run the command again.')
+            return -1
 
         return 1
 
@@ -652,13 +667,20 @@ class HIRONX(HrpsysConfigurator):
             self.rh_svc.power('all', SWITCH_OFF)
             return 0
 
+        is_result_hw = True
         print self.configurator_name, 'calib-joint ' + jname + ' ' + option
-        self.rh_svc.initializeJointAngle(jname, option)
+        is_result_hw = is_result_hw and self.rh_svc.initializeJointAngle(jname, option)
         print self.configurator_name, 'done'
-        self.rh_svc.power('all', SWITCH_OFF)
+        is_result_hw = is_result_hw and self.rh_svc.power('all', SWITCH_OFF)
         self.goActual()  # This needs to happen before turning servo on.
         time.sleep(0.1)
-        self.rh_svc.servo(jname, SWITCH_ON)
+        is_result_hw = is_result_hw and self.rh_svc.servo(jname, SWITCH_ON)
+        if not is_result_hw:
+            # The step described in the following msg is confirmed by the manufacturer 12/14/2015
+            print('Turning servos ({}) failed. This is likely because of issues ' +
+                  "happening in lower level. Please check if the Kawada's " +
+                  "proprietary tool NextageOpenSupervisor returns without issue " +
+                  "or not. If the issue persists, contact the manufacturer.".format(jname))
 
         # turn on hand motors
         print 'Turn on Hand Servo'

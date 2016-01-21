@@ -2,6 +2,26 @@
 Changelog for package hironx_ros_bridge
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+1.1.3 (2015-12-16)
+------------------
+* [fix] add error msg when checkEncoders did not go well
+* [sys] add test for head and waste joints
+* Contributors: Isaac I.Y. Saito
+
+1.1.2 (2015-11-11)
+------------------
+* [sys] Add a testcase for checking `#335 <https://github.com/start-jsk/rtmros_hironx/issues/335>`_
+* [sys] add DEBUG_HRPSYS argument
+* [sys] Remove redundant install rule
+* [sys][travis] Drop rosbuild checking for Indigo onward
+* Contributors: Isaac I.Y. Saito, Kei Okada
+
+1.1.1 (2015-11-02)
+------------------
+* [improved] Elaborate print message upon hands servo-on failure
+* [fix] Disable EKF that causes unnecessary error (unless robot moves)
+* Contributors: Isaac I.Y. Saito
+
 1.0.37 (2015-09-11)
 -------------------
 * [test] Optimize rostest time-limit 

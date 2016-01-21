@@ -1,52 +1,45 @@
-if(NOT USE_ROSBUILD)
-  include(catkin.cmake)
-  return()
-endif()
-cmake_minimum_required(VERSION 2.4.6)
-include($ENV{ROS_ROOT}/core/rosbuild/rosbuild.cmake)
-rosbuild_find_ros_package(hrpsys_ros_bridge)
-include(${hrpsys_ros_bridge_PACKAGE_PATH}/cmake/compile_robot_model.cmake)
+cmake_minimum_required(VERSION 2.8.3)
+project(hironx_ros_bridge)
 
-# Set the build type.  Options are:
-#  Coverage       : w/ debug symbols, w/o optimization, w/ code-coverage
-#  Debug          : w/ debug symbols, w/o optimization
-#  Release        : w/o debug symbols, w/ optimization
-#  RelWithDebInfo : w/ debug symbols, w/ optimization
-#  MinSizeRel     : w/o debug symbols, w/ optimization, stripped binaries
-#set(ROS_BUILD_TYPE RelWithDebInfo)
+find_package(catkin REQUIRED COMPONENTS hrpsys_ros_bridge pr2_controllers_msgs roslib roslint rostest)
+find_package(Boost REQUIRED COMPONENTS system)
 
-rosbuild_init()
+catkin_package(
+    CATKIN_DEPENDS std_msgs
+    CATKIN_DEPENDS hrpsys_ros_bridge pr2_controllers_msgs roslib #
+    INCLUDE_DIRS include
+    LIBRARIES ros_client_cpp
+)
 
-#set the default path for built executables to the "bin" directory
-set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
-#set the default path for built libraries to the "lib" directory
-set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
+catkin_python_setup()
 
-#uncomment if you have defined messages
-#rosbuild_genmsg()
-#uncomment if you have defined services
-#rosbuild_gensrv()
-
-#common commands for building c++ executables and libraries
-#rosbuild_add_library(${PROJECT_NAME} src/example.cpp)
-#target_link_libraries(${PROJECT_NAME} another_library)
-#rosbuild_add_boost_directories()
-#rosbuild_link_boost(${PROJECT_NAME} thread)
-#rosbuild_add_executable(example examples/example.cpp)
-#target_link_libraries(example ${PROJECT_NAME})
-
-rosbuild_download_data(https://github.com/rdiankov/collada_robots/raw/master/kawada-hironx.zae models/kawada-hironx.zae be4b0015914d33a5aaa24ee055bcdbc8)
 add_custom_command(OUTPUT ${PROJECT_SOURCE_DIR}/models/kawada-hironx.dae
+  COMMAND ${catkin_EXTRAS_DIR}/test/download_checkmd5.py
+  https://github.com/rdiankov/collada_robots/raw/master/kawada-hironx.zae
+  ${PROJECT_SOURCE_DIR}/models/kawada-hironx.zae
+  be4b0015914d33a5aaa24ee055bcdbc8
   COMMAND unzip -u ${PROJECT_SOURCE_DIR}/models/kawada-hironx.zae
   WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/models
-  DEPENDS ${PROJECT_SOURCE_DIR}/models/kawada-hironx.zae)
-add_custom_target(${PROJECT_NAME}_kawada_hironx_dae ALL DEPENDS ${PROJECT_SOURCE_DIR}/models/kawada-hironx.dae)
-
+  VERBATIM)
 # commit generated files due to  https://code.google.com/p/rtm-ros-robotics/issues/detail?id=187
 #compile_collada_model(${PROJECT_SOURCE_DIR}/models/kawada-hironx.dae)
-rosbuild_find_ros_package(openhrp3)
-set(OPENHRP3 ${openhrp3_PACKAGE_PATH}) # for longfloor.wrl
+
+# set ROBOT_NAME and OPENHRP3 for configure_file
+set(PKG_CONFIG_PATH "${openhrp3_PREFIX}/lib/pkgconfig:$ENV{PKG_CONFIG_PATH}") # for openrtm3.1.pc
+execute_process(
+  COMMAND pkg-config --variable=idl_dir openhrp3.1
+  OUTPUT_VARIABLE OPENHRP_IDL_DIR
+  RESULT_VARIABLE RESULT
+  OUTPUT_STRIP_TRAILING_WHITESPACE)
+if(NOT RESULT EQUAL 0)
+  set(OPENHRP_FOUND FALSE)
+endif()
+# OPENHRP_IDL_DIR = <openhrp3>/share/OpenHRP-3.1/idl/
+set(OPENHRP_SAMPLE_DIR ${OPENHRP_IDL_DIR}/../../../)
+set(OPENHRP3 ${OPENHRP_SAMPLE_DIR})  # for longfloor.wrl
 set(ROBOT_NAME kawada-hironx)
+
+message("Configure ${ROBOT_NAME} related file with OPENHRP3=${OPENHRP3}")
 configure_file(conf/RobotHardware.conf.in       ${PROJECT_SOURCE_DIR}/conf/${ROBOT_NAME}.RobotHardware.conf)
 configure_file(conf/nosim.RobotHardware.conf.in ${PROJECT_SOURCE_DIR}/conf/${ROBOT_NAME}_nosim.RobotHardware.conf)
 configure_file(conf/xml.in                      ${PROJECT_SOURCE_DIR}/conf/${ROBOT_NAME}.xml)
@@ -55,12 +48,61 @@ configure_file(conf/conf.in                     ${PROJECT_SOURCE_DIR}/conf/${ROB
 configure_file(conf/nosim.conf.in               ${PROJECT_SOURCE_DIR}/conf/${ROBOT_NAME}_nosim.conf)
 add_custom_target(${PROJECT_NAME}_model_files ALL DEPENDS ${PROJECT_SOURCE_DIR}/conf/${ROBOT_NAME}.RobotHardware.conf ${PROJECT_SOURCE_DIR}/conf/${ROBOT_NAME}_nosim.RobotHardware.conf ${PROJECT_SOURCE_DIR}/conf/${ROBOT_NAME}.xml ${PROJECT_SOURCE_DIR}/conf/${ROBOT_NAME}_nosim.xml ${PROJECT_SOURCE_DIR}/conf/${ROBOT_NAME}.conf ${PROJECT_SOURCE_DIR}/conf/${ROBOT_NAME}_nosim.conf)
 
+include_directories(include ${catkin_INCLUDE_DIRS} ${Boost_INCLUDE_DIRS})
 
-#clean generated files
-set_directory_properties(PROPERTIES ADDITIONAL_MAKE_CLEAN_FILES "${PROJECT_SOURCE_DIR}/conf/${ROBOT_NAME}.RobotHardware.conf;${PROJECT_SOURCE_DIR}/conf/${ROBOT_NAME}.conf;${PROJECT_SOURCE_DIR}/conf/${ROBOT_NAME}.l;${PROJECT_SOURCE_DIR}/conf/${ROBOT_NAME}.xml;${PROJECT_SOURCE_DIR}/conf/${ROBOT_NAME}_nosim.RobotHardware.conf;${PROJECT_SOURCE_DIR}/conf/${ROBOT_NAME}_nosim.conf;${PROJECT_SOURCE_DIR}/conf/${ROBOT_NAME}_nosim.xml;${PROJECT_SOURCE_DIR}/conf/${ROBOT_NAME}_nosim.conf;${PROJECT_SOURCE_DIR}/models/${ROBOT_NAME}.dae")
+#add_definitions("-std=c++0x")
+add_library(
+  ros_client_cpp include/ros_client.cpp
+)
 
-##
-## tests
-##
-rosbuild_add_rostest(test/test-hironx.test)
-rosbuild_add_rostest(test/test-hironx-ros-bridge.test)
+add_executable(
+    acceptancetest_hironx_cpp src/acceptancetest_hironx.cpp
+)
+
+target_link_libraries(
+  acceptancetest_hironx_cpp
+  ros_client_cpp ${catkin_LIBRARIES} ${Boost_LIBRARIES}
+)
+
+install(TARGETS acceptancetest_hironx_cpp
+        RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
+
+install(DIRECTORY include DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION})
+install(DIRECTORY launch DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION} PATTERN ".svn" EXCLUDE)
+install(DIRECTORY scripts DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION} USE_SOURCE_PERMISSIONS PATTERN ".svn" EXCLUDE)
+install(DIRECTORY conf DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION} PATTERN ".svn" EXCLUDE)
+install(DIRECTORY models DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION} PATTERN ".svn" EXCLUDE)
+install(DIRECTORY test DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION} USE_SOURCE_PERMISSIONS PATTERN ".svn" EXCLUDE)
+install(FILES rqt_plugin.xml DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION})
+
+install(CODE "
+  message(\"++ glob files under \$ENV{DESTDIR}/${CMAKE_INSTALL_PREFIX}/share/${PROJECT_NAME}/conf/\")
+  file(GLOB _xml_files \$ENV{DESTDIR}/${CMAKE_INSTALL_PREFIX}/share/${PROJECT_NAME}/conf/*.xml)
+  file(GLOB _conf_files \$ENV{DESTDIR}/${CMAKE_INSTALL_PREFIX}/share/${PROJECT_NAME}/conf/*.conf)
+  message(\"++ sed -i s@${PROJECT_SOURCE_DIR}@${CMAKE_INSTALL_PREFIX}/share/${PROJECT_NAME}@ \${_file}\")
+  if (EXISTS ${openhrp3_SOURCE_DIR})
+    message(\"++sed -i s@${openhrp3_SOURCE_DIR}/share/OpenHRP-3.1@${CMAKE_INSTALL_PREFIX}/share/openhrp3/share/OpenHRP-3.1@g \${_conf_file}\")
+  endif()
+  foreach(_file \${_xml_files};\${_conf_files})
+    message(\"  ++ fix \${_file}\")
+    execute_process(COMMAND sed -i s@${PROJECT_SOURCE_DIR}@${CMAKE_INSTALL_PREFIX}/share/${PROJECT_NAME}@ \${_file})
+    if (EXISTS ${openhrp3_SOURCE_DIR})
+      execute_process(COMMAND sed -i s@${openhrp3_SOURCE_DIR}/share/OpenHRP-3.1@${CMAKE_INSTALL_PREFIX}/share/openhrp3/share/OpenHRP-3.1@g \${_file})
+    endif()
+    execute_process(COMMAND sed -i s@${PROJECT_SOURCE_DIR}@${CMAKE_INSTALL_PREFIX}/share/${PROJECT_NAME}@ \${_file})
+  endforeach()
+  ")
+
+install(TARGETS acceptancetest_hironx_cpp ros_client_cpp
+        ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+        LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+        RUNTIME DESTINATION ${CATKIN_GLOBAL_BIN_DESTINATION})
+
+add_rostest(test/test-hironx.test)
+add_rostest(test/test-hironx-ros-bridge.test)
+add_rostest(test/test-hironx-ros-bridge-send.test)
+add_rostest(test/test-hironx-ros-bridge-pose.test)
+add_rostest(test/test-hironx-ros-bridge-controller.test)
+
+roslint_python(scripts/hironx.py src/hironx_ros_bridge/hironx_client.py src/hironx_ros_bridge/ros_client.py src/hironx_ros_bridge/constant.py)
+roslint_cpp()
