@@ -44,6 +44,8 @@ from geometry_msgs.msg import Pose, PoseStamped
 from moveit_commander import MoveGroupCommander
 import rospy
 
+from hironx_ros_bridge.ros_client import ROS_Client
+
 _PKG = 'hironx_ros_bridge'
 _SEC_WAIT_BETWEEN_TESTCASES = 3
 
@@ -185,6 +187,21 @@ class TestHironxMoveit(unittest.TestCase):
 #    def test_simple_unittest(self):
 #        self.assertEqual(1, 1)
 
+    def test_rosclient_robotcommander(self):
+        '''
+        Starting from https://github.com/start-jsk/rtmros_hironx/pull/422,
+        ROS_Client.py depends on moveit_commander.RobotCommander class.
+        This case tests the integration of ROS_Client.py and RobotCommander.
+
+        Developers need to avoid testing moveit_commander.RobotCommander itself
+        -- that needs to be done upstream.
+        '''
+        rosclient = ROS_Client()
+
+        # If the list of movegroups are not none, that can mean
+        # RobotCommander is working as expected.
+        groupnames = rosclient.get_group_names()
+        self.assertIsNotNone(groupnames)
 
 if __name__ == '__main__':
     import rostest

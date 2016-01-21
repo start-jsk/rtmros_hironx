@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 2.8.3)
 project(hironx_moveit_config)
 
-find_package(catkin REQUIRED COMPONENTS hironx_ros_bridge)
+find_package(catkin REQUIRED COMPONENTS hironx_ros_bridge rostest)
 
 # generate model file
 file(MAKE_DIRECTORY "models/meshes")
@@ -18,3 +18,5 @@ catkin_package()
 install(DIRECTORY launch DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION} PATTERN ".svn" EXCLUDE)
 install(DIRECTORY config DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION} PATTERN ".svn" EXCLUDE)
 install(DIRECTORY models DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION} PATTERN ".svn" EXCLUDE)
+
+add_rostest(test/test-hironx-moveit.test)
