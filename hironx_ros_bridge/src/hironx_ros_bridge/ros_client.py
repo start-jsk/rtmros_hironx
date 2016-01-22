@@ -93,7 +93,7 @@ class ROS_Client(RobotCommander):
         if not rospy.has_param('robot_description_semantic'):
             rospy.logwarn('Moveit is not started yet, if you want to use MoveIt!' + self._MSG_NO_MOVEGROUP_FOUND)
             return
-        self._movegr_larm = self._movegr_rarm = None
+
         try:
             self._init_moveit_commanders()
         except RuntimeError as e:
@@ -111,15 +111,17 @@ class ROS_Client(RobotCommander):
         '''
         # left_arm, right_arm are fixed in nextage_moveit_config pkg.
         try:
-            self._movegr_larm = self.get_group(Constant.GRNAME_LEFT_ARM_MOVEGROUP)
-            self._movegr_rarm = self.get_group(Constant.GRNAME_RIGHT_ARM_MOVEGROUP)
-            self._movegr_botharms = self.get_group('both_arm')
-            self._movegr_rarm.set_planner_id("RRTConnectkConfigDefault")
-            self._movegr_larm.set_planner_id("RRTConnectkConfigDefault")
-            self._movegr_botharms.set_planner_id("RRTConnectkConfigDefault")
-            self._movegr_larm_ref_frame = self._movegr_larm.get_pose_reference_frame()
-            self._movegr_rarm_ref_frame = self._movegr_rarm.get_pose_reference_frame()
-            self._movegr_botharms_ref_frame = self._movegr_botharms.get_pose_reference_frame()
+            self.MG_LARM = self.get_group(Constant.GRNAME_LEFT_ARM_MOVEGROUP)
+            self.MG_RARM = self.get_group(Constant.GRNAME_RIGHT_ARM_MOVEGROUP)
+            self.MG_BOTHARMS = self.get_group('both_arm')
+            self.MG_LARM.set_planner_id("RRTConnectkConfigDefault")
+            self.MG_RARM.set_planner_id("RRTConnectkConfigDefault")
+            self.MG_BOTHARMS.set_planner_id("RRTConnectkConfigDefault")
+
+            # TODO: Why the ref frames need to be kept as member variables?
+            self._movegr_larm_ref_frame = self.MG_LARM.get_pose_reference_frame()
+            self._movegr_rarm_ref_frame = self.MG_RARM.get_pose_reference_frame()
+            self._movegr_botharms_ref_frame = self.MG_BOTHARMS.get_pose_reference_frame()
         except RuntimeError as e:
             raise e
 
