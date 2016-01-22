@@ -41,8 +41,10 @@ from moveit_commander import MoveItCommanderException
 import rospy
 from pr2_controllers_msgs.msg import JointTrajectoryAction
 from pr2_controllers_msgs.msg import JointTrajectoryGoal
+from geometry_msgs.msg import Pose
 from trajectory_msgs.msg import JointTrajectoryPoint
-from tf.transformations import quaternion_from_euler
+from tf.transformations import quaternion_from_euler, euler_from_quaternion, compose_matrix, translation_from_matrix, euler_from_matrix
+import numpy
 
 from hironx_ros_bridge.constant import Constant
 
@@ -104,6 +106,10 @@ class ROS_Client(object):
         try:
             self._movegr_larm = MoveGroupCommander(Constant.GRNAME_LEFT_ARM_MOVEGROUP)
             self._movegr_rarm = MoveGroupCommander(Constant.GRNAME_RIGHT_ARM_MOVEGROUP)
+            self._movegr_rarm.set_planner_id("RRTConnectkConfigDefault");
+            self._movegr_larm.set_planner_id("RRTConnectkConfigDefault");
+            self._movegr_larm_ref_frame = self._movegr_larm.get_pose_reference_frame()
+            self._movegr_rarm_ref_frame = self._movegr_rarm.get_pose_reference_frame()
         except RuntimeError as e:
             raise e
 
@@ -269,8 +275,13 @@ class ROS_Client(object):
                      'http://moveit.ros.org/doxygen/' +
                      'classmoveit__commander_1_1move__group_1_1' +
                      'MoveGroupCommander.html#acfe2220fd85eeb0a971c51353e437753'
-        @param ref_frame_name: TODO: Not utilized yet. Need to be implemented.
+        @param ref_frame_name: reference frame for target pose, i.e. "LARM_JOINT5_Link".
         '''
+        # convert to tuple to list
+        position = list(position)
+        if not rpy is None:
+            rpy = list(rpy)
+        #
         # Check if MoveGroup is instantiated.
         if not self._movegr_larm or not self._movegr_rarm:
             try:
@@ -286,7 +297,18 @@ class ROS_Client(object):
         elif Constant.GRNAME_RIGHT_ARM == joint_group:
             movegr = self._movegr_rarm
         else:
-            rospy.loginfo('444')
+            rospy.logerr('joint_group must be either %s or %s'%(Constant.GRNAME_LEFT_ARM,Constant.GRNAME_RIGHT_ARM))
+            return
+
+        # set reference frame
+        if ref_frame_name :
+            ref_pose = movegr.get_current_pose(ref_frame_name).pose
+            ref_mat = compose_matrix(
+                translate = [ref_pose.position.x, ref_pose.position.y, ref_pose.position.z],
+                angles = list(euler_from_quaternion([ref_pose.orientation.x,ref_pose.orientation.y,ref_pose.orientation.z,ref_pose.orientation.w])))
+            target_mat = numpy.dot(ref_mat, compose_matrix(translate = position, angles = rpy or [0, 0, 0]))
+            position = list(translation_from_matrix(target_mat))
+            rpy = list(euler_from_matrix(target_mat))
 
         # If no RPY specified, give position and return the method.
         if not rpy:
@@ -294,6 +316,8 @@ class ROS_Client(object):
                 movegr.set_position_target(position)
             except MoveItCommanderException as e:
                 rospy.logerr(str(e))
+            (movegr.go(do_wait) or movegr.go(do_wait) or
+             rospy.logerr('MoveGroup.go fails; jointgr={}'.format(joint_group)))
             return
 
         # Not necessary to convert from rpy to quaternion, since
