@@ -42,3 +42,5 @@ class Constant():
     GRNAME_HEAD = 'head'
     GRNAME_BOTH_ARMS = 'botharms'
     GRNAME_BOTH_ARMS_MOVEGROUP = 'botharms'
+    GRNAME_UPPERBODY = 'upperbody'
+    POSE_OFF = 'offpose'

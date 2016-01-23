@@ -113,10 +113,16 @@ class ROS_Client(RobotCommander):
         try:
             self.MG_LARM = self.get_group(Constant.GRNAME_LEFT_ARM_MOVEGROUP)
             self.MG_RARM = self.get_group(Constant.GRNAME_RIGHT_ARM_MOVEGROUP)
-            self.MG_BOTHARMS = self.get_group('both_arm')
+            self.MG_BOTHARMS = self.get_group(Constant.GRNAME_BOTH_ARMS)
+            self.MG_HEAD = self.get_group(Constant.GRNAME_HEAD)
+            self.MG_TORSO = self.get_group(Constant.GRNAME_TORSO)
+            self.MG_UPPERBODY = self.get_group(Constant.GRNAME_UPPERBODY)
             self.MG_LARM.set_planner_id("RRTConnectkConfigDefault")
             self.MG_RARM.set_planner_id("RRTConnectkConfigDefault")
             self.MG_BOTHARMS.set_planner_id("RRTConnectkConfigDefault")
+            self.MG_HEAD.set_planner_id("RRTConnectkConfigDefault")
+            self.MG_TORSO.set_planner_id("RRTConnectkConfigDefault")
+            self.MG_UPPERBODY.set_planner_id("RRTConnectkConfigDefault")
 
             # TODO: Why the ref frames need to be kept as member variables?
             self._movegr_larm_ref_frame = self.MG_LARM.get_pose_reference_frame()
@@ -198,6 +204,10 @@ class ROS_Client(RobotCommander):
             posetype_str = 'init_rtm_factory'
         self.MG_BOTHARMS.set_named_target(posetype_str)
         self.MG_BOTHARMS.go()
+
+    def go_offpose(self, task_duration=7.0):
+        self.MG_UPPERBODY.set_named_target(Constant.POSE_OFF)
+        self.MG_UPPERBODY.go()
 
     def goInitial(self, init_pose_type=0, task_duration=7.0):
         '''
@@ -286,6 +296,7 @@ class ROS_Client(RobotCommander):
     def set_pose(self, joint_group, position, rpy=None, task_duration=7.0,
                  do_wait=True, ref_frame_name=None):
         '''
+        @deprecated: Use set_pose_target (from MoveGroupCommander) directly.
         Accept pose defined by position and RPY in Cartesian format.
 
         @type joint_group: str
@@ -315,11 +326,13 @@ class ROS_Client(RobotCommander):
         # Locally assign the specified MoveGroup
         movegr = None
         if Constant.GRNAME_LEFT_ARM == joint_group:
-            movegr = self._movegr_larm
+            movegr = self.MG_LARM
         elif Constant.GRNAME_RIGHT_ARM == joint_group:
-            movegr = self._movegr_rarm
+            movegr = self.MG_RARM
         else:
-            rospy.logerr('joint_group must be either %s or %s'%(Constant.GRNAME_LEFT_ARM,Constant.GRNAME_RIGHT_ARM))
+            rospy.logerr('joint_group must be either %s, %s or %s'%(Constant.GRNAME_LEFT_ARM,
+                                                                    Constant.GRNAME_RIGHT_ARM,
+                                                                    Constant.GRNAME_BOTH_ARMS))
             return
 
         # set reference frame
