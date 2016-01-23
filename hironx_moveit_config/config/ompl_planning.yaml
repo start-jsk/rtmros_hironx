@@ -41,7 +41,7 @@ left_arm:
     - RRTStarkConfigDefault
   projection_evaluator: joints(LARM_JOINT0,LARM_JOINT1)
   longest_valid_segment_fraction: 0.05
-both_arm:
+botharms:
   planner_configs:
     - SBLkConfigDefault
     - LBKPIECEkConfigDefault

@@ -40,3 +40,5 @@ class Constant():
     GRNAME_RIGHT_ARM_MOVEGROUP = 'right_arm'
     GRNAME_TORSO = 'torso'
     GRNAME_HEAD = 'head'
+    GRNAME_BOTH_ARMS = 'botharms'
+    GRNAME_BOTH_ARMS_MOVEGROUP = 'botharms'
