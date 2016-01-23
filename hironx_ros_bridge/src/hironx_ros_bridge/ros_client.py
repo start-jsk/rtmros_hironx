@@ -191,9 +191,13 @@ class ROS_Client(RobotCommander):
                1: factory init pose (specified as _InitialPose_Factory)
         '''
         rospy.loginfo('*** go_init begins ***')
-        # botha.set_named_target('init_rtm')
-        # botha.go()
-        rospy.loginfo(self._goal_larm.trajectory.points)
+        posetype_str = ''
+        if 0 == init_pose_type:
+            posetype_str = 'init_rtm'
+        elif 1 == init_pose_type:
+            posetype_str = 'init_rtm_factory'
+        self.MG_BOTHARMS.set_named_target(posetype_str)
+        self.MG_BOTHARMS.go()
 
     def goInitial(self, init_pose_type=0, task_duration=7.0):
         '''
@@ -202,6 +206,10 @@ class ROS_Client(RobotCommander):
         This method exists solely because of compatibility purpose with
         hironx_ros_bridge.hironx_client.HIRONX.goInitial, which
         holds a method "goInitial".
+
+        @param init_pose_type:
+               0: default init pose (specified as _InitialPose)
+               1: factory init pose (specified as _InitialPose_Factory)
         '''
         return self.go_init(init_pose_type, task_duration)
 

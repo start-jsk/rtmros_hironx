@@ -81,9 +81,11 @@ class TestHironxMoveit(unittest.TestCase):
         self._ros.MG_LARM_current_pose = self._ros.MG_LARM.get_current_pose().pose
         # For botharms get_current_pose ends with no eef error.
 
-        self.init_rtm_jointvals = [0.010471975511965976, 0.0, -1.7453292519943295, -0.26529004630313807,
-                                   0.16406094968746698, -0.05585053606381855, -0.010471975511965976, 0.0,
-                                   -1.7453292519943295, 0.26529004630313807, 0.16406094968746698, 0.05585053606381855]
+        self.init_rtm_jointvals = [0.010471975511965976, 0.0, -1.7453292519943295, -0.26529004630313807, 0.16406094968746698, -0.05585053606381855,
+                                   -0.010471975511965976, 0.0, -1.7453292519943295, 0.26529004630313807, 0.16406094968746698, 0.05585053606381855]
+
+        self.init_rtm_jointvals_factory = [0.010471975511965976, 0.0, -1.7453292519943295, -0.26529004630313807, 0.16406094968746698, -0.05585053606381855,
+                                           -0.010471975511965976, 0.0, -1.7453292519943295, 0.26529004630313807, 0.16406094968746698, 0.05585053606381855]
 
         # These represent a pose as in the image https://goo.gl/hYa15h
         self.banzai_pose_larm_goal = [-0.0280391167993, 0.558512828409, 0.584801820449,
@@ -200,6 +202,14 @@ class TestHironxMoveit(unittest.TestCase):
         # RobotCommander is working as expected.
         groupnames = self.rosclient.get_group_names()
         self.assertIsNotNone(groupnames)
+
+    def test_rosclient_goInitial(self):
+        self._ros.goInitial()
+        numpy.testing.assert_almost_equal(self._ros.MG_BOTHARMS.get_current_joint_values(),
+                                          self.init_rtm_jointvals, 3)
+        self._ros.goInitial(init_pose_type=1)
+        numpy.testing.assert_almost_equal(self._ros.MG_BOTHARMS.get_current_joint_values(),
+                                          self.init_rtm_jointvals_factory, 3)
 
 if __name__ == '__main__':
     import rostest
