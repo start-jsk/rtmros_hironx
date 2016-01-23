@@ -60,15 +60,6 @@ class TestHironxMoveit(unittest.TestCase):
 
         rospy.init_node("test_hironx_moveit")
         self._ros = ROS_Client()
-        self._ros.MG_RARM = MoveGroupCommander("right_arm")
-        self._ros.MG_LARM = MoveGroupCommander("left_arm")
-        self._ros.MG_BOTHARMS = MoveGroupCommander("both_arm")
-
-        # Tentative workaround for https://github.com/tork-a/rtmros_nextage/issues/170
-        safe_kinematicsolver = "RRTConnectkConfigDefault"
-        self._ros.MG_LARM.set_planner_id(safe_kinematicsolver)
-        self._ros.MG_RARM.set_planner_id(safe_kinematicsolver)
-        self._ros.MG_BOTHARMS.set_planner_id(safe_kinematicsolver)
 
         self._botharms_joints = ['LARM_JOINT0', 'LARM_JOINT1',
                                  'LARM_JOINT2', 'LARM_JOINT3',
@@ -86,6 +77,10 @@ class TestHironxMoveit(unittest.TestCase):
 
         self.init_rtm_jointvals_factory = [0.010471975511965976, 0.0, -1.7453292519943295, -0.26529004630313807, 0.16406094968746698, -0.05585053606381855,
                                            -0.010471975511965976, 0.0, -1.7453292519943295, 0.26529004630313807, 0.16406094968746698, 0.05585053606381855]
+
+        self.offpose_jointvals = [0.0, 0.0, 0.0,
+                                  -0.4363323129985819, -2.4260076602721163, -2.7401669256310983, -0.7853981633974487, 0.0, 0.0,
+                                  0.4363323129985819, -2.4260076602721163, -2.7401669256310983, 0.7853981633974487, 0.0, 0.0]
 
         # These represent a pose as in the image https://goo.gl/hYa15h
         self.banzai_pose_larm_goal = [-0.0280391167993, 0.558512828409, 0.584801820449,
@@ -210,6 +205,11 @@ class TestHironxMoveit(unittest.TestCase):
         self._ros.goInitial(init_pose_type=1)
         numpy.testing.assert_almost_equal(self._ros.MG_BOTHARMS.get_current_joint_values(),
                                           self.init_rtm_jointvals_factory, 3)
+
+    def test_rosclient_go_offpose(self):
+        self._ros.go_offpose()
+        numpy.testing.assert_almost_equal(self._ros.MG_UPPERBODY.get_current_joint_values(),
+                                          self.offpose_jointvals, 3)
 
 if __name__ == '__main__':
     import rostest
