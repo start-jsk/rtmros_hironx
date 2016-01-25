@@ -2,6 +2,14 @@
 Changelog for package hironx_ros_bridge
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* [fix] servoOn debug msg failure (`#425 <https://github.com/start-jsk/rtmros_hironx/issues/425>`_)
+* [fix][ROS_Client] Implement missing methods `#421 <https://github.com/start-jsk/rtmros_hironx/issues/421>`_
+* [feat][ROS_Client] ROS client now Inherits moveitcommander.RobotCommander class.
+* [feat][hironx/rqt dashboard] Add HiroNXO specific commands
+* Contributors: Kei Okada, pazeshun, Isaac I.Y. Saito, 
+
 1.1.3 (2015-12-16)
 ------------------
 * [fix] add error msg when checkEncoders did not go well
