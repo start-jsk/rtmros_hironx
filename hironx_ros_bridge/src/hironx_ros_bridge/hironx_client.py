@@ -571,7 +571,7 @@ class HIRONX(HrpsysConfigurator):
         print 'Turn on Hand Servo'
         if self.sc_svc:
             is_servoon = self.sc_svc.servoOn()
-            print('Hands Servo on: ' + is_servoon)
+            print('Hands Servo on: ' + str(is_servoon))
             if not is_servoon:
                 print('One or more hand servos failed to turn on. Make sure all hand modules are properly cabled ('
                       + _MSG_RESTART_QNX + ') and run the command again.')
