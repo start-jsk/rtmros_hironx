@@ -2,6 +2,16 @@
 Changelog for package hironx_ros_bridge
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* [feat][moveit config, ROS_CLient] Upperbody move group. Add more fundamental command.
+* [feat][moveit config, ROS_CLient] More fundamental command.
+* [feat][moveit config] Factory-init pose for MoveIt! reserved pose.
+* [feat] Rename both arms group to adjust to that of NEXTAGE Open.
+* [feat][ROS_Client] Exporting move group members publicly.
+* [feat][ROS_Client] Remove some standalone methods that are less maintained. Instead, utilize more from MoveIt! RobotCommander and MoveitCommander.
+* Contributors: Isaac I.Y. Saito
+
 1.1.4 (2016-01-25)
 ------------------
 * [fix] servoOn debug msg failure (`#425 <https://github.com/start-jsk/rtmros_hironx/issues/425>`_)

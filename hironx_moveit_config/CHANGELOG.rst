@@ -2,6 +2,14 @@
 Changelog for package hironx_moveit_config
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* [feat][ROS_CLient] Upperbody move group.
+* [feat] Rename both arms group to adjust to that of NEXTAGE Open.
+* [feat] Add torso and head move groups.
+* [feat] Factory-init pose for MoveIt! reserved pose.
+* Contributors: Isaac I.Y. Saito
+
 1.1.4 (2016-01-25)
 ------------------
 * [sys][moveit config] Enable unit test for ROS_Client-RobotCommander integration
