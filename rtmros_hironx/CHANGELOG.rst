@@ -2,8 +2,8 @@
 Changelog for package rtmros_hironx
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.1.5 (2016-01-26)
+------------------
 * [feat][moveit config, ROS_CLient] Upperbody move group. Add more fundamental command.
 * [feat][ROS_CLient] More fundamental commands.
 * [feat][moveit config] Factory-init pose for MoveIt! reserved pose.

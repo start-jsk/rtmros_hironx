@@ -2,8 +2,8 @@
 Changelog for package hironx_ros_bridge
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.1.5 (2016-01-26)
+------------------
 * [feat][moveit config, ROS_CLient] Upperbody move group. Add more fundamental command.
 * [feat][moveit config, ROS_CLient] More fundamental command.
 * [feat][moveit config] Factory-init pose for MoveIt! reserved pose.
