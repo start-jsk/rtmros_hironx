@@ -69,7 +69,7 @@ class ROS_Client(RobotCommander):
 
     def __init__(self, jointgroups=None):
         '''
-        @type jointgroups: [str]
+        @param jointgroups [str]: Deprecated. No need after version 1.1.4 onward.
         '''
         super(ROS_Client, self).__init__()  # This solves https://github.com/start-jsk/rtmros_hironx/issues/300
 
@@ -81,19 +81,19 @@ class ROS_Client(RobotCommander):
             return
 
         rospy.init_node('hironx_ros_client')
-        if jointgroups:
-            self._set_groupnames(jointgroups)
 
         if not rospy.has_param('robot_description'):
             rospy.logwarn('ROS Bridge is not started yet, Assuming you want just to use RTM')
             return
 
+        # See the doc in the method for the reason why this line is still kept
+        # even after this class has shifted MoveIt! intensive.
         self._init_action_clients()
 
         if not rospy.has_param('robot_description_semantic'):
             rospy.logwarn('Moveit is not started yet, if you want to use MoveIt!' + self._MSG_NO_MOVEGROUP_FOUND)
             return
-        self._movegr_larm = self._movegr_rarm = None
+
         try:
             self._init_moveit_commanders()
         except RuntimeError as e:
@@ -111,16 +111,33 @@ class ROS_Client(RobotCommander):
         '''
         # left_arm, right_arm are fixed in nextage_moveit_config pkg.
         try:
-            self._movegr_larm = MoveGroupCommander(Constant.GRNAME_LEFT_ARM_MOVEGROUP)
-            self._movegr_rarm = MoveGroupCommander(Constant.GRNAME_RIGHT_ARM_MOVEGROUP)
-            self._movegr_rarm.set_planner_id("RRTConnectkConfigDefault");
-            self._movegr_larm.set_planner_id("RRTConnectkConfigDefault");
-            self._movegr_larm_ref_frame = self._movegr_larm.get_pose_reference_frame()
-            self._movegr_rarm_ref_frame = self._movegr_rarm.get_pose_reference_frame()
+            self.MG_LARM = self.get_group(Constant.GRNAME_LEFT_ARM_MOVEGROUP)
+            self.MG_RARM = self.get_group(Constant.GRNAME_RIGHT_ARM_MOVEGROUP)
+            self.MG_BOTHARMS = self.get_group(Constant.GRNAME_BOTH_ARMS)
+            self.MG_HEAD = self.get_group(Constant.GRNAME_HEAD)
+            self.MG_TORSO = self.get_group(Constant.GRNAME_TORSO)
+            self.MG_UPPERBODY = self.get_group(Constant.GRNAME_UPPERBODY)
+            self.MG_LARM.set_planner_id("RRTConnectkConfigDefault")
+            self.MG_RARM.set_planner_id("RRTConnectkConfigDefault")
+            self.MG_BOTHARMS.set_planner_id("RRTConnectkConfigDefault")
+            self.MG_HEAD.set_planner_id("RRTConnectkConfigDefault")
+            self.MG_TORSO.set_planner_id("RRTConnectkConfigDefault")
+            self.MG_UPPERBODY.set_planner_id("RRTConnectkConfigDefault")
+
+            # TODO: Why the ref frames need to be kept as member variables?
+            self._movegr_larm_ref_frame = self.MG_LARM.get_pose_reference_frame()
+            self._movegr_rarm_ref_frame = self.MG_RARM.get_pose_reference_frame()
+            self._movegr_botharms_ref_frame = self.MG_BOTHARMS.get_pose_reference_frame()
         except RuntimeError as e:
             raise e
 
     def _init_action_clients(self):
+        '''
+        This is only needed for accessing Actionlib clients directly, which
+        is no longer needed for this class now that it inherits
+        RobotCommander from MoveIt!. Still this line is kept for the methods
+        deprecated but remain for backward compatibility.
+        '''
         self._aclient_larm = actionlib.SimpleActionClient(
             '/larm_controller/joint_trajectory_action', JointTrajectoryAction)
         self._aclient_rarm = actionlib.SimpleActionClient(
@@ -164,45 +181,53 @@ class ROS_Client(RobotCommander):
                           self._goal_larm.trajectory.joint_names,
                           self._goal_rarm.trajectory.joint_names))
 
-    def _set_groupnames(self, groupnames):
+    def go_init(self, init_pose_type=0, task_duration=7.0):
         '''
-        @type groupnames: [str]
-        @param groupnames: List of the joint group names. Assumes to be in the
-                           following order:
-                               torso, head, right arm, left arm.
-                           This current setting is derived from the order of
-                           Groups argument in HIRONX class. If other groups
-                           need to be defined in the future, this method may
-                           need to be modified.
-        '''
-        rospy.loginfo('_set_groupnames; groupnames={}'.format(groupnames))
-        self._GR_TORSO = groupnames[0]
-        self._GR_HEAD = groupnames[1]
-        self._GR_RARM = groupnames[2]
-        self._GR_LARM = groupnames[3]
+        Change the posture of the entire robot to the pre-defined init pose.
 
-    def go_init(self, task_duration=7.0):
-        '''
-        Init positions are taken from HIRONX.
-        TODO: Need to add factory position too that's so convenient when
-              working with the manufacturer.
+        This method is equivalent to
+        hironx_ros_bridge.hironx_client.HIRONX.goInitial method (https://github.com/start-jsk/rtmros_hironx/blob/83c3ff0ad2aabd8525631b08276d33b09c98b2bf/hironx_ros_bridge/src/hironx_ros_bridge/hironx_client.py#L199),
+        with an addition of utilizing MoveIt!, which means e.g. if there is
+        possible perceived collision robots will take the path MoveIt! computes
+        with collision avoidance taken into account.
+
         @type task_duration: float
+        @param init_pose_type:
+               0: default init pose (specified as _InitialPose)
+               1: factory init pose (specified as _InitialPose_Factory)
         '''
         rospy.loginfo('*** go_init begins ***')
-        POSITIONS_TORSO_DEG = [0.0]
-        self.set_joint_angles_deg(Constant.GRNAME_TORSO, POSITIONS_TORSO_DEG, task_duration)
-        POSITIONS_HEAD_DEG = [0.0, 0.0]
-        self.set_joint_angles_deg(Constant.GRNAME_HEAD, POSITIONS_HEAD_DEG, task_duration)
-        POSITIONS_LARM_DEG = [0.6, 0, -100, -15.2, 9.4, -3.2]
-        self.set_joint_angles_deg(Constant.GRNAME_LEFT_ARM, POSITIONS_LARM_DEG, task_duration)
-        POSITIONS_RARM_DEG = [-0.6, 0, -100, 15.2, 9.4, 3.2]
-        self.set_joint_angles_deg(Constant.GRNAME_RIGHT_ARM, POSITIONS_RARM_DEG,
-                                  task_duration, wait=True)
-        rospy.loginfo(self._goal_larm.trajectory.points)
+        posetype_str = ''
+        if 0 == init_pose_type:
+            posetype_str = 'init_rtm'
+        elif 1 == init_pose_type:
+            posetype_str = 'init_rtm_factory'
+        self.MG_BOTHARMS.set_named_target(posetype_str)
+        self.MG_BOTHARMS.go()
+
+    def go_offpose(self, task_duration=7.0):
+        self.MG_UPPERBODY.set_named_target(Constant.POSE_OFF)
+        self.MG_UPPERBODY.go()
+
+    def goInitial(self, init_pose_type=0, task_duration=7.0):
+        '''
+        This method internally calls self.go_init.
+
+        This method exists solely because of compatibility purpose with
+        hironx_ros_bridge.hironx_client.HIRONX.goInitial, which
+        holds a method "goInitial".
+
+        @param init_pose_type:
+               0: default init pose (specified as _InitialPose)
+               1: factory init pose (specified as _InitialPose_Factory)
+        '''
+        return self.go_init(init_pose_type, task_duration)
 
     def set_joint_angles_rad(self, groupname, positions_radian, duration=7.0,
                              wait=False):
         '''
+        @deprecated: Use MoveitCommander.set_joint_value_target instead.
+
         @type groupname: str
         @param groupname: This should exist in self.groupnames.
         @type positions_radian: [float]
@@ -271,6 +296,7 @@ class ROS_Client(RobotCommander):
     def set_pose(self, joint_group, position, rpy=None, task_duration=7.0,
                  do_wait=True, ref_frame_name=None):
         '''
+        @deprecated: Use set_pose_target (from MoveGroupCommander) directly.
         Accept pose defined by position and RPY in Cartesian format.
 
         @type joint_group: str
@@ -300,11 +326,13 @@ class ROS_Client(RobotCommander):
         # Locally assign the specified MoveGroup
         movegr = None
         if Constant.GRNAME_LEFT_ARM == joint_group:
-            movegr = self._movegr_larm
+            movegr = self.MG_LARM
         elif Constant.GRNAME_RIGHT_ARM == joint_group:
-            movegr = self._movegr_rarm
+            movegr = self.MG_RARM
         else:
-            rospy.logerr('joint_group must be either %s or %s'%(Constant.GRNAME_LEFT_ARM,Constant.GRNAME_RIGHT_ARM))
+            rospy.logerr('joint_group must be either %s, %s or %s'%(Constant.GRNAME_LEFT_ARM,
+                                                                    Constant.GRNAME_RIGHT_ARM,
+                                                                    Constant.GRNAME_BOTH_ARMS))
             return
 
         # set reference frame

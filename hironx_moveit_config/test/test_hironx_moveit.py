@@ -59,16 +59,7 @@ class TestHironxMoveit(unittest.TestCase):
     def setUpClass(self):
 
         rospy.init_node("test_hironx_moveit")
-
-        self.rarm = MoveGroupCommander("right_arm")
-        self.larm = MoveGroupCommander("left_arm")
-        self.botharms = MoveGroupCommander("both_arm")
-
-        # Tentative workaround for https://github.com/tork-a/rtmros_nextage/issues/170
-        safe_kinematicsolver = "RRTConnectkConfigDefault"
-        self.larm.set_planner_id(safe_kinematicsolver)
-        self.rarm.set_planner_id(safe_kinematicsolver)
-        self.botharms.set_planner_id(safe_kinematicsolver)
+        self._ros = ROS_Client()
 
         self._botharms_joints = ['LARM_JOINT0', 'LARM_JOINT1',
                                  'LARM_JOINT2', 'LARM_JOINT3',
@@ -77,13 +68,19 @@ class TestHironxMoveit(unittest.TestCase):
                                  'RARM_JOINT2', 'RARM_JOINT3',
                                  'RARM_JOINT4', 'RARM_JOINT5']
 
-        self.rarm_current_pose = self.rarm.get_current_pose().pose
-        self.larm_current_pose = self.larm.get_current_pose().pose
+        self._ros.MG_RARM_current_pose = self._ros.MG_RARM.get_current_pose().pose
+        self._ros.MG_LARM_current_pose = self._ros.MG_LARM.get_current_pose().pose
         # For botharms get_current_pose ends with no eef error.
 
-        self.init_rtm_jointvals = [0.010471975511965976, 0.0, -1.7453292519943295, -0.26529004630313807,
-                                   0.16406094968746698, -0.05585053606381855, -0.010471975511965976, 0.0,
-                                   -1.7453292519943295, 0.26529004630313807, 0.16406094968746698, 0.05585053606381855]
+        self.init_rtm_jointvals = [0.010471975511965976, 0.0, -1.7453292519943295, -0.26529004630313807, 0.16406094968746698, -0.05585053606381855,
+                                   -0.010471975511965976, 0.0, -1.7453292519943295, 0.26529004630313807, 0.16406094968746698, 0.05585053606381855]
+
+        self.init_rtm_jointvals_factory = [0.010471975511965976, 0.0, -1.7453292519943295, -0.26529004630313807, 0.16406094968746698, -0.05585053606381855,
+                                           -0.010471975511965976, 0.0, -1.7453292519943295, 0.26529004630313807, 0.16406094968746698, 0.05585053606381855]
+
+        self.offpose_jointvals = [0.0, 0.0, 0.0,
+                                  -0.4363323129985819, -2.4260076602721163, -2.7401669256310983, -0.7853981633974487, 0.0, 0.0,
+                                  0.4363323129985819, -2.4260076602721163, -2.7401669256310983, 0.7853981633974487, 0.0, 0.0]
 
         # These represent a pose as in the image https://goo.gl/hYa15h
         self.banzai_pose_larm_goal = [-0.0280391167993, 0.558512828409, 0.584801820449,
@@ -124,19 +121,19 @@ class TestHironxMoveit(unittest.TestCase):
     def test_set_pose_target_rpy(self):
         # #rpy ver
         target = [0.2035, -0.5399, 0.0709, 0, -1.6, 0]
-        self.rarm.set_pose_target(target)
-        self.rarm.plan()
-        self.assertTrue(self.rarm.go())
+        self._ros.MG_RARM.set_pose_target(target)
+        self._ros.MG_RARM.plan()
+        self.assertTrue(self._ros.MG_RARM.go())
 
     def test_set_pose_target_quarternion(self):
         target = [0.2035, -0.5399, 0.0709, 0.000427, 0.000317, -0.000384, 0.999999]
-        self.rarm.set_pose_target(target)
-        self.rarm.plan()
-        self.assertTrue(self.rarm.go())
+        self._ros.MG_RARM.set_pose_target(target)
+        self._ros.MG_RARM.plan()
+        self.assertTrue(self._ros.MG_RARM.go())
 
     def test_botharms_compare_joints(self):
         '''Comparing joint names.'''
-        self.assertItemsEqual(self.botharms.get_joints(), self._botharms_joints)
+        self.assertItemsEqual(self._ros.MG_BOTHARMS.get_joints(), self._botharms_joints)
 
     def test_botharms_get_joint_values(self):
         '''
@@ -145,12 +142,12 @@ class TestHironxMoveit(unittest.TestCase):
         MoveGroup.get_joint_values is working.
         '''
 
-        self.larm.set_pose_target(self.banzai_pose_larm_goal)
-        self.larm.plan()
-        self.larm.go()
-        self.rarm.set_pose_target(self.banzai_pose_rarm_goal)
-        self.rarm.plan()
-        self.rarm.go()
+        self._ros.MG_LARM.set_pose_target(self.banzai_pose_larm_goal)
+        self._ros.MG_LARM.plan()
+        self._ros.MG_LARM.go()
+        self._ros.MG_RARM.set_pose_target(self.banzai_pose_rarm_goal)
+        self._ros.MG_RARM.plan()
+        self._ros.MG_RARM.go()
         # Comparing to the 3rd degree seems too aggressive; example output:
         #   x: array([ 1.35906843, -1.52695742, -1.52658066, -0.21309358,
         #              -0.19092542, -1.51707957, -0.70651268, -1.93170852,
@@ -158,7 +155,7 @@ class TestHironxMoveit(unittest.TestCase):
         #   y: array([ 1.35914129, -1.52698103, -1.5263865 , -0.212939,
         #              -0.19093239, -1.51718648, -0.70667243, -1.93141106,
         #              -1.4268663 ,  1.06139422, 0.90376432,  1.8353421 ])
-        numpy.testing.assert_almost_equal(self.botharms.get_current_joint_values(),
+        numpy.testing.assert_almost_equal(self._ros.MG_BOTHARMS.get_current_joint_values(),
                                           self.banzai_jointvals_goal, 2)
 
     def test_botharms_set_named_target(self):
@@ -167,21 +164,21 @@ class TestHironxMoveit(unittest.TestCase):
         the init_rtm pose defined in HiroNx.srdf.
         '''
         # Move the arms to non init pose.
-        self.larm.set_pose_target(self.banzai_pose_larm_goal)
-        self.larm.plan()
-        self.larm.go()
-        self.rarm.set_pose_target(self.banzai_pose_rarm_goal)
-        self.rarm.plan()
-        self.rarm.go()
+        self._ros.MG_LARM.set_pose_target(self.banzai_pose_larm_goal)
+        self._ros.MG_LARM.plan()
+        self._ros.MG_LARM.go()
+        self._ros.MG_RARM.set_pose_target(self.banzai_pose_rarm_goal)
+        self._ros.MG_RARM.plan()
+        self._ros.MG_RARM.go()
 
-        self.botharms.set_named_target('init_rtm')
-        self.botharms.plan()
-        self.botharms.go()
+        self._ros.MG_BOTHARMS.set_named_target('init_rtm')
+        self._ros.MG_BOTHARMS.plan()
+        self._ros.MG_BOTHARMS.go()
 
         # Raises AssertException when the assertion fails, which
         # automatically be flagged false by unittest framework.
         # http://stackoverflow.com/a/4319836/577001
-        numpy.testing.assert_almost_equal(self.botharms.get_current_joint_values(),
+        numpy.testing.assert_almost_equal(self._ros.MG_BOTHARMS.get_current_joint_values(),
                                           self.init_rtm_jointvals, 3)
 
 #    def test_simple_unittest(self):
@@ -196,12 +193,23 @@ class TestHironxMoveit(unittest.TestCase):
         Developers need to avoid testing moveit_commander.RobotCommander itself
         -- that needs to be done upstream.
         '''
-        rosclient = ROS_Client()
-
         # If the list of movegroups are not none, that can mean
         # RobotCommander is working as expected.
-        groupnames = rosclient.get_group_names()
+        groupnames = self.rosclient.get_group_names()
         self.assertIsNotNone(groupnames)
+
+    def test_rosclient_goInitial(self):
+        self._ros.goInitial()
+        numpy.testing.assert_almost_equal(self._ros.MG_BOTHARMS.get_current_joint_values(),
+                                          self.init_rtm_jointvals, 3)
+        self._ros.goInitial(init_pose_type=1)
+        numpy.testing.assert_almost_equal(self._ros.MG_BOTHARMS.get_current_joint_values(),
+                                          self.init_rtm_jointvals_factory, 3)
+
+    def test_rosclient_go_offpose(self):
+        self._ros.go_offpose()
+        numpy.testing.assert_almost_equal(self._ros.MG_UPPERBODY.get_current_joint_values(),
+                                          self.offpose_jointvals, 3)
 
 if __name__ == '__main__':
     import rostest
