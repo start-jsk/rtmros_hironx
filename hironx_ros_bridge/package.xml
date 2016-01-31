@@ -34,6 +34,7 @@
 
   <run_depend>gnuplot</run_depend>
   <run_depend>moveit_commander</run_depend>
+  <run_depend>hironx_head_action</run_depend>
   <run_depend>hrpsys_ros_bridge</run_depend>
   <run_depend>openni2_launch</run_depend>
   <run_depend>pr2_controllers_msgs</run_depend>
