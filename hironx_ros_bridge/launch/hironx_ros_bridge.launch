@@ -61,4 +61,8 @@
     <node pkg="rqt_gui" type="rqt_gui" name="rqt_hironxo" respawn="false" output="screen"
           args="--perspective-file $(find hironx_ros_bridge)/resource/hironx_rqt_dashboard.perspective"/>
   </group>
+
+  <!-- Enable head point action https://github.com/start-jsk/rtmros_hironx/pull/427 -->
+  <include file="$(find hironx_head_action)/launch/head_action.launch"/>
+
 </launch>
