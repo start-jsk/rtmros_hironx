@@ -196,7 +196,7 @@ class ROS_Client(RobotCommander):
         # we are pointing the high-def camera frame
         # pointing_axis defaults to X-axis)
         self._goal_head_point = PointHeadGoal()
-        self._goal_head_point.pointing_frame = "HEAD_JOINT1_LINK"  # TODO: Not sure if HEAD_JOINT1_LINK is the most optimized link for HiroNXO for this purpose.
+        self._goal_head_point.pointing_frame = "HEAD_JOINT1_Link"  # TODO: Not sure if HEAD_JOINT1_LINK is the most optimized link for HiroNXO for this purpose.
         self._goal_head_point.pointing_axis.x = 1
         self._goal_head_point.pointing_axis.y = 0
         self._goal_head_point.pointing_axis.z = 0
