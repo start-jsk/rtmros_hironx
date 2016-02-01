@@ -61,4 +61,15 @@
     <node pkg="rqt_gui" type="rqt_gui" name="rqt_hironxo" respawn="false" output="screen"
           args="--perspective-file $(find hironx_ros_bridge)/resource/hironx_rqt_dashboard.perspective"/>
   </group>
+
+  <!-- Enable head point action https://github.com/start-jsk/rtmros_hironx/pull/427 -->
+  <group ns="head_traj_controller">
+    <node pkg="hironx_head_action" type="head_action" name="point_head_action" output="screen">
+      <rosparam>
+        success_angle_threshold: 0.01
+      </rosparam>
+    </node>
+  </group>
+  <node pkg="pr2_controller_manager" type="spawner" name="default_controllers_spawner"
+        output="screen" args="head_traj_controller" />
 </launch>
