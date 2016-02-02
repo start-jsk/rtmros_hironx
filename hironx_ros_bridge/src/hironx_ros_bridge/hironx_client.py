@@ -681,11 +681,7 @@ class HIRONX(HrpsysConfigurator):
         is_result_hw = is_result_hw and self.rh_svc.servo(jname, SWITCH_ON)
         if not is_result_hw:
             # The step described in the following msg is confirmed by the manufacturer 12/14/2015
-            print('Turning servos ({}) failed. This is likely because of issues ' +
-                  "happening in lower level. Please check if the Kawada's " +
-                  "proprietary tool NextageOpenSupervisor returns without issue " +
-                  "or not. If the issue persists, contact the manufacturer.".format(jname))
-
+            print("Turning servos ({}) failed. This is likely because of issues happening in lower level. Please check if the Kawada's proprietary tool NextageOpenSupervisor returns without issue or not. If the issue persists, contact the manufacturer.".format(jname))
         # turn on hand motors
         print 'Turn on Hand Servo'
         if self.sc_svc:
