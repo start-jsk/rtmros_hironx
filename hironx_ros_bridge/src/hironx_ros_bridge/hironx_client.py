@@ -673,7 +673,7 @@ class HIRONX(HrpsysConfigurator):
 
         is_result_hw = True
         print self.configurator_name, 'calib-joint ' + jname + ' ' + option
-        is_result_hw = is_result_hw and self.rh_svc.initializeJointAngle(jname, option)
+        self.rh_svc.initializeJointAngle(jname, option)
         print self.configurator_name, 'done'
         is_result_hw = is_result_hw and self.rh_svc.power('all', SWITCH_OFF)
         self.goActual()  # This needs to happen before turning servo on.
