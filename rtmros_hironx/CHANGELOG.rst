@@ -2,8 +2,8 @@
 Changelog for package rtmros_hironx
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.1.6 (2016-02-03)
+------------------
 * [fix] calibration bug (checkEncoders) `#227 <https://github.com/tork-a/rtmros_nextage/issues/227>`_
 * Contributors: Isaac I.Y. Saito, Hajime Saito
 
