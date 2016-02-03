@@ -1,3 +1,45 @@
 <launch>
+    <!-- Originally copied from
+    https://github.com/ros-planning/moveit_robots/blob/323d2c5b17260a59ae3645fe654ecf03945ab6fc/baxter/baxter_moveit_config/launch/baxter_moveit_sensor_manager.launch
+     -->
+     <arg name="camera_link_pose" default="0.07 0.06 0.09 0 0.0 0"/>
+     <arg name="kinect" default="false"/>
+     <arg name="xtion" default="false"/>
+     <group if="$(arg kinect)" >
+         <!-- launch openni to talk to kinect -->
+         <include file="$(find freenect_launch)/launch/freenect.launch">
+             <!-- These args are workarounds for tf_prefix issues in freenect.launch -->
+             <arg name="rgb_frame_id" value="camera_rgb_optical_frame"/>
+             <arg name="depth_frame_id" value="camera_depth_optical_frame"/>
+         </include>
+         <!-- Users update this to set transform between camera and robot -->
+         <node pkg="tf" type="static_transform_publisher" name="head_link_to_xtion_link"
+               args="$(arg camera_link_pose) /HEAD_JOINT1_Link /camera_link 100" />
+        
+         <!-- octomap parameters for moveit -->
+         <group ns="move_group" >
+             <param name="octomap_frame" type="string" value="WAIST" />
+             <param name="octomap_resolution" type="double" value="0.02" />
+             <rosparam command="load" file="$(find hironx_moveit_config)/config/kinect_sensor.yaml" />
+         </group>
+     </group>
+     <group if="$(arg xtion)" >
+         <!-- launch openni to talk to xtion -->
+         <include file="$(find openni2_launch)/launch/openni2.launch">
+             <!-- These args are workarounds for tf_prefix issues in openni.launch -->
+             <arg name="rgb_frame_id" value="camera_rgb_optical_frame" />
+             <arg name="depth_frame_id" value="camera_depth_optical_frame" />
+         </include>
+         <!-- Users update this to set transform between camera and robot -->
+         <!-- This example has the Xtion mounted to the chest of the robot -->
+         <node pkg="tf" type="static_transform_publisher" name="head_link_to_xtion_link"
+               args="$(arg camera_link_pose) /HEAD_JOINT1_Link /camera_link 100" />
 
+         <!-- octomap parameters for moveit -->
+         <group ns="move_group" >
+             <param name="octomap_frame" type="string" value="WAIST" />
+             <param name="octomap_resolution" type="double" value="0.02" />
+             <rosparam command="load" file="$(find hironx_moveit_config)/config/xtion_sensor.yaml" />
+         </group>
+     </group>
 </launch>
