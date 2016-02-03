@@ -5,9 +5,9 @@
 <!--  <include file="$(find pr2_machine)/pr2.machine" />
 -->
   <group ns="head_traj_controller">
-    <node name="point_head_action" 
+    <node name="point_head_action"
           pkg="hironx_head_action" type="head_action" output="screen" >
-
+      <remap from="command" to="/head_controller/command" />
       <rosparam>
         success_angle_threshold: 0.01
       </rosparam>

@@ -85,6 +85,7 @@ private:
   std::string root_;
   std::string tip_;
   std::string pan_link_;
+  std::string tilt_link_;
   std::string default_pointing_frame_;
   std::string pointing_frame_;
   tf::Vector3 pointing_axis_;
@@ -128,7 +129,8 @@ public:
       , has_active_goal_(false)
   {
     pnh_.param("pan_link", pan_link_, std::string("HEAD_JOINT0_Link"));
-    pnh_.param("default_pointing_frame", default_pointing_frame_, std::string("HEAD_JOINT1_Link"));
+    pnh_.param("tilt_link", tilt_link_, std::string("HEAD_JOINT1_Link"));
+    pnh_.param("default_pointing_frame", default_pointing_frame_, std::string("HEAD_TARGET_Link"));
     pnh_.param("success_angle_threshold", success_angle_threshold_, 0.1);
 
     if(pan_link_[0] == '/') pan_link_.erase(0, 1);
@@ -157,12 +159,22 @@ public:
         exit(-2);
       }
     }
+#if 0
+    if( tree_.getSegment(tilt_link_) != tree_.getSegments().end() ) {
+      std::cerr << "ghoge" << std::endl;
+    }
+    if( tree_.getSegment(default_pointing_frame_) == tree_.getSegments().end() ) {
+      std::cerr << "ghoge 2" << std::endl;
+      KDL::Segment pointing_frame_segment(default_pointing_frame_, KDL::Joint(KDL::Joint::None), KDL::Frame(KDL::Vector(0.3, 0, 0.1)));
+      tree_.addSegment(pointing_frame_segment, tilt_link_);
+    }
+#endif
 
     ROS_DEBUG("Tree has %d joints and %d segments.", tree_.getNrOfJoints(), tree_.getNrOfSegments());
 
     action_server_.start();
 
-    watchdog_timer_ = nh_.createTimer(ros::Duration(1.0), &ControlHead::watchdog, this);
+    //watchdog_timer_ = nh_.createTimer(ros::Duration(1.0), &ControlHead::watchdog, this);
   }
 
   void goalCB(GoalHandle gh)
@@ -193,6 +205,7 @@ public:
     // Process pointing frame and axis
     const geometry_msgs::PointStamped &target = gh.getGoal()->target;
     pointing_frame_ = gh.getGoal()->pointing_frame;
+    std::cerr << pointing_frame_ << std::endl;
     if(pointing_frame_.length() == 0)
     {
       ROS_WARN("Pointing frame not specified, using %s [1, 0, 0] by default.", default_pointing_frame_.c_str());
@@ -202,6 +215,7 @@ public:
     else
     {
       if(pointing_frame_[0] == '/') pointing_frame_.erase(0, 1);
+      pointing_axis_ = tf::Vector3(1.0, 0.0, 0.0);
       bool ret1 = false;
       try
       {
@@ -236,6 +250,7 @@ public:
         return;
       }
     }
+    std::cerr << "pointing_axis " << pointing_axis_[0] << ", " << pointing_axis_[1] << ", " << pointing_axis_[2] << std::endl;
 
     //Put the target point in the root frame (usually torso_lift_link).
     bool ret1 = false;
@@ -271,8 +286,11 @@ public:
       jac_solver_.reset(new KDL::ChainJntToJacSolver(chain_));
       joint_names_.resize(chain_.getNrOfJoints());
     }
+    ROS_INFO("create chain from %s to %s.", root_.c_str(), pointing_frame_.c_str());
+    ROS_INFO("create tip %s.", tip_.c_str());
 
     unsigned int joints = chain_.getNrOfJoints();
+    ROS_INFO("create joints %d", joints);
 
 //    int segments = chain_.getNrOfSegments();
 //    ROS_INFO("Parsed urdf from %s to %s and found %d joints and %d segments.", root_.c_str(), pointing_frame_.c_str(), joints, segments);
@@ -285,7 +303,7 @@ public:
 
     KDL::JntArray jnt_pos(joints), jnt_eff(joints);
     KDL::Jacobian jacobian(joints);
-
+#if 0
     pr2_controllers_msgs::QueryTrajectoryState traj_state;
     traj_state.request.time = ros::Time::now() + ros::Duration(0.01);
     if (!cli_query_traj_.call(traj_state))
@@ -300,14 +318,17 @@ public:
       gh.setRejected();
       return;
     }
+#endif
+    joint_names_[0] = "HEAD_JOINT0";
+    joint_names_[1] = "HEAD_JOINT1";
     std::vector<urdf::JointLimits> limits_(joints);
 
     // Get initial joint positions and joint limits.
     for(unsigned int i = 0; i < joints; i++)
     {
-      joint_names_[i] = traj_state.response.name[i];
+      //joint_names_[i] = traj_state.response.name[i];
       limits_[i] = *(urdf_model_.joints_[joint_names_[i].c_str()]->limits);
-      ROS_DEBUG("Joint %d %s: %f, limits: %f %f", i, traj_state.response.name[i].c_str(), traj_state.response.position[i], limits_[i].lower, limits_[i].upper);
+      //ROS_DEBUG("Joint %d %s: %f, limits: %f %f", i, traj_state.response.name[i].c_str(), traj_state.response.position[i], limits_[i].lower, limits_[i].upper);
       //jnt_pos(i) = traj_state.response.position[i];
       jnt_pos(i) = 0;
     }
@@ -322,6 +343,7 @@ public:
       KDL::Frame pose;
       pose_solver_->JntToCart(jnt_pos, pose);
       jac_solver_->JntToJac(jnt_pos, jacobian);
+      std::cerr << jacobian.data << std::endl;
 
       tf::Transform frame_in_root;
       tf::poseKDLToTF(pose, frame_in_root);
@@ -332,7 +354,7 @@ public:
       float prev_correction = correction_angle;
       correction_angle = current_in_frame.angle(axis_in_frame);
       correction_delta = correction_angle - prev_correction;
-      ROS_DEBUG("At step %d, joint poses are %.4f and %.4f, angle error is %f", count, jnt_pos(0), jnt_pos(1), correction_angle);
+      ROS_INFO("At step %d, joint poses are %.4f and %.4f, angle error is %f, angle delta is %f !", count, jnt_pos(0), jnt_pos(1), correction_angle, correction_delta);
       if(correction_angle < 0.5*success_angle_threshold_) break;
       tf::Vector3 correction_axis = frame_in_root.getBasis()*(axis_in_frame.cross(current_in_frame).normalized());
       //printVector3("correction_axis in root:", correction_axis);
@@ -369,8 +391,13 @@ public:
         ROS_ERROR("Goal is out of joint limits, trying to point there anyway... \n");
         break;
       }
+      if(count > 100){
+        ROS_ERROR("Could not reach the goal, trying to point there anyway... \n");
+        break;
+      }
     }
     ROS_DEBUG("Iterative solver took %d steps", count);
+    ROS_INFO("Iterative solver took %d steps", count);
     
     std::vector<double> q_goal(joints);
 
@@ -403,8 +430,10 @@ public:
     if (gh.getGoal()->max_velocity > 0)
     {
       // Very approximate velocity limiting.
-      double dist = sqrt(pow(q_goal[0] - traj_state.response.position[0], 2) +
-                         pow(q_goal[1] - traj_state.response.position[1], 2));
+      // double dist = sqrt(pow(q_goal[0] - traj_state.response.position[0], 2) +
+      //                    pow(q_goal[1] - traj_state.response.position[1], 2));
+      double dist = sqrt(pow(q_goal[0] - 0, 2) +
+                         pow(q_goal[1] - 0, 2));
       ros::Duration limit_from_velocity(dist / gh.getGoal()->max_velocity);
       if (limit_from_velocity > min_duration)
         min_duration = limit_from_velocity;
@@ -413,19 +442,21 @@ public:
 
     // Computes the command to send to the trajectory controller.
     trajectory_msgs::JointTrajectory traj;
-    traj.header.stamp = traj_state.request.time;
+    //traj.header.stamp = traj_state.request.time;
+    traj.header.stamp = ros::Time::now();
 
-    traj.joint_names.push_back(traj_state.response.name[0]);
-    traj.joint_names.push_back(traj_state.response.name[1]);
+    traj.joint_names.push_back(joint_names_[0]);
+    traj.joint_names.push_back(joint_names_[1]);
 
-    traj.points.resize(2);
-    traj.points[0].positions = traj_state.response.position;
-    traj.points[0].velocities = traj_state.response.velocity;
-    traj.points[0].time_from_start = ros::Duration(0.0);
-    traj.points[1].positions = q_goal;
-    traj.points[1].velocities.push_back(0);
-    traj.points[1].velocities.push_back(0);
-    traj.points[1].time_from_start = ros::Duration(min_duration);
+    traj.points.resize(1);
+    //traj.points.resize(2);
+    //traj.points[0].positions = traj_state.response.position;
+    //traj.points[0].velocities = traj_state.response.velocity;
+    //traj.points[0].time_from_start = ros::Duration(0.0);
+    traj.points[0].positions = q_goal;
+    traj.points[0].velocities.push_back(0);
+    traj.points[0].velocities.push_back(0);
+    traj.points[0].time_from_start = ros::Duration(min_duration);
 
     pub_controller_command_.publish(traj);
   }
