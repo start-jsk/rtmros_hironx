@@ -2,6 +2,11 @@
 Changelog for package rtmros_hironx
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* [fix] calibration bug (checkEncoders) `#227 <https://github.com/tork-a/rtmros_nextage/issues/227>`_
+* Contributors: Isaac I.Y. Saito, Hajime Saito
+
 1.1.5 (2016-01-26)
 ------------------
 * [feat][moveit config, ROS_CLient] Upperbody move group. Add more fundamental command.
