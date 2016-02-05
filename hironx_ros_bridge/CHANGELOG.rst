@@ -2,6 +2,12 @@
 Changelog for package hironx_ros_bridge
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* [fix] ROS py client gets stuck when ros master is not running (`#430 <https://github.com/start-jsk/rtmros_hironx/issues/430>`_)
+* [fix] RTM py client not printing upon checkEncoders failure (`#428 <https://github.com/start-jsk/rtmros_hironx/issues/428>`_)
+* Contributors: Isaac I.Y. Saito
+
 1.1.6 (2016-02-03)
 ------------------
 * [fix] calibration bug (checkEncoders) `#227 <https://github.com/tork-a/rtmros_nextage/issues/227>`_
