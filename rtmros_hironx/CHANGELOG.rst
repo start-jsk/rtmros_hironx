@@ -2,8 +2,8 @@
 Changelog for package rtmros_hironx
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.1.7 (2016-02-05)
+------------------
 * [fix] ROS py client gets stuck when ros master is not running (`#430 <https://github.com/start-jsk/rtmros_hironx/issues/430>`_)
 * [fix] RTM py client not printing upon checkEncoders failure (`#428 <https://github.com/start-jsk/rtmros_hironx/issues/428>`_)
 * Contributors: Isaac I.Y. Saito
