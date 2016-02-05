@@ -71,14 +71,14 @@ class ROS_Client(RobotCommander):
         '''
         @param jointgroups [str]: Deprecated. No need after version 1.1.4 onward.
         '''
-        super(ROS_Client, self).__init__()  # This solves https://github.com/start-jsk/rtmros_hironx/issues/300
-
         # if we do not have ros running, return 
         try:
             rospy.get_master().getSystemState()
         except Exception:
             print('[ros_client] ros master is not running, so do not create ros client...')
             return
+
+        super(ROS_Client, self).__init__()  # This solves https://github.com/start-jsk/rtmros_hironx/issues/300
 
         rospy.init_node('hironx_ros_client')
 
