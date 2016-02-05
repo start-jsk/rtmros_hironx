@@ -75,7 +75,8 @@ class ROS_Client(RobotCommander):
         try:
             rospy.get_master().getSystemState()
         except Exception:
-            print('[ros_client] ros master is not running, so do not create ros client...')
+            from termcolor import colored
+            print(colored('[ERROR][ros_client] ros master is not running, so do not create ros client...', 'red'))
             return
 
         super(ROS_Client, self).__init__()  # This solves https://github.com/start-jsk/rtmros_hironx/issues/300
