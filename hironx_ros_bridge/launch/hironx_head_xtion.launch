@@ -1,0 +1,5 @@
+<launch>
+  <!-- coorinate values should be worked out; they are still not accurage -->
+  <node pkg="tf" type="static_transform_publisher" name="head_link_to_xtion_link"
+        args="0.07 0.06 0.09 0 0.0 0 /HEAD_JOINT1_Link /camera_link 100" />
+</launch>

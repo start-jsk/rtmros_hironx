@@ -50,4 +50,8 @@
     <arg name="SIMULATOR_NAME" value="$(arg SIMULATOR_NAME)" />
     <arg name="COLLISIONDETECTOR_INSTANCE_NAME" default="CollisionDetector0" />
   </include>
+
+  <!-- add xtion head -->
+  <include file="$(find hironx_ros_bridge)/launch/hironx_head_xtion.launch" />
+
 </launch>
