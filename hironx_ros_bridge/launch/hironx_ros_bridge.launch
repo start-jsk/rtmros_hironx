@@ -16,6 +16,10 @@
   <arg name="USE_SERVOCONTROLLER" default="false" />
   <arg name="USE_ROBOT_POSE_EKF" default="false" />
 
+  <!-- For rqt dashboard that needs to connect RTM nameserver -->
+  <param name="rtmnameserver_port" type="int" value="$(arg corbaport)" />
+  <param name="rtmnameserver_robotname" type="str" value="$(arg SIMULATOR_NAME)" />
+
   <include file="$(find hrpsys_ros_bridge)/launch/hrpsys_ros_bridge.launch">
     <arg name="SIMULATOR_NAME" value="$(arg SIMULATOR_NAME)" />
     <arg name="nameserver" value="$(arg nameserver)" />
