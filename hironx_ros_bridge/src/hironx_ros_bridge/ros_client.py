@@ -34,10 +34,12 @@
 
 import copy
 import math
+import socket
 
 import actionlib
 from moveit_commander import MoveGroupCommander, MoveItCommanderException, RobotCommander
 import rospy
+from rospy import ROSInitException
 from pr2_controllers_msgs.msg import JointTrajectoryAction
 from pr2_controllers_msgs.msg import JointTrajectoryGoal
 from geometry_msgs.msg import Pose
@@ -74,10 +76,13 @@ class ROS_Client(RobotCommander):
         # if we do not have ros running, return 
         try:
             rospy.get_master().getSystemState()
-        except Exception:
-            from termcolor import colored
-            print(colored('[ERROR][ros_client] ros master is not running, so do not create ros client...', 'red'))
-            return
+        except socket.error as e:
+            errormsg = '[ros_client] ros master is not running, so do not create ros client...'
+            raise ROSInitException(errormsg)
+        except Exception as e:
+            errormsg = '[ros_client] Unknown exception occurred, so do not create ros client...'
+            rospy.logerr(errormsg)
+            raise e
 
         super(ROS_Client, self).__init__()  # This solves https://github.com/start-jsk/rtmros_hironx/issues/300
 
