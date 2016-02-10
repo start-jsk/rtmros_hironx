@@ -2,8 +2,8 @@
 Changelog for package hironx_ros_bridge
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.1.8 (2016-02-09)
+------------------
 * [fix][ROS_Client] Correctly import termcolor. Better error handling (Fix `#436 <https://github.com/start-jsk/rtmros_hironx/issues/436>`_)
 * Contributors: Isaac I.Y. Saito
 
