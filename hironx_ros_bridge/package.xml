@@ -41,10 +41,6 @@
   <run_depend>roslang</run_depend>
   <run_depend>tf</run_depend>
 
-  <test_depend>unittest</test_depend>
-  
-  <!-- <test_depend>hrpsys_ros_bridge</test_depend> -->
-
   <export>
     <rqt_gui plugin="${prefix}/rqt_plugin.xml"/>
   </export>
