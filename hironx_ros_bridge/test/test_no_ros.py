@@ -1,8 +1,9 @@
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
 # Software License Agreement (BSD License)
 #
-# Copyright (c) 2014, TORK (Tokyo Opensource Robotics Kyokai Association)
+# Copyright (c) 2016, Tokyo Opensource Robotics Kyokai Association (TORK)
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -15,7 +16,7 @@
 #    copyright notice, this list of conditions and the following
 #    disclaimer in the documentation and/or other materials provided
 #    with the distribution.
-#  * Neither the name of TORK. nor the
+#  * Neither the name of Tokyo Opensource Robotics Kyokai Association. nor the
 #    names of its contributors may be used to endorse or promote products
 #    derived from this software without specific prior written permission.
 #
@@ -32,15 +33,32 @@
 # ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
 
+PKG = 'hironx_ros_bridge'
+import unittest
 
-class Constant():
-    GRNAME_LEFT_ARM = 'larm'
-    GRNAME_LEFT_ARM_MOVEGROUP = 'left_arm'
-    GRNAME_RIGHT_ARM = 'rarm'
-    GRNAME_RIGHT_ARM_MOVEGROUP = 'right_arm'
-    GRNAME_TORSO = 'torso'
-    GRNAME_HEAD = 'head'
-    GRNAME_BOTH_ARMS = 'botharms'
-    GRNAME_BOTH_ARMS_MOVEGROUP = 'botharms'
-    GRNAME_UPPERBODY = 'upperbody'
-    POSE_OFF = 'offpose'
+from hironx_ros_bridge.ros_client import ROS_Client
+from rospy import ROSInitException
+
+
+class TestNoRos(unittest.TestCase):
+
+    @classmethod
+    def setUpClass(cls):
+        True
+
+    @classmethod
+    def tearDownClass(cls):
+        True
+
+    def test_noros(self):
+        '''
+        Test if the certain exception is returned when no ROS master is available.
+        '''
+        try:
+            rosclient = ROS_Client()
+        except ROSInitException as e:
+            self.assertRaises(ROSInitException)
+
+if __name__ == '__main__':
+    import rostest
+    rostest.rosrun(PKG, 'test_no_ros', TestNoRos)

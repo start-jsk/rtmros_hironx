@@ -2,6 +2,62 @@
 Changelog for package rtmros_hironx
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+1.1.8 (2016-02-09)
+------------------
+* [fix][ROS_Client] Correctly import termcolor. Better error handling (Fix `#436 <https://github.com/start-jsk/rtmros_hironx/issues/436>`_)
+* Contributors: Isaac I.Y. Saito
+
+1.1.7 (2016-02-05)
+------------------
+* [fix] ROS py client gets stuck when ros master is not running (`#430 <https://github.com/start-jsk/rtmros_hironx/issues/430>`_)
+* [fix] RTM py client not printing upon checkEncoders failure (`#428 <https://github.com/start-jsk/rtmros_hironx/issues/428>`_)
+* Contributors: Isaac I.Y. Saito
+
+1.1.6 (2016-02-03)
+------------------
+* [fix] calibration bug (checkEncoders) `#227 <https://github.com/tork-a/rtmros_nextage/issues/227>`_
+* Contributors: Isaac I.Y. Saito, Hajime Saito
+
+1.1.5 (2016-01-26)
+------------------
+* [feat][moveit config, ROS_CLient] Upperbody move group. Add more fundamental command.
+* [feat][ROS_CLient] More fundamental commands.
+* [feat][moveit config] Factory-init pose for MoveIt! reserved pose.
+* [feat] Rename both arms group to adjust to that of NEXTAGE Open.
+* [feat][ROS_Client] Exporting move group members publicly.
+* [feat][ROS_Client] Remove some standalone methods that are less maintained. Instead, utilize more from MoveIt! RobotCommander and MoveitCommander.
+* Contributors: Isaac I.Y. Saito
+
+1.1.4 (2016-01-25)
+------------------
+* [fix] servoOn debug msg failure (`#425 <https://github.com/start-jsk/rtmros_hironx/issues/425>`_)
+* [fix][ROS_Client] Implement missing methods `#421 <https://github.com/start-jsk/rtmros_hironx/issues/421>`_
+* [feat][ROS_Client] ROS client now Inherits moveitcommander.RobotCommander class.
+* [feat][hironx/rqt dashboard] Add HiroNXO specific commands
+* [sys][moveit config] Enable unit test for ROS_Client-RobotCommander integration. Missing dependency
+* Contributors: Kei Okada, pazeshun, Isaac I.Y. Saito, 
+
+1.1.3 (2015-12-16)
+------------------
+* [fix] add error msg when checkEncoders did not go well
+* [sys] add test for head and waste joints
+* Contributors: Isaac I.Y. Saito
+
+1.1.2 (2015-11-11)
+------------------
+* [sys] Add a testcase for checking `#335 <https://github.com/start-jsk/rtmros_hironx/issues/335>`_
+* [sys] add DEBUG_HRPSYS argument
+* [sys] Remove redundant install rule
+* [sys][travis] Drop rosbuild checking for Indigo onward
+* Contributors: Isaac I.Y. Saito, Kei Okada
+
+1.1.1 (2015-11-02)
+------------------
+* [improved] Elaborate print message upon hands servo-on failure
+* [fix] Disable EKF that causes unnecessary error (unless robot moves)
+* [fix] Install a missing launch file (hironx_calibration)
+* Contributors: Isaac I.Y. Saito
+
 1.0.37 (2015-09-11)
 -------------------
 * [test] Optimize rostest time-limit 
