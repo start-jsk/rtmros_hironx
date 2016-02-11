@@ -2,6 +2,11 @@
 Changelog for package hironx_ros_bridge
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* use stupid code instead of using termcolor #437
+* Contributors: Kei Okada
+
 1.1.9 (2016-02-11)
 ------------------
 * [fix] test_depend on unittest seems no longer necessary Indigo onward
