@@ -34,7 +34,6 @@
   <run_depend>hrpsys_ros_bridge</run_depend>
   <run_depend>openni2_launch</run_depend>
   <run_depend>pr2_controllers_msgs</run_depend>
-  <run_depend>python-termcolor</run_depend>
   <run_depend>roslib</run_depend>
   <run_depend>rosbash</run_depend>
   <run_depend>rospy</run_depend>

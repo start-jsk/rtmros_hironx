@@ -34,7 +34,6 @@
 # POSSIBILITY OF SUCH DAMAGE.
 
 import socket
-from termcolor import colored
 
 try:  # catkin does not requires load_manifest
     import hironx_ros_bridge
@@ -80,7 +79,7 @@ if __name__ == '__main__':
     try:
         ros = ROS_Client()
     except socket.error as e:
-        print(colored(e.strerror, 'red'))
+        print("\033[31m%s\033[0m" % (e.strerror))
 
 # for simulated robot
 # $ ./hironx.py
