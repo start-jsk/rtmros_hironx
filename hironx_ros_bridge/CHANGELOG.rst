@@ -2,8 +2,8 @@
 Changelog for package hironx_ros_bridge
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.1.10 (2016-02-11)
+-------------------
 * use stupid code instead of using termcolor #437
 * Contributors: Kei Okada
 
