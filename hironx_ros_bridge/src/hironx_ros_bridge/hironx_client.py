@@ -835,6 +835,44 @@ class HIRONX(HrpsysConfigurator):
         self.rh_svc.removeForceSensorOffset()
 
     def getCurrentPose(self, lname=None, frame_name='WAIST'):
+        '''!@brief
+        Returns the current physical pose of the specified joint.
+        cf. getReferencePose that returns commanded value.
+
+        eg.
+        \verbatim
+             IN: robot.getCurrentPose('LARM_JOINT5')
+             OUT: [-0.0017702356144599085,
+              0.00019034630541264752,
+              -0.9999984150158207,
+              0.32556275164378523,
+              0.00012155879975329215,
+              0.9999999745367515,
+               0.0001901314142046251,
+               0.18236394191140365,
+               0.9999984257434246,
+               -0.00012122202968358842,
+               -0.001770258707652326,
+               0.07462472659364472,
+               0.0,
+               0.0,
+               0.0,
+               1.0]
+        \endverbatim
+
+        @type lname: str
+        @param lname: Name of the link.
+        @param frame_name str: set reference frame name (from 315.2.5)
+        @rtype: list of float
+        @return: Rotational matrix and the position of the given joint in
+                 1-dimensional list, that is:
+        \verbatim
+                 [a11, a12, a13, x,
+                  a21, a22, a23, y,
+                  a31, a32, a33, z,
+                   0,   0,   0,  1]
+        \endverbatim
+        '''
         if ':' in lname:
             frame_name = None
         
@@ -845,6 +883,22 @@ class HIRONX(HrpsysConfigurator):
             return HrpsysConfigurator.getCurrentPose(self, lname, frame_name)
     
     def getCurrentPosition(self, lname=None, frame_name='WAIST'):
+        '''!@brief
+        Returns the current physical position of the specified joint.
+        cf. getReferencePosition that returns commanded value.
+
+        eg.
+        \verbatim
+            robot.getCurrentPosition('LARM_JOINT5')
+            [0.325, 0.182, 0.074]
+        \endverbatim
+
+        @type lname: str
+        @param lname: Name of the link.
+        @param frame_name str: set reference frame name (from 315.2.5)
+        @rtype: list of float
+        @return: List of x, y, z positions about the specified joint.
+        '''
         if ':' in lname:
             frame_name = None
 
@@ -855,6 +909,22 @@ class HIRONX(HrpsysConfigurator):
             return HrpsysConfigurator.getCurrentPosition(self, lname, frame_name)
 
     def getCurrentRotation(self, lname=None, frame_name='WAIST'):
+        '''!@brief
+        Returns the current physical rotation of the specified joint.
+        cf. getReferenceRotation that returns commanded value.
+
+        @type lname: str
+        @param lname: Name of the link.
+        @param frame_name str: set reference frame name (from 315.2.5)
+        @rtype: list of float
+        @return: Rotational matrix of the given joint in 2-dimensional list,
+                 that is:
+        \verbatim
+                 [[a11, a12, a13],
+                  [a21, a22, a23],
+                  [a31, a32, a33]]
+        \endverbatim
+        '''
         if ':' in lname:
             frame_name = None
         
@@ -865,6 +935,16 @@ class HIRONX(HrpsysConfigurator):
             return HrpsysConfigurator.getCurrentRotation(self, lname, frame_name)
     
     def getCurrentRPY(self, lname, frame_name='WAIST'):
+        '''!@brief
+        Returns the current physical rotation in RPY of the specified joint.
+        cf. getReferenceRPY that returns commanded value.
+
+        @type lname: str
+        @param lname: Name of the link.
+        @param frame_name str: set reference frame name (from 315.2.5)
+        @rtype: list of float
+        @return: List of orientation in rpy form about the specified joint.
+        '''
         if ':' in lname:
             frame_name = None
 
@@ -875,6 +955,23 @@ class HIRONX(HrpsysConfigurator):
             return HrpsysConfigurator.getCurrentRPY(self, lname, frame_name)
 
     def getReferencePose(self, lname, frame_name='WAIST'):
+        '''!@brief
+        Returns the current commanded pose of the specified joint.
+        cf. getCurrentPose that returns physical pose.
+
+        @type lname: str
+        @param lname: Name of the link.
+        @param frame_name str: set reference frame name (from 315.2.5)
+        @rtype: list of float
+        @return: Rotational matrix and the position of the given joint in
+                 1-dimensional list, that is:
+        \verbatim
+                 [a11, a12, a13, x,
+                  a21, a22, a23, y,
+                  a31, a32, a33, z,
+                   0,   0,   0,  1]
+        \endverbatim
+        '''
         if ':' in lname:
             frame_name = None
         
@@ -885,6 +982,17 @@ class HIRONX(HrpsysConfigurator):
             return HrpsysConfigurator.getReferencePose(self, lname, frame_name)
 
     def getReferencePosition(self, lname, frame_name='WAIST'):
+        '''!@brief
+        Returns the current commanded position of the specified joint.
+        cf. getCurrentPosition that returns physical value.
+
+        @type lname: str
+        @param lname: Name of the link.
+        @param frame_name str: set reference frame name (from 315.2.5)
+        @rtype: list of float
+        @return: List of angles (degree) of all joints, in the order defined
+                 in the member variable 'Groups' (eg. chest, head1, head2, ..).
+        '''
         if ':' in lname:
             frame_name = None
         
@@ -895,6 +1003,22 @@ class HIRONX(HrpsysConfigurator):
             return HrpsysConfigurator.getReferencePosition(self, lname, frame_name)
 
     def getReferenceRotation(self, lname, frame_name='WAIST'):
+        '''!@brief
+        Returns the current commanded rotation of the specified joint.
+        cf. getCurrentRotation that returns physical value.
+
+        @type lname: str
+        @param lname: Name of the link.
+        @param frame_name str: set reference frame name (from 315.2.5)
+        @rtype: list of float
+        @return: Rotational matrix of the given joint in 2-dimensional list,
+                 that is:
+        \verbatim
+                 [[a11, a12, a13],
+                  [a21, a22, a23],
+                  [a31, a32, a33]]
+        \endverbatim
+        '''
         if ':' in lname:
             frame_name = None
         
@@ -905,6 +1029,16 @@ class HIRONX(HrpsysConfigurator):
             return HrpsysConfigurator.getReferenceRotation(self, lname, frame_name)
 
     def getReferenceRPY(self, lname, frame_name='WAIST'):
+        '''!@brief
+        Returns the current commanded rotation in RPY of the specified joint.
+        cf. getCurrentRPY that returns physical value.
+
+        @type lname: str
+        @param lname: Name of the link.
+        @param frame_name str: set reference frame name (from 315.2.5)
+        @rtype: list of float
+        @return: List of orientation in rpy form about the specified joint.
+        '''
         if ':' in lname:
             frame_name = None
         
@@ -915,6 +1049,18 @@ class HIRONX(HrpsysConfigurator):
             return HrpsysConfigurator.getReferenceRPY(self, lname, frame_name)
     
     def setTargetPose(self, gname, pos, rpy, tm, frame_name='WAIST'):
+        '''!@brief
+        Move the end-effector to the given absolute pose.
+        All d* arguments are in meter.
+
+        @param gname str: Name of the joint group.
+        @param pos list of float: In meter.
+        @param rpy list of float: In radian.
+        @param tm float: Second to complete the command.
+        @param frame_name str: Name of the frame that this particular command
+                           references to.
+        @return bool: False if unreachable.
+        '''
         if self.hrpsys_version <= '315.2.4':
             print "\033[33m setTargetPose({}, {}, {}, {}, {}) is not supported on {}\033[0m".format(gname, pos, rpy, tm, frame_name, self.hrpsys_version)
             return HrpsysConfigurator.setTargetPose(self, gname, pos, rpy, tm)
