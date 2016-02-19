@@ -33,13 +33,19 @@
 # POSSIBILITY OF SUCH DAMAGE.
 
 import os
+try:  # Python2
+    from urlparse import urlparse
+except ImportError:  # Python3
+    from urllib.parse import urlparse
 
 from hironx_ros_bridge.hironx_client import HIRONX
+from hrpsys import rtm
 from hrpsys_ros_bridge.hrpsys_dashboard import HrpsysDashboard
 from python_qt_binding import loadUi
 from python_qt_binding.QtCore import Qt, Signal
 from python_qt_binding.QtGui import (QHeaderView, QItemSelectionModel,
                                      QWidget)
+from rosgraph import Master
 from rospkg import RosPack
 import rospy
 from rospy.exceptions import ROSException
@@ -70,8 +76,13 @@ class HironxoCommandPanel(QWidget):
         self._guicontext = guicontext
 
         # RTM Client
+        rtm.nshost = self.get_rosmaster_domain().hostname
+        rtm.nsport = rospy.get_param('rtmnameserver_port', '15005')
+        robotname = rospy.get_param('rtmnameserver_robotname', 'HiroNX(Robot)0')
+        rospy.loginfo('Connecting to RTM nameserver. host={}, port={}, robotname={}'.format(rtm.nshost, rtm.nsport, robotname))
+
         self._rtm = HIRONX()
-        self._rtm.init(robotname='HiroNX(Robot)0', url='')
+        self._rtm.init(robotname=robotname, url='')
 
         rospack = RosPack()
         ui_file = os.path.join(rospack.get_path(PKG_NAME), 'resource',
@@ -91,6 +102,18 @@ class HironxoCommandPanel(QWidget):
         self.pushButton_actualPose_r.clicked[bool].connect(self._actual_pose_r)
         self.spinBox_precision_output.valueChanged[int].connect(self._get_precision_output)
         self.pushButton_groups.clicked[bool].connect(self._show_groups)
+
+    def get_rosmaster_domain(self):
+        '''
+        Workaround for rosgraph.Master.getUri() that does NOT return
+        a domain name with ".local".
+        '''
+        master = Master('/hironxo_command_widget')
+        #masteruri_http = master.getUri()  # This does not obtain a hostname with ".local", 
+                                           # regardless ROS_MASTER_URI actually contains it.
+        masteruri_http = os.environ['ROS_MASTER_URI']
+        urlparsed = urlparse(masteruri_http)
+        return urlparsed
 
     def _print_command(self, command_str):
         self.textBrowser_output.append('***Command used***\n\t' + command_str)

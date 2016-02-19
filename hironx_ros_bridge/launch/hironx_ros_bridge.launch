@@ -10,11 +10,16 @@
   <arg name="SIMULATOR_NAME" default="RobotHardware0" />
   <arg name="corbaport" default="15005" />
   <arg name="CONF_FILE_COLLISIONDETECT" default="$(find hironx_ros_bridge)/conf/kawada-hironx.conf" /> <!-- Default is simulation -->
+  <arg name="open_rqt_gui" default="true" />
   <arg name="USE_COLLISIONCHECK" default="false" /> <!-- For running collsion detection inside the robot (QNX) -->
   <arg name="USE_ROBOTHARDWARE" default="false" />
   <arg name="USE_IMPEDANCECONTROLLER" default="false"/>
   <arg name="USE_SERVOCONTROLLER" default="false" />
   <arg name="USE_ROBOT_POSE_EKF" default="false" />
+
+  <!-- For rqt dashboard that needs to connect RTM nameserver -->
+  <param name="rtmnameserver_port" type="int" value="$(arg corbaport)" />
+  <param name="rtmnameserver_robotname" type="str" value="$(arg SIMULATOR_NAME)" />
 
   <include file="$(find hrpsys_ros_bridge)/launch/hrpsys_ros_bridge.launch">
     <arg name="SIMULATOR_NAME" value="$(arg SIMULATOR_NAME)" />
@@ -50,4 +55,10 @@
     <arg name="SIMULATOR_NAME" value="$(arg SIMULATOR_NAME)" />
     <arg name="COLLISIONDETECTOR_INSTANCE_NAME" default="CollisionDetector0" />
   </include>
+
+  <group if="$(arg open_rqt_gui)"> 
+    <!-- Load rqt GUI tool with a pre-setup GUI perspective file  -->
+    <node pkg="rqt_gui" type="rqt_gui" name="rqt_hironxo" respawn="false" output="screen"
+          args="--perspective-file $(find hironx_ros_bridge)/resource/hironx_rqt_dashboard.perspective"/>
+  </group>
 </launch>

@@ -1,0 +1,132 @@
+{
+  "keys": {}, 
+  "groups": {
+    "pluginmanager": {
+      "keys": {
+        "running-plugins": {
+          "type": "repr", 
+          "repr": "{u'hironx_ros_bridge/HiroNXDashboard': [1]}"
+        }
+      }, 
+      "groups": {
+        "plugin__hironx_ros_bridge__HiroNXDashboard__1": {
+          "keys": {}, 
+          "groups": {
+            "dock_widget__command_widget_top": {
+              "keys": {
+                "dockable": {
+                  "type": "repr", 
+                  "repr": "True"
+                }, 
+                "parent": {
+                  "type": "repr", 
+                  "repr": "None"
+                }
+              }, 
+              "groups": {}
+            }, 
+            "plugin": {
+              "keys": {
+                "show_highlighted_only": {
+                  "type": "repr", 
+                  "repr": "False"
+                }, 
+                "message_limit": {
+                  "type": "repr", 
+                  "repr": "20000"
+                }, 
+                "exclude_filters": {
+                  "type": "repr", 
+                  "repr": "u'severity'"
+                }, 
+                "table_splitter": {
+                  "type": "repr(QByteArray.hex)", 
+                  "repr(QByteArray.hex)": "QtCore.QByteArray('000000ff00000000000000020000004b000000e701000000090100000002')", 
+                  "pretty-print": "       K       "
+                }, 
+                "highlight_filters": {
+                  "type": "repr", 
+                  "repr": "u'message'"
+                }, 
+                "paused": {
+                  "type": "repr", 
+                  "repr": "False"
+                }, 
+                "settings_exist": {
+                  "type": "repr", 
+                  "repr": "True"
+                }, 
+                "filter_splitter": {
+                  "type": "repr(QByteArray.hex)", 
+                  "repr(QByteArray.hex)": "QtCore.QByteArray('000000ff00000000000000020000006f0000006f01000000090100000002')", 
+                  "pretty-print": "       o o     "
+                }
+              }, 
+              "groups": {
+                "exclude_filter_0": {
+                  "keys": {
+                    "enabled": {
+                      "type": "repr", 
+                      "repr": "True"
+                    }, 
+                    "itemlist": {
+                      "type": "repr", 
+                      "repr": "u''"
+                    }
+                  }, 
+                  "groups": {}
+                }, 
+                "highlight_filter_0": {
+                  "keys": {
+                    "regex": {
+                      "type": "repr", 
+                      "repr": "False"
+                    }, 
+                    "text": {
+                      "type": "repr", 
+                      "repr": "u''"
+                    }, 
+                    "enabled": {
+                      "type": "repr", 
+                      "repr": "True"
+                    }
+                  }, 
+                  "groups": {}
+                }
+              }
+            }
+          }
+        }
+      }
+    }, 
+    "mainwindow": {
+      "keys": {
+        "geometry": {
+          "type": "repr(QByteArray.hex)", 
+          "repr(QByteArray.hex)": "QtCore.QByteArray('01d9d0cb00010000000000b50000056b000003520000077d000000bf000005910000034800000773000000010000')", 
+          "pretty-print": "       k R }     H s   "
+        }, 
+        "state": {
+          "type": "repr(QByteArray.hex)", 
+          "repr(QByteArray.hex)": "QtCore.QByteArray('000000ff00000000fd00000001000000030000028a00000192fc0100000001fb00000072006800690072006f006e0078005f0072006f0073005f006200720069006400670065005f005f004800690072006f004e005800440061007300680062006f006100720064005f005f0031005f005f0063006f006d006d0061006e0064005f007700690064006700650074005f0074006f007001000000000000028a000001d900ffffff0000028a0000000000000004000000040000000800000008fc0000000200000002000000010000006e006800690072006f006e0078005f0072006f0073005f006200720069006400670065005f005f004800690072006f004e005800440061007300680062006f006100720064005f005f0031005f005f004800690072006f004e0058002000640061007300680062006f0061007200640100000000ffffffff0000000000000000000000030000000100000036004d0069006e0069006d0069007a006500640044006f0063006b00570069006400670065007400730054006f006f006c0062006100720000000000ffffffff0000000000000000')", 
+          "pretty-print": "                 rhironx_ros_bridge__HiroNXDashboard__1__command_widget_top                            nhironx_ros_bridge__HiroNXDashboard__1__HiroNX dashboard                                                  "
+        }
+      }, 
+      "groups": {
+        "toolbar_areas": {
+          "keys": {
+            "MinimizedDockWidgetsToolbar": {
+              "type": "repr", 
+              "repr": "8"
+            }, 
+            "hironx_ros_bridge__HiroNXDashboard__1__HiroNX dashboard": {
+              "type": "repr", 
+              "repr": "4"
+            }
+          }, 
+          "groups": {}
+        }
+      }
+    }
+  }
+}
