@@ -2,6 +2,12 @@
 Changelog for package hironx_ros_bridge
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* [fix][rqt dashboard] Enable to connect remote RTM nameserver (Fix #429)
+* [doc][hironx py] Add doc for overridden methods
+* Contributors: Isaac I.Y. Saito
+
 1.1.10 (2016-02-11)
 -------------------
 * use stupid code instead of using termcolor #437
