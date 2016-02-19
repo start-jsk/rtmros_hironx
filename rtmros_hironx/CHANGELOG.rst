@@ -2,8 +2,8 @@
 Changelog for package rtmros_hironx
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.1.11 (2016-02-18)
+-------------------
 * [fix][rqt dashboard] Enable to connect remote RTM nameserver (Fix #429)
 * [doc][hironx py] Add doc for overridden methods
 * Contributors: Isaac I.Y. Saito
