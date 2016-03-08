@@ -21,10 +21,10 @@
 
 #define min(a, b) ((a) < (b) ? (a) : (b))
 
-int io_read (resmgr_context_t * ctp, io_read_t * msg, RESMGR_OCB_T * ocb);	//
+int io_read(resmgr_context_t * ctp, io_read_t * msg, RESMGR_OCB_T * ocb);	//
 static char *buffer = (char *) "Hello world\n";	//
 
-void wait_t (void);		// wait for 3 sec.
+void wait_t(void);		// wait for 3 sec.
 
 #include "QNX101/jr3pci3.idm"
 
@@ -49,8 +49,6 @@ unsigned long MappedAddress;
 
 #define WriteJr3Pm2(addr,data,data2)	(*(int volatile *)ToJr3PciAddrH((addr)) = (int)(data));(*(int volatile *)ToJr3PciAddrL((addr)) = (int)(data2))
 
-
-
 #define WriteJr3Pm(addr,data)		WriteJr3Pm2((addr),(data) >> 8, (data))
 
 /* Read and Write from the data memory using bus relative addressing */
@@ -60,7 +58,6 @@ unsigned long MappedAddress;
 /* Read and Write from the data memory using 0 relative addressing */
 #define ReadJr3(addr) (ReadJr3Dm((addr) | Jr3DmAddrMask))
 #define WriteJr3(addr,data) WriteJr3Dm((addr) | Jr3DmAddrMask,data)
-
 
 static resmgr_connect_funcs_t ConnectFuncs;	//
 static resmgr_io_funcs_t IoFuncs;	//
@@ -82,160 +79,147 @@ volatile uint32_t Jr3BaseAddress1L;
  bit fields are shown with the lsb first
  */
 
-struct raw_channel
-{
-  uint16_t raw_time;
-  uint16_t dummy1;
-  int16_t raw_data;
-  int16_t dummy2;
-  int16_t reserved[2];
-  int16_t dummy3[2];
+struct raw_channel {
+	uint16_t raw_time;
+	uint16_t dummy1;
+	int16_t raw_data;
+	int16_t dummy2;
+	int16_t reserved[2];
+	int16_t dummy3[2];
 };
 
-struct force_array
-{
-  int16_t fx;
-  int16_t dummy1;
-  int16_t fy;
-  int16_t dummy2;
-  int16_t fz;
-  int16_t dummy3;
-  int16_t mx;
-  int16_t dummy4;
-  int16_t my;
-  int16_t dummy5;
-  int16_t mz;
-  int16_t dummy6;
-  int16_t v1;
-  int16_t dummy7;
-  int16_t v2;
-  int16_t dummy8;
+struct force_array {
+	int16_t fx;
+	int16_t dummy1;
+	int16_t fy;
+	int16_t dummy2;
+	int16_t fz;
+	int16_t dummy3;
+	int16_t mx;
+	int16_t dummy4;
+	int16_t my;
+	int16_t dummy5;
+	int16_t mz;
+	int16_t dummy6;
+	int16_t v1;
+	int16_t dummy7;
+	int16_t v2;
+	int16_t dummy8;
 };
 
-
-
-struct six_axis_array
-{
-  int16_t fx;
-  int16_t dummy1;
-  int16_t fy;
-  int16_t dummy2;
-  int16_t fz;
-  int16_t dummy3;
-  int16_t mx;
-  int16_t dummy4;
-  int16_t my;
-  int16_t dummy5;
-  int16_t mz;
-  int16_t dummy6;
+struct six_axis_array {
+	int16_t fx;
+	int16_t dummy1;
+	int16_t fy;
+	int16_t dummy2;
+	int16_t fz;
+	int16_t dummy3;
+	int16_t mx;
+	int16_t dummy4;
+	int16_t my;
+	int16_t dummy5;
+	int16_t mz;
+	int16_t dummy6;
 };
 
-struct vect_bits
-{
-  uint8_t fx:1;
-  uint8_t fy:1;
-  uint8_t fz:1;
-  uint8_t mx:1;
-  uint8_t my:1;
-  uint8_t mz:1;
-  uint8_t changedV1:1;
-  uint8_t changedV2:1;
-  int16_t dummy;
+struct vect_bits {
+	uint8_t fx :1;
+	uint8_t fy :1;
+	uint8_t fz :1;
+	uint8_t mx :1;
+	uint8_t my :1;
+	uint8_t mz :1;
+	uint8_t changedV1 :1;
+	uint8_t changedV2 :1;
+	int16_t dummy;
 };
 
-struct warning_bits
-{
-  uint8_t fx_near_set:1;
-  uint8_t fy_near_set:1;
-  uint8_t fz_near_set:1;
-  uint8_t mx_near_set:1;
-  uint8_t my_near_set:1;
-  uint8_t mz_near_set:1;
-  uint8_t reserved:8;
-  //uint8_t        reserved : 10; // this will use 3 byte
-  int16_t dummy;
+struct warning_bits {
+	uint8_t fx_near_set :1;
+	uint8_t fy_near_set :1;
+	uint8_t fz_near_set :1;
+	uint8_t mx_near_set :1;
+	uint8_t my_near_set :1;
+	uint8_t mz_near_set :1;
+	uint8_t reserved :8;
+	//uint8_t        reserved : 10; // this will use 3 byte
+	int16_t dummy;
 };
 
-struct error_bits
-{
-  uint8_t fx_sat:1;
-  uint8_t fy_sat:1;
-  uint8_t fz_sat:1;
-  uint8_t mx_sat:1;
-  uint8_t my_sat:1;
-  uint8_t mz_sat:1;
-  uint8_t researved:2;
-  //uint8_t       researved : 4; // this will use 3 byte
-  uint8_t memry_error:1;
-  uint8_t sensor_charge:1;
-  uint8_t system_busy:1;
-  uint8_t cal_crc_bad:1;
-  uint8_t watch_dog2:1;
-  uint8_t watch_dog:1;
-  int16_t dummy1;
+struct error_bits {
+	uint8_t fx_sat :1;
+	uint8_t fy_sat :1;
+	uint8_t fz_sat :1;
+	uint8_t mx_sat :1;
+	uint8_t my_sat :1;
+	uint8_t mz_sat :1;
+	uint8_t researved :2;
+	//uint8_t       researved : 4; // this will use 3 byte
+	uint8_t memry_error :1;
+	uint8_t sensor_charge :1;
+	uint8_t system_busy :1;
+	uint8_t cal_crc_bad :1;
+	uint8_t watch_dog2 :1;
+	uint8_t watch_dog :1;
+	int16_t dummy1;
 };
 
 char *force_units_str[] =
-  { (char *) "pound, inch*pound, inch*1000",
-(char *) "Newton, Newton*meter*10, mm*10", (char *) "kilogram-force*10, kilogram-Force*cm, mm*10",
-(char *) "kilopound, kiloinch*pound, inch*1000" };
+  {  (char *) "pound, inch*pound, inch*1000",
 
-enum force_units
-{
-  lbs_in_lbs_mils,
-  N_dNm_mm10,
-  kgf10_kgFcm_mm10,
-  klbs_kin_lbs_mils,
-  reserved_units_4,
-  reserved_units_5,
-  reserved_units_6,
-  reserved_units_7
+		(char *) "Newton, Newton*meter*10, mm*10",
+		(char *) "kilogram-force*10, kilogram-Force*cm, mm*10",
+		(char *) "kilopound, kiloinch*pound, inch*1000" };
+
+enum force_units {
+	lbs_in_lbs_mils,
+	N_dNm_mm10,
+	kgf10_kgFcm_mm10,
+	klbs_kin_lbs_mils,
+	reserved_units_4,
+	reserved_units_5,
+	reserved_units_6,
+	reserved_units_7
 };
 
-struct thresh_struct
-{
-  int16_t data_address;
-  int16_t dummy1;
-  int16_t threshold;
-  int16_t dummy2;
-  int16_t bit_pattern;
-  int16_t dummy3;
+struct thresh_struct {
+	int16_t data_address;
+	int16_t dummy1;
+	int16_t threshold;
+	int16_t dummy2;
+	int16_t bit_pattern;
+	int16_t dummy3;
 };
 
-struct le_struct
-{
-  int16_t latch_bits;
-  int16_t dummy1;
-  int16_t number_of_ge_thresholds;
-  int16_t dummy2;
-  int16_t number_of_le_thresholds;
-  int16_t dummy3;
-  thresh_struct thresholds[4];
-  int16_t reserved;
-  int16_t dummy4;
+struct le_struct {
+	int16_t latch_bits;
+	int16_t dummy1;
+	int16_t number_of_ge_thresholds;
+	int16_t dummy2;
+	int16_t number_of_le_thresholds;
+	int16_t dummy3;
+	thresh_struct thresholds[4];
+	int16_t reserved;
+	int16_t dummy4;
 };
 
-enum link_types
-{
-  end_x_form, tx, ty, tz, rx, ry, rz, neg
+enum link_types {
+	end_x_form, tx, ty, tz, rx, ry, rz, neg
 };
 
-struct links
-{
-  link_types link_type;
-  int16_t dummy1;
-  int16_t link_amount;
-  int16_t dummy2;
+struct links {
+	link_types link_type;
+	int16_t dummy1;
+	int16_t link_amount;
+	int16_t dummy2;
 };
 
-struct transform
-{
-  links link[8];
+struct transform {
+	links link[8];
 };
 
 
-struct force_sensor_data
-{
+struct force_sensor_data {
   raw_channel raw_channels[16];	/* offset 0x0000 */
   char copyright[0x18 * 4];	/* offset 0x0040 */
   int16_t reserved1[0x08 * 2];	/* offset 0x0058 */
@@ -337,434 +321,383 @@ struct force_sensor_data
   transform transforms[0x10];	/* offset 0x0200 */
 };
 
-
-typedef struct
-{
-  uint16_t msg_no;
-  char msg_data[255];
+typedef struct {
+	uint16_t msg_no;
+	char msg_data[255];
 } server_msg_t;
 
+int download(unsigned int base0, unsigned int base1) {
+	printf("Download %x %x\n", base0, base1);
 
-int
-download (unsigned int base0, unsigned int base1)
-{
-  printf ("Download %x %x\n", base0, base1);
+	int count;
+	int index = 0;
+	unsigned int Jr3BaseAddressH;
+	unsigned int Jr3BaseAddressL;
 
-  int count;
-  int index = 0;
-  unsigned int Jr3BaseAddressH;
-  unsigned int Jr3BaseAddressL;
+	Jr3BaseAddressH = base0;
+	Jr3BaseAddressL = base1;
 
-  Jr3BaseAddressH = base0;
-  Jr3BaseAddressL = base1;
+	/* The first line is a line count */
+	count = dsp[index++];
 
-  /* The first line is a line count */
-  count = dsp[index++];
+	/* Read in file while the count is no 0xffff */
+	while (count != 0xffff) {
+		int addr;
 
-  /* Read in file while the count is no 0xffff */
-  while (count != 0xffff)
-    {
-      int addr;
+		/* After the count is the address */
+		addr = dsp[index++];
 
-      /* After the count is the address */
-      addr = dsp[index++];
+		/* loop count times and write the data to the dsp memory */
+		while (count > 0) {
+			/* Check to see if this is data memory or program memory */
+			if (addr & 0x4000) {
+				int data = 0;
 
-      /* loop count times and write the data to the dsp memory */
-      while (count > 0)
-	{
-	  /* Check to see if this is data memory or program memory */
-	  if (addr & 0x4000)
-	    {
-	      int data = 0;
+				/* Data memory is 16 bits and is on one line */
+				data = dsp[index++];
+				WriteJr3Dm(addr, data);
+				count--;
+				if (data != ReadJr3Dm(addr)) {
+					printf("data addr: %4.4x out: %4.4x in: %4.4x\n", addr,
+							data, ReadJr3Dm(addr));
+				}
+			} else {
+				int data, data2;
+				int data3;
 
-	      /* Data memory is 16 bits and is on one line */
-	      data = dsp[index++];
-	      WriteJr3Dm (addr, data);
-	      count--;
-	      if (data != ReadJr3Dm (addr))
-		{
-		  printf ("data addr: %4.4x out: %4.4x in: %4.4x\n", addr,
-			  data, ReadJr3Dm (addr));
+				/* Program memory is 24 bits and is on two lines */
+				data = dsp[index++];
+				data2 = dsp[index++];
+				WriteJr3Pm2(addr, data, data2);
+				count -= 2;
+
+				/* Verify the write */
+				if (((data << 8) | (data2 & 0xff))
+						!= (data3 = ReadJr3Pm(addr))) {
+					//      printf("pro addr: %4.4x out: %6.6x in: %6.6x\n", addr, ((data << 8)|(data2 & 0xff)), /* ReadJr3Pm(addr) */ data3);
+				}
+			}
+			addr++;
 		}
-	    }
-	  else
-	    {
-	      int data, data2;
-	      int data3;
+		count = dsp[index++];
+	}
 
+	return 0;
 
-	      /* Program memory is 24 bits and is on two lines */
-	      data = dsp[index++];
-	      data2 = dsp[index++];
-	      WriteJr3Pm2 (addr, data, data2);
-	      count -= 2;
+}
 
-	      /* Verify the write */
-	      if (((data << 8) | (data2 & 0xff)) !=
-		  (data3 = ReadJr3Pm (addr)))
-		{
-		  //      printf("pro addr: %4.4x out: %6.6x in: %6.6x\n", addr, ((data << 8)|(data2 & 0xff)), /* ReadJr3Pm(addr) */ data3);
+void get_force_sensor_info(force_sensor_data * data, char *msg) {
+	struct tm t1, *soft_day, *cal_day;
+	;
+	time_t t2;
+	t1.tm_sec = t1.tm_min = t1.tm_hour = 0;
+	t1.tm_isdst = -1;
+	t1.tm_mon = 0;
+	t1.tm_year = data->software_year - 1900;
+	t1.tm_mday = data->software_day;
+	t2 = mktime(&t1);
+	soft_day = localtime(&t2);
+	t1.tm_sec = t1.tm_min = t1.tm_hour = 0;
+	t1.tm_isdst = -1;
+	t1.tm_mon = 0;
+	t1.tm_year = data->cal_year - 1900;
+	t1.tm_mday = data->cal_day;
+	t2 = mktime(&t1);
+	cal_day = localtime(&t2);
+	snprintf(msg, 128, "rom # %d, soft # %d, %d/%d/%d\n"
+			"serial # %d, model # %d, cal day %d/%d/%d\n"
+			"%s, %d bits, %d ch\n"
+			"(C) %c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c\n\n",
+			data->eeprom_ver_no, data->software_ver_no, soft_day->tm_mday,
+			soft_day->tm_mon + 1, soft_day->tm_year + 1900, data->serial_no,
+			data->model_no, cal_day->tm_mday, cal_day->tm_mon + 1,
+			cal_day->tm_year + 1900, force_units_str[1], data->bit,
+			data->channels, data->copyright[0 * 4 + 1],
+			data->copyright[1 * 4 + 1], data->copyright[2 * 4 + 1],
+			data->copyright[3 * 4 + 1], data->copyright[4 * 4 + 1],
+			data->copyright[5 * 4 + 1], data->copyright[6 * 4 + 1],
+			data->copyright[7 * 4 + 1], data->copyright[8 * 4 + 1],
+			data->copyright[9 * 4 + 1], data->copyright[10 * 4 + 1],
+			data->copyright[11 * 4 + 1], data->copyright[12 * 4 + 1],
+			data->copyright[13 * 4 + 1], data->copyright[14 * 4 + 1],
+			data->copyright[15 * 4 + 1], data->copyright[16 * 4 + 1],
+			data->copyright[17 * 4 + 1], data->copyright[18 * 4 + 1],
+			data->copyright[19 * 4 + 1], data->copyright[20 * 4 + 1],
+			data->copyright[21 * 4 + 1], data->copyright[22 * 4 + 1],
+			data->copyright[23 * 4 + 1]);
+}
+
+int message_callback(message_context_t * ctp, int type, unsigned flags,
+		void *handle) {
+	server_msg_t *msg;
+	int num;
+	char msg_reply[255];
+
+	/* cast a pointer to the message data */
+	msg = (server_msg_t *) ctp->msg;
+
+	/* Print out some usefull information on the message */
+	//printf( "\n\nServer Got Message:\n" );
+	//printf( "  type: %d\n" , type );
+	//printf( "  data: %s\n\n", msg->msg_data );
+	force_sensor_data *data_0;
+	force_sensor_data *data_1;
+	data_0 = (force_sensor_data *) (Jr3BaseAddress0H + (Jr3DmAddrMask << 2));
+	data_1 = (force_sensor_data *) (Jr3BaseAddress1H + (Jr3DmAddrMask << 2));
+
+	/* Build the reply message */
+	num = type - _IO_MAX;
+	switch (num) {
+	case 1:			// get data
+	{
+		float tmp[12] = { -1.0 * (float) data_0->filter0.fx
+				/ (float) data_0->full_scale.fx, -1.0
+				* (float) data_0->filter0.fy / (float) data_0->full_scale.fy,
+				-1.0 * (float) data_0->filter0.fz
+						/ (float) data_0->full_scale.fz, -1.0
+						* (float) data_0->filter0.mx
+						/ (float) data_0->full_scale.mx * 0.1, // Newton*meter*10
+				-1.0 * (float) data_0->filter0.my
+						/ (float) data_0->full_scale.my * 0.1, -1.0
+						* (float) data_0->filter0.mz
+						/ (float) data_0->full_scale.mz * 0.1, -1.0
+						* (float) data_1->filter0.fx
+						/ (float) data_1->full_scale.fx, -1.0
+						* (float) data_1->filter0.fy
+						/ (float) data_1->full_scale.fy, -1.0
+						* (float) data_1->filter0.fz
+						/ (float) data_1->full_scale.fz, -1.0
+						* (float) data_1->filter0.mx
+						/ (float) data_1->full_scale.mx * 0.1, -1.0
+						* (float) data_1->filter0.my
+						/ (float) data_1->full_scale.my * 0.1, -1.0
+						* (float) data_1->filter0.mz
+						/ (float) data_1->full_scale.mz * 0.1 };
+		memcpy(msg_reply, tmp, sizeof(float) * 12);
+	}
+		break;
+	case 2:			// update offset
+		data_0->offsets.fx += data_0->filter0.fx;
+		data_0->offsets.fy += data_0->filter0.fy;
+		data_0->offsets.fz += data_0->filter0.fz;
+		data_0->offsets.mx += data_0->filter0.mx;
+		data_0->offsets.my += data_0->filter0.my;
+		data_0->offsets.mz += data_0->filter0.mz;
+		data_1->offsets.fx += data_1->filter0.fx;
+		data_1->offsets.fy += data_1->filter0.fy;
+		data_1->offsets.fz += data_1->filter0.fz;
+		data_1->offsets.mx += data_1->filter0.mx;
+		data_1->offsets.my += data_1->filter0.my;
+		data_1->offsets.mz += data_1->filter0.mz;
+		break;
+	case 3:			// set filter
+		break;
+	case 4:			// get data
+		get_force_sensor_info(data_0, msg_reply);
+		get_force_sensor_info(data_1, msg_reply + strlen(msg_reply));
+		break;
+	}
+
+	/* Send a reply to the waiting (blocked) client */
+	MsgReply(ctp->rcvid, EOK, msg_reply, 256);
+	return 0;
+}
+
+int main(int argc, char **argv) {
+	resmgr_attr_t resmgr_attr;
+	message_attr_t message_attr;
+	dispatch_t *dpp;
+	dispatch_context_t *ctp, *ctp_ret;
+	int resmgr_id, message_id;
+
+	/* Create the Dispatch Interface */
+	dpp = dispatch_create();
+	if (dpp == NULL) {
+		fprintf(stderr, "dispatch_create() failed: %s\n", strerror(errno));
+		return EXIT_FAILURE;
+	}
+
+	memset(&resmgr_attr, 0, sizeof(resmgr_attr));
+	resmgr_attr.nparts_max = 1;
+	resmgr_attr.msg_max_size = 2048;
+
+	/* Setup the default I/O functions to handle open/read/write/... */
+	iofunc_func_init(_RESMGR_CONNECT_NFUNCS, &ConnectFuncs, _RESMGR_IO_NFUNCS,
+			&IoFuncs);
+
+	IoFuncs.read = io_read;
+
+	/* Setup the attribute for the entry in the filesystem */
+	iofunc_attr_init(&IoFuncAttr, S_IFNAM | 0666, 0, 0);
+	IoFuncAttr.nbytes = strlen(buffer) + 1;	//
+
+	resmgr_id = resmgr_attach(dpp, &resmgr_attr, "/dev/jr3q", _FTYPE_ANY, 0,
+			&ConnectFuncs, &IoFuncs, &IoFuncAttr);
+	if (resmgr_id == -1) {
+		fprintf(stderr, "resmgr_attach() failed: %s\n", strerror(errno));
+		return EXIT_FAILURE;
+	}
+
+	/* Setup PCI */
+	unsigned int flags = 0;
+	unsigned bus, function, index = 0;
+	unsigned devid, venid;
+	int result;
+	unsigned lastbus, version, hardware;
+	unsigned int address0;
+	void *bufptr;
+	unsigned int addr;
+
+	pci_attach(flags);
+	result = pci_present(&lastbus, &version, &hardware);
+	if (result == -1) {
+		printf("PCI BIOS not present!\n");
+	}
+	devid = DEVICEID;
+	venid = VENDORID;
+	result = pci_find_device(devid, venid, index, &bus, &function);
+	printf("result PCI %d\n", result);
+	printf("bus %d\n", bus);
+	printf("function %d\n", function);
+	pci_read_config_bus(bus, function, 0x10, 1, sizeof(unsigned int), bufptr);
+
+	address0 = *(unsigned int *) bufptr;
+	buffer = (char *) bufptr;
+	printf("Board addr 0x%x\n", *(unsigned int *) buffer);
+
+	Jr3BaseAddress0H = (volatile uint32_t) mmap_device_memory(NULL, 0x100000,
+			PROT_READ | PROT_WRITE | PROT_NOCACHE, 0, address0);
+	Jr3BaseAddress0L = (volatile uint32_t) mmap_device_memory(NULL, 0x100000,
+			PROT_READ | PROT_WRITE | PROT_NOCACHE, 0, address0 + Jr3NoAddrMask);
+	Jr3BaseAddressH = (volatile uint32_t) mmap_device_memory(NULL, 0x100000,
+			PROT_READ | PROT_WRITE | PROT_NOCACHE, 0, address0);
+	WriteJr3Dm(Jr3ResetAddr, 0);	// Reset DSP
+	wait_t();
+	download(Jr3BaseAddress0H, Jr3BaseAddress0L);
+	wait_t();
+
+	Jr3BaseAddress1H = (volatile uint32_t) mmap_device_memory(NULL, 0x100000,
+			PROT_READ | PROT_WRITE | PROT_NOCACHE, 0, address0 + 0x80000);
+	Jr3BaseAddress1L = (volatile uint32_t) mmap_device_memory(NULL, 0x100000,
+			PROT_READ | PROT_WRITE | PROT_NOCACHE, 0, address0 + 0x80000 +
+			Jr3NoAddrMask);
+	download(Jr3BaseAddress1H, Jr3BaseAddress1L);
+	wait_t();
+	/*
+	 Jr3BaseAddress2H = (volatile uint32_t)mmap_device_memory(NULL, 0x100000, PROT_READ|PROT_WRITE|PROT_NOCACHE, 0, address0 + 0x100000);
+	 Jr3BaseAddress2L = (volatile uint32_t)mmap_device_memory(NULL, 0x100000, PROT_READ|PROT_WRITE|PROT_NOCACHE, 0, address0 + 0x100000 + Jr3NoAddrMask);
+	 download(Jr3BaseAddress2H, Jr3BaseAddress2L);
+	 wait_t();
+
+	 Jr3BaseAddress3H = (volatile uint32_t)mmap_device_memory(NULL, 0x100000, PROT_READ|PROT_WRITE|PROT_NOCACHE, 0, address0 + 0x180000);
+	 Jr3BaseAddress3L = (volatile uint32_t)mmap_device_memory(NULL, 0x100000, PROT_READ|PROT_WRITE|PROT_NOCACHE, 0, address0 + 0x180000 + Jr3NoAddrMask);
+	 download(Jr3BaseAddress3H, Jr3BaseAddress3L);
+	 wait_t();
+	 */
+
+	//reset
+	*(uint16_t *) (Jr3BaseAddress0H + ((0x0200 | Jr3DmAddrMask) << 2)) =
+			(uint16_t) 0;
+	*(uint16_t *) (Jr3BaseAddress0H + ((0x00e7 | Jr3DmAddrMask) << 2)) =
+			(uint16_t) 0x0500;
+
+	/* Setup our message callback */
+	memset(&message_attr, 0, sizeof(message_attr));
+	message_attr.nparts_max = 1;
+	message_attr.msg_max_size = 4096;
+
+	/* Attach a callback (handler) for two message types */
+	message_id = message_attach(dpp, &message_attr, _IO_MAX + 1, _IO_MAX + 10,
+			message_callback, NULL);
+	if (message_id == -1) {
+		fprintf(stderr, "message_attach() failed: %s\n", strerror(errno));
+		return EXIT_FAILURE;
+	}
+
+	/* Setup a context for the dispatch layer to use */
+	ctp = dispatch_context_alloc(dpp);
+	if (ctp == NULL) {
+		fprintf(stderr, "dispatch_context_alloc() failed: %s\n",
+				strerror(errno));
+		return EXIT_FAILURE;
+	}
+
+	/* The "Data Pump" - get and process messages */
+	while (1) {
+		ctp_ret = dispatch_block(ctp);
+		if (ctp_ret) {
+			dispatch_handler(ctp);
+		} else {
+			fprintf(stderr, "dispatch_block() failed: %s\n", strerror(errno));
+			return EXIT_FAILURE;
 		}
-	    }
-	  addr++;
 	}
-      count = dsp[index++];
-    }
 
-
-  return 0;
-
+	return EXIT_SUCCESS;
 }
 
-void
-get_force_sensor_info (force_sensor_data * data, char *msg)
-{
-  struct tm t1, *soft_day, *cal_day;;
-  time_t t2;
-  t1.tm_sec = t1.tm_min = t1.tm_hour = 0;
-  t1.tm_isdst = -1;
-  t1.tm_mon = 0;
-  t1.tm_year = data->software_year - 1900;
-  t1.tm_mday = data->software_day;
-  t2 = mktime (&t1);
-  soft_day = localtime (&t2);
-  t1.tm_sec = t1.tm_min = t1.tm_hour = 0;
-  t1.tm_isdst = -1;
-  t1.tm_mon = 0;
-  t1.tm_year = data->cal_year - 1900;
-  t1.tm_mday = data->cal_day;
-  t2 = mktime (&t1);
-  cal_day = localtime (&t2);
-  snprintf (msg, 128,
-	    "rom # %d, soft # %d, %d/%d/%d\n"
-	    "serial # %d, model # %d, cal day %d/%d/%d\n"
-	    "%s, %d bits, %d ch\n"
-	    "(C) %c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c\n\n",
-	    data->eeprom_ver_no, data->software_ver_no, soft_day->tm_mday,
-	    soft_day->tm_mon + 1, soft_day->tm_year + 1900, data->serial_no,
-	    data->model_no, cal_day->tm_mday, cal_day->tm_mon + 1,
-	    cal_day->tm_year + 1900, force_units_str[1], data->bit,
-	    data->channels, data->copyright[0 * 4 + 1],
-	    data->copyright[1 * 4 + 1], data->copyright[2 * 4 + 1],
-	    data->copyright[3 * 4 + 1], data->copyright[4 * 4 + 1],
-	    data->copyright[5 * 4 + 1], data->copyright[6 * 4 + 1],
-	    data->copyright[7 * 4 + 1], data->copyright[8 * 4 + 1],
-	    data->copyright[9 * 4 + 1], data->copyright[10 * 4 + 1],
-	    data->copyright[11 * 4 + 1], data->copyright[12 * 4 + 1],
-	    data->copyright[13 * 4 + 1], data->copyright[14 * 4 + 1],
-	    data->copyright[15 * 4 + 1], data->copyright[16 * 4 + 1],
-	    data->copyright[17 * 4 + 1], data->copyright[18 * 4 + 1],
-	    data->copyright[19 * 4 + 1], data->copyright[20 * 4 + 1],
-	    data->copyright[21 * 4 + 1], data->copyright[22 * 4 + 1],
-	    data->copyright[23 * 4 + 1]);
-}
+int io_read(resmgr_context_t * ctp, io_read_t * msg, RESMGR_OCB_T * ocb) {
+	int nleft;
+	int nbytes;
+	int nparts;
+	int status;
 
+	if ((status = iofunc_read_verify(ctp, msg, ocb, NULL)) != EOK)
+		return (status);
 
+	if ((msg->i.xtype & _IO_XTYPE_MASK) != _IO_XTYPE_NONE)
+		return (ENOSYS);
 
-int
-message_callback (message_context_t * ctp, int type, unsigned flags,
-		  void *handle)
-{
-  server_msg_t *msg;
-  int num;
-  char msg_reply[255];
+	/*
+	 * on all reads (first and subsequent) calculate
+	 * how many bytes we can return to the client,
+	 * based upon the number of bytes available (nleft)
+	 * and the client's buffer size
+	 */
 
-  /* cast a pointer to the message data */
-  msg = (server_msg_t *) ctp->msg;
+	nleft = ocb->attr->nbytes - ocb->offset;
+	nbytes = min(msg->i.nbytes, nleft);
 
-  /* Print out some usefull information on the message */
-  //printf( "\n\nServer Got Message:\n" );
-  //printf( "  type: %d\n" , type );
-  //printf( "  data: %s\n\n", msg->msg_data );
+	if (nbytes > 0) {
+		/* set up the return data IOV */
+		SETIOV(ctp->iov, buffer + ocb->offset, nbytes);
 
-  force_sensor_data *data_0;
-  force_sensor_data *data_1;
-  data_0 = (force_sensor_data *) (Jr3BaseAddress0H + (Jr3DmAddrMask << 2));
-  data_1 = (force_sensor_data *) (Jr3BaseAddress1H + (Jr3DmAddrMask << 2));
+		/* set up the number of bytes (returned by client's read()) */
+		_IO_SET_READ_NBYTES(ctp, nbytes);
 
-  /* Build the reply message */
-  num = type - _IO_MAX;
-  switch (num)
-    {
-    case 1:			// get data
-      {
-	float tmp[12] = {
-	  -1.0 * (float) data_0->filter0.fx / (float) data_0->full_scale.fx,
-	  -1.0 * (float) data_0->filter0.fy / (float) data_0->full_scale.fy,
-	  -1.0 * (float) data_0->filter0.fz / (float) data_0->full_scale.fz,
-	  -1.0 * (float) data_0->filter0.mx / (float) data_0->full_scale.mx * 0.1, // Newton*meter*10
-	  -1.0 * (float) data_0->filter0.my / (float) data_0->full_scale.my * 0.1,
-	  -1.0 * (float) data_0->filter0.mz / (float) data_0->full_scale.mz * 0.1,
-	  -1.0 * (float) data_1->filter0.fx / (float) data_1->full_scale.fx,
-	  -1.0 * (float) data_1->filter0.fy / (float) data_1->full_scale.fy,
-	  -1.0 * (float) data_1->filter0.fz / (float) data_1->full_scale.fz,
-	  -1.0 * (float) data_1->filter0.mx / (float) data_1->full_scale.mx * 0.1,
-	  -1.0 * (float) data_1->filter0.my / (float) data_1->full_scale.my * 0.1,
-	  -1.0 * (float) data_1->filter0.mz / (float) data_1->full_scale.mz * 0.1
-	};
-	memcpy (msg_reply, tmp, sizeof (float) * 12);
-      }
-      break;
-    case 2:			// update offset
-      data_0->offsets.fx += data_0->filter0.fx;
-      data_0->offsets.fy += data_0->filter0.fy;
-      data_0->offsets.fz += data_0->filter0.fz;
-      data_0->offsets.mx += data_0->filter0.mx;
-      data_0->offsets.my += data_0->filter0.my;
-      data_0->offsets.mz += data_0->filter0.mz;
-      data_1->offsets.fx += data_1->filter0.fx;
-      data_1->offsets.fy += data_1->filter0.fy;
-      data_1->offsets.fz += data_1->filter0.fz;
-      data_1->offsets.mx += data_1->filter0.mx;
-      data_1->offsets.my += data_1->filter0.my;
-      data_1->offsets.mz += data_1->filter0.mz;
-      break;
-    case 3:			// set filter
-      break;
-    case 4:			// get data
-      get_force_sensor_info (data_0, msg_reply);
-      get_force_sensor_info (data_1, msg_reply + strlen (msg_reply));
-      break;
-    }
+		/*
+		 * advance the offset by the number of bytes
+		 * returned to the client.
+		 */
 
-  /* Send a reply to the waiting (blocked) client */
-  MsgReply (ctp->rcvid, EOK, msg_reply, 256);
-  return 0;
-}
+		ocb->offset += nbytes;
+		nparts = 1;
+	} else {
+		/* they've adked for zero bytes or they've already previously
+		 * read everything
+		 */
 
-
-
-int
-main (int argc, char **argv)
-{
-  resmgr_attr_t resmgr_attr;
-  message_attr_t message_attr;
-  dispatch_t *dpp;
-  dispatch_context_t *ctp, *ctp_ret;
-  int resmgr_id, message_id;
-
-  /* Create the Dispatch Interface */
-  dpp = dispatch_create ();
-  if (dpp == NULL)
-    {
-      fprintf (stderr, "dispatch_create() failed: %s\n", strerror (errno));
-      return EXIT_FAILURE;
-    }
-
-  memset (&resmgr_attr, 0, sizeof (resmgr_attr));
-  resmgr_attr.nparts_max = 1;
-  resmgr_attr.msg_max_size = 2048;
-
-  /* Setup the default I/O functions to handle open/read/write/... */
-  iofunc_func_init (_RESMGR_CONNECT_NFUNCS, &ConnectFuncs,
-		    _RESMGR_IO_NFUNCS, &IoFuncs);
-
-  IoFuncs.read = io_read;
-
-  /* Setup the attribute for the entry in the filesystem */
-  iofunc_attr_init (&IoFuncAttr, S_IFNAM | 0666, 0, 0);
-  IoFuncAttr.nbytes = strlen (buffer) + 1;	//
-
-  resmgr_id = resmgr_attach (dpp, &resmgr_attr, "/dev/jr3q", _FTYPE_ANY,
-			     0, &ConnectFuncs, &IoFuncs, &IoFuncAttr);
-  if (resmgr_id == -1)
-    {
-      fprintf (stderr, "resmgr_attach() failed: %s\n", strerror (errno));
-      return EXIT_FAILURE;
-    }
-
-  /* Setup PCI */
-  unsigned int flags = 0;
-  unsigned bus, function, index = 0;
-  unsigned devid, venid;
-  int result;
-  unsigned lastbus, version, hardware;
-  unsigned int address0;
-  void *bufptr;
-  unsigned int addr;
-
-  pci_attach (flags);
-  result = pci_present (&lastbus, &version, &hardware);
-  if (result == -1)
-    {
-      printf ("PCI BIOS not present!\n");
-    }
-  devid = DEVICEID;
-  venid = VENDORID;
-  result = pci_find_device (devid, venid, index, &bus, &function);
-  printf ("result PCI %d\n", result);
-  printf ("bus %d\n", bus);
-  printf ("function %d\n", function);
-  pci_read_config_bus (bus, function, 0x10, 1, sizeof (unsigned int), bufptr);
-
-  address0 = *(unsigned int *) bufptr;
-  buffer = (char *) bufptr;
-  printf ("Board addr 0x%x\n", *(unsigned int *) buffer);
-
-  Jr3BaseAddress0H =
-    (volatile uint32_t) mmap_device_memory (NULL, 0x100000,
-					    PROT_READ | PROT_WRITE |
-					    PROT_NOCACHE, 0, address0);
-  Jr3BaseAddress0L =
-    (volatile uint32_t) mmap_device_memory (NULL, 0x100000,
-					    PROT_READ | PROT_WRITE |
-					    PROT_NOCACHE, 0,
-					    address0 + Jr3NoAddrMask);
-  Jr3BaseAddressH =
-    (volatile uint32_t) mmap_device_memory (NULL, 0x100000,
-					    PROT_READ | PROT_WRITE |
-					    PROT_NOCACHE, 0, address0);
-  WriteJr3Dm (Jr3ResetAddr, 0);	// Reset DSP       
-  wait_t ();
-  download (Jr3BaseAddress0H, Jr3BaseAddress0L);
-  wait_t ();
-
-  Jr3BaseAddress1H =
-    (volatile uint32_t) mmap_device_memory (NULL, 0x100000,
-					    PROT_READ | PROT_WRITE |
-					    PROT_NOCACHE, 0,
-					    address0 + 0x80000);
-  Jr3BaseAddress1L =
-    (volatile uint32_t) mmap_device_memory (NULL, 0x100000,
-					    PROT_READ | PROT_WRITE |
-					    PROT_NOCACHE, 0,
-					    address0 + 0x80000 +
-					    Jr3NoAddrMask);
-  download (Jr3BaseAddress1H, Jr3BaseAddress1L);
-  wait_t ();
-/*
-			Jr3BaseAddress2H = (volatile uint32_t)mmap_device_memory(NULL, 0x100000, PROT_READ|PROT_WRITE|PROT_NOCACHE, 0, address0 + 0x100000); 
-			Jr3BaseAddress2L = (volatile uint32_t)mmap_device_memory(NULL, 0x100000, PROT_READ|PROT_WRITE|PROT_NOCACHE, 0, address0 + 0x100000 + Jr3NoAddrMask); 
-			download(Jr3BaseAddress2H, Jr3BaseAddress2L);
-			wait_t();
-
-			Jr3BaseAddress3H = (volatile uint32_t)mmap_device_memory(NULL, 0x100000, PROT_READ|PROT_WRITE|PROT_NOCACHE, 0, address0 + 0x180000); 
-			Jr3BaseAddress3L = (volatile uint32_t)mmap_device_memory(NULL, 0x100000, PROT_READ|PROT_WRITE|PROT_NOCACHE, 0, address0 + 0x180000 + Jr3NoAddrMask); 
-			download(Jr3BaseAddress3H, Jr3BaseAddress3L);
-			wait_t();
-*/
-
-  //reset
-  *(uint16_t *) (Jr3BaseAddress0H + ((0x0200 | Jr3DmAddrMask) << 2)) =
-    (uint16_t) 0;
-  *(uint16_t *) (Jr3BaseAddress0H + ((0x00e7 | Jr3DmAddrMask) << 2)) =
-    (uint16_t) 0x0500;
-
-
-  /* Setup our message callback */
-  memset (&message_attr, 0, sizeof (message_attr));
-  message_attr.nparts_max = 1;
-  message_attr.msg_max_size = 4096;
-
-  /* Attach a callback (handler) for two message types */
-  message_id = message_attach (dpp, &message_attr, _IO_MAX + 1,
-			       _IO_MAX + 10, message_callback, NULL);
-  if (message_id == -1)
-    {
-      fprintf (stderr, "message_attach() failed: %s\n", strerror (errno));
-      return EXIT_FAILURE;
-    }
-
-  /* Setup a context for the dispatch layer to use */
-  ctp = dispatch_context_alloc (dpp);
-  if (ctp == NULL)
-    {
-      fprintf (stderr, "dispatch_context_alloc() failed: %s\n",
-	       strerror (errno));
-      return EXIT_FAILURE;
-    }
-
-  /* The "Data Pump" - get and process messages */
-  while (1)
-    {
-      ctp_ret = dispatch_block (ctp);
-      if (ctp_ret)
-	{
-	  dispatch_handler (ctp);
+		_IO_SET_READ_NBYTES(ctp, 0);
+		nparts = 0;
 	}
-      else
-	{
-	  fprintf (stderr, "dispatch_block() failed: %s\n", strerror (errno));
-	  return EXIT_FAILURE;
-	}
-    }
 
-  return EXIT_SUCCESS;
-}
+	/* mark the access time as invalid (we just accessed it) */
 
+	if (msg->i.nbytes > 0)
+		ocb->attr->flags |= IOFUNC_ATTR_ATIME;
 
-int
-io_read (resmgr_context_t * ctp, io_read_t * msg, RESMGR_OCB_T * ocb)
-{
-  int nleft;
-  int nbytes;
-  int nparts;
-  int status;
-
-  if ((status = iofunc_read_verify (ctp, msg, ocb, NULL)) != EOK)
-    return (status);
-
-  if ((msg->i.xtype & _IO_XTYPE_MASK) != _IO_XTYPE_NONE)
-    return (ENOSYS);
-
-  /*
-   * on all reads (first and subsequent) calculate
-   * how many bytes we can return to the client,
-   * based upon the number of bytes available (nleft)
-   * and the client's buffer size
-   */
-
-  nleft = ocb->attr->nbytes - ocb->offset;
-  nbytes = min (msg->i.nbytes, nleft);
-
-  if (nbytes > 0)
-    {
-      /* set up the return data IOV */
-      SETIOV (ctp->iov, buffer + ocb->offset, nbytes);
-
-      /* set up the number of bytes (returned by client's read()) */
-      _IO_SET_READ_NBYTES (ctp, nbytes);
-
-      /*
-       * advance the offset by the number of bytes
-       * returned to the client.
-       */
-
-      ocb->offset += nbytes;
-      nparts = 1;
-    }
-  else
-    {
-      /* they've adked for zero bytes or they've already previously
-       * read everything
-       */
-
-      _IO_SET_READ_NBYTES (ctp, 0);
-      nparts = 0;
-    }
-
-  /* mark the access time as invalid (we just accessed it) */
-
-  if (msg->i.nbytes > 0)
-    ocb->attr->flags |= IOFUNC_ATTR_ATIME;
-
-  return (_RESMGR_NPARTS (nparts));
-
+	return (_RESMGR_NPARTS(nparts));
 
 }
 
-void
-wait_t (void)
-{
-  struct timeval tv, tv1;
+void wait_t(void) {
+	struct timeval tv, tv1;
 
-  gettimeofday (&tv1, NULL);
+	gettimeofday(&tv1, NULL);
 
-  do
-    {
-      gettimeofday (&tv, NULL);
-    }
-  while (tv.tv_sec - tv1.tv_sec < 3);	// wait for 3 sec.
+	do {
+		gettimeofday(&tv, NULL);
+	} while (tv.tv_sec - tv1.tv_sec < 3);	// wait for 3 sec.
 
-  return;
+	return;
 }
