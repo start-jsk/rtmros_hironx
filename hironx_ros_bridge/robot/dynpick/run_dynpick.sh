@@ -1,12 +1,11 @@
 #!/bin/sh
 
-slay devc-serusb_qnx650sp1
+# Written by TORK
+
+slay devc-serusb
 sleep 1
-./devc-serusb_qnx650sp1  -E -F -b 921600 -d module=ftdi,busno=0,devno=1,vid=0x0403,did=0x6001
+devc-serusb -E -F -b 921600 -d busno=0,devno=1,vid=0x10c4,did=0xea60
 sleep 1
-stty < /dev/serusb1
-make
+# stty < /dev/serusb1
 ./dynpick_driver
-stty < /dev/serusb1
-
-
+# stty < /dev/serusb1
