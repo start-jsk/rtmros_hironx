@@ -9,5 +9,5 @@
 # devc-serusb -E -F -b 921600 -d busno=0,devno=1,vid=0x10c4,did=0xea60
 # sleep 1
 # stty < /dev/serusb1
-./dynpick_driver
+./dynpick_driver &
 # stty < /dev/serusb1
