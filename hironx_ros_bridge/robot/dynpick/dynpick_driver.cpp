@@ -105,7 +105,7 @@ int SetComAttr(int fdc) {
 
 int ReadCom(int fdc, unsigned short *data) {
 	int tick;
-	char str[256];
+	char str[255];
 	int n, len;
 
 #define DATA_LENGTH 27
@@ -252,7 +252,7 @@ int message_callback(message_context_t * ctp, int type, unsigned flags,
 	}
 
 	/* Send a reply to the waiting (blocked) client */
-	MsgReply(ctp->rcvid, EOK, msg_reply, 256);
+	MsgReply(ctp->rcvid, EOK, msg_reply, 255);
 	return 0;
 }
 
