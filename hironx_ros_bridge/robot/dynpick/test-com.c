@@ -96,7 +96,7 @@ int main()
 start :
    // Open COM port
    printf("Enter COM port > ");
-   //scanf("%d", &comNo);
+   scanf("%d", &comNo);
    comNo = 1;
    sprintf(devname_out, "/dev/serusb%d", comNo);
    printf("Open %s for output\n", devname_out);
@@ -159,6 +159,7 @@ start :
 #define DATA_LENGTH 27
 	len = 0;
 	bzero(str, 27);
+        int clk_read_start = clock();
 	while ( len < DATA_LENGTH ) 
 	  {
 	     n = read(fd, str+len, DATA_LENGTH-len);
@@ -171,9 +172,11 @@ start :
 	       {
 		  char *pmesg = strerror(errno);
 		  fprintf (stderr, "failed to read data (%d): %s (%d)\n", n, pmesg, errno);
-		  goto loop_exit;
+		  usleep(10000);
+		  //goto loop_exit;
 	       }
 	  }
+	int clk_read_end = clock();
 	//goto skip;
 loop_exit :
 	  {
@@ -182,7 +185,7 @@ loop_exit :
 	       {
 		  fprintf(stderr, "%02x:", 0x0000ff & str[i]);
 	       }
-	     fprintf(stderr, "\n");
+	     fprintf(stderr, " %7.3f [msec]\n", ((float)(clk_read_end - clk_read_start))/(CLOCKS_PER_SEC / 1000) );
 	  }
 	
 	     
@@ -200,7 +203,7 @@ loop_exit :
 	num++;
 
 skip :
-	if (clk >= 100) //10000
+	if (clk >= 10000) //10000
 	  break;
 
 	// Dsiaply Console
