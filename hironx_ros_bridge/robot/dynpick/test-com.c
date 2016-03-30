@@ -76,8 +76,7 @@ int main()
 {
    int			status;
    //FILE			*fd;
-   int			fd_in;
-   int			fd_out;
+   int			fd;
    char			fname[64];
    char			devname_in[64];
    char			devname_out[64];	   
@@ -92,30 +91,18 @@ int main()
 
    
    //fd = NULL;
-   fd_in = -1;
-   fd_out = -1;   
+   fd = -1;   
 
 start :
    // Open COM port
    printf("Enter COM port > ");
    //scanf("%d", &comNo);
    comNo = 1;
-#if 1
    sprintf(devname_out, "/dev/serusb%d", comNo);
    printf("Open %s for output\n", devname_out);
-   fd_in = fd_out = open(devname_out, O_RDWR | O_NOCTTY | O_NONBLOCK );
-   //fd_in = fd_out = open(devname_out, O_RDWR);
-#else
-   sprintf(devname_out, "/dev/ser%d", comNo);
-   printf("Open %s for output\n", devname_out);
-   fd_out = open(devname_out, O_WRONLY | O_NOCTTY | O_NONBLOCK );
+   fd = open(devname_out, O_RDWR | O_NOCTTY | O_NONBLOCK );
 
-   sprintf(devname_in, "/dev/ser%d", comNo+1);
-   printf("Open %s for input\n", devname_in);
-   fd_in = open(devname_in, O_RDONLY | O_NOCTTY | O_NONBLOCK );
-#endif   
-
-   if (fd_in < 0 || fd_out < 0)
+   if (fd < 0 || fd < 0)
      goto over;
 
    // Get Sampling Frequency
@@ -133,11 +120,10 @@ start :
    //if (!fd)
    //	goto over;
 
-   slogf(0, _SLOG_INFO, "Started  input: %s fd = %d\n", devname_in, fd_in);
-   slogf(0, _SLOG_INFO, "        output: %s fd = %d\n", devname_out, fd_out);	   
+   slogf(0, _SLOG_INFO, "Started  input: %s fd = %d\n", devname_in, fd);
+   slogf(0, _SLOG_INFO, "        output: %s fd = %d\n", devname_out, fd);	   
    // Set Commport Settings
-   SetComAttr(fd_in);
-   SetComAttr(fd_out);
+   SetComAttr(fd);
 
    // Read Data
    printf("=== record data ===\n");
@@ -147,9 +133,9 @@ start :
    num = 0;
 
    // Data Requests
-   n = write(fd_out, "R", 1);
-   tcdrain(fd_out);
-   printf("write data %d\n", n);
+   n = write(fd, "R", 1);
+   tcdrain(fd);
+   printf("write data (ret %d)\n", n);
 
    while (true)
      {
@@ -165,9 +151,9 @@ start :
 	  }
 	
 	// Data Request
-	n = write(fd_out, "R", 1);
-	tcdrain(fd_out);
-	printf("write data %d\n", n);
+	n = write(fd, "R", 1);
+	tcdrain(fd);
+	printf("write data (ret %d)\n", n);
 
 	// Get Singale data
 #define DATA_LENGTH 27
@@ -175,8 +161,8 @@ start :
 	bzero(str, 27);
 	while ( len < DATA_LENGTH ) 
 	  {
-	     n = read(fd_in, str+len, DATA_LENGTH-len);
-	     printf("read data %d (%d)\n", n, len);
+	     n = read(fd, str+len, DATA_LENGTH-len);
+	     printf("read data (ret %d, %d bytes read))\n", n, len+n);
 	     if ( n > 0 ) 
 	       {
 		  len += n;
@@ -220,33 +206,19 @@ skip :
 	// Dsiaply Console
 	if (clk >= clkb2 + 1000)
 	  {
-#if 0
 	     printf(str);
 	     if (kbhit() &&
 		 getchar() == '.')
 	       break;
-#endif
 	     clkb2 = clk / 1000 * 1000;
 	  }
      }
 
 over :
-#if 0
-   if (fd)
+   if (fd >= 0)
      {
-	fclose(fd);
-	fd = NULL;
-     }
-#endif
-   if (fd_in >= 0)
-     {
-	close(fd_in);
-	fd_in = -1;
-     }
-   if (fd_out >= 0)
-     {
-	close(fd_out);
-	fd_out = -1;
+	close(fd);
+	fd = -1;
      }
 
    printf ("=== num = %d ===\n", num);
