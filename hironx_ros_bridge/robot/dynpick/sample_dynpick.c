@@ -17,6 +17,7 @@
 #include <sys/iofunc.h>
 #include <sys/dispatch.h>
 #include <sys/mman.h>
+#include <sys/time.h>
 
 #define Jr3DmAddrMask	0x6000
 #define PAGE_SIZE	0x1000
@@ -43,6 +44,7 @@ main (int argc, char **argv)
   int num;
   char msg_reply[255];
   int i;
+  struct timeval c0, c1;
 
   printf ("\x1b[2J");
   printf ("\x1b[0;0H");
@@ -82,7 +84,9 @@ main (int argc, char **argv)
 loop:
   /* Send the data to the server and get a reply */
   msg.msg_no = _IO_MAX + num;
+  gettimeofday(&c0, NULL);
   ret = MsgSend (fd, &msg, sizeof (msg), msg_reply, 255);
+  gettimeofday(&c1, NULL);
   if (ret == -1)
     {
       fprintf (stderr, "Unable to MsgSend() to server: %s\n",
@@ -95,8 +99,10 @@ loop:
       memcpy (tmp, msg_reply, sizeof (float) * 12);
       printf ("client: msg_reply: %7.3f %7.3f %7.3f %7.3f %7.3f %7.3f\n",
 	      tmp[0], tmp[1], tmp[2], tmp[3], tmp[4], tmp[5]);
-      printf ("                   %7.3f %7.3f %7.3f %7.3f %7.3f %7.3f\n",
-	      tmp[6], tmp[7], tmp[8], tmp[9], tmp[10], tmp[11]);
+#define DELTA_SEC(start, end) (end.tv_sec - start.tv_sec + (end.tv_usec - start.tv_usec)/1e6)
+      printf ("                   %7.3f %7.3f %7.3f %7.3f %7.3f %7.3f ... %7.3f msec\n",
+	      tmp[6], tmp[7], tmp[8], tmp[9], tmp[10], tmp[11],
+	      DELTA_SEC(c0, c1)*1000);
     }
   else
     {
@@ -111,7 +117,6 @@ loop:
     {
       num = 4;
     }
-
 
   if (i++ < 100000)
     goto loop;

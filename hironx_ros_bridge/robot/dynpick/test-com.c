@@ -13,6 +13,7 @@
 #include <sys/stat.h>
 #include <sys/select.h>
 #include <sys/slog.h>
+#include <sys/time.h>
 
 #define true		1
 #define false		0
@@ -159,7 +160,8 @@ start :
 #define DATA_LENGTH 27
 	len = 0;
 	bzero(str, 27);
-        int clk_read_start = clock();
+        struct timeval tm0, tm1;
+	gettimeofday(&tm0, NULL);
 	while ( len < DATA_LENGTH ) 
 	  {
 	     n = read(fd, str+len, DATA_LENGTH-len);
@@ -176,7 +178,7 @@ start :
 		  //goto loop_exit;
 	       }
 	  }
-	int clk_read_end = clock();
+	gettimeofday(&tm1, NULL);
 	//goto skip;
 loop_exit :
 	  {
@@ -185,7 +187,8 @@ loop_exit :
 	       {
 		  fprintf(stderr, "%02x:", 0x0000ff & str[i]);
 	       }
-	     fprintf(stderr, " %7.3f [msec]\n", ((float)(clk_read_end - clk_read_start))/(CLOCKS_PER_SEC / 1000) );
+#define DELTA_SEC(start, end) (end.tv_sec - start.tv_sec + (end.tv_usec - start.tv_usec)/1e6)
+	     fprintf(stderr, " %7.3f [msec]\n", DELTA_SEC(tm0, tm1)*1000 );
 	  }
 	
 	     
@@ -203,7 +206,7 @@ loop_exit :
 	num++;
 
 skip :
-	if (clk >= 10000) //10000
+	if (clk >= 10000)
 	  break;
 
 	// Dsiaply Console
@@ -454,8 +457,8 @@ int SetComAttr(int fdc)
 #endif
 
 	 // settings for qnx
-	 term.c_cc[VMIN] = 100;
-	 term.c_cc[VTIME] = 0;
+	 term.c_cc[VMIN] = 0;
+	 term.c_cc[VTIME] = 2;
 
 	 res = tcsetattr(fdc, TCSANOW, &term);
 	 if (res<0) 
