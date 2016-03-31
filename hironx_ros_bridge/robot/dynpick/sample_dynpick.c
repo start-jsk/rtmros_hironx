@@ -44,7 +44,7 @@ main (int argc, char **argv)
   int num;
   char msg_reply[255];
   int i;
-  struct timeval c0, c1;
+  struct timeval c0, c1, l0, l1;
 
   printf ("\x1b[2J");
   printf ("\x1b[0;0H");
@@ -82,6 +82,7 @@ main (int argc, char **argv)
 
   i = 0;
 loop:
+  gettimeofday(&l0, NULL);
   /* Send the data to the server and get a reply */
   msg.msg_no = _IO_MAX + num;
   gettimeofday(&c0, NULL);
@@ -119,6 +120,8 @@ loop:
     }
 
   if (i++ < 100000)
+    gettimeofday(&l1, NULL);
+    printf ("Loop took %7.3f msec\n", DELTA_SEC(l0, l1)*1000);
     goto loop;
 
   close (fd);
