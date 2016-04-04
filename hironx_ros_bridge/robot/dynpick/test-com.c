@@ -141,13 +141,13 @@ int main() {
 
 		// Data Request
 		n = write(fd, "R", 1);
-		tcdrain(fd);
+		tcdrain(fd);  //  The tcdrain() function waits until all output has been physically transmitted to the device associated with fd, or until a signal is received.
 		printf("write data (ret %d)\n", n);
 
-		// Get Singale data
+		// Get Single data
 #define DATA_LENGTH 27
 		len = 0;
-		bzero(str, 27);
+		bzero(str, 27);  // Setting the first 27 bytes of the area starting `str` to zero.
 		struct timeval tm0, tm1;
 		gettimeofday(&tm0, NULL);
 		while (len < DATA_LENGTH) {
