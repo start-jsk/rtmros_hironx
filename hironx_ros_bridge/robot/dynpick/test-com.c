@@ -399,7 +399,7 @@ int SetComAttr(int fdc) {
 	term.c_cc[VKILL] = 0; /* @ */
 	term.c_cc[VEOF] = 4; /* Ctrl-d */
 	term.c_cc[VTIME] = 0;
-	term.c_cc[VMIN] = 0;
+	term.c_cc[VMIN] = 1;
 	//term.c_cc[VSWTC]    = 0;     /* '?0' */
 	term.c_cc[VSTART] = 0; /* Ctrl-q */
 	term.c_cc[VSTOP] = 0; /* Ctrl-s */
