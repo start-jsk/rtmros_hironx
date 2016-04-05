@@ -125,8 +125,15 @@ int main() {
 	num = 0;
 
 	// Data Requests
+	struct timeval wr0, wr1, tcd0, tcd1;
+	gettimeofday(&wr0, NULL);
 	n = write(fd, "R", 1);
+	gettimeofday(&wr1, NULL);
+	gettimeofday(&tcd0, NULL);
 	tcdrain(fd);
+	gettimeofday(&tcd1, NULL);
+#define DELTA_SEC(start, end) (end.tv_sec - start.tv_sec + (end.tv_usec - start.tv_usec)/1e6)
+	printf("write took %7.3f, tcdrain took %7.3f [msec]\n", DELTA_SEC(wr0, wr1) * 1000, DELTA_SEC(tcd0, tcd1) * 1000);
 	printf("write data (ret %d)\n", n);
 
 	while (true) {
@@ -140,16 +147,20 @@ int main() {
 		}
 
 		// Data Request
+		gettimeofday(&wr0, NULL);
 		n = write(fd, "R", 1);
+		gettimeofday(&wr1, NULL);
+		printf("write (in loop) took %7.3f [msec]\n", DELTA_SEC(tcd0, tcd1) * 1000);
+		gettimeofday(&tcd0, NULL);
 		tcdrain(fd);  //  The tcdrain() function waits until all output has been physically transmitted to the device associated with fd, or until a signal is received.
+		gettimeofday(&tcd1, NULL);
+		printf("(In loop) write took %7.3f, tcdrain took %7.3f [msec]\n", DELTA_SEC(wr0, wr1) * 1000, DELTA_SEC(tcd0, tcd1) * 1000);
 		printf("write data (ret %d)\n", n);
 
 		// Get Single data
 #define DATA_LENGTH 27
 		len = 0;
 		bzero(str, 27);  // Setting the first 27 bytes of the area starting `str` to zero.
-		struct timeval tm0, tm1;
-		gettimeofday(&tm0, NULL);
 		while (len < DATA_LENGTH) {
 			n = read(fd, str + len, DATA_LENGTH - len);
 			printf("read data (ret %d, %d bytes read))\n", n, len + n);
@@ -163,15 +174,12 @@ int main() {
 				//goto loop_exit;
 			}
 		}
-		gettimeofday(&tm1, NULL);
 		//goto skip;
 		loop_exit: {
 			int i;
 			for (i = 0; i < DATA_LENGTH; i++) {
 				fprintf(stderr, "%02x:", 0x0000ff & str[i]);
 			}
-#define DELTA_SEC(start, end) (end.tv_sec - start.tv_sec + (end.tv_usec - start.tv_usec)/1e6)
-			fprintf(stderr, " %7.3f [msec]\n", DELTA_SEC(tm0, tm1) * 1000);
 		}
 
 		sscanf(str, "%1d%4hx%4hx%4hx%4hx%4hx%4hx", &tick, &data[0], &data[1],
