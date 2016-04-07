@@ -4,7 +4,7 @@
   This driver is stored in this robot-specific package for not many reasons than they are slightly customized for the robot (as of Apr 2016 it takes 2 sensor inputs in a single cpp file. It also assumes the specific device file name). So if you can separate those as a standalone, generic package that'll be appreciated (please just let us know if you will at https://github.com/start-jsk/rtmros_hironx/issues).
 */
 /*
- * This program is for JR3/Nitta Force moment sensor.
+ * This program is for Dynpick F/T sensor (developed from JR3 sensor).
  * Copyright(C) by Waseda University, Nitta Coropration. 2002.
  *
  * Copyright (c) 2016, TORK (Tokyo Opensource Robotics Kyokai Association)
@@ -40,14 +40,12 @@
 #include <stdlib.h>
 #include <errno.h>
 #include <string.h>
-#include <sys/time.h>
-#include <sys/neutrino.h>
-#include <sys/iofunc.h>
 #include <sys/dispatch.h>
+#include <sys/iofunc.h>
 #include <sys/mman.h>
-
+#include <sys/neutrino.h>
 #include <sys/slog.h>
-
+#include <sys/time.h>
 #include	<fcntl.h>
 #include	<termios.h>
 
@@ -306,8 +304,9 @@ int main(int argc, char **argv) {
 	if (fd2 < 0) {
 		fprintf(stderr, "could not open /dev/serusb2\n");
 	}
-
-	slogf(0, _SLOG_INFO, "Started  fd1 = %d, fd2 = %d\n", fd1, fd2);
+        #ifdef __QNX__ 
+	    slogf(0, _SLOG_INFO, "Started  fd1 = %d, fd2 = %d\n", fd1, fd2);
+        #endif 
 	SetComAttr(fd1);
 	SetComAttr(fd2);
 
