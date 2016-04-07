@@ -1,5 +1,38 @@
 /*
  * This program is based on http://github.com/tork-a/dynpick_driver and http://github.com/start-jsk/rtmros_hironx/blob/indigo-devel/hironx_ros_bridge/robot/nitta/jr3_driver.cpp
+
+  This driver is stored in this robot-specific package for not many reasons than they are slightly customized for the robot (as of Apr 2016 it takes 2 sensor inputs in a single cpp file. It also assumes the specific device file name). So if you can separate those as a standalone, generic package that'll be appreciated (please just let us know if you will at https://github.com/start-jsk/rtmros_hironx/issues).
+*/
+/*
+ * This program is for JR3/Nitta Force moment sensor.
+ * Copyright(C) by Waseda University, Nitta Coropration. 2002.
+ *
+ * Copyright (c) 2016, TORK (Tokyo Opensource Robotics Kyokai Association)
+ * All rights reserved.
+ * # Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ * #  * Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer.
+ *  * Redistributions in binary form must reproduce the above
+ *    copyright notice, this list of conditions and the following
+ *    disclaimer in the documentation and/or other materials provided
+ *    with the distribution.
+ *  * Neither the name of TOKYO. nor the names of its contributors may be
+ *    used to endorse or promote products derived from this software without
+ *    specific prior written permission.
+ * # THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+ * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+ * COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+ * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+ * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+ * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+ * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
  */
 
 #include <stdio.h>
