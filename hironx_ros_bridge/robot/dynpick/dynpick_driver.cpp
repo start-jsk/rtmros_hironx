@@ -114,7 +114,7 @@ int ReadCom(int fdc, unsigned short *data) {
 
 	// Data Request
 	n = write(fdc, "R", 1);
-	tcdrain(fdc);
+	//tcdrain(fdc);  // Old legacy that is no longer needed. Besideds that, on QNX6.5.0 this is found taking unnecessarily too long (say 100msec).
 	printf("write data ret=%d, fd=%d\n", n, fdc);
 
 	// Get Singale data
