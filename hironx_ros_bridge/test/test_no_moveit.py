@@ -59,6 +59,7 @@ class TestNoMoveit(unittest.TestCase):
             print(err)
             self.assertTrue(p.returncode==0, "[%s] ==> return code is not 0" % (err))
         except Exception as e:
+            print('Exception caught in test_nomoveit: {}'.format(e))
             self.fail(str(e))
 
 if __name__ == '__main__':
