@@ -59,7 +59,7 @@ install: # Use this to install any prerequisites or dependencies necessary to ru
   ##
   - if [ $USE_DEB == false -o $BUILDER == rosbuild ]; then if [ $ROSWS == rosws ]; then $ROSWS merge /opt/ros/$ROS_DISTRO/.rosinstall; fi  ; fi
   - if [ $USE_DEB == false ]; then python -c 'import sys, yaml; yaml.dump(yaml.load(sys.stdin), sys.stdout, width=1024, indent=4)'  < .rosinstall > .rosinstall.$$; mv .rosinstall.$$ .rosinstall; fi
-  - if [ $USE_DEB == false ]; then sed -i "s@^\(.*github.com/$TRAVIS_REPO_SLUG.*\)@#\1@" .rosinstall               ; fi # comment out current repo
+  - if [ $USE_DEB == false ]; then sed -i "s@^\(.*github.com/.*/$REPOSITORY_NAME.*\)@#\1@" .rosinstall               ; fi # comment out current repo
   - if [ $USE_DEB == false ]; then $ROSWS update   ; fi
   # disable doc generation
   - if [ $USE_DEB == false ]; then sed -i "s@if(ENABLE_DOXYGEN)@if(0)@" rtm-ros-robotics/hrpsys/CMakeLists.txt   ; fi
