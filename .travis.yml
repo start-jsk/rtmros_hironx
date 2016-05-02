@@ -79,7 +79,7 @@ script: # All commands must exit with code 0 on success. Anything else is consid
   # for catkin
   - if [ $BUILDER == catkin -a $USE_DEB == true  ]; then catkin_make ${ROS_PARALLEL_JOBS}            ; fi
   - if [ $BUILDER == catkin -a $USE_DEB == false ]; then mkdir -p $HOME/ros/ws_$REPOSITORY_NAME/devel_isolated/hrpsys/; echo "$HOME/ros/ws_$REPOSITORY_NAME/devel_isolated/hrpsys/" > $HOME/ros/ws_$REPOSITORY_NAME/devel_isolated/hrpsys/.catkin; fi
-  - if [ $BUILDER == catkin -a $USE_DEB == false ]; then awk '/cmake_minimum_required/,/## test/' src/rtm-ros-robotics/rtmros_common/hrpsys_ros_bridge/catkin.cmake > src/rtm-ros-robotics/rtmros_common/hrpsys_ros_bridge/CMakeLists.txt; fi
+  - if [ $BUILDER == catkin -a $USE_DEB == false ]; then awk '/cmake_minimum_required/,/## test/' src/rtm-ros-robotics/rtmros_common/hrpsys_ros_bridge/CMakeLists.txt | tee src/rtm-ros-robotics/rtmros_common/hrpsys_ros_bridge/CMakeLists.txt >/dev/null 2>&1; fi
   - if [ $BUILDER == catkin -a $USE_DEB == false ]; then catkin_make_isolated ${ROS_PARALLEL_JOBS}   ; fi
   - if [ $BUILDER == catkin ]; then export TARGET_PKG=`find build*/*hiro* -name Makefile -print |  sed s@.*/\\\\\([^\/]*\\\\\)/Makefile@\\\1@g` ; fi
   # - if [ $BUILDER == catkin ]; then source devel/setup.sh; export EXIT_STATUS=0; for pkg in $TARGET_PKG; do (roscd $pkg; [ "`find . -iname '*.test'`" == "" ] && echo "[$pkg] No tests were found!!!"  || find . -iname "*.test" -print0 | xargs -0 -n1 rostest || export EXIT_STATUS=$?;) done; [ $EXIT_STATUS == 0 ] ; fi
