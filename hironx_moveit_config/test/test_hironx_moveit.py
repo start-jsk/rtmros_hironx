@@ -58,7 +58,6 @@ class TestHironxMoveit(unittest.TestCase):
     @classmethod
     def setUpClass(self):
 
-        rospy.init_node("test_hironx_moveit")
         self._ros = ROS_Client()
 
         self._botharms_joints = ['LARM_JOINT0', 'LARM_JOINT1',
