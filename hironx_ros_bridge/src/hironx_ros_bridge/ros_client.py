@@ -37,12 +37,14 @@ import math
 import socket
 
 import actionlib
+#from control_msgs.msg import PointHeadAction, PointHeadGoal  # Use pr2_controllers_msgs instead, since we're using PR2 control manager
 from moveit_commander import MoveGroupCommander, MoveItCommanderException, RobotCommander
 import rospy
 from rospy import ROSInitException
 from pr2_controllers_msgs.msg import JointTrajectoryAction
 from pr2_controllers_msgs.msg import JointTrajectoryGoal
-from geometry_msgs.msg import Pose
+from pr2_controllers_msgs.msg import PointHeadAction, PointHeadGoal
+from geometry_msgs.msg import PointStamped, Pose
 from trajectory_msgs.msg import JointTrajectoryPoint
 from tf.transformations import quaternion_from_euler, euler_from_quaternion, compose_matrix, translation_from_matrix, euler_from_matrix
 import numpy
@@ -94,6 +96,7 @@ class ROS_Client(RobotCommander):
 
         # See the doc in the method for the reason why this line is still kept
         # even after this class has shifted MoveIt! intensive.
+        rospy.loginfo('Initializing action clients')
         self._init_action_clients()
 
         if not rospy.has_param('robot_description_semantic'):
@@ -152,6 +155,9 @@ class ROS_Client(RobotCommander):
             '/head_controller/joint_trajectory_action', JointTrajectoryAction)
         self._aclient_torso = actionlib.SimpleActionClient(
             '/torso_controller/joint_trajectory_action', JointTrajectoryAction)
+        # For head move http://wiki.ros.org/pr2_controllers/Tutorials/Moving%20the%20Head
+        self._aclient_point_head = actionlib.SimpleActionClient(
+            '/head_traj_controller/point_head_action', PointHeadAction)
 
         self._aclient_larm.wait_for_server()
         self._goal_larm = JointTrajectoryGoal()
@@ -187,12 +193,20 @@ class ROS_Client(RobotCommander):
                           self._goal_larm.trajectory.joint_names,
                           self._goal_rarm.trajectory.joint_names))
 
+        # we are pointing the high-def camera frame
+        # pointing_axis defaults to X-axis)
+        self._goal_head_point = PointHeadGoal()
+        self._goal_head_point.pointing_frame = "HEAD_JOINT1_Link"  # TODO: Not sure if HEAD_JOINT1_LINK is the most optimized link for HiroNXO for this purpose.
+        self._goal_head_point.pointing_axis.x = 1
+        self._goal_head_point.pointing_axis.y = 0
+        self._goal_head_point.pointing_axis.z = 0
+
     def go_init(self, init_pose_type=0, task_duration=7.0):
         '''
         Change the posture of the entire robot to the pre-defined init pose.
 
         This method is equivalent to
-        hironx_ros_bridge.hironx_client.HIRONX.goInitial method (https://github.com/start-jsk/rtmros_hironx/blob/83c3ff0ad2aabd8525631b08276d33b09c98b2bf/hironx_ros_bridge/src/hironx_ros_bridge/hironx_client.py#L199),
+        hironx_ros_bridge.hironx_client.HIRONX.goInitial method(https://github.com/start-jsk/rtmros_hironx/blob/83c3ff0ad2aabd8525631b08276d33b09c98b2bf/hironx_ros_bridge/src/hironx_ros_bridge/hironx_client.py#L199),
         with an addition of utilizing MoveIt!, which means e.g. if there is
         possible perceived collision robots will take the path MoveIt! computes
         with collision avoidance taken into account.
@@ -376,3 +390,38 @@ class ROS_Client(RobotCommander):
 
         (movegr.go(do_wait) or movegr.go(do_wait) or
          rospy.logerr('MoveGroup.go fails; jointgr={}'.format(joint_group)))
+
+    def look_at(self, target_frameid, target_x, target_y, target_z,
+                min_duration=0.5, max_velocity=1.0):
+        '''
+        Python version of "Moving the Head" from PR2 tutorial --
+        http://wiki.ros.org/pr2_controllers/Tutorials/Moving%20the%20Head
+        @param min_duration float: sec. Operation takes no shorter than this
+                                   amount of time.
+        @param max_velocity float: rad/s. Operation goes no faster than this.
+        '''
+        goal = self._goal_head_point
+
+        # the target point, expressed in the requested frame
+        target_point = PointStamped()
+        target_point.header.frame_id = target_frameid
+        target_point.point.x = target_x
+        target_point.point.y = target_y
+        target_point.point.z = target_z
+
+        goal.target = target_point
+
+        # take at least 0.5 seconds to get there
+        goal.min_duration = rospy.Duration(min_duration)
+
+        # and go no faster than this rad/s
+        goal.max_velocity = max_velocity;
+
+        # send the goal
+        self._aclient_point_head.send_goal(goal)
+        # TODO: Is method name correct? Does action client in python exist?
+        rospy.loginfo('goal sent via aclient_point_head')
+
+        # wait for it to get there (abort after 2 secs to prevent getting stuck)
+        self._aclient_point_head.wait_for_server()  # TODO: Is wait_for_server correct here? Don't we want to wait for result?
+        rospy.loginfo('done aclient_point_head')
