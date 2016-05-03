@@ -77,7 +77,7 @@ before_script: # Use this to prepare your build for testing e.g. copy database c
 script: # All commands must exit with code 0 on success. Anything else is considered failure.
   # for catkin
   - if [ $BUILDER == catkin -a $USE_DEB == true  ]; then catkin_make ${ROS_PARALLEL_JOBS}            ; fi
-  - if [ $BUILDER == catkin -a $USE_DEB == false ]; then mkdir -p $HOME/ros/ws_$REPOSITORY_NAME/devel_isolated/hrpsys/; echo "$HOME/ros/ws_$REPOSITORY_NAME/devel_isolated/hrpsys/" > $HOME/ros/ws_$REPOSITORY_NAME/devel_isolated/hrpsys/.catkin; fi
+  # - if [ $BUILDER == catkin -a $USE_DEB == false ]; then mkdir -p $HOME/ros/ws_$REPOSITORY_NAME/devel_isolated/hrpsys/; echo "$HOME/ros/ws_$REPOSITORY_NAME/devel_isolated/hrpsys/" > $HOME/ros/ws_$REPOSITORY_NAME/devel_isolated/hrpsys/.catkin; fi
   - if [ $BUILDER == catkin -a $USE_DEB == false ]; then awk '/cmake_minimum_required/,/## test/' src/rtm-ros-robotics/rtmros_common/hrpsys_ros_bridge/CMakeLists.txt | tee src/rtm-ros-robotics/rtmros_common/hrpsys_ros_bridge/CMakeLists.txt >/dev/null 2>&1; fi
   - if [ $BUILDER == catkin -a $USE_DEB == false ]; then catkin_make_isolated ${ROS_PARALLEL_JOBS}   ; fi
   - if [ $BUILDER == catkin ]; then export TARGET_PKG=`find build*/*hiro* -name Makefile -print | grep -v gtest | sed s@.*/\\\\\([^\/]*\\\\\)/Makefile@\\\1@g` ; echo ${TARGET_PKG}; fi
