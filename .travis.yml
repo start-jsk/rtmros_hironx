@@ -59,11 +59,10 @@ install: # Use this to install any prerequisites or dependencies necessary to ru
   ##
   - if [ $USE_DEB == false -o $BUILDER == rosbuild ]; then if [ $ROSWS == rosws ]; then $ROSWS merge /opt/ros/$ROS_DISTRO/.rosinstall; fi  ; fi
   - if [ $USE_DEB == false ]; then python -c 'import sys, yaml; yaml.dump(yaml.load(sys.stdin), sys.stdout, width=1024, indent=4)'  < .rosinstall > .rosinstall.$$; mv .rosinstall.$$ .rosinstall; fi
-  - if [ $USE_DEB == false ]; then sed -i "s@^\(.*github.com/$TRAVIS_REPO_SLUG.*\)@#\1@" .rosinstall               ; fi # comment out current repo
+  - if [ $USE_DEB == false ]; then sed -i "s@^\(.*github.com/.*/$REPOSITORY_NAME.*\)@#\1@" .rosinstall               ; fi # comment out current repo
   - if [ $USE_DEB == false ]; then $ROSWS update   ; fi
   # disable doc generation
   - if [ $USE_DEB == false ]; then sed -i "s@if(ENABLE_DOXYGEN)@if(0)@" rtm-ros-robotics/hrpsys/CMakeLists.txt   ; fi
-  - if [ $USE_DEB == false -o $BUILDER == rosbuild ]; then $ROSWS set $REPOSITORY_NAME http://github.com/$TRAVIS_REPO_SLUG --git -y        ; fi
   - ln -s $CI_SOURCE_PATH . # Link the repo we are testing to the new workspace
   - cd ../
   # Install dependencies for source repos
@@ -78,19 +77,23 @@ before_script: # Use this to prepare your build for testing e.g. copy database c
 script: # All commands must exit with code 0 on success. Anything else is considered failure.
   # for catkin
   - if [ $BUILDER == catkin -a $USE_DEB == true  ]; then catkin_make ${ROS_PARALLEL_JOBS}            ; fi
-  - if [ $BUILDER == catkin -a $USE_DEB == false ]; then mkdir -p $HOME/ros/ws_$REPOSITORY_NAME/devel_isolated/hrpsys/; echo "$HOME/ros/ws_$REPOSITORY_NAME/devel_isolated/hrpsys/" > $HOME/ros/ws_$REPOSITORY_NAME/devel_isolated/hrpsys/.catkin; fi
-  - if [ $BUILDER == catkin -a $USE_DEB == false ]; then awk '/cmake_minimum_required/,/## test/' src/rtm-ros-robotics/rtmros_common/hrpsys_ros_bridge/catkin.cmake > src/rtm-ros-robotics/rtmros_common/hrpsys_ros_bridge/CMakeLists.txt; fi
+  # - if [ $BUILDER == catkin -a $USE_DEB == false ]; then mkdir -p $HOME/ros/ws_$REPOSITORY_NAME/devel_isolated/hrpsys/; echo "$HOME/ros/ws_$REPOSITORY_NAME/devel_isolated/hrpsys/" > $HOME/ros/ws_$REPOSITORY_NAME/devel_isolated/hrpsys/.catkin; fi
+  - if [ $BUILDER == catkin -a $USE_DEB == false ]; then awk '/cmake_minimum_required/,/## test/' src/rtm-ros-robotics/rtmros_common/hrpsys_ros_bridge/CMakeLists.txt | tee src/rtm-ros-robotics/rtmros_common/hrpsys_ros_bridge/CMakeLists.txt >/dev/null 2>&1; fi
   - if [ $BUILDER == catkin -a $USE_DEB == false ]; then catkin_make_isolated ${ROS_PARALLEL_JOBS}   ; fi
-  - if [ $BUILDER == catkin ]; then export TARGET_PKG=`find build*/*hiro* -name Makefile -print |  sed s@.*/\\\\\([^\/]*\\\\\)/Makefile@\\\1@g` ; fi
+  - if [ $BUILDER == catkin ]; then export TARGET_PKG=`find build*/*hiro* -name Makefile -print | grep -v gtest | sed s@.*/\\\\\([^\/]*\\\\\)/Makefile@\\\1@g` ; echo ${TARGET_PKG}; fi
   # - if [ $BUILDER == catkin ]; then source devel/setup.sh; export EXIT_STATUS=0; for pkg in $TARGET_PKG; do (roscd $pkg; [ "`find . -iname '*.test'`" == "" ] && echo "[$pkg] No tests were found!!!"  || find . -iname "*.test" -print0 | xargs -0 -n1 rostest || export EXIT_STATUS=$?;) done; [ $EXIT_STATUS == 0 ] ; fi
   - export EXIT_STATUS=$?
+  - if [ $BUILDER == catkin ]; then source devel*/setup.bash; env  ; fi
+  - if [ $BUILDER == catkin ]; then python -c 'import sys; print(sys.path); import hrpsys_ros_bridge; print(hrpsys_ros_bridge)'; fi
   - if [ $BUILDER == catkin -a $USE_DEB == true  ]; then catkin_make test --pkg $TARGET_PKG ${ROS_PARALLEL_JOBS}  ; export EXIT_STATUS=$?; fi
-  - if [ $BUILDER == catkin -a $USE_DEB == false ]; then catkin_make_isolated --pkg $TARGET_PKG --make-args ${ROS_PARALLEL_JOBS} test  ; export EXIT_STATUS=$?; fi
-  - if [ $EXIT_STATUS != 0 -a $BUILDER == catkin ]; then find build* -name LastTest.log -exec echo "==== {} ====" \; -exec cat {} \;  ; fi
+  #- if [ $BUILDER == catkin -a $USE_DEB == false ]; then catkin_make_isolated --make-args ${ROS_PARALLEL_JOBS} test  ; export EXIT_STATUS=$?; fi
+  - if [ $BUILDER == catkin -a $USE_DEB == false ]; then export EXIT_STATUS=0; for pkg in $TARGET_PKG; do make -C build_isolated/$pkg test || export EXIT_STATUS=$?; done; [ $EXIT_STATUS == 0 ] ; fi
+  - if [ $EXIT_STATUS != 0 -a $BUILDER == catkin ]; then find build* -name LastTest.log -exec echo "==== {} ====" \; -exec cat {} \;  ; exit 1; fi
+  - if [ $BUILDER == catkin -a $USE_DEB == true  ]; then source /opt/ros/$ROS_DISTRO/setup.bash       ; fi
   - if [ $BUILDER == catkin -a $USE_DEB == true  ]; then catkin_make ${ROS_PARALLEL_JOBS} install            ; fi
 #  - if [ $BUILDER == catkin -a $USE_DEB == false ]; then rm -fr build devel; catkin_make_isolated ${ROS_PARALLEL_JOBS} --install      ; fi
   - if [ $BUILDER == catkin -a $USE_DEB == true ]; then rm -fr devel src build                 ; fi
-  - if [ $BUILDER == catkin -a $USE_DEB == true ]; then source install/setup.bash              ; fi
+  - if [ $BUILDER == catkin -a $USE_DEB == true ]; then source install*/setup.bash              ; fi
   - if [ $BUILDER == catkin -a $USE_DEB == true ]; then export EXIT_STATUS=0; for pkg in $TARGET_PKG; do [ "`find install/share/$pkg -iname '*.test'`" == "" ] && echo "[$pkg] No tests were found!!!"  || find install/share/$pkg -iname "*.test" -print0 | xargs -0 -n1 rostest || export EXIT_STATUS=$?; done; [ $EXIT_STATUS == 0 ] ; fi
   # for rosbuild
   - if [ $BUILDER == rosbuild ]; then rosmake -a --profile --pjobs=8       ; fi

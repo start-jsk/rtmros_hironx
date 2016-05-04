@@ -37,6 +37,7 @@ import math
 import socket
 
 import actionlib
+import moveit_commander
 from moveit_commander import MoveGroupCommander, MoveItCommanderException, RobotCommander
 import rospy
 from rospy import ROSInitException
@@ -53,6 +54,10 @@ _MSG_ASK_ISSUEREPORT = 'Your report to ' + \
                        'https://github.com/start-jsk/rtmros_hironx/issues ' + \
                        'about the issue you are seeing is appreciated.'
 
+
+# workaround for core dump whenever exiting Python MoveIt script (https://github.com/ros-planning/moveit_commander/issues/15#issuecomment-34441531)
+import atexit, os
+atexit.register(lambda : os._exit(0))
 
 class ROS_Client(RobotCommander):
     '''

@@ -15,5 +15,5 @@
     <arg name="load_robot_description" value="true"/>
   </include>
 
-  <test type="test_hironx_moveit.py" pkg="hironx_ros_bridge" test-name="test_hironx_moveit" time-limit="30" retry="4" />
+  <test type="test_hironx_moveit.py" pkg="hironx_moveit_config" test-name="test_hironx_moveit" time-limit="100" retry="4" />
 </launch>

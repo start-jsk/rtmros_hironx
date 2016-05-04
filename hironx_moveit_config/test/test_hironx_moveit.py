@@ -58,7 +58,6 @@ class TestHironxMoveit(unittest.TestCase):
     @classmethod
     def setUpClass(self):
 
-        rospy.init_node("test_hironx_moveit")
         self._ros = ROS_Client()
 
         self._botharms_joints = ['LARM_JOINT0', 'LARM_JOINT1',
@@ -75,8 +74,8 @@ class TestHironxMoveit(unittest.TestCase):
         self.init_rtm_jointvals = [0.010471975511965976, 0.0, -1.7453292519943295, -0.26529004630313807, 0.16406094968746698, -0.05585053606381855,
                                    -0.010471975511965976, 0.0, -1.7453292519943295, 0.26529004630313807, 0.16406094968746698, 0.05585053606381855]
 
-        self.init_rtm_jointvals_factory = [0.010471975511965976, 0.0, -1.7453292519943295, -0.26529004630313807, 0.16406094968746698, -0.05585053606381855,
-                                           -0.010471975511965976, 0.0, -1.7453292519943295, 0.26529004630313807, 0.16406094968746698, 0.05585053606381855]
+        self.init_rtm_jointvals_factory = [-1.3877787807814457e-17, 1.0842021724855044e-19, -2.2689280275926285, -4.440892098500626e-16, -2.220446049250313e-16, 0.0,
+                                           0.0, 1.0842021724855044e-19, -2.2689280275926285, 2.220446049250313e-16, -1.1102230246251565e-16, 5.551115123125783e-17]
 
         self.offpose_jointvals = [0.0, 0.0, 0.0,
                                   -0.4363323129985819, -2.4260076602721163, -2.7401669256310983, -0.7853981633974487, 0.0, 0.0,
@@ -195,7 +194,7 @@ class TestHironxMoveit(unittest.TestCase):
         '''
         # If the list of movegroups are not none, that can mean
         # RobotCommander is working as expected.
-        groupnames = self.rosclient.get_group_names()
+        groupnames = self._ros.get_group_names()
         self.assertIsNotNone(groupnames)
 
     def test_rosclient_goInitial(self):
