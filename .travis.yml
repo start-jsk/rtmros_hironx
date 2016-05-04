@@ -87,6 +87,7 @@ script: # All commands must exit with code 0 on success. Anything else is consid
   # - if [ $BUILDER == catkin ]; then source devel/setup.sh; export EXIT_STATUS=0; for pkg in $TARGET_PKG; do (roscd $pkg; [ "`find . -iname '*.test'`" == "" ] && echo "[$pkg] No tests were found!!!"  || find . -iname "*.test" -print0 | xargs -0 -n1 rostest || export EXIT_STATUS=$?;) done; [ $EXIT_STATUS == 0 ] ; fi
   - export EXIT_STATUS=$?
   - if [ $BUILDER == catkin ]; then source devel*/setup.bash; env  ; fi
+  - if [ $BUILDER == catkin ]; then python -c 'import sys; print(sys.path); import hrpsys_ros_bridge; print(hrpsys_ros_bridge)'; fi
   - if [ $BUILDER == catkin -a $USE_DEB == true  ]; then catkin_make test --pkg $TARGET_PKG ${ROS_PARALLEL_JOBS}  ; export EXIT_STATUS=$?; fi
   - if [ $BUILDER == catkin -a $USE_DEB == false ]; then catkin_make_isolated --pkg $TARGET_PKG --make-args ${ROS_PARALLEL_JOBS} test  ; export EXIT_STATUS=$?; fi
   - if [ $EXIT_STATUS != 0 -a $BUILDER == catkin ]; then find build* -name LastTest.log -exec echo "==== {} ====" \; -exec cat {} \;  ; exit 1; fi
