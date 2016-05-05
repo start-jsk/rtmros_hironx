@@ -2,6 +2,13 @@
 Changelog for package hironx_moveit_config
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* [fix][test_hironx_moveit.py] fix "rospy.init_node() has already been called with different arguments" exception.
+* [fix][test_hironx_moveit.py] old file names
+* [improve][test-hironx-moveit.test] Relax test duration.
+* Contributors: Kei Okada
+
 1.1.11 (2016-02-18)
 -------------------
 

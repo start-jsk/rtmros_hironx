@@ -2,6 +2,9 @@
 Changelog for package hironx_calibration
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+
 1.1.11 (2016-02-18)
 -------------------
 

@@ -2,6 +2,16 @@
 Changelog for package rtmros_hironx
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* [fix][RTM py] Remove redundant connection for impedance controller RTC.
+* [fix][ROS py] fix segfault on ros_client exit.
+* [feat] Add QNX driver for Dynpick F/T sensor.
+* [fix][test_hironx_moveit.py] fix "rospy.init_node() has already been called with different arguments" exception.
+* [fix][test_hironx_moveit.py] old file names
+* [improve][test-hironx-moveit.test] Relax test duration.
+* Contributors: Isaac Kei Okada, I.Y. Saito
+
 1.1.11 (2016-02-18)
 -------------------
 * [fix][rqt dashboard] Enable to connect remote RTM nameserver (Fix #429)
