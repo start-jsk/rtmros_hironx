@@ -136,7 +136,7 @@ available at http://www.eclipse.org/legal/epl-v10.html
 												</bind_material>
 											</instance_geometry>
 											<node id="v1.node9" name="RARM_JOINT5_Link" sid="node9">
-												<translate>-0.04 0 -0.09</translate>
+												<translate>-0.047 0 -0.09</translate>
 												<rotate>0 0 1 0</rotate>
 												<rotate sid="node_joint9_axis0">1 0 0 0</rotate>
 												<instance_geometry url="#g1_9_geom0">
@@ -256,7 +256,7 @@ available at http://www.eclipse.org/legal/epl-v10.html
 												</bind_material>
 											</instance_geometry>
 											<node id="v1.node19" name="LARM_JOINT5_Link" sid="node19">
-												<translate>-0.04 0 -0.09</translate>
+												<translate>-0.047 0 -0.09</translate>
 												<rotate>0 0 1 0</rotate>
 												<rotate sid="node_joint19_axis0">1 0 0 0</rotate>
 												<instance_geometry url="#g1_19_geom0">
