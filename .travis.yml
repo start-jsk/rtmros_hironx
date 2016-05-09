@@ -39,7 +39,7 @@ before_install: # Use this to prepare the system to install prerequisites or dep
   - export ROS_PARALLEL_JOBS="-j1 -l1"
   - echo "Testing branch $TRAVIS_BRANCH of $REPOSITORY_NAME"
   - sudo -E sh -c 'echo "deb $ROS_REPOSITORY_PATH trusty main" > /etc/apt/sources.list.d/ros-latest.list'
-  - wget http://packages.ros.org/ros.key -O - | sudo apt-key add -
+  - sudo apt-key adv --keyserver hkp://ha.pool.sks-keyservers.net --recv-key 0xB01FA116
   - sudo apt-get update -qq
   - sudo apt-get install -qq -y python-catkin-pkg python-rosdep python-wstool ros-$ROS_DISTRO-catkin
   - if [ $ROSWS == rosws ]; then sudo apt-get install -qq -y python-rosinstall     ; fi
