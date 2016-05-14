@@ -43,6 +43,7 @@ import unittest
 from geometry_msgs.msg import Pose, PoseStamped
 from moveit_commander import MoveGroupCommander
 import rospy
+import tf
 
 from hironx_ros_bridge.ros_client import ROS_Client
 
@@ -209,6 +210,17 @@ class TestHironxMoveit(unittest.TestCase):
         self._ros.go_offpose()
         numpy.testing.assert_almost_equal(self._ros.MG_UPPERBODY.get_current_joint_values(),
                                           self.offpose_jointvals, 3)
+
+    def test_geometry_link_r4_r5(self):
+        ''' 
+            Trying to capture issues like https://github.com/tork-a/rtmros_nextage/issues/244
+        '''
+        TRANS_RARM4_RARM5 = [-0.047, 0.000, -0.090]  # Expected value.
+
+        tflistener = tf.TransformListener()
+        (trans, rot) = tflistener.lookupTransform("/RARM_JOINT5_Link", "/RARM_JOINT4_Link", rospy.Time(0))
+        [self.assertAlmostEqual(v_trans, v_expected, 3) for v_trans, v_expected in zip(trans, TRANS_RARM4_RARM5)]
+
 
 if __name__ == '__main__':
     import rostest
