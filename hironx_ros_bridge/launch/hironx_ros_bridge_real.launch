@@ -1,4 +1,5 @@
 <launch>
+  <arg name="COLLADA_FILE" default="$(find hironx_ros_bridge)/models/kawada-hironx.dae" />
   <arg name="CONF_FILE_COLLISIONDETECT" default="$(find hironx_ros_bridge)/conf/hironx_realrobot_fixedpath.conf" />
   <arg name="corbaport" default="15005" />
   <arg name="MODEL_FILE" default="/opt/jsk/etc/HIRONX/model/main.wrl" /> <!-- This shouldn't be changed unless you know what you're doing -->
@@ -12,6 +13,7 @@
         args="--host $(arg nameserver) --port $(arg corbaport) --modelfile $(arg MODEL_FILE) --robot RobotHardware" />
 
   <include file="$(find hironx_ros_bridge)/launch/hironx_ros_bridge.launch" >
+    <arg name="COLLADA_FILE" value="$(arg COLLADA_FILE)" />
     <arg name="CONF_FILE_COLLISIONDETECT" value="$(arg CONF_FILE_COLLISIONDETECT)" />
     <arg name="corbaport" default="$(arg corbaport)" />
     <arg name="MODEL_FILE" value="$(arg MODEL_FILE)" />
