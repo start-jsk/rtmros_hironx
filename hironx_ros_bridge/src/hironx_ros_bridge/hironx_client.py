@@ -204,7 +204,7 @@ class HrpsysConfigurator2(HrpsysConfigurator): ## JUST FOR TEST, REMOVE WHEN YOU
         if self.seq_version >= '315.2.5':                         ### CHANGED
             if self.default_frame_name and frame_name is None:
                 frame_name = self.default_frame_name
-            if frame_name and not ':' in lname:
+            if frame_name and not ':' in gname:
                 gname = gname + ':' + frame_name
         else: # hrpsys < 315.2.4
             if frame_name and not ':' in gname:
