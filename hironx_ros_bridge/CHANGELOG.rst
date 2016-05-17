@@ -2,6 +2,12 @@
 Changelog for package hironx_ros_bridge
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* [fix] Correct collada file location for real robot.
+* [sys] Add better test for ros_client
+* Contributors: Kei Okada, Isaac I.Y. Saito
+
 1.1.12 (2016-05-05)
 -------------------
 * [fix][RTM py] Remove redundant connection for impedance controller RTC.

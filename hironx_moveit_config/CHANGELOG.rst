@@ -2,6 +2,11 @@
 Changelog for package hironx_moveit_config
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* [sys] Add test for eef geometry.
+* Contributors: Isaac I.Y. Saito
+
 1.1.12 (2016-05-05)
 -------------------
 * [fix][test_hironx_moveit.py] fix "rospy.init_node() has already been called with different arguments" exception.
