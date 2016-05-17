@@ -2,8 +2,8 @@
 Changelog for package hironx_ros_bridge
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.1.13 (2016-05-16)
+-------------------
 * [fix] Correct collada file location for real robot.
 * [sys] Add better test for ros_client
 * Contributors: Kei Okada, Isaac I.Y. Saito
