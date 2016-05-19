@@ -2,6 +2,12 @@
 Changelog for package rtmros_hironx
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* [fix] remove duplicate functions, put them in upstream
+* [enhance][hironx.py] easier default model file location when operating the real robot.
+* Contributors: Kei Okada, Isaac I.Y. Saito
+    
 1.1.13 (2016-05-16)
 -------------------
 * [fix] Correct collada file location for real robot.
