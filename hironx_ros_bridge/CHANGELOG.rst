@@ -2,8 +2,8 @@
 Changelog for package hironx_ros_bridge
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.1.14 (2016-05-19)
+-------------------
 * [fix] remove duplicate functions, put them in upstream
 * [enhance][hironx.py] easier default model file location when operating the real robot.
 * Contributors: Kei Okada, Isaac I.Y. Saito
