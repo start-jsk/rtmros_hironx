@@ -52,6 +52,7 @@ import argparse
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='hiro command line interpreters')
+    parser.add_argument('--isreal', help='true if running against real robot. Default: false')
     parser.add_argument('--host', help='corba name server hostname')
     parser.add_argument('--port', help='corba name server port number')
     parser.add_argument('--modelfile', help='robot model file nmae')
@@ -66,7 +67,7 @@ if __name__ == '__main__':
     if not args.robot:
         args.robot = "RobotHardware0" if args.host else "HiroNX(Robot)0"
     if not args.modelfile:
-        args.modelfile = ""
+        args.modelfile = "/opt/jsk/etc/HIRONX/model/main.wrl" if args.host else ""
 
     # support old style format
     if len(unknown) >= 2:
