@@ -18,6 +18,7 @@ planner_configs:
   BKPIECEkConfigDefault:
     type: geometric::BKPIECE
 right_arm:
+  default_planner_config: RRTConnectkConfigDefault
   planner_configs:
     - SBLkConfigDefault
     - LBKPIECEkConfigDefault
@@ -30,6 +31,7 @@ right_arm:
   projection_evaluator: joints(RARM_JOINT0,RARM_JOINT1)
   longest_valid_segment_fraction: 0.05
 left_arm:
+  default_planner_config: RRTConnectkConfigDefault
   planner_configs:
     - SBLkConfigDefault
     - LBKPIECEkConfigDefault
@@ -42,6 +44,7 @@ left_arm:
   projection_evaluator: joints(LARM_JOINT0,LARM_JOINT1)
   longest_valid_segment_fraction: 0.05
 botharms:
+  default_planner_config: RRTConnectkConfigDefault
   planner_configs:
     - SBLkConfigDefault
     - LBKPIECEkConfigDefault
@@ -54,6 +57,7 @@ botharms:
   projection_evaluator: joints(LARM_JOINT0,LARM_JOINT1)
   longest_valid_segment_fraction: 0.05
 right_gripper:
+  default_planner_config: RRTConnectkConfigDefault
   planner_configs:
     - SBLkConfigDefault
     - LBKPIECEkConfigDefault
@@ -66,6 +70,7 @@ right_gripper:
   projection_evaluator: joints(RHAND_JOINT0,RHAND_JOINT1)
   longest_valid_segment_fraction: 0.05
 left_gripper:
+  default_planner_config: RRTConnectkConfigDefault
   planner_configs:
     - SBLkConfigDefault
     - LBKPIECEkConfigDefault
@@ -78,6 +83,7 @@ left_gripper:
   projection_evaluator: joints(LHAND_JOINT0,LHAND_JOINT1)
   longest_valid_segment_fraction: 0.05
 head:
+  default_planner_config: RRTConnectkConfigDefault
   planner_configs:
     - SBLkConfigDefault
     - ESTkConfigDefault
@@ -93,6 +99,7 @@ head:
   projection_evaluator: joints(HEAD_JOINT0,HEAD_JOINT1)
   longest_valid_segment_fraction: 0.05
 torso:
+  default_planner_config: RRTConnectkConfigDefault
   planner_configs:
     - SBLkConfigDefault
     - ESTkConfigDefault
@@ -108,6 +115,7 @@ torso:
   projection_evaluator: joints(CHEST_JOINT0)
   longest_valid_segment_fraction: 0.05
 upperbody:
+  default_planner_config: RRTConnectkConfigDefault
   planner_configs:
     - SBLkConfigDefault
     - ESTkConfigDefault
