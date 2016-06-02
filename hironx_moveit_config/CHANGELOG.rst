@@ -2,6 +2,11 @@
 Changelog for package hironx_moveit_config
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Workaround MoveIt! RRT issue (see https://github.com/tork-a/rtmros_nextage/issues/170).
+* Contributors: Isaac I.Y. Saito
+
 1.1.14 (2016-05-19)
 -------------------
 
