@@ -52,7 +52,6 @@ import argparse
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='hiro command line interpreters')
-    parser.add_argument('--isreal', help='true if running against real robot. Default: false')
     parser.add_argument('--host', help='corba name server hostname')
     parser.add_argument('--port', help='corba name server port number')
     parser.add_argument('--modelfile', help='robot model file nmae')
