@@ -289,7 +289,11 @@ class HIRONX(HrpsysConfigurator2):
         @type url: str
         '''
         # reload for hrpsys 315.1.8
+        print(self.configurator_name + "waiting ModelLoader")
         HrpsysConfigurator.waitForModelLoader(self)
+        print(self.configurator_name + "start hrpsys")
+
+        print(self.configurator_name + "finding RTCManager and RobotHardware")
         HrpsysConfigurator.waitForRTCManagerAndRoboHardware(self, robotname=robotname)
         print self.configurator_name, "Hrpsys controller version info: "
         if self.ms :
@@ -304,7 +308,38 @@ class HIRONX(HrpsysConfigurator2):
             import AbsoluteForceSensorService_idl
             import ImpedanceControllerService_idl
 
-        HrpsysConfigurator.init(self, robotname=robotname, url=url)
+        # HrpsysConfigurator.init(self, robotname=robotname, url=url)
+        self.sensors = self.getSensors(url)
+
+        # all([rtm.findRTC(rn[0], rtm.rootnc) for rn in self.getRTCList()]) # not working somehow...
+        if set([rn[0] for rn in self.getRTCList()]).issubset(set([x.name() for x in self.ms.get_components()])) :
+            print(self.configurator_name + "hrpsys components are already created and running")
+            self.findComps(max_timeout_count=0, verbose=True)
+        else:
+            print(self.configurator_name + "no hrpsys components found running. creating now")
+            self.createComps()
+
+            print(self.configurator_name + "connecting hrpsys components")
+            self.connectComps()
+
+            print(self.configurator_name + "activating hrpsys components")
+            self.activateComps()
+
+            print(self.configurator_name + "setup hrpsys logger")
+            self.setupLogger()
+
+        print(self.configurator_name + "setup joint groups for hrpsys controller")
+        self.setSelfGroups()
+
+        print(self.configurator_name + '\033[32minitialized successfully\033[0m')
+
+        # set hrpsys_version
+        try:
+            self.hrpsys_version = self.fk.ref.get_component_profile().version
+        except:
+            print(self.configurator_name + '\033[34mCould not get hrpsys_version\033[0m')
+
+            pass
         self.setSelfGroups()
         self.hrpsys_version = self.fk.ref.get_component_profile().version
 
