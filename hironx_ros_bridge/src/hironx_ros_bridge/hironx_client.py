@@ -313,22 +313,22 @@ class HIRONX(HrpsysConfigurator2):
 
         # all([rtm.findRTC(rn[0], rtm.rootnc) for rn in self.getRTCList()]) # not working somehow...
         if set([rn[0] for rn in self.getRTCList()]).issubset(set([x.name() for x in self.ms.get_components()])) :
-            print(self.configurator_name + "compontes is already created")
+            print(self.configurator_name + "hrpsys components are already created and running")
             self.findComps(max_timeout_count=0, verbose=True)
         else:
-            print(self.configurator_name + "creating components")
+            print(self.configurator_name + "no hrpsys components found running. creating now")
             self.createComps()
 
-            print(self.configurator_name + "connecting components")
+            print(self.configurator_name + "connecting hrpsys components")
             self.connectComps()
 
-            print(self.configurator_name + "activating components")
+            print(self.configurator_name + "activating hrpsys components")
             self.activateComps()
 
-            print(self.configurator_name + "setup logger")
+            print(self.configurator_name + "setup hrpsys logger")
             self.setupLogger()
 
-        print(self.configurator_name + "setup joint groups")
+        print(self.configurator_name + "setup joint groups for hrpsys controller")
         self.setSelfGroups()
 
         print(self.configurator_name + '\033[32minitialized successfully\033[0m')
