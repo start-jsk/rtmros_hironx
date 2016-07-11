@@ -2,8 +2,8 @@
 Changelog for package hironx_ros_bridge
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.1.16 (2016-07-11)
+-------------------
 * [fix] Use existing running hrtpsy components when available (fix to `tork-a/rtmros_nextage/#248 <https://github.com/tork-a/rtmros_nextage/issues/248>`_)
 * [fix][hironx.py] Remove an arg that was merged by mistake.
 * Contributors: Isaac I.Y. Saito, Kei Okada
