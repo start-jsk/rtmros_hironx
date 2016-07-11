@@ -2,6 +2,12 @@
 Changelog for package rtmros_hironx
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* [fix] Use existing running hrtpsy components when available (fix to `tork-a/rtmros_nextage/#248 <https://github.com/tork-a/rtmros_nextage/issues/248>`_)
+* [fix][hironx.py] Remove an arg that was merged by mistake.
+* Contributors: Isaac I.Y. Saito, Kei Okada
+
 1.1.15 (2016-06-02)
 -------------------
 * Workaround MoveIt! RRT issue (see https://github.com/tork-a/rtmros_nextage/issues/170).
