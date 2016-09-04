@@ -46,7 +46,7 @@ class AcceptanceTestROS(AbstAcceptanceTest):
         self._robotclient = robot_client
 
     def go_initpos(self, default_task_duration=7.0):
-        self._robotclient.go_init(default_task_duration)
+        self._robotclient.go_init(task_duration = default_task_duration)
 
     def set_joint_angles(self, joint_group, joint_angles, msg_tasktitle=None,
                          task_duration=7.0, do_wait=True):
