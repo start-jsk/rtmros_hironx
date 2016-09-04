@@ -213,6 +213,8 @@ class ROS_Client(RobotCommander):
             posetype_str = 'init_rtm'
         elif 1 == init_pose_type:
             posetype_str = 'init_rtm_factory'
+        else:
+            rospy.logerr("unsupporeted init_pose_type " + str(init_pose_type))
         self.MG_BOTHARMS.set_named_target(posetype_str)
         self.MG_BOTHARMS.go()
 
