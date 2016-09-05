@@ -41,8 +41,8 @@ import moveit_commander
 from moveit_commander import MoveGroupCommander, MoveItCommanderException, RobotCommander
 import rospy
 from rospy import ROSInitException
-from pr2_controllers_msgs.msg import JointTrajectoryAction
-from pr2_controllers_msgs.msg import JointTrajectoryGoal
+from control_msgs.msg import FollowJointTrajectoryAction
+from control_msgs.msg import FollowJointTrajectoryGoal
 from geometry_msgs.msg import Pose
 from trajectory_msgs.msg import JointTrajectoryPoint
 from tf.transformations import quaternion_from_euler, euler_from_quaternion, compose_matrix, translation_from_matrix, euler_from_matrix
@@ -150,16 +150,16 @@ class ROS_Client(RobotCommander):
         deprecated but remain for backward compatibility.
         '''
         self._aclient_larm = actionlib.SimpleActionClient(
-            '/larm_controller/joint_trajectory_action', JointTrajectoryAction)
+            '/larm_controller/follow_joint_trajectory_action', FollowJointTrajectoryAction)
         self._aclient_rarm = actionlib.SimpleActionClient(
-            '/rarm_controller/joint_trajectory_action', JointTrajectoryAction)
+            '/rarm_controller/follow_joint_trajectory_action', FollowJointTrajectoryAction)
         self._aclient_head = actionlib.SimpleActionClient(
-            '/head_controller/joint_trajectory_action', JointTrajectoryAction)
+            '/head_controller/follow_joint_trajectory_action', FollowJointTrajectoryAction)
         self._aclient_torso = actionlib.SimpleActionClient(
-            '/torso_controller/joint_trajectory_action', JointTrajectoryAction)
+            '/torso_controller/follow_joint_trajectory_action', FollowJointTrajectoryAction)
 
         self._aclient_larm.wait_for_server()
-        self._goal_larm = JointTrajectoryGoal()
+        self._goal_larm = FollowJointTrajectoryGoal()
         self._goal_larm.trajectory.joint_names.append("LARM_JOINT0")
         self._goal_larm.trajectory.joint_names.append("LARM_JOINT1")
         self._goal_larm.trajectory.joint_names.append("LARM_JOINT2")
@@ -168,7 +168,7 @@ class ROS_Client(RobotCommander):
         self._goal_larm.trajectory.joint_names.append("LARM_JOINT5")
 
         self._aclient_rarm.wait_for_server()
-        self._goal_rarm = JointTrajectoryGoal()
+        self._goal_rarm = FollowJointTrajectoryGoal()
         self._goal_rarm.trajectory.joint_names.append("RARM_JOINT0")
         self._goal_rarm.trajectory.joint_names.append("RARM_JOINT1")
         self._goal_rarm.trajectory.joint_names.append("RARM_JOINT2")
@@ -177,12 +177,12 @@ class ROS_Client(RobotCommander):
         self._goal_rarm.trajectory.joint_names.append("RARM_JOINT5")
 
         self._aclient_head.wait_for_server()
-        self._goal_head = JointTrajectoryGoal()
+        self._goal_head = FollowJointTrajectoryGoal()
         self._goal_head.trajectory.joint_names.append('HEAD_JOINT0')
         self._goal_head.trajectory.joint_names.append('HEAD_JOINT1')
 
         self._aclient_torso.wait_for_server()
-        self._goal_torso = JointTrajectoryGoal()
+        self._goal_torso = FollowJointTrajectoryGoal()
         self._goal_torso.trajectory.joint_names.append('CHEST_JOINT0')
 
         rospy.loginfo('Joint names; ' +
@@ -213,6 +213,8 @@ class ROS_Client(RobotCommander):
             posetype_str = 'init_rtm'
         elif 1 == init_pose_type:
             posetype_str = 'init_rtm_factory'
+        else:
+            rospy.logerr("unsupporeted init_pose_type " + str(init_pose_type))
         self.MG_BOTHARMS.set_named_target(posetype_str)
         self.MG_BOTHARMS.go()
 
@@ -327,7 +329,7 @@ class ROS_Client(RobotCommander):
             rpy = list(rpy)
         #
         # Check if MoveGroup is instantiated.
-        if not self._movegr_larm or not self._movegr_rarm:
+        if not self.MG_LARM or not self.MG_RARM:
             try:
                 self._init_moveit_commanders()
             except RuntimeError as e:

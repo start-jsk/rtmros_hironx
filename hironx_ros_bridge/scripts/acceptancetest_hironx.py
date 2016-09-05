@@ -32,7 +32,7 @@
 # ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
 
-import time
+import time, rospy
 
 from hironx_ros_bridge.constant import Constant
 from hironx_ros_bridge.hironx_client import HIRONX
@@ -102,9 +102,14 @@ class AcceptanceTest_Hiro():
         # Init RTM and ROS client.
         self.ros = ROS_Client()
         self._acceptance_ros_client = AcceptanceTestROS(self.ros)
-        self.rtm = HIRONX()
-        self.rtm.init(robotname=self._rtm_robotname, url=self._rtm_url)
-        self._acceptance_rtm_client = AcceptanceTestRTM(self.rtm)
+        if rospy.has_param('/gazebo'):
+            print("\033[32m[INFO] Assming Gazebo Siulator, so do not connect to CORBA systmes\033[0m")
+            print("\033[32m[INFO] run 'acceptance.run_tests_ros()' for ROS interface test\033[0m")
+        else:
+            self.rtm = HIRONX()
+            self.rtm.init(robotname=self._rtm_robotname, url=self._rtm_url)
+            self._acceptance_rtm_client = AcceptanceTestRTM(self.rtm)
+            print("\033[32m[INFO] run 'acceptance.run_tests_rtm()' for RTM interface test\033[0m")
 
     def _wait_input(self, msg, do_wait_input=False):
         '''
