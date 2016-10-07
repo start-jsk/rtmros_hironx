@@ -46,6 +46,7 @@ import OpenRTM_aist.RTM_IDL
 import rtm
 from waitInput import waitInputConfirm, waitInputSelect
 
+from distutils.version import StrictVersion
 
 SWITCH_ON = OpenHRP.RobotHardwareService.SWITCH_ON
 SWITCH_OFF = OpenHRP.RobotHardwareService.SWITCH_OFF
@@ -138,7 +139,7 @@ class HrpsysConfigurator2(HrpsysConfigurator): ## JUST FOR TEST, REMOVE WHEN YOU
         #### for hrpsys <= 315.2.5, frame_name is not supported
         ####   frame_name is given, call with lname with warning / oerror
         ####   frame_name is none, call with lname
-        if self.fk_version >= '315.2.5':                         ### CHANGED
+        if StrictVersion(self.fk_version) >= StrictVersion('315.2.5'):                         ### CHANGED
             if self.default_frame_name and frame_name is None:
                 frame_name = self.default_frame_name
             if frame_name and not ':' in lname:
@@ -174,7 +175,7 @@ class HrpsysConfigurator2(HrpsysConfigurator): ## JUST FOR TEST, REMOVE WHEN YOU
                 eef_name = item[1][-1]
                 print("{}: {}".format(eef_name, self.getReferencePose(eef_name)))
             raise RuntimeError("need to specify joint name")
-        if self.fk_version >= '315.2.5':                         ### CHANGED
+        if StrictVersion(self.fk_version) >= StrictVersion('315.2.5'):                         ### CHANGED
             if self.default_frame_name and frame_name is None:
                 frame_name = self.default_frame_name
             if frame_name and not ':' in lname:
@@ -201,7 +202,7 @@ class HrpsysConfigurator2(HrpsysConfigurator): ## JUST FOR TEST, REMOVE WHEN YOU
         @return bool: False if unreachable.
         '''
         print(gname, frame_name, pos, rpy, tm)
-        if self.seq_version >= '315.2.5':                         ### CHANGED
+        if StrictVersion(self.seq_version) >= StrictVersion('315.2.5'):                         ### CHANGED
             if self.default_frame_name and frame_name is None:
                 frame_name = self.default_frame_name
             if frame_name and not ':' in gname:
@@ -302,7 +303,7 @@ class HIRONX(HrpsysConfigurator2):
             print self.configurator_name, "  ref = ", self.ms.ref
         if self.ms and self.ms.ref and len(self.ms.ref.get_component_profiles()) > 0:
             print self.configurator_name, "  version  = ", self.ms.ref.get_component_profiles()[0].version
-        if self.ms and self.ms.ref and len(self.ms.ref.get_component_profiles()) > 0 and self.ms.ref.get_component_profiles()[0].version < '315.2.0':
+        if self.ms and self.ms.ref and len(self.ms.ref.get_component_profiles()) > 0 and StrictVersion(self.ms.ref.get_component_profiles()[0].version) < StrictVersion('315.2.0'):
             sys.path.insert(0, os.path.join(os.path.dirname(os.path.realpath(__file__)), 'hrpsys_315_1_9/hrpsys'))
             delete_module('ImpedanceControllerService_idl')
             import AbsoluteForceSensorService_idl
@@ -955,18 +956,18 @@ class HIRONX(HrpsysConfigurator2):
         return self.ic_svc.stopImpedanceController(arm)
 
     def startImpedance(self, arm, **kwargs):
-        if self.hrpsys_version < '315.2.0':
+        if StrictVersion(self.hrpsys_version) < StrictVersion('315.2.0'):
             self.startImpedance_315_1(arm, **kwargs)
-        elif self.hrpsys_version < '315.3.0':
+        elif StrictVersion(self.hrpsys_version) < StrictVersion('315.3.0'):
             self.startImpedance_315_2(arm, **kwargs)
         else:
             self.startImpedance_315_3(arm, **kwargs)
         print('startImpedance {}'.format(self._MSG_IMPEDANCE_CALL_DONE))
 
     def stopImpedance(self, arm):
-        if self.hrpsys_version < '315.2.0':
+        if StrictVersion(self.hrpsys_version) < StrictVersion('315.2.0'):
             self.stopImpedance_315_1(arm)
-        elif self.hrpsys_version < '315.3.0':
+        elif StrictVersion(self.hrpsys_version) < StrictVersion('315.3.0'):
             self.stopImpedance_315_2(arm)
         else:
             self.stopImpedance_315_3(arm)
