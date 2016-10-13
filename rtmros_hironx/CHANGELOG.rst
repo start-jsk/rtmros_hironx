@@ -2,8 +2,8 @@
 Changelog for package rtmros_hironx
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.1.17 (2016-10-13)
+-------------------
 * [fix] Fix versioning; use StrictVersion to compare version string
 * [improve] acceptancetest_hironx.py: display what to do
 * [fix] acceptancetest to work with gazebo environment
