@@ -2,6 +2,14 @@
 Changelog for package hironx_ros_bridge
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* [fix] Fix versioning; use StrictVersion to compare version string
+* [improve] acceptancetest_hironx.py: display what to do
+* [fix] acceptancetest to work with gazebo environment
+* [improve] ros_client.py : for ros_clinet to use control_msgs instaed of pr2_controllers, this should work on latest hrpsys_ros_bridge which support both interface
+* Contributors: Kei Okada
+
 1.1.16 (2016-07-11)
 -------------------
 * [fix] Use existing running hrtpsy components when available (fix to `tork-a/rtmros_nextage/#248 <https://github.com/tork-a/rtmros_nextage/issues/248>`_)
