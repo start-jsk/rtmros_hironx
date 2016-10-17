@@ -79,7 +79,9 @@ if __name__ == '__main__':
     try:
         ros = ROS_Client()
     except socket.error as e:
-        print("\033[31m%s\033[0m" % (e.strerror))
+        errormsg = 'No ROS Master found. Without it, you cannot use ROS from this script, but can use RTM. ' + \
+                   'To use ROS, do not forget to run rosbridge. How to do so? --> http://wiki.ros.org/rtmros_nextage/Tutorials/Operating%20Hiro%2C%20NEXTAGE%20OPEN'
+        print("\033[31m%s\n%s\033[0m" % (e.strerror, errormsg))
 
 # for simulated robot
 # $ ./hironx.py
