@@ -84,7 +84,7 @@ def delete_module(modname, paranoid=None):
                 except AttributeError:
                     pass
 
-class HrpsysConfigurator2(HrpsysConfigurator): ## JUST FOR TEST, REMOVE WHEN YOU MERGE
+class HrpsysConfigurator2(HrpsysConfigurator):  # # JUST FOR TEST, REMOVE WHEN YOU MERGE
     default_frame_name = 'WAIST'
 
     def getCurrentPose(self, lname=None, frame_name=None):
@@ -139,14 +139,14 @@ class HrpsysConfigurator2(HrpsysConfigurator): ## JUST FOR TEST, REMOVE WHEN YOU
         #### for hrpsys <= 315.2.5, frame_name is not supported
         ####   frame_name is given, call with lname with warning / oerror
         ####   frame_name is none, call with lname
-        if StrictVersion(self.fk_version) >= StrictVersion('315.2.5'):                         ### CHANGED
+        if StrictVersion(self.fk_version) >= StrictVersion('315.2.5'):  # ## CHANGED
             if self.default_frame_name and frame_name is None:
                 frame_name = self.default_frame_name
             if frame_name and not ':' in lname:
                 lname = lname + ':' + frame_name
-        else: # hrpsys < 315.2.4
+        else:  # hrpsys < 315.2.4
             if frame_name:
-                print('frame_name ('+lname+') is not supported') ### CHANGED
+                print('frame_name (' + lname + ') is not supported')  # ## CHANGED
         pose = self.fk_svc.getCurrentPose(lname)
         if not pose[0]:
             raise RuntimeError("Could not find reference : " + lname)
@@ -175,14 +175,14 @@ class HrpsysConfigurator2(HrpsysConfigurator): ## JUST FOR TEST, REMOVE WHEN YOU
                 eef_name = item[1][-1]
                 print("{}: {}".format(eef_name, self.getReferencePose(eef_name)))
             raise RuntimeError("need to specify joint name")
-        if StrictVersion(self.fk_version) >= StrictVersion('315.2.5'):                         ### CHANGED
+        if StrictVersion(self.fk_version) >= StrictVersion('315.2.5'):  # ## CHANGED
             if self.default_frame_name and frame_name is None:
                 frame_name = self.default_frame_name
             if frame_name and not ':' in lname:
                 lname = lname + ':' + frame_name
-        else: # hrpsys < 315.2.4
+        else:  # hrpsys < 315.2.4
             if frame_name:
-                print('frame_name ('+lname+') is not supported') ### CHANGED
+                print('frame_name (' + lname + ') is not supported')  # ## CHANGED
         pose = self.fk_svc.getReferencePose(lname)
         if not pose[0]:
             raise RuntimeError("Could not find reference : " + lname)
@@ -202,14 +202,14 @@ class HrpsysConfigurator2(HrpsysConfigurator): ## JUST FOR TEST, REMOVE WHEN YOU
         @return bool: False if unreachable.
         '''
         print(gname, frame_name, pos, rpy, tm)
-        if StrictVersion(self.seq_version) >= StrictVersion('315.2.5'):                         ### CHANGED
+        if StrictVersion(self.seq_version) >= StrictVersion('315.2.5'):  # ## CHANGED
             if self.default_frame_name and frame_name is None:
                 frame_name = self.default_frame_name
             if frame_name and not ':' in gname:
                 gname = gname + ':' + frame_name
-        else: # hrpsys < 315.2.4
+        else:  # hrpsys < 315.2.4
             if frame_name and not ':' in gname:
-                print('frame_name ('+gname+') is not supported') ### CHANGED
+                print('frame_name (' + gname + ') is not supported')  # ## CHANGED
         result = self.seq_svc.setTargetPose(gname, pos, rpy, tm)
         if not result:
             print("setTargetPose failed. Maybe SequencePlayer failed to solve IK.\n"
@@ -275,8 +275,8 @@ class HIRONX(HrpsysConfigurator2):
 
     hrpsys_version = '0.0.0'
 
-    _MSG_IMPEDANCE_CALL_DONE = (" call is done. This does't necessarily mean " +
-                               "the function call was successful, since not " +
+    _MSG_IMPEDANCE_CALL_DONE = (" call is done. This does't necessarily mean " + 
+                               "the function call was successful, since not " + 
                                "all methods internally called return status")
 
     def init(self, robotname="HiroNX(Robot)0", url=""):
@@ -297,9 +297,9 @@ class HIRONX(HrpsysConfigurator2):
         print(self.configurator_name + "finding RTCManager and RobotHardware")
         HrpsysConfigurator.waitForRTCManagerAndRoboHardware(self, robotname=robotname)
         print self.configurator_name, "Hrpsys controller version info: "
-        if self.ms :
+        if self.ms:
             print self.configurator_name, "  ms = ", self.ms
-        if self.ms and self.ms.ref :
+        if self.ms and self.ms.ref:
             print self.configurator_name, "  ref = ", self.ms.ref
         if self.ms and self.ms.ref and len(self.ms.ref.get_component_profiles()) > 0:
             print self.configurator_name, "  version  = ", self.ms.ref.get_component_profiles()[0].version
@@ -544,7 +544,7 @@ class HIRONX(HrpsysConfigurator2):
         That said, override Groups variable if you prefer link and joint
         groups set differently.
         '''
-        #TODO: Accept groups variable. The name of the method sounds more
+        # TODO: Accept groups variable. The name of the method sounds more
         #      natural if it accepts it.
         for item in self.Groups:
             self.seq_svc.addJointGroup(item[0], item[1])
@@ -654,7 +654,7 @@ class HIRONX(HrpsysConfigurator2):
         if jname == '':
             jname = 'all'
 
-        #self.rh_svc.power('all', SWITCH_ON)  #do not switch on before goActual
+        # self.rh_svc.power('all', SWITCH_ON)  #do not switch on before goActual
 
         try:
             waitInputConfirm(
@@ -675,14 +675,14 @@ class HIRONX(HrpsysConfigurator2):
             self.seq_svc.removeJointGroup("torso")
         except:
             print(self.configurator_name,
-                  'Exception during servoOn while removing JoingGroup. ' +
+                  'Exception during servoOn while removing JoingGroup. ' + 
                   _MSG_ASK_ISSUEREPORT)
         try:
             # setup jointGroups
             self.setSelfGroups()  # restart groups
         except:
             print(self.configurator_name,
-                  'Exception during servoOn while removing setSelfGroups. ' +
+                  'Exception during servoOn while removing setSelfGroups. ' + 
                   _MSG_ASK_ISSUEREPORT)
 
         try:
@@ -830,20 +830,20 @@ class HIRONX(HrpsysConfigurator2):
             self.sc_svc.servoOn()
 
     def startImpedance_315_1(self, arm,
-                       M_p = 100.0,
-                       D_p = 100.0,
-                       K_p = 100.0,
-                       M_r = 100.0,
-                       D_r = 2000.0,
-                       K_r = 2000.0,
-                       ref_force = [0, 0, 0],
-                       force_gain = [1, 1, 1],
-                       ref_moment = [0, 0, 0],
-                       moment_gain = [0, 0, 0],
-                       sr_gain = 1.0,
-                       avoid_gain = 0.0,
-                       reference_gain = 0.0,
-                       manipulability_limit = 0.1):
+                             M_p=100.0,
+                             D_p=100.0,
+                             K_p=100.0,
+                             M_r=100.0,
+                             D_r=2000.0,
+                             K_r=2000.0,
+                             ref_force=[0, 0, 0],
+                             force_gain=[1, 1, 1],
+                             ref_moment=[0, 0, 0],
+                             moment_gain=[0, 0, 0],
+                             sr_gain=1.0,
+                             avoid_gain=0.0,
+                             reference_gain=0.0,
+                             manipulability_limit=0.1):
         ic_sensor_name = 'rhsensor'
         ic_target_name = 'RARM_JOINT5'
         if arm == 'rarm':
@@ -858,23 +858,23 @@ class HIRONX(HrpsysConfigurator2):
 
         self.ic_svc.setImpedanceControllerParam(
             OpenHRP.ImpedanceControllerService.impedanceParam(
-                name = ic_sensor_name,
-                base_name = 'CHEST_JOINT0',
-                target_name = ic_target_name,
-                M_p = M_p,
-                D_p = D_p,
-                K_p = K_p,
-                M_r = M_r,
-                D_r = D_r,
-                K_r = K_r,
-                ref_force = ref_force,
-                force_gain = force_gain,
-                ref_moment = ref_moment,
-                moment_gain = moment_gain,
-                sr_gain = sr_gain,
-                avoid_gain = avoid_gain,
-                reference_gain = reference_gain,
-                manipulability_limit = manipulability_limit))
+                name=ic_sensor_name,
+                base_name='CHEST_JOINT0',
+                target_name=ic_target_name,
+                M_p=M_p,
+                D_p=D_p,
+                K_p=K_p,
+                M_r=M_r,
+                D_r=D_r,
+                K_r=K_r,
+                ref_force=ref_force,
+                force_gain=force_gain,
+                ref_moment=ref_moment,
+                moment_gain=moment_gain,
+                sr_gain=sr_gain,
+                avoid_gain=avoid_gain,
+                reference_gain=reference_gain,
+                manipulability_limit=manipulability_limit))
 
     def stopImpedance_315_1(self, arm):
         ic_sensor_name = 'rhsensor'
@@ -888,48 +888,48 @@ class HIRONX(HrpsysConfigurator2):
         self.ic_svc.deleteImpedanceControllerAndWait(ic_sensor_name)
 
     def startImpedance_315_2(self, arm,
-                       M_p = 100.0,
-                       D_p = 100.0,
-                       K_p = 100.0,
-                       M_r = 100.0,
-                       D_r = 2000.0,
-                       K_r = 2000.0,
-                       force_gain = [1, 1, 1],
-                       moment_gain = [0, 0, 0],
-                       sr_gain = 1.0,
-                       avoid_gain = 0.0,
-                       reference_gain = 0.0,
-                       manipulability_limit = 0.1):
+                             M_p=100.0,
+                             D_p=100.0,
+                             K_p=100.0,
+                             M_r=100.0,
+                             D_r=2000.0,
+                             K_r=2000.0,
+                             force_gain=[1, 1, 1],
+                             moment_gain=[0, 0, 0],
+                             sr_gain=1.0,
+                             avoid_gain=0.0,
+                             reference_gain=0.0,
+                             manipulability_limit=0.1):
         self.ic_svc.setImpedanceControllerParam(
             arm,
             OpenHRP.ImpedanceControllerService.impedanceParam(
-                M_p = M_p,
-                D_p = D_p,
-                K_p = K_p,
-                M_r = M_r,
-                D_r = D_r,
-                K_r = K_r,
-                force_gain = force_gain,
-                moment_gain = moment_gain,
-                sr_gain = sr_gain,
-                avoid_gain = avoid_gain,
-                reference_gain = reference_gain,
-                manipulability_limit = manipulability_limit))
+                M_p=M_p,
+                D_p=D_p,
+                K_p=K_p,
+                M_r=M_r,
+                D_r=D_r,
+                K_r=K_r,
+                force_gain=force_gain,
+                moment_gain=moment_gain,
+                sr_gain=sr_gain,
+                avoid_gain=avoid_gain,
+                reference_gain=reference_gain,
+                manipulability_limit=manipulability_limit))
         return self.ic_svc.startImpedanceController(arm)
 
     def startImpedance_315_3(self, arm,
-                       M_p = 100.0,
-                       D_p = 100.0,
-                       K_p = 100.0,
-                       M_r = 100.0,
-                       D_r = 2000.0,
-                       K_r = 2000.0,
-                       force_gain = [1, 1, 1],
-                       moment_gain = [0, 0, 0],
-                       sr_gain = 1.0,
-                       avoid_gain = 0.0,
-                       reference_gain = 0.0,
-                       manipulability_limit = 0.1):
+                             M_p=100.0,
+                             D_p=100.0,
+                             K_p=100.0,
+                             M_r=100.0,
+                             D_r=2000.0,
+                             K_r=2000.0,
+                             force_gain=[1, 1, 1],
+                             moment_gain=[0, 0, 0],
+                             sr_gain=1.0,
+                             avoid_gain=0.0,
+                             reference_gain=0.0,
+                             manipulability_limit=0.1):
         r, p = self.ic_svc.getImpedanceControllerParam(arm)
         if not r:
             print('{}, Failt to getImpedanceControllerParam({})'.format(self.configurator_name, arm))
