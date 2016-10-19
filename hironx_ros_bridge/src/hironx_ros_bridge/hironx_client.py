@@ -829,7 +829,8 @@ class HIRONX(HrpsysConfigurator2):
         if self.sc_svc:
             self.sc_svc.servoOn()
 
-    def startImpedance_315_1(self, arm,
+    def startImpedance_315_1(self,
+                             arm='rarm',
                              M_p=100.0,
                              D_p=100.0,
                              K_p=100.0,
@@ -843,9 +844,10 @@ class HIRONX(HrpsysConfigurator2):
                              sr_gain=1.0,
                              avoid_gain=0.0,
                              reference_gain=0.0,
-                             manipulability_limit=0.1):
+                             manipulability_limit=0.1,
+                             target_frame_name='RARM_JOINT5'):
         ic_sensor_name = 'rhsensor'
-        ic_target_name = 'RARM_JOINT5'
+        ic_target_name = target_frame_name
         if arm == 'rarm':
             ic_sensor_name = 'rhsensor'
             ic_target_name = 'RARM_JOINT5'
@@ -887,7 +889,8 @@ class HIRONX(HrpsysConfigurator2):
             return
         self.ic_svc.deleteImpedanceControllerAndWait(ic_sensor_name)
 
-    def startImpedance_315_2(self, arm,
+    def startImpedance_315_2(self,
+                             arm='rarm',
                              M_p=100.0,
                              D_p=100.0,
                              K_p=100.0,
@@ -899,10 +902,12 @@ class HIRONX(HrpsysConfigurator2):
                              sr_gain=1.0,
                              avoid_gain=0.0,
                              reference_gain=0.0,
-                             manipulability_limit=0.1):
+                             manipulability_limit=0.1,
+                             target_frame_name='RARM_JOINT5'):
         self.ic_svc.setImpedanceControllerParam(
             arm,
             OpenHRP.ImpedanceControllerService.impedanceParam(
+                target_name=target_frame_name,
                 M_p=M_p,
                 D_p=D_p,
                 K_p=K_p,
@@ -917,7 +922,8 @@ class HIRONX(HrpsysConfigurator2):
                 manipulability_limit=manipulability_limit))
         return self.ic_svc.startImpedanceController(arm)
 
-    def startImpedance_315_3(self, arm,
+    def startImpedance_315_3(self,
+                             arm='rarm',
                              M_p=100.0,
                              D_p=100.0,
                              K_p=100.0,
@@ -929,7 +935,8 @@ class HIRONX(HrpsysConfigurator2):
                              sr_gain=1.0,
                              avoid_gain=0.0,
                              reference_gain=0.0,
-                             manipulability_limit=0.1):
+                             manipulability_limit=0.1,
+                             target_frame_name='RARM_JOINT5'):
         r, p = self.ic_svc.getImpedanceControllerParam(arm)
         if not r:
             print('{}, Failt to getImpedanceControllerParam({})'.format(self.configurator_name, arm))
@@ -940,6 +947,7 @@ class HIRONX(HrpsysConfigurator2):
         if M_r != None: p.M_r = M_r
         if D_r != None: p.M_r = D_r
         if K_r != None: p.M_r = K_r
+        p.target_name = target_frame_name
         if force_gain != None: p.force_gain = force_gain
         if moment_gain != None: p.moment_gain = moment_gain
         if sr_gain != None: p.sr_gain = sr_gain
