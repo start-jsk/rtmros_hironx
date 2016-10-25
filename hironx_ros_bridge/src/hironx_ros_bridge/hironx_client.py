@@ -719,8 +719,10 @@ class HIRONX(HrpsysConfigurator2):
                       + _MSG_RESTART_QNX + ') and run the command again.')
                 return -1
         else:
-            print('hrpsys ServoController not found. ' + _MSG_RESTART_QNX + ' and run the command again.')
-            return -1
+            print('hrpsys ServoController not found. Ignore this if you' +
+                  ' do not intend to use hand servo (e.g. NEXTAGE Open).' +
+                  ' If you do intend, then' + _MSG_RESTART_QNX +
+                  ' and run the command again.')
 
         return 1
 

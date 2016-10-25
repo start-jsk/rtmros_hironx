@@ -39,6 +39,18 @@ class TestHiroController(TestHiro):
         #self.assertTrue(ret)
         self.assertTrue(True) # this is dummy, current simulate hiro does not have force sensor so it retunrs None
 
+    def test_hands_controller(self):
+        '''
+        If Servo Controller RTC are running (which will be always true for
+        the tests because it runs on simulation), kill it then test if servoOn
+        method still succeeds.
+        '''
+        if self.robot.sc_svc:
+            self.robot.sc_svc = None
+        else:
+            print('Servo Controller RTC is not running, so skipping this test.')
+            pass
+        self.assertEqual(self.robot.servoOn(), 1)
 
 if __name__ == '__main__':
     import rostest
