@@ -2,6 +2,12 @@
 Changelog for package rtmros_hironx
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* [fix] servoOn error that returns always -1 for robots without Servo Controller RTC for hands. See https://github.com/start-jsk/rtmros_hironx/pull/398#pullrequestreview-5575278
+* [fix][moveit config] Fix Interactive Marker size.
+* Contributors: Isaac I.Y. Saito
+
 1.1.17 (2016-10-13)
 -------------------
 * [fix] Fix versioning; use StrictVersion to compare version string

@@ -2,6 +2,11 @@
 Changelog for package hironx_ros_bridge
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* [fix] servoOn error that returns always -1 for robots without Servo Controller RTC for hands. See https://github.com/start-jsk/rtmros_hironx/pull/398#pullrequestreview-5575278
+* Contributors: Isaac I.Y. Saito
+
 1.1.17 (2016-10-13)
 -------------------
 * [fix] Fix versioning; use StrictVersion to compare version string

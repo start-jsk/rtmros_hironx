@@ -2,6 +2,11 @@
 Changelog for package hironx_moveit_config
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* [fix][moveit config] Fix Interactive Marker size.
+* Contributors: Isaac I.Y. Saito
+
 1.1.17 (2016-10-13)
 -------------------
 
