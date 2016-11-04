@@ -35,19 +35,19 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include <stdio.h>
-#include <unistd.h>
-#include <stdlib.h>
 #include <errno.h>
+#include <fcntl.h>
+#include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
-#include <sys/dispatch.h>
 #include <sys/iofunc.h>
+#include <sys/dispatch.h>
 #include <sys/mman.h>
 #include <sys/neutrino.h>
 #include <sys/slog.h>
 #include <sys/time.h>
-#include	<fcntl.h>
-#include	<termios.h>
+#include <termios.h>
+#include <unistd.h>
 
 unsigned short force_sensor_data_0[6];
 unsigned short force_sensor_data_1[6];
