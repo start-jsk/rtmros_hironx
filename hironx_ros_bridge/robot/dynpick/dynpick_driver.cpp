@@ -40,8 +40,8 @@
 #include <stdlib.h>
 #include <errno.h>
 #include <string.h>
-#include <sys/dispatch.h>
 #include <sys/iofunc.h>
+#include <sys/dispatch.h>
 #include <sys/mman.h>
 #include <sys/neutrino.h>
 #include <sys/slog.h>
