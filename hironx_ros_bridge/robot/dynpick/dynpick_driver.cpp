@@ -307,8 +307,13 @@ int main(int argc, char **argv) {
         #ifdef __QNX__ 
 	    slogf(0, _SLOG_INFO, "Started  fd1 = %d, fd2 = %d\n", fd1, fd2);
         #endif 
-	SetComAttr(fd1);
+        /* Switch the order of SetComAttr depending on your sensor. Also alter the order at ReadCom calls later in this file. */
+        // serusb1=right, serusb2=left
+	//SetComAttr(fd1);
+	//SetComAttr(fd2);
+        // serusb2=right, serusb1=left
 	SetComAttr(fd2);
+	SetComAttr(fd1);
 
 	/* Create the Dispatch Interface */
 	dpp = dispatch_create();
@@ -364,8 +369,12 @@ int main(int argc, char **argv) {
 	/* The "Data Pump" - get and process messages */
 	while (1) {
 		/* do serial read */
-		ReadCom(fd1, force_sensor_data_0);
-		ReadCom(fd2, force_sensor_data_1);
+                // serusb1=right, serusb2=left
+		//ReadCom(fd1, force_sensor_data_0);
+		//ReadCom(fd2, force_sensor_data_1);
+                // serusb2=right, serusb1=left
+		ReadCom(fd2, force_sensor_data_0);
+		ReadCom(fd1, force_sensor_data_1);
 
 		printf("dispatch\n");
 		/* process message */
