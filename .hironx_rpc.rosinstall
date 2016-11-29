@@ -1,0 +1,10 @@
+# This is intended for users who operate Hironx via RPC (Remote Procedure Call).
+# If you're not doing so or have no idea of what it is, do not use this file.   
+- git:
+    uri: https://github.com/tork-a/tork_rpc_util.git
+    local-name: tork-a/tork_rpc_util
+    version: master
+- git:
+    uri: https://github.com/start-jsk/rtmros_hironx
+    local-name: start-jsk/rtmros_hironx
+    version: indigo-devel
