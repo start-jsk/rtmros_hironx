@@ -60,7 +60,6 @@ namespace NEXTAGE_OPEN
         virtual int wait_for_iob_signal(void) = 0;
         virtual long get_signal_period(void) = 0;
         
-        
         virtual int initializeJointAngle(const char *name, const char *option) = 0;
         virtual int read_digital_input(char *dIn) = 0;
         virtual int length_digital_input(void) = 0;

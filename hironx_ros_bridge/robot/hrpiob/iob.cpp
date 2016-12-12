@@ -733,3 +733,35 @@ int read_digital_output(char *doutput)
 	else
 		return FALSE;
 }
+
+#ifndef defined(ROBOT_IOB_VERSION) && ROBOT_IOB_VERSION >= 2
+/**
+ * @brief Needed for hrpsys 315.4.0 onward (added at https://github.com/fkanehiro/hrpsys-base/pull/598).
+ *        TODO Implement if we want to utilize this.
+ */
+int number_of_thermometers(void)
+{
+    std::fprintf(stdout, "number_of_thermometers not implemented. See https://github.com/start-jsk/rtmros_hironx/pull/481\n");
+    return 0;
+}
+
+/**
+ * @brief Needed for hrpsys 315.4.0 onward (added at https://github.com/fkanehiro/hrpsys-base/pull/598).
+ *        TODO Implement if we want to utilize this.
+ */
+int number_of_batteries(void)
+{
+    std::fprintf(stdout, "number_of_batteries not implemented. See https://github.com/start-jsk/rtmros_hironx/pull/481\n");
+    return 0;
+}
+
+/**
+ * @brief Needed for hrpsys 315.4.0 onward (added at https://github.com/fkanehiro/hrpsys-base/pull/598).
+ *        TODO Implement if we want to utilize this.
+ */
+int read_battery(char *battery)
+{
+    std::fprintf(stdout, "read_battery not implemented. See https://github.com/start-jsk/rtmros_hironx/pull/481\n");
+    return 0;
+}
++#endif
