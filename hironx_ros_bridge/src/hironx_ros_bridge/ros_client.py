@@ -82,7 +82,8 @@ class ROS_Client(RobotCommander):
         try:
             rospy.get_master().getSystemState()
         except socket.error as e:
-            errormsg = '[ros_client] ros master is not running, so do not create ros client...'
+            errormsg = 'No ROS Master found. Without it, you cannot use ROS from this script, but you can still use RTM without issues. ' + \
+                       'To use ROS, do not forget to run rosbridge. How to do so? --> http://wiki.ros.org/rtmros_nextage/Tutorials/Operating%20Hiro%2C%20NEXTAGE%20OPEN'
             raise ROSInitException(errormsg)
         except Exception as e:
             errormsg = '[ros_client] Unknown exception occurred, so do not create ros client...'
