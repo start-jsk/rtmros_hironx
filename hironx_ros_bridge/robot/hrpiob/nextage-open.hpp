@@ -67,6 +67,12 @@ namespace NEXTAGE_OPEN
         virtual int write_digital_output_with_mask(const char *doutput, const char *mask) = 0;
         virtual int length_digital_output(void) = 0;
         virtual int read_digital_output(char *doutput) = 0;
+
+        #if defined(ROBOT_IOB_VERSION) && ROBOT_IOB_VERSION >= 2
+            virtual int number_of_thermometers(void) = 0;
+            virtual int number_of_batteries(void) = 0;
+            virtual int read_battery(char *battery) = 0;
+        #endif
     };
 
 }
