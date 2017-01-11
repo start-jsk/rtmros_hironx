@@ -764,4 +764,4 @@ int read_battery(char *battery)
     std::fprintf(stdout, "read_battery not implemented. See https://github.com/start-jsk/rtmros_hironx/pull/481\n");
     return 0;
 }
-+#endif
+#endif
