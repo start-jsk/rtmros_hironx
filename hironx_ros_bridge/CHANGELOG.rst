@@ -2,6 +2,14 @@
 Changelog for package hironx_ros_bridge
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* [fix] more precision on end effector's location
+* [fix][dynpick qnx driver] compilation.
+* [fix][hironx script] Correct exception when no ROS master found.
+* [fix] updated translation of last joint to match CAD data. updated arm end translation
+* Contributors: Hajime SAITO, Isaac I.Y. Saito, Kei Okada
+
 1.1.18 (2016-10-28)
 -------------------
 * [fix] servoOn error that returns always -1 for robots without Servo Controller RTC for hands. See https://github.com/start-jsk/rtmros_hironx/pull/398#pullrequestreview-5575278
