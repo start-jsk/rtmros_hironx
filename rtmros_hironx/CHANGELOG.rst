@@ -2,8 +2,8 @@
 Changelog for package rtmros_hironx
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.1.19 (2017-01-12)
+-------------------
 * [fix] more precision on end effector's location
 * [fix][dynpick qnx driver] compilation.
 * [fix][hironx script] Correct exception when no ROS master found.
