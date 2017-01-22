@@ -2504,6 +2504,26 @@ available at http://www.eclipse.org/legal/epl-v10.html
 					<axis_info axis="robot1_kinematics/axis_info_inst23"/>
 				</technique_common>
 			</motion>
+			<extra name="CAMERA_HEAD_R" type="attach_sensor">
+				<technique profile="OpenRAVE">
+					<instance_sensor url="#sensor2"/>
+					<frame_origin link="kmodel1/link3">
+						<translate>0.059959 -0.069754 0.095</translate>
+						<rotate>0.5575793136150866 -0.49754281129213 -0.6644971481955756 109.2074797252176</rotate>
+						<rotate>1 0 0 180</rotate>
+					</frame_origin>
+				</technique>
+			</extra>
+			<extra name="CAMERA_HEAD_L" type="attach_sensor">
+				<technique profile="OpenRAVE">
+					<instance_sensor url="#sensor3"/>
+					<frame_origin link="kmodel1/link3">
+						<translate>0.059959 0.069754 0.095</translate>
+						<rotate>0.482495411872448 -0.5407162028626805 -0.6890748620315513 114.4044973381611</rotate>
+						<rotate>1 0 0 180</rotate>
+					</frame_origin>
+				</technique>
+			</extra>
 			<extra name="lhsensor" type="attach_sensor">
 				<technique profile="OpenRAVE">
 					<instance_sensor url="#sensor0"/>
@@ -4032,6 +4052,20 @@ available at http://www.eclipse.org/legal/epl-v10.html
 			<sensor id="sensor1" sid="1" type="base_force6d">
 				<load_range_force>-1.000000 -1.000000 -1.000000</load_range_force>
 				<load_range_torque>-1.000000 -1.000000 -1.000000</load_range_torque>
+			</sensor>
+			<sensor id="sensor2" sid="0" type="base_pinhole_camera">
+				<focal_length>0.050000</focal_length>
+				<intrinsic>1076.85803578395 0 320 0 807.643526837964 240</intrinsic>
+				<format>uint8</format>
+				<image_dimensions>640 480 3</image_dimensions>
+				<measurement_time>0.033333</measurement_time>
+			</sensor>
+			<sensor id="sensor3" sid="1" type="base_pinhole_camera">
+				<focal_length>0.050000</focal_length>
+				<intrinsic>1076.85803578395 0 320 0 807.643526837964 240</intrinsic>
+				<format>uint8</format>
+				<image_dimensions>640 480 3</image_dimensions>
+				<measurement_time>0.033333</measurement_time>
 			</sensor>
 		</technique>
 	</extra>
