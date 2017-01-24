@@ -24,4 +24,20 @@
     <arg name="CONF_FILE_COLLISIONDETECT" value="$(arg CONF_FILE_COLLISIONDETECT)" />
     <arg name="open_rqt_gui" default="false" />
   </include>
+
+  <!-- camera image -->
+  <node name="rtmlaunch_hironx_ros_bridge_simulation" pkg="openrtm_tools" type="rtmlaunch.py" args="$(find hironx_ros_bridge)/launch/hironx_ros_bridge_simulation.launch" output="screen" />
+  <arg name="openrtm_args" default='-o "corba.nameservers:localhost:$(arg corbaport)" -o "naming.formats:%n.rtc" -o "exec_cxt.periodic.type:PeriodicExecutionContext" -o "exec_cxt.periodic.rate:100" -o "logger.file_name:/tmp/rtc%p.log"' />
+  <node pkg="hrpsys_ros_bridge" name="ImageSensorROSBridge_HeadRight" type="ImageSensorROSBridge"
+        args="$(arg openrtm_args)" ns="right" >
+    <param name="frame_id" value="/CAMERA_HEAD_R" />
+  </node>
+  <node pkg="hrpsys_ros_bridge" name="ImageSensorROSBridge_HeadLeft" type="ImageSensorROSBridge"
+        args="$(arg openrtm_args)" ns="left" >
+    <param name="frame_id" value="/CAMERA_HEAD_L" />
+  </node>
+  <rtconnect from="HiroNX(Robot)0.rtc:CAMERA_HEAD_R" to="ImageSensorROSBridge_HeadRight.rtc:timedImage" />
+  <rtconnect from="HiroNX(Robot)0.rtc:CAMERA_HEAD_L" to="ImageSensorROSBridge_HeadLeft.rtc:timedImage" />
+  <rtactivate component="ImageSensorROSBridge_HeadRight.rtc" />
+  <rtactivate component="ImageSensorROSBridge_HeadLeft.rtc" />
 </launch>
