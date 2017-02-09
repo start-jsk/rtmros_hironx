@@ -2,8 +2,8 @@
 Changelog for package hironx_ros_bridge
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.1.20 (2017-02-09)
+-------------------
 * [Capability] Enable head cameras for hrpsys simulator.
 * Contributors: Kei Okada
 
