@@ -2,6 +2,11 @@
 Changelog for package hironx_ros_bridge
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* [Capability] Enable head cameras for hrpsys simulator.
+* Contributors: Kei Okada
+
 1.1.19 (2017-01-12)
 -------------------
 * [fix] more precision on end effector's location
