@@ -174,6 +174,7 @@ class TestHiroTarget(TestHiro):
         self.robot.goInitial()
 
         posel1 = self.robot.getCurrentPose('LARM_JOINT5')
+        posel2 = None
         try:
             posel2 = self.robot.getCurrentPose('LARM_JOINT5', 'WAIST')
         except RuntimeError as e:
