@@ -35,7 +35,7 @@ install(DIRECTORY test launch
    DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
    USE_SOURCE_PERMISSIONS)
 
-if (CATKIN_ENABLE_TESTING)
-  find_package(catkin REQUIRED COMPONENTS rostest)
-  add_rostest(test/test-head-action.test)
-endif()
+# System tests are done in the downstream, hironx_ros_bridge pkg.
+# Because system tests require some launch files hironx_ros_bridge provides, but
+# then hironx_ros_bridge depends on this package so that circular dependency 
+# occurs. That's why tests are moved there to avoid circular.

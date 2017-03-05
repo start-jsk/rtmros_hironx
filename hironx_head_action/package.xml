@@ -40,6 +40,5 @@
   <run_depend>tf</run_depend>
   <run_depend>tf_conversions</run_depend>
   <run_depend>trajectory_msgs</run_depend>
-  <test_depend>hironx_ros_bridge</test_depend>
   <test_depend>rostest</test_depend>
 </package>

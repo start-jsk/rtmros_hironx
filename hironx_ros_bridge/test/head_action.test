@@ -7,6 +7,6 @@
     <arg name="corbaport" value="$(arg corbaport)" />
   </include>
 
-  <test type="test_head_action.py" pkg="hironx_head_action" test-name="test_head_action" />
+  <test pkg="hironx_ros_bridge" type="test_head_action.py" test-name="test_head_action" />
 
 </launch>
