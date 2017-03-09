@@ -36,13 +36,20 @@ import rospy
 from std_msgs.msg import Int8MultiArray, MultiArrayDimension
 import sys
 
+from hironx_rpc_msgs.msg import KinematicsGroup
 from hironx_rpc_msgs.srv import (
-    CheckEncoders, CheckEncodersResponse,
+    CalibrationOperation, CalibrationOperationResponse,
     GetCartesianCommon, GetCartesianCommonResponse,
+    GetJointAngles, GetJointAnglesResponse,
+    GetKinematicsGroups, GetKinematicsGroupsResponse,
+    GetRTCList, GetRTCListResponse,
     GetSensors, GetSensorsResponse,
     GoInitOffPoses, GoInitOffPosesResponse,
+    LoadPattern, LoadPatternResponse,
     RobotState, RobotStateResponse,
-    ServoOperation, ServoOperationResponse
+    ServoOperation, ServoOperationResponse,
+    SetEffort, SetEffortResponse,
+    SetHandJointAngles, SetHandJointAnglesResponse,
 )
 from tork_rpc_util.rpc_servers_handler import ActionServiceInfo, RpcServersHandler
 from tork_rpc_util.msg import Float32List, Int8List
@@ -57,14 +64,23 @@ class ActionServiceNameDict(object):
     getCurrentPosition = 'srv_getCurrentPosition'
     getCurrentRotation = 'srv_getCurrentRotation'
     getCurrentRPY = 'srv_getCurrentRPY'
+    getJointAngles = 'srv_getJointAngles'
+    get_kinematics_groups = 'srv_groups'
     getReferencePosition = 'srv_getReferencePosition'
     getReferenceRotation = 'srv_getReferenceRotation'
     getReferenceRPY = 'srv_getReferenceRPY'
+    getRTCList = 'srv_getRTCList'
     getSensors = 'srv_getSensors'
     goInitial = 'srv_goInitial'
     goOffPose = 'srv_goOffPose'
+    isCalibDone = 'srv_isCalibDone'
+    isServoOn = 'srv_isServoOn'
+    loadPattern = 'srv_loadPattern'
+    moveHand = 'srv_moveHand'
     servoOff = 'srv_servoOff'
     servoOn = 'srv_servoOn'
+    setHandJointAngles = 'srv_setHandJointAngles'
+    setEffort = 'srv_setEffort'
 
 
 class HironxRpcServer(RpcServersHandler):
@@ -78,6 +94,8 @@ class HironxRpcServer(RpcServersHandler):
     @see: also the Hironx' RPC-specific diagram: https://docs.google.com/drawings/d/1UNUasiORaGl-QQQEIa4Pex165YAyxgprAq9F5XbaSJA/edit
     '''
 
+    _NAMESPACE = 'rpc_servers_handler'
+
     def __init__(self):
         ''' '''
         rospy.init_node('hironx_rpc_server')
@@ -85,33 +103,56 @@ class HironxRpcServer(RpcServersHandler):
         self._robotif = self._init_hironx_rtmclient()
 
         self.action_infos = {
-            ActionServiceNameDict.checkEncoders: ActionServiceInfo(ActionServiceNameDict.checkEncoders, CheckEncoders, self._cb_checkEncoders),
+            ActionServiceNameDict.checkEncoders: ActionServiceInfo(ActionServiceNameDict.checkEncoders, CalibrationOperation, self._cb_calibration_operation),
             ActionServiceNameDict.getActualState: ActionServiceInfo(ActionServiceNameDict.getActualState, RobotState, self._cb_getActualState),
             ActionServiceNameDict.getCurrentPosition: ActionServiceInfo(ActionServiceNameDict.getCurrentPosition, GetCartesianCommon, self._cb_getCartesian),
             ActionServiceNameDict.getCurrentRotation: ActionServiceInfo(ActionServiceNameDict.getCurrentRotation, GetCartesianCommon, self._cb_getCartesian),
             ActionServiceNameDict.getCurrentRPY: ActionServiceInfo(ActionServiceNameDict.getCurrentRPY, GetCartesianCommon, self._cb_getCartesian),
+            ActionServiceNameDict.getJointAngles: ActionServiceInfo(ActionServiceNameDict.getJointAngles, GetJointAngles, self._cb_getJointAngles),
+            ActionServiceNameDict.get_kinematics_groups: ActionServiceInfo(ActionServiceNameDict.get_kinematics_groups, GetKinematicsGroups, self._cb_get_kinematics_groups),
             ActionServiceNameDict.getReferencePosition: ActionServiceInfo(ActionServiceNameDict.getReferencePosition, GetCartesianCommon, self._cb_getCartesian),
             ActionServiceNameDict.getReferenceRotation: ActionServiceInfo(ActionServiceNameDict.getReferenceRotation, GetCartesianCommon, self._cb_getCartesian),
             ActionServiceNameDict.getReferenceRPY: ActionServiceInfo(ActionServiceNameDict.getReferenceRPY, GetCartesianCommon, self._cb_getCartesian),
+            ActionServiceNameDict.getRTCList: ActionServiceInfo(ActionServiceNameDict.getRTCList, GetRTCList, self._cb_getRTCList),
             ActionServiceNameDict.getSensors: ActionServiceInfo(ActionServiceNameDict.getSensors, GetSensors, self._cb_getSensors),
             ActionServiceNameDict.goInitial: ActionServiceInfo(ActionServiceNameDict.goInitial, GoInitOffPoses, self._cb_goInitOffPoses),
             ActionServiceNameDict.goOffPose: ActionServiceInfo(ActionServiceNameDict.goOffPose, GoInitOffPoses, self._cb_goInitOffPoses),
+            ActionServiceNameDict.isCalibDone: ActionServiceInfo(ActionServiceNameDict.isCalibDone, CalibrationOperation, self._cb_calibration_operation),
+            ActionServiceNameDict.isServoOn: ActionServiceInfo(ActionServiceNameDict.isServoOn, ServoOperation, self._cb_servoOperation),
+            ActionServiceNameDict.loadPattern: ActionServiceInfo(ActionServiceNameDict.loadPattern, LoadPattern, self._cb_loadPattern),
+            ActionServiceNameDict.moveHand: ActionServiceInfo(ActionServiceNameDict.moveHand, SetHandJointAngles, self._cb_setHandJointAngles),
             ActionServiceNameDict.servoOff: ActionServiceInfo(ActionServiceNameDict.servoOff, ServoOperation, self._cb_servoOperation),
-            ActionServiceNameDict.servoOn: ActionServiceInfo(ActionServiceNameDict.servoOn, ServoOperation, self._cb_servoOperation)
+            ActionServiceNameDict.servoOn: ActionServiceInfo(ActionServiceNameDict.servoOn, ServoOperation, self._cb_servoOperation),
+            ActionServiceNameDict.setHandJointAngles: ActionServiceInfo(ActionServiceNameDict.setHandJointAngles, SetHandJointAngles, self._cb_setHandJointAngles),
+            ActionServiceNameDict.setEffort: ActionServiceInfo(ActionServiceNameDict.setEffort, SetEffort, self._cb_setEffort),
         }
         super(HironxRpcServer, self).__init__(self.action_infos)
 
         rospy.loginfo(sys._getframe().f_code.co_name + '__init__ done.')
 
-    def _cb_checkEncoders(self, service_req):
+    def convert_listelem_to_str(self, list):
+        '''Convert a list element as string, and return a new list'''
+        list_str = []
+        for elem in list:
+            list_str.append(str(elem)[1:-1])  # Remove brackets by slice
+        return list_str
+
+    def _cb_calibration_operation(self, service_req):
         '''
-        @type service_req: hironx_rpc_msgs.srv.CheckEncoders
+        @type service_req: hironx_rpc_msgs.srv.CalibrationOperationResponse
         '''
+        method_type_id = service_req.method_type_id
         jname = service_req.jname
         option = service_req.option
         rospy.loginfo('Service requested {} '.format(service_req))
-        ret = self._robotif.checkEncoders(jname=jname, option=option)
-        return CheckEncodersResponse(ret)
+        if 1 == method_type_id:
+            ret = self._robotif.checkEncoders(jname=jname, option=option)
+            return CalibrationOperationResponse(result=ret, isCalibDone=True)
+        elif 2 == method_type_id:
+            ret = self._robotif.isCalibDone()
+            return CalibrationOperationResponse(isCalibDone=ret)
+        else:
+            return False  # TODO better exception handling.
 
     def _cb_getActualState(self, service_req):
         '''
@@ -148,6 +189,14 @@ class HironxRpcServer(RpcServersHandler):
             ret.servoState, service_response.servoState))
 
         return service_response
+
+    def _cb_getJointAngles(self, service_req):
+        '''
+        @type service_req: hironx_rpc_msgs.srv.GetJointAngles
+        '''
+        rospy.loginfo('Service requested {} '.format(service_req))
+        ret = self._robotif.getJointAngles()
+        return GetJointAnglesResponse(angles=ret)
 
     def _cb_getCartesian(self, service_req):
         '''
@@ -194,6 +243,25 @@ class HironxRpcServer(RpcServersHandler):
             service_response = GetCartesianCommonResponse(rot=rot_matrix)
         return service_response
 
+    def _cb_get_kinematics_groups(self, service_req):
+        '''
+        @type service_req: hironx_rpc_msgs.srv.GetKinematicsGroups
+        '''
+        rospy.loginfo('Service requested {} '.format(service_req))
+        ret = self._robotif.Groups
+        res = GetKinematicsGroupsResponse()
+        for g in ret:
+            res.groups.append(KinematicsGroup(groupname=g[0], joints=g[1]))
+        return res
+
+    def _cb_getRTCList(self, service_req):
+        '''
+        @type service_req: hironx_rpc_msgs.srv.GetRTCList
+        '''
+        rospy.loginfo('Service requested {} '.format(service_req))
+        ret = self._robotif.getRTCList()
+        return GetRTCListResponse(rtcs=self.convert_listelem_to_str(ret))
+
     def _cb_getSensors(self, service_req):
         '''
         @type service_req: hironx_rpc_msgs.srv.GetSensors
@@ -221,6 +289,16 @@ class HironxRpcServer(RpcServersHandler):
         else:
             return False  # TODO: Throw exception or service
 
+    def _cb_loadPattern(self, service_req):
+        '''
+        @type service_req: hironx_rpc_msgs.srv.LoadPattern
+        '''
+        file_path = service_req.file_path
+        tm = service_req.tm
+        rospy.loginfo('Service requested {} '.format(service_req))
+        ret = self._robotif.loadPattern(file_path, tm)
+        return LoadPatternResponse()
+
     def _cb_servoOperation(self, service_req):
         '''
         @type service_req: hironx_rpc_msgs.srv.ServoOperation
@@ -236,17 +314,64 @@ class HironxRpcServer(RpcServersHandler):
         elif 2 == method_type_id:
             ret = self._robotif.servoOff(jname=joint_name, wait=wait)
             return ServoOperationResponse(result_off=ret)
+        elif 3 == method_type_id:
+            ret = self._robotif.isServoOn(jname=joint_name)
+            return ServoOperationResponse(result_on=ret)
+
+    def _cb_setHandJointAngles(self, service_req):
+        '''
+        @type service_req: hironx_rpc_msgs.srv.SetHandJointAngles
+        @rtype service_req: hironx_rpc_msgs.srv.SetHandJointAnglesResponse
+        @return: TODO Because the upstream method setHandJointAngles returns
+                 nothing on the simulation, for now this service always return
+                 True. Once the correct behavior figured with the real robot,
+                 this should also be fixed.
+        '''
+        method_type_id = service_req.method_type_id
+        hand = service_req.handgroup_name
+        av = list(service_req.angles)
+        tm = service_req.time
+        rospy.loginfo('Service requested {} '.format(service_req))
+        if 1 == method_type_id:
+            #ret = self._robotif.setHandJointAngles(hand, av, tm)
+            self._robotif.setHandJointAngles(hand, av, tm)
+            return SetHandJointAnglesResponse(result=True)
+        elif 2 == method_type_id:
+            #ret = self._robotif.moveHand(hand, av, tm)
+            self._robotif.moveHand(hand, av, tm)
+            return SetHandJointAnglesResponse(result=True)
+
+    def _cb_setEffort(self, service_req):
+        '''
+        @type service_req: hironx_rpc_msgs.srv.SetEffot
+        '''
+        kinematic_group = service_req.kinematic_group
+        effort = service_req.effort
+        rospy.loginfo('Service requested {} '.format(service_req))
+        self._robotif.setHandEffort(effort)
+        return SetEffortResponse()
 
     def _init_hironx_rtmclient(self):
-        ros_ns = 'rpc_servers_handler'
-        modelfile_location_realrobot = '/opt/jsk/etc/HIRONX/model/main.wrl'
-        CORBA_NAMESERVER_NAME = rospy.get_param(ros_ns + "/CORBA_NAMESERVER_NAME", 'hiro')
-        CORBA_PORT = rospy.get_param(ros_ns + "/CORBA_PORT", 15005)
-        MODELFILE_HRPSYS = rospy.get_param(ros_ns + "/MODELFILE_HRPSYS", modelfile_location_realrobot)
-        ROBOTNAME_HRPSYS = rospy.get_param(ros_ns + "/ROBOTNAME_HRPSYS", 'RobotHardware')
+        MODEL_LOCATION_REALROBOT = '/opt/jsk/etc/HIRONX/model/main.wrl'
+        CORBA_NAMESERVER_NAME = rospy.get_param(
+            self._NAMESPACE + "/CORBA_NAMESERVER_NAME", 'hiro')
+        CORBA_PORT = rospy.get_param(self._NAMESPACE + "/CORBA_PORT", 15005)
+        MODELFILE_HRPSYS = rospy.get_param(
+            self._NAMESPACE + "/MODELFILE_HRPSYS", MODEL_LOCATION_REALROBOT)
+        ROBOTNAME_HRPSYS = rospy.get_param(
+            self._NAMESPACE + "/ROBOTNAME_HRPSYS", 'RobotHardware')
 
         rtm.nshost = CORBA_NAMESERVER_NAME
         rtm.nsport = CORBA_PORT
-        robot = hiro = hironx_client.HIRONX()
+        # Wait for RTM servers to come up. This allows (hopefully) RPC servers
+        # to be launched together with the RTMs.
+        import time
+        _time_sleep = rospy.get_param(
+            self._NAMESPACE + '/SLEEP_INIT_RTMCLIENT', 5.0)
+        rospy.loginfo(
+            'Sleep {} seconds to wait for RTM servers'.format(_time_sleep))
+        time.sleep(_time_sleep)
+
+        robot = hironx_client.HIRONX()
         robot.init(robotname=ROBOTNAME_HRPSYS, url=MODELFILE_HRPSYS)
         return robot

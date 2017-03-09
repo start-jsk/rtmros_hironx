@@ -1,0 +1,11 @@
+#Request definition
+# Used to identify which method to be used.
+# 1: checkEncoders
+# 2: isCalibDone
+int8 method_type_id
+string jname
+string option 
+---
+#Response definition
+uint8 result
+bool isCalibDone

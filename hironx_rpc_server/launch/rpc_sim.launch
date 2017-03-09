@@ -3,6 +3,7 @@
   <arg name="CORBA_PORT" default="15005" doc="Value set here is Hironx's default." />
   <arg name="MODELFILE_HRPSYS" default="$(find hironx_ros_bridge)/models/kawada-hironx.dae" />
   <arg name="ROBOTNAME_HRPSYS" default="HiroNX(Robot)0" doc="Default value is for a sim robot." />
+  <arg name="SLEEP_INIT_RTMCLIENT" default="1.0" />
  
   <!-- TODO: With this include commented in, for some reasons hrpsys-simulator keeps failing. 
   <include file="$(find hironx_ros_bridge)/launch/hironx_ros_bridge_simulation.launch" />

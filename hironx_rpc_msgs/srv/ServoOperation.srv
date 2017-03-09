@@ -2,6 +2,7 @@
 # Used to identify which method to be used.
 # 1: servoOn
 # 2: servoOff
+# 3: isServoOn
 int8 method_type_id
 string joint_name
 bool   wait

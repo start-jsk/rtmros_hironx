@@ -35,18 +35,19 @@ from hrpsys_ros_bridge.srv import (
     OpenHRP_ForwardKinematicsService_getCurrentPose,
     OpenHRP_ForwardKinematicsService_getReferencePose,
     OpenHRP_StateHolderService_goActual,
-    OpenHRP_ServoControllerService_getJointAngles,
     OpenHRP_SequencePlayerService_setJointAngle,
     OpenHRP_SequencePlayerService_setJointAngles,
     OpenHRP_SequencePlayerService_setJointAnglesOfGroup,
+    OpenHRP_SequencePlayerService_setTargetPose,
     OpenHRP_SequencePlayerService_waitInterpolation,
-    OpenHRP_SequencePlayerService_waitInterpolationOfGroup
+    OpenHRP_SequencePlayerService_waitInterpolationOfGroup,
 )
 import rospy
 
 from hironx_rpc_msgs.srv import (
-    CheckEncoders, GetCartesianCommon, GetSensors, GoInitOffPoses, RobotState,
-    ServoOperation
+    CalibrationOperation, GetCartesianCommon, GetJointAngles,
+    GetKinematicsGroups, GetRTCList, GetSensors, GoInitOffPoses, LoadPattern,
+    RobotState, ServoOperation, SetEffort, SetHandJointAngles
 )
 
 
@@ -78,8 +79,8 @@ class SampleClientHironxRPC(object):
         rospy.wait_for_service(_srv_name)
         try:
             _srv_proxy = rospy.ServiceProxy(
-                _srv_name, CheckEncoders)
-            _response = _srv_proxy()
+                _srv_name, CalibrationOperation)
+            _response = _srv_proxy(method_type_id=1)
             return _response
         except rospy.ServiceException, e:
             raise e
@@ -167,6 +168,34 @@ class SampleClientHironxRPC(object):
         except rospy.ServiceException, e:
             raise e
 
+    def sample_getJointAngles(self):
+        '''
+        @note: Since srv is defined but no service is run by hrpsys_ros_bridge,
+               use service defined in hironx_rpc_server.
+        '''
+        _srv_name = 'srv_getJointAngles'
+
+        rospy.wait_for_service(_srv_name)
+        try:
+            _srv_proxy = rospy.ServiceProxy(_srv_name, GetJointAngles)
+            _response = _srv_proxy()
+            return _response
+        except rospy.ServiceException, e:
+            raise e
+
+    def sample_groups(self):
+        '''
+        @rtype hironx_rpc_msgs.GetKinematicsGroups
+        '''
+        _srv_name = 'srv_groups'
+        rospy.wait_for_service(_srv_name)
+        try:
+            _srv_proxy = rospy.ServiceProxy(_srv_name, GetKinematicsGroups)
+            _response = _srv_proxy()
+            return _response
+        except rospy.ServiceException, e:
+            raise e
+
     def sample_getReferencePosition(self):
         '''
         @rtype geometry_msgs/Vector3
@@ -212,19 +241,77 @@ class SampleClientHironxRPC(object):
         except rospy.ServiceException, e:
             raise e
 
-    def sample_getJointAngles(self):
+    def sample_getRTCList(self):
         '''
-        @note: TODO: Not working. Srv is defined but no service is run by
-               hrpsys_ros_bridge.
-        '''
-        _srv_name = 'ServoControllerServiceROSBridge/getJointAngles'
+        @summary: The output from HrpsysConfigurator.py looks like:
 
+                robot.getRTCList()
+                Out[2]:
+                [['seq', 'SequencePlayer'],
+                 ['sh', 'StateHolder'],
+                 ['fk', 'ForwardKinematics'],
+                 ['ic', 'ImpedanceController'],
+                 ['el', 'SoftErrorLimiter'],
+                 ['sc', 'ServoController'],
+                 ['log', 'DataLogger'],
+                 ['rmfo', 'RemoveForceSensorLinkOffset']]
+
+            However, because of the limitation in ROS messaging, which doesn't
+            support multi-dimensional array, it is impossible to return a list
+            like above. This method instead returns a list where each list
+            element is converted into string, like the following:
+
+                 sample_rpc.sample_getRTCList()
+                 Out[3]:
+                 ["'seq', 'SequencePlayer'",
+                  "'sh', 'StateHolder'",
+                  "'fk', 'ForwardKinematics'",
+                  "'ic', 'ImpedanceController'",
+                  "'el', 'SoftErrorLimiter'",
+                  "'sc', 'ServoController'",
+                  "'log', 'DataLogger'",
+                  "'rmfo', 'RemoveForceSensorLinkOffset'"]
+
+        @see http://fkanehiro.github.io/hrpsys-base/df/d98/classpython_1_1hrpsys__config_1_1HrpsysConfigurator.html#a5614e5504ba16881c14eaf3ea61adc81
+        @return: List of string. Unlike the example above that's the return
+                 value from HrpsysConfigurator.py, each element is converted
+                 as a string.
+        @rtype [str]
+        '''
+        _srv_name = 'srv_getRTCList'
         rospy.wait_for_service(_srv_name)
         try:
-            _srv_proxy = rospy.ServiceProxy(
-                _srv_name, OpenHRP_ServoControllerService_getJointAngles)
+            _srv_proxy = rospy.ServiceProxy(_srv_name, GetRTCList)
             _response = _srv_proxy()
-            return _response
+            return _response.rtcs
+        except rospy.ServiceException, e:
+            raise e
+
+    def sample_getRTCInstanceList(self):
+        '''
+        @see http://fkanehiro.github.io/hrpsys-base/df/d98/classpython_1_1hrpsys__config_1_1HrpsysConfigurator.html#a888185b5cff537487c060f77f2e8ef26
+        @return: List of the instance name. Example:
+
+            robot.getRTCInstanceList()
+            Out[50]:
+            [<hrpsys.rtm.RTcomponent instance at 0x7fd554ec7488>,
+             <hrpsys.rtm.RTcomponent instance at 0x7fd555b16c20>,
+             <hrpsys.rtm.RTcomponent instance at 0x7fd5548f0d40>,
+             <hrpsys.rtm.RTcomponent instance at 0x7fd554f3fb48>,
+             <hrpsys.rtm.RTcomponent instance at 0x7fd554950b00>,
+             <hrpsys.rtm.RTcomponent instance at 0x7fd55494c5f0>,
+             <hrpsys.rtm.RTcomponent instance at 0x7fd5549635f0>,
+             <hrpsys.rtm.RTcomponent instance at 0x7fd554eb4128>,
+             <hrpsys.rtm.RTcomponent instance at 0x7fd55496c908>]
+        @rtype [str]
+        '''
+        _srv_name = 'srv_getRTCInstanceList'
+        rospy.wait_for_service(_srv_name)
+        try:
+            # Use the same srv type as getRTCList
+            _srv_proxy = rospy.ServiceProxy(_srv_name, GetRTCList)
+            _response = _srv_proxy()
+            return _response.rtcs
         except rospy.ServiceException, e:
             raise e
 
@@ -302,6 +389,98 @@ class SampleClientHironxRPC(object):
         except rospy.ServiceException, e:
             raise e
 
+    def sample_isServoOn(self):
+        '''
+        @see: http://docs.ros.org/indigo/api/hironx_ros_bridge/html/classhironx__ros__bridge_1_1hironx__client_1_1HIRONX.html#afe037d52b45f48775224c39511e1c038
+        @rtype int
+        @return: 1 when true. -1 otherwise.
+        '''
+        _srv_name = 'srv_isServoOn'
+        rospy.wait_for_service(_srv_name)
+        try:
+            _srv_proxy = rospy.ServiceProxy(_srv_name, ServoOperation)
+            _response = _srv_proxy(method_type_id=3, joint_name='all')
+            return _response.result_on
+        except rospy.ServiceException, e:
+            raise e
+
+    def sample_isCalibDone(self):
+        '''
+        @see: http://fkanehiro.github.io/hrpsys-base/df/d98/classpython_1_1hrpsys__config_1_1HrpsysConfigurator.html#a955c6b358765ef15591da00d4c16f43b
+        @rtype bool
+        '''
+        _srv_name = 'srv_isCalibDone'
+        rospy.wait_for_service(_srv_name)
+        try:
+            _srv_proxy = rospy.ServiceProxy(_srv_name, CalibrationOperation)
+            _response = _srv_proxy(method_type_id=2)
+            return _response
+        except rospy.ServiceException, e:
+            raise e
+
+    def sample_loadPattern(self, pattern_filepath, tm=10):
+        '''
+        @see: http://fkanehiro.github.io/hrpsys-base/df/d98/classpython_1_1hrpsys__config_1_1HrpsysConfigurator.html#aaea0081b80df5d4a994c13723e7498df
+        @return -1 if error happened internally.
+        '''
+        if not pattern_filepath:
+            rospy.logerr('pattern_filepath is not set. Returning the method.')
+            return -1
+        _srv_name = 'srv_loadPattern'
+        rospy.wait_for_service(_srv_name)
+        try:
+            _srv_proxy = rospy.ServiceProxy(_srv_name, LoadPattern)
+            _response = _srv_proxy(file_path=pattern_filepath, tm=tm)
+            return _response
+        except rospy.ServiceException, e:
+            raise e
+
+    def sample_set_effort(self):
+        '''
+        @summary: setHandEffort can be called from here.
+        @see http://docs.ros.org/indigo/api/hironx_ros_bridge/html/classhironx__ros__bridge_1_1hironx__client_1_1HIRONX.html#a9412965040afbd04c50bd1ea5d9bc501
+        @return: Nothing returned.
+        '''
+        _srv_name = 'srv_setEffort'
+        rospy.wait_for_service(_srv_name)
+        try:
+            _srv_proxy = rospy.ServiceProxy(_srv_name, SetEffort)
+            _response = _srv_proxy(effort=50)
+            return _response
+        except rospy.ServiceException, e:
+            raise e
+
+    def sample_setHandJointAngles(
+            self, srv_name='srv_setHandJointAngles', hand='lhand', av=[0.0, 0.0, 0,0, 0.0], tm=2):
+        '''
+        @see http://docs.ros.org/indigo/api/hironx_ros_bridge/html/classhironx__ros__bridge_1_1hironx__client_1_1HIRONX.html#ad4945bdcd78468c77888ee2506227cfe
+        @rtype bool
+        @return: TODO Because the upstream method setHandJointAngles returns
+                 nothing on the simulation, for now this service always return
+                 True. Once the correct behavior figured with the real robot,
+                 this should also be fixed. 
+        '''
+        _srv_name = srv_name
+        method_type_id = 1
+        if _srv_name == 'srv_moveHand':
+            method_type_id = 2
+
+        rospy.wait_for_service(_srv_name)
+        try:
+            _srv_proxy = rospy.ServiceProxy(_srv_name, SetHandJointAngles)
+            _response = _srv_proxy(
+                method_type_id=method_type_id, handgroup_name='lhand',
+                angles=(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0), time=2)
+            return _response
+        except rospy.ServiceException, e:
+            raise e
+
+    def sample_moveHand(self):
+        '''
+        @see http://docs.ros.org/indigo/api/hironx_ros_bridge/html/classhironx__ros__bridge_1_1hironx__client_1_1HIRONX.html#ad44dd1e89b9662fab181638630d4e706
+        '''
+        self.sample_setHandJointAngles(srv_name='srv_moveHand')
+
     def sample_servoOff(self):
         '''
         @see: fkanehiro.github.io/hrpsys-base/df/d98/classpython_1_1hrpsys__config_1_1HrpsysConfigurator.html#a31eadc49bdf2ce66014c510500614c07
@@ -330,38 +509,6 @@ class SampleClientHironxRPC(object):
             _srv_proxy = rospy.ServiceProxy(_srv_name, ServoOperation)
             _response = _srv_proxy(method_type_id=1, joint_name='all', time=4)
             return _response.result_on
-        except rospy.ServiceException, e:
-            raise e
-
-    def sample_waitInerpolation(self):
-        '''
-        @see: http://fkanehiro.github.io/hrpsys-base/df/d98/classpython_1_1hrpsys__config_1_1HrpsysConfigurator.html#aa0c2ce9825c19956c7647208bf193309
-        @return: None.
-        '''
-        _srv_name = '/SequencePlayerServiceROSBridge/waitInterpolation'
-        rospy.wait_for_service(_srv_name)
-        try:
-            _srv_proxy = rospy.ServiceProxy(
-                _srv_name, OpenHRP_SequencePlayerService_waitInterpolation)
-            _response = _srv_proxy()
-            return _response
-        except rospy.ServiceException, e:
-            raise e
-
-    def sample_waitInerpolationOfGroups(self, groupname='larm'):
-        '''
-        @see: http://fkanehiro.github.io/hrpsys-base/df/d98/classpython_1_1hrpsys__config_1_1HrpsysConfigurator.html#a8613814b3a8152647b54ae5f28e35dd9
-        @param groupname str: Name of the joint group.
-        @return: None.
-        '''
-        _srv_name = '/SequencePlayerServiceROSBridge/waitInterpolationOfGroup'
-        rospy.wait_for_service(_srv_name)
-        try:
-            _srv_proxy = rospy.ServiceProxy(
-                _srv_name,
-                OpenHRP_SequencePlayerService_waitInterpolationOfGroup)
-            _response = _srv_proxy(groupname)
-            return _response
         except rospy.ServiceException, e:
             raise e
 
@@ -408,6 +555,59 @@ class SampleClientHironxRPC(object):
             _srv_proxy = rospy.ServiceProxy(
                 _srv_name, OpenHRP_SequencePlayerService_setJointAnglesOfGroup)
             _response = _srv_proxy(groupname, jvs, tm)
+            return _response
+        except rospy.ServiceException, e:
+            raise e
+
+    def sample_setTargetPose(self):
+        '''
+        @see: http://fkanehiro.github.io/hrpsys-base/df/d98/classpython_1_1hrpsys__config_1_1HrpsysConfigurator.html#a918664913b98e332ef8a6a23f5da379c
+        @rtype OpenHRP_SequencePlayerService_setTargetPose
+        '''
+        _srv_name = '/SequencePlayerServiceROSBridge/setTargetPose'
+        rospy.wait_for_service(_srv_name)
+        name = 'rarm'
+        rospy.loginfo('Assuming this is run at the initial pose. If not, '
+                      'run goInitial first.')
+        xyz = [0.3255627368715471, -0.1823638733778268, 0.07462449717662004]
+        rpy = (3.0732189053889805, -1.5690225912054285, -3.0730289207320203)
+        tm = 3
+        try:
+            _srv_proxy = rospy.ServiceProxy(
+                _srv_name, OpenHRP_SequencePlayerService_setTargetPose)
+            _response = _srv_proxy(name, xyz, rpy, tm)
+            return _response
+        except rospy.ServiceException, e:
+            raise e
+
+    def sample_waitInerpolation(self):
+        '''
+        @see: http://fkanehiro.github.io/hrpsys-base/df/d98/classpython_1_1hrpsys__config_1_1HrpsysConfigurator.html#aa0c2ce9825c19956c7647208bf193309
+        @return: None.
+        '''
+        _srv_name = '/SequencePlayerServiceROSBridge/waitInterpolation'
+        rospy.wait_for_service(_srv_name)
+        try:
+            _srv_proxy = rospy.ServiceProxy(
+                _srv_name, OpenHRP_SequencePlayerService_waitInterpolation)
+            _response = _srv_proxy()
+            return _response
+        except rospy.ServiceException, e:
+            raise e
+
+    def sample_waitInerpolationOfGroups(self, groupname='larm'):
+        '''
+        @see: http://fkanehiro.github.io/hrpsys-base/df/d98/classpython_1_1hrpsys__config_1_1HrpsysConfigurator.html#a8613814b3a8152647b54ae5f28e35dd9
+        @param groupname str: Name of the joint group.
+        @return: None.
+        '''
+        _srv_name = '/SequencePlayerServiceROSBridge/waitInterpolationOfGroup'
+        rospy.wait_for_service(_srv_name)
+        try:
+            _srv_proxy = rospy.ServiceProxy(
+                _srv_name,
+                OpenHRP_SequencePlayerService_waitInterpolationOfGroup)
+            _response = _srv_proxy(groupname)
             return _response
         except rospy.ServiceException, e:
             raise e
