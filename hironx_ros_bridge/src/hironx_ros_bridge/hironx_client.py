@@ -208,8 +208,7 @@ class HrpsysConfigurator2(HrpsysConfigurator): ## JUST FOR TEST, REMOVE WHEN YOU
         # https://github.com/fkanehiro/hrpsys-base/pull/1063 resolves.
         if gname.upper() not in map (lambda x : x[0].upper(), self.Groups):
             print("setTargetPose failed. {} is not available in the kinematic groups. "
-                  "Check available Groups (by e.g. self.Groups/robot.Groups). "
-                  "Also check the case of the group name".format(gname))
+                  "Check available Groups (by e.g. self.Groups/robot.Groups). ".format(gname))
             return False
         if StrictVersion(self.seq_version) >= StrictVersion('315.2.5'):                         ### CHANGED
             if self.default_frame_name and frame_name is None:
