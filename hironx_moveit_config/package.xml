@@ -5,11 +5,11 @@
   <description>
      An automatically generated package with all the configuration and launch files for using the HiroNX with the MoveIt Motion Planning Framework
   </description>
-  <author email="assistant@moveit.ros.org">MoveIt Setup Assistant</author>
   <author email="uesnaola@gmail.com">Urko Esnaola</author>
+  <author email="iiysaito@opensource-robotics.tokyo.jp">Isaac I.Y. Saito</author>
 
   <maintainer email="k-okada@jsk.t.u-tokyo.ac.jp">Kei Okada</maintainer>
-  <maintainer email="iisaito@opensource-robotics.tokyo.jp">Isaac Isao Saito</maintainer>
+  <maintainer email="dev@opensource-robotics.tokyo.jp">TORK</maintainer>
 
   <license>BSD</license>
 
