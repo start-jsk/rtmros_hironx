@@ -9,8 +9,9 @@
   </description>
 
   <maintainer email="k-okada@jsk.t.u-tokyo.ac.jp">Kei Okada</maintainer>
-  <maintainer email="iisaito@kinugarage.com">Isaac Isao Saito</maintainer>
+  <maintainer email="dev@opensource-robotics.tokyo.jp">TORK</maintainer>
   <author email="k-okada@jsk.t.u-tokyo.ac.jp">Kei Okada</author>
+  <author email="iiysaito@opensource-robotics.tokyo.jp">Isaac I.Y. Saito</author>
 
   <license>BSD</license>
   <license>CreativeCommons-by-nc-4.0</license>

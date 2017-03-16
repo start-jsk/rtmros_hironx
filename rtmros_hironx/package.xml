@@ -8,8 +8,9 @@
   </description> 
 
   <maintainer email="k-okada@jsk.t.u-tokyo.ac.jp">Kei Okada</maintainer>
-  <maintainer email="iisaito@kinugarage.com">Isaac IY Saito</maintainer>
+  <maintainer email="dev@opensource-robotics.tokyo.jp">TORK</maintainer>
   <author email="k-okada@jsk.t.u-tokyo.ac.jp">Kei Okada</author>
+  <author email="iiysaito@opensource-robotics.tokyo.jp">Isaac I.Y. Saito</author>
 
   <license>BSD</license>
   <url type="website">http://ros.org/wiki/rtmros_hironx/</url>
