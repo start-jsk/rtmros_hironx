@@ -87,6 +87,43 @@ def delete_module(modname, paranoid=None):
 class HrpsysConfigurator2(HrpsysConfigurator): ## JUST FOR TEST, REMOVE WHEN YOU MERGE
     default_frame_name = 'WAIST'
 
+    def _get_geometry(self, method, frame_name=None):
+        '''!@brief
+        A method only inteded for class-internal usage.
+
+        @since: 315.12.1 or higher
+        @type method: A Python function object.
+        @param method: One of the following Python function objects defined in class HrpsysConfigurator:
+            [getCurrentPose, getCurrentPosition, getCurrentReference, getCurrentRPY,
+             getReferencePose, getReferencePosition, getReferenceReference, getReferenceRPY]
+        @param frame_name str: set reference frame name (available from version 315.2.5)
+        @rtype: {str: [float]}
+        @return: Dictionary of the values for each kinematic group.
+            Example (using getCurrentPosition):
+
+                [{CHEST_JOINT0: [0.0, 0.0, 0.0]},
+                 {HEAD_JOINT1: [0.0, 0.0, 0.5694999999999999]},
+                 {RARM_JOINT5: [0.3255751238415409, -0.18236314012331808, 0.06762452267747099]},
+                 {LARM_JOINT5: [0.3255751238415409, 0.18236314012331808, 0.06762452267747099]}]
+        '''
+        _geometry_methods = ['getCurrentPose', 'getCurrentPosition',
+                             'getCurrentReference', 'getCurrentRPY',
+                             'getReferencePose', 'getReferencePosition',
+                             'getReferenceReference', 'getReferenceRPY']
+        if method not in _geometry_methods:
+            raise RuntimeError("Passed method {} is not supported.".format(method))
+        for kinematic_group in self.Groups:
+            # The last element is usually an eef in each kinematic group,
+            # although not required so.
+            eef_name = kinematic_group[1][-1]
+            try:
+                result = method(eef_name, frame_name)
+            except RuntimeError as e:
+                print(str(e))
+            print("{}: {}".format(eef_name, method(eef_name)))
+        raise RuntimeError("Since no link name passed, ran it for all"
+                           " available eefs.")
+
     def getCurrentPose(self, lname=None, frame_name=None):
         '''!@brief
         Returns the current physical pose of the specified joint.
@@ -127,10 +164,7 @@ class HrpsysConfigurator2(HrpsysConfigurator): ## JUST FOR TEST, REMOVE WHEN YOU
         \endverbatim
         '''
         if not lname:
-            for item in self.Groups:
-                eef_name = item[1][-1]
-                print("{}: {}".format(eef_name, self.getCurrentPose(eef_name)))
-            raise RuntimeError("need to specify joint name")
+            self._get_geometry(self.getReferenceRPY, frame_name)
         ####
         #### for hrpsys >= 315.2.5, frame_name is supported
         ####   default_frame_name is set, call with lname:default_frame_name
@@ -152,7 +186,7 @@ class HrpsysConfigurator2(HrpsysConfigurator): ## JUST FOR TEST, REMOVE WHEN YOU
             raise RuntimeError("Could not find reference : " + lname)
         return pose[1].data
 
-    def getReferencePose(self, lname, frame_name=None):
+    def getReferencePose(self, lname=None, frame_name=None):
         '''!@brief
         Returns the current commanded pose of the specified joint.
         cf. getCurrentPose that returns physical pose.
@@ -171,10 +205,8 @@ class HrpsysConfigurator2(HrpsysConfigurator): ## JUST FOR TEST, REMOVE WHEN YOU
         \endverbatim
         '''
         if not lname:
-            for item in self.Groups:
-                eef_name = item[1][-1]
-                print("{}: {}".format(eef_name, self.getReferencePose(eef_name)))
-            raise RuntimeError("need to specify joint name")
+            # Requires hrpsys 315.12.1 or higher.
+            self._get_geometry(self.getReferenceRPY, frame_name)
         if StrictVersion(self.fk_version) >= StrictVersion('315.2.5'):                         ### CHANGED
             if self.default_frame_name and frame_name is None:
                 frame_name = self.default_frame_name
