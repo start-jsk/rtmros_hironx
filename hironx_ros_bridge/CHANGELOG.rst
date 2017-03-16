@@ -2,6 +2,12 @@
 Changelog for package hironx_ros_bridge
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* [fix][hironx py] Let setTargetPose fail when invalid kinematic group name passed. `#470 <https://github.com/start-jsk/rtmros_hironx/pull/470>`_
+* [capability][hrpsys-sim] Add hand camera feature.
+* [capability] Add rviz.launch. Now you can run RViz with a default view (without running MoveIt! when you don't need to).
+
 1.1.20 (2017-02-09)
 -------------------
 * [Capability] Enable head cameras for hrpsys simulator.
