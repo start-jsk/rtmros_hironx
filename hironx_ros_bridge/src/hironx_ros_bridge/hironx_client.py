@@ -110,7 +110,7 @@ class HrpsysConfigurator2(HrpsysConfigurator): ## JUST FOR TEST, REMOVE WHEN YOU
                              'getCurrentReference', 'getCurrentRPY',
                              'getReferencePose', 'getReferencePosition',
                              'getReferenceReference', 'getReferenceRPY']
-        if method not in _geometry_methods:
+        if method.__name__ not in _geometry_methods:
             raise RuntimeError("Passed method {} is not supported.".format(method))
         for kinematic_group in self.Groups:
             # The last element is usually an eef in each kinematic group,
