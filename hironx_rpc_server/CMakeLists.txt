@@ -12,7 +12,7 @@ catkin_package(
 #  DEPENDS system_lib
 )
 
-install(DIRECTORY scripts
+install(DIRECTORY script
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
 install(DIRECTORY launch test
   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
