@@ -328,6 +328,20 @@ class TestHiroTarget(TestHiro):
             numpy.testing.assert_array_almost_equal(init_l, init_l_now, decimal=2)
             numpy.testing.assert_array_almost_equal(init_r, init_r_now, decimal=2)
 
+    def test_get_geometry_methods_noarg(self):
+        '''
+        @summary: What we call "geometry_methods" are supposed to raise
+                  RuntimeError in a normal condition.
+
+        geometry_methods are [
+                     'getCurrentPose', 'getCurrentPosition',
+                     'getCurrentRPY', 'getCurrentRPYRotation',
+                     'getReferencePose', 'getReferencePosition',
+                     'getReferenceRotation', 'getReferenceRPY']
+        '''
+        self.assertRaises(RuntimeError, lambda: self.robot.getCurrentPose())
+        self.assertRaises(RuntimeError, lambda: self.robot.getReferencePose())
+
 if __name__ == '__main__':
     import rostest
     rostest.rosrun(PKG, 'test_hronx_target', TestHiroTarget)
