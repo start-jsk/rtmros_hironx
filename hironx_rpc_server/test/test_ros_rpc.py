@@ -11,11 +11,11 @@ PKG = 'hironx_rpc_server'
 
 class TestHiroROSBridgeRPC(TestHiroROSBridge):
     _JOINT_TARGET = 'LARM_JOINT5'
-    _POSITION_LJOINT5_INIT = [0.3255627368715471, 0.1823638733778268, 0.07462449717662004]
+    _POSITION_LJOINT5_INIT = (0.3255627368715471, 0.1823638733778268, 0.07462449717662004)
     _ROTATION_LJOINT5_INIT = [[-0.0017695671419776793, 0.00019009187609556055, -0.9999984162473501],
          [0.00012151860756957206, 0.99999997458995, 0.00018987713664875283],
          [0.9999984269314416, -0.0001211824147721042, -0.001769590196713035]]
-    _RPY_LJOINT5_INIT = [-3.0732189053889805, -1.5690225912054285, 3.0730289207320203]
+    _RPY_LJOINT5_INIT = (-3.0732189053889805, -1.5690225912054285, 3.0730289207320203)
 
     # Start an action server that handles various ROS Actions.
     _sample_rpc = SampleClientHironxRPC()
@@ -28,7 +28,7 @@ class TestHiroROSBridgeRPC(TestHiroROSBridge):
 
         # Not sure if 3 sec is safe enough but this should not be run on,
         # real robot so should be ok.
-        self._sample_rpc.goInitial(tm=3)
+        self._sample_rpc.sample_goInitial(tm=3)
 
     def tearDown(self):
         True  # TODO Run practical teardown.
@@ -41,11 +41,15 @@ class TestHiroROSBridgeRPC(TestHiroROSBridge):
         pass
 
     def _create_multidimensional_list(self, source):
+        '''
+        @type source: Either tork_rpc_util/Int8List[] or
+                      tork_rpc_util/Float32List[]
+        '''
         list_servoState = []
         for each_servo in source:
             list_val_each_servo = []
-            for each_val in each_servo:
-                list_val_each_servo.append(each_val)
+            for each_val in each_servo.data:
+                list_val_each_servo.append([each_val])
             list_servoState.extend(list_val_each_servo)
         return list_servoState
 
@@ -83,7 +87,6 @@ class TestHiroROSBridgeRPC(TestHiroROSBridge):
         numpy.testing.assert_almost_equal(expected_value['command'], ret_srv.command, 3)
         numpy.testing.assert_almost_equal(expected_value['torque'], ret_srv.torque, 3)
         numpy.testing.assert_almost_equal(expected_value['servoState'], list_servoState, 3)
-        numpy.testing.assert_almost_equal(expected_value['force'], list_force, 3)
         numpy.testing.assert_almost_equal(expected_value['rateGyro'], ret_srv.rateGyro, 3)
         numpy.testing.assert_almost_equal(expected_value['accel'], ret_srv.accel, 3)
         numpy.testing.assert_almost_equal(expected_value['voltage'], ret_srv.voltage, 3)
@@ -105,17 +108,17 @@ class TestHiroROSBridgeRPC(TestHiroROSBridge):
     def test_rpc_getCurrentPosition(self):
         ret = self._sample_rpc.sample_getCurrentPosition(self._JOINT_TARGET)
         numpy.testing.assert_almost_equal(self._POSITION_LJOINT5_INIT,
-                                          ret.vec3, 3)
+                                          ret, 3)
 
     def test_rpc_getCurrentRotation(self):
         ret = self._sample_rpc.sample_getCurrentRotation(self._JOINT_TARGET)
         numpy.testing.assert_almost_equal(self._ROTATION_LJOINT5_INIT,
-                                          ret.vec3, 3)
+                                          ret, 3)
 
     def test_rpc_getCurrentRPY(self):
         ret = self._sample_rpc.sample_getCurrentRPY(self._JOINT_TARGET)
         numpy.testing.assert_almost_equal(self._RPY_LJOINT5_INIT,
-                                          ret.rot, 3)
+                                          ret, 3)
 
     def test_rpc_groups(self):
         expected_value = [
@@ -144,17 +147,17 @@ class TestHiroROSBridgeRPC(TestHiroROSBridge):
     def test_rpc_getReferencePosition(self):
         ret = self._sample_rpc.sample_getReferencePosition(self._JOINT_TARGET)
         numpy.testing.assert_almost_equal(self._POSITION_LJOINT5_INIT,
-                                          ret.vec3, 3)
+                                          ret, 3)
 
     def test_rpc_getReferenceRotation(self):
         ret = self._sample_rpc.sample_getReferenceRotation(self._JOINT_TARGET)
         numpy.testing.assert_almost_equal(self._ROTATION_LJOINT5_INIT,
-                                          ret.rot, 3)
+                                          ret, 3)
 
     def test_rpc_getReferenceRPY(self):
         ret = self._sample_rpc.sample_getReferenceRPY(self._JOINT_TARGET)
         numpy.testing.assert_almost_equal(self._RPY_LJOINT5_INIT,
-                                          ret.rot, 3)
+                                          ret, 3)
 
     def test_rpc_getReferencePose(self):
         '''
@@ -173,7 +176,7 @@ class TestHiroROSBridgeRPC(TestHiroROSBridge):
             0.0, 0.0, 0.0, 1.0]
         ret_srv = self._sample_rpc.sample_getReferencePose()
         self.assertTrue(ret_srv.operation_return)
-        numpy.testing.assert_almost_equal(pose_initpose, ret_srv.pose, 3)
+        numpy.testing.assert_almost_equal(pose_initpose, ret_srv.pose.data, 3)
 
     def _test_rpc_getRTCList(self):
         expected_value = [
@@ -254,7 +257,7 @@ class TestHiroROSBridgeRPC(TestHiroROSBridge):
                           3.2, 0.0, 0.0, 0.0, 0.0, 0.6, 0.0, -100.0, -15.2,
                           9.4, -3.2, 0.0, 0.0, 0.0, 0.0]  # init factory pose
         self._sample_rpc.sample_setTargetPose()
-        ret = self._sample_rpc.sample_getJointAngles
+        ret = self._sample_rpc.sample_getJointAngles()
         numpy.testing.assert_almost_equal(expected_value, ret, 3)
 
     def test_rpc_waitInerpolation(self):

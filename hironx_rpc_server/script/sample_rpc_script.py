@@ -33,7 +33,10 @@
 # ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
 
+import rospy
 from hironx_rpc_server.sample_rpc import SampleClientHironxRPC
 
 if __name__ == '__main__':
+    # Start an action server that handles various ROS Actions.
+    rospy.init_node('hironx_rpc_sample_script')
     sample_rpc = SampleClientHironxRPC()

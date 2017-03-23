@@ -71,8 +71,7 @@ class SampleClientHironxRPC(object):
 
     def __init__(self):
         '''        '''
-        # Start an action server that handles various ROS Actions.
-        rospy.init_node('hironx_rpc_sample')
+        pass
 
     def sample_checkEncoders(self):
         _srv_name = 'srv_checkEncoders'
@@ -122,7 +121,7 @@ class SampleClientHironxRPC(object):
         except rospy.ServiceException, e:
             raise e
 
-    def sample_getCurrentPosition(self):
+    def sample_getCurrentPosition(self, linkname='LARM_JOINT5'):
         '''
         @rtype geometry_msgs/Vector3
         '''
@@ -130,14 +129,14 @@ class SampleClientHironxRPC(object):
         rospy.wait_for_service(_srv_name)
         try:
             _srv_proxy = rospy.ServiceProxy(_srv_name, GetCartesianCommon)
-            linkname = 'LARM_JOINT5'
             framename = None
             _response = _srv_proxy(1, linkname, framename)
-            return _response.vec3
+            res = (_response.vec3.x, _response.vec3.y, _response.vec3.z)
+            return res
         except rospy.ServiceException, e:
             raise e
 
-    def sample_getCurrentRotation(self):
+    def sample_getCurrentRotation(self, linkname='LARM_JOINT5'):
         '''
         @rtype tork_rpc_util/Float32List[]
         '''
@@ -146,25 +145,30 @@ class SampleClientHironxRPC(object):
         rospy.wait_for_service(_srv_name)
         try:
             _srv_proxy = rospy.ServiceProxy(_srv_name, GetCartesianCommon)
-            linkname = 'LARM_JOINT5'
             framename = None
             _response = _srv_proxy(2, linkname, framename)
-            return _response.rot
+            res_list = []
+            for row in _response.rot:
+                row_list = []
+                for e in row.data:
+                    row_list.append(e)
+                res_list.append(row_list)
+            return res_list
         except rospy.ServiceException, e:
             raise e
 
-    def sample_getCurrentRPY(self):
+    def sample_getCurrentRPY(self, linkname='LARM_JOINT5'):
         '''
-        @rtype geometry_msgs/Vector3
+        @rtype (float, float, float)
         '''
         _srv_name = 'srv_getCurrentRPY'
         rospy.wait_for_service(_srv_name)
         try:
             _srv_proxy = rospy.ServiceProxy(_srv_name, GetCartesianCommon)
-            linkname = 'LARM_JOINT5'
             framename = None
             _response = _srv_proxy(3, linkname, framename)
-            return _response.vec3
+            res = (_response.vec3.x, _response.vec3.y, _response.vec3.z)
+            return res
         except rospy.ServiceException, e:
             raise e
 
@@ -172,6 +176,8 @@ class SampleClientHironxRPC(object):
         '''
         @note: Since srv is defined but no service is run by hrpsys_ros_bridge,
                use service defined in hironx_rpc_server.
+        @rtype [float]
+        @return list of joint angles.
         '''
         _srv_name = 'srv_getJointAngles'
 
@@ -179,24 +185,30 @@ class SampleClientHironxRPC(object):
         try:
             _srv_proxy = rospy.ServiceProxy(_srv_name, GetJointAngles)
             _response = _srv_proxy()
-            return _response
+            return _response.angles
         except rospy.ServiceException, e:
             raise e
 
     def sample_groups(self):
         '''
-        @rtype hironx_rpc_msgs.GetKinematicsGroups
+        @summary: From the service receive hironx_rpc_msgs.GetKinematicsGroups
+                  then convert back to the Hironx.groups format to return. 
+        @rtype [[str, [str]]]
+        @see For return type http://docs.ros.org/indigo/api/hironx_ros_bridge/html/classhironx__ros__bridge_1_1hironx__client_1_1HIRONX.html#a13732eef4afc0e25e587f3858bb568c6
         '''
         _srv_name = 'srv_groups'
         rospy.wait_for_service(_srv_name)
+        groups_list = []
         try:
             _srv_proxy = rospy.ServiceProxy(_srv_name, GetKinematicsGroups)
             _response = _srv_proxy()
-            return _response
+            for g in _response.groups:
+                groups_list.append([g.groupname, g.joints])
+            return groups_list
         except rospy.ServiceException, e:
             raise e
 
-    def sample_getReferencePosition(self):
+    def sample_getReferencePosition(self, linkname='LARM_JOINT5'):
         '''
         @rtype geometry_msgs/Vector3
         '''
@@ -204,40 +216,65 @@ class SampleClientHironxRPC(object):
         rospy.wait_for_service(_srv_name)
         try:
             _srv_proxy = rospy.ServiceProxy(_srv_name, GetCartesianCommon)
-            linkname = 'LARM_JOINT5'
             framename = None
             _response = _srv_proxy(4, linkname, framename)
-            return _response.vec3
+            res = (_response.vec3.x, _response.vec3.y, _response.vec3.z)
+            return res
         except rospy.ServiceException, e:
             raise e
 
-    def sample_getReferenceRotation(self):
+    def sample_getReferenceRotation(self, linkname='LARM_JOINT5'):
         '''
-        @rtype tork_rpc_util/Float32List[]
+        @summary: API doc:
+            Definition: robot.getReferenceRotation(self, lname, frame_name=None)
+            Docstring:
+            !@brief
+            Returns the current commanded rotation of the specified joint.
+            cf. getCurrentRotation that returns physical value.
+
+            @type lname: str
+            @param lname: Name of the link.
+            @param frame_name str: set reference frame name (from 315.2.5)
+            @rtype: list of float
+            @return: Rotational matrix of the given joint in 2-dimensional list,
+                     that is:
+
+            erbatim
+                     [[a11, a12, a13],
+                      [a21, a22, a23],
+                      [a31, a32, a33]]
+            \endverbatim
+
+        @rtype [[float]]
         '''
         _srv_name = 'srv_getReferenceRotation'
         rospy.wait_for_service(_srv_name)
         try:
             _srv_proxy = rospy.ServiceProxy(_srv_name, GetCartesianCommon)
-            linkname = 'LARM_JOINT5'
             framename = None
             _response = _srv_proxy(5, linkname, framename)
-            return _response.rot
+            res_list = []
+            for row in _response.rot:
+                row_list = []
+                for e in row.data:
+                    row_list.append(e)
+                res_list.append(row_list)
+            return res_list
         except rospy.ServiceException, e:
             raise e
 
-    def sample_getReferenceRPY(self):
+    def sample_getReferenceRPY(self, linkname='LARM_JOINT5'):
         '''
-        @rtype geometry_msgs/Vector3
+        @rtype (float, float, float) 
         '''
         _srv_name = 'srv_getReferenceRPY'
         rospy.wait_for_service(_srv_name)
         try:
             _srv_proxy = rospy.ServiceProxy(_srv_name, GetCartesianCommon)
-            linkname = 'LARM_JOINT5'
             framename = None
             _response = _srv_proxy(6, linkname, framename)
-            return _response.vec3
+            res = (_response.vec3.x, _response.vec3.y, _response.vec3.z) 
+            return res
         except rospy.ServiceException, e:
             raise e
 
@@ -315,13 +352,23 @@ class SampleClientHironxRPC(object):
         except rospy.ServiceException, e:
             raise e
 
-    def sample_getReferencePose(self):
+    def sample_getReferencePose(self, linkname='LARM_JOINT5'):
+        '''
+        @summary: No API doc available online for the ROS service used for
+                  this. .srv file content:
+
+                    $ more /opt/ros/indigo/share/hrpsys_ros_bridge/srv/OpenHRP_ForwardKinematicsService_getReferencePose.srv
+                    string linkname
+                    ---
+                    bool operation_return
+                    RTC_TimedDoubleSeq pose
+        @rtype 
+        '''
         _srv_name = 'ForwardKinematicsServiceROSBridge/getReferencePose'
         rospy.wait_for_service(_srv_name)
         try:
             _srv_proxy = rospy.ServiceProxy(
                 _srv_name, OpenHRP_ForwardKinematicsService_getReferencePose)
-            linkname = 'LARM_JOINT5'
             _response = _srv_proxy(linkname)
             return _response
         except rospy.ServiceException, e:
