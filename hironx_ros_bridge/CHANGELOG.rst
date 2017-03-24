@@ -2,6 +2,12 @@
 Changelog for package hironx_ros_bridge
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* [Improve][rtm py] Return more specific error when actual error occurs. `#487 <https://github.com/start-jsk/rtmros_hironx/issues/487>`_.
+* [test] Export a common test py module. `#490 <https://github.com/start-jsk/rtmros_hironx/issues/490>`_.
+* Contributors: Isaac I.Y. Saito
+
 1.1.21 (2017-03-16)
 -------------------
 * [fix][hironx py] Let setTargetPose fail when invalid kinematic group name passed. `#470 <https://github.com/start-jsk/rtmros_hironx/pull/470>`_

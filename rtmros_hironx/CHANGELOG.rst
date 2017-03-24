@@ -2,6 +2,9 @@
 Changelog for package rtmros_hironx
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+
 1.1.21 (2017-03-16)
 -------------------
 * [fix][hironx py] Let setTargetPose fail when invalid kinematic group name passed. `#470 <https://github.com/start-jsk/rtmros_hironx/pull/470>`_
