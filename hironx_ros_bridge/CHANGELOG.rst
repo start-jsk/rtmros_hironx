@@ -2,8 +2,8 @@
 Changelog for package hironx_ros_bridge
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.1.22 (2017-03-24)
+-------------------
 * [Improve][rtm py] Return more specific error when actual error occurs. `#487 <https://github.com/start-jsk/rtmros_hironx/issues/487>`_.
 * [test] Export a common test py module. `#490 <https://github.com/start-jsk/rtmros_hironx/issues/490>`_.
 * Contributors: Isaac I.Y. Saito
