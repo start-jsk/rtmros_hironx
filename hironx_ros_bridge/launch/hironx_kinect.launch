@@ -5,7 +5,8 @@
        Head on HIRO014 is customed. Values need to be filled for normal, COTS model robots. -->
   <arg name="TF_COORD_XYZ_HIRO014" value="0.062367406594775215 0.07536259323525744 0.12330820494245931" />
   <arg name="TF_COORD_RPY_HIRO014" value="-0.03346088258363324 0.1383150116022393 -0.014468436806528857" />
-  <arg name="TF_COORD" default ="$(arg TF_COORD_XYZ_HIRO014) $(arg TF_COORD_RPY_HIRO014)" />
+  <arg name="TF_COORD" default ="$(arg TF_COORD_XYZ_HIRO014) $(arg TF_COORD_RPY_HIRO014)"
+       description="6 float values of position (xyz) and orientation (rpy). Default values are for Hironx someone owns. You better fill this in with the values from your own robot."/>
 
   <include file="$(find openni2_launch)/launch/openni2.launch" >
     <arg name="depth_registration" default="true" />
