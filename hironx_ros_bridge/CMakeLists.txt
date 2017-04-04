@@ -109,5 +109,5 @@ if (CATKIN_ENABLE_TESTING)
   catkin_add_nosetests(test/test_no_ros.py)
 endif()
 
-roslint_python(scripts/hironx.py src/hironx_ros_bridge/hironx_client.py src/hironx_ros_bridge/ros_client.py src/hironx_ros_bridge/constant.py)
+roslint_python(scripts/hironx.py src/hironx_ros_bridge/hironx_client.py src/hironx_ros_bridge/ros_client.py src/hironx_ros_bridge/constant.py src/hironx_ros_bridge/testutil/test_rosbridge.py)
 roslint_cpp()
