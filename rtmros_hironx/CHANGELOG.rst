@@ -2,6 +2,13 @@
 Changelog for package rtmros_hironx
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* [enhancement][test] Common testcase module location change `#490 <https://github.com/start-jsk/rtmros_hironx/issues/490>`_.
+* [doc] More elaboration on startImpedance* methods.
+* [doc][calib] Cleanup pkg description.
+* Contributors: Isaac I.Y. Saito
+
 1.1.22 (2017-03-24)
 -------------------
 

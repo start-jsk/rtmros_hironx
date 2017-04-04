@@ -2,6 +2,11 @@
 Changelog for package hironx_calibration
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* [doc][calib] Cleanup pkg description.
+* Contributors: Isaac I.Y. Saito
+
 1.1.22 (2017-03-24)
 -------------------
 

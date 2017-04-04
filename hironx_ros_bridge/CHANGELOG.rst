@@ -2,6 +2,12 @@
 Changelog for package hironx_ros_bridge
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* [enhancement][test] Common testcase module location change `#490 <https://github.com/start-jsk/rtmros_hironx/issues/490>`_.
+* [doc] More elaboration on startImpedance* methods.
+* Contributors: Isaac I.Y. Saito
+
 1.1.22 (2017-03-24)
 -------------------
 * [Improve][rtm py] Return more specific error when actual error occurs. `#487 <https://github.com/start-jsk/rtmros_hironx/issues/487>`_.
