@@ -39,7 +39,7 @@ import rospy
 from tf.transformations import quaternion_matrix, euler_from_matrix
 import time
 
-from hironx_ros_bridge.testutil.test_hironx_ros_bridge import TestHiroROSBridge
+from hironx_ros_bridge.testutil.test_rosbridge import TestHiroROSBridge
 
 PKG = 'hironx_ros_bridge'
 
