@@ -886,6 +886,16 @@ class HIRONX(HrpsysConfigurator2):
                        avoid_gain = 0.0,
                        reference_gain = 0.0,
                        manipulability_limit = 0.1):
+        '''
+        @type arm: str name of artm to be controlled, this must be initialized
+                   using setSelfGroups()
+        @param ref_{force, moment}: Target values at the target position.
+                                    Units: N, Nm, respectively.
+        @param {force, moment}_gain: multipliers to the eef offset position
+                                     vel_p and orientation vel_r. 3-dimensional
+                                     vector (then converted internally into a
+                                     diagonal matrix).
+        '''
         ic_sensor_name = 'rhsensor'
         ic_target_name = 'RARM_JOINT5'
         if arm == 'rarm':
@@ -942,6 +952,14 @@ class HIRONX(HrpsysConfigurator2):
                        avoid_gain = 0.0,
                        reference_gain = 0.0,
                        manipulability_limit = 0.1):
+        '''
+        @type arm: str name of artm to be controlled, this must be initialized
+                   using setSelfGroups()
+        @param {force, moment}_gain: multipliers to the eef offset position
+                                     vel_p and orientation vel_r. 3-dimensional
+                                     vector (then converted internally into a
+                                     diagonal matrix).
+        '''
         self.ic_svc.setImpedanceControllerParam(
             arm,
             OpenHRP.ImpedanceControllerService.impedanceParam(
@@ -972,6 +990,14 @@ class HIRONX(HrpsysConfigurator2):
                        avoid_gain = 0.0,
                        reference_gain = 0.0,
                        manipulability_limit = 0.1):
+        '''
+        @type arm: str name of artm to be controlled, this must be initialized
+                   using setSelfGroups()
+        @param {force, moment}_gain: multipliers to the eef offset position
+                                     vel_p and orientation vel_r. 3-dimensional
+                                     vector (then converted internally into a
+                                     diagonal matrix).
+        '''
         r, p = self.ic_svc.getImpedanceControllerParam(arm)
         if not r:
             print('{}, Failt to getImpedanceControllerParam({})'.format(self.configurator_name, arm))
@@ -998,6 +1024,20 @@ class HIRONX(HrpsysConfigurator2):
         return self.ic_svc.stopImpedanceController(arm)
 
     def startImpedance(self, arm, **kwargs):
+        '''
+        Enable the ImpedanceController RT component.
+        This method internally calls startImpedance-*, hrpsys version-specific
+        method.
+
+        @requires: ImpedanceController RTC to be activated on the robot's
+                   controller.
+        @param arm: Name of the kinematic group (i.e. self.Groups[n][0]).
+        @param kwargs: This varies depending on the version of hrpsys your
+                       robot's controller runs on
+                       (which you can find by "self.hrpsys_version" command).
+                       For instance, if your hrpsys is 315.10.1, refer to
+                       "startImpedance_315_4" method.
+        '''
         if StrictVersion(self.hrpsys_version) < StrictVersion('315.2.0'):
             self.startImpedance_315_1(arm, **kwargs)
         elif StrictVersion(self.hrpsys_version) < StrictVersion('315.3.0'):
