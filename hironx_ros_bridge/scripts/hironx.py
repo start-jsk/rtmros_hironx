@@ -52,6 +52,10 @@ from hironx_ros_bridge.ros_client import ROS_Client
 from hrpsys import rtm
 import argparse
 
+errormsg_noros = 'No ROS Master found. Without it, you cannot use ROS from' \
+                 ' this script, but can use RTM. To use ROS, do not forget' \
+                 ' to run rosbridge. How to do so? --> http://wiki.ros.org/rtmros_nextage/Tutorials/Operating%20Hiro%2C%20NEXTAGE%20OPEN'
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='hiro command line interpreters')
     parser.add_argument('--host', help='corba name server hostname')
@@ -81,9 +85,9 @@ if __name__ == '__main__':
     try:
         ros = ROS_Client()
     except ROSInitException as e:
-        print("\033[31m%s\n%s\033[0m" % (e.strerror, errormsg))
+        print('[nextage.py] {}'.format(e))
     except socket.error as e: 
-        print("\033[31m%s\n%s\033[0m" % (e.strerror, errormsg))
+        print("\033[31m%s\n%s\033[0m" % (e.strerror, errormsg_noros))
 
 # for simulated robot
 # $ ./hironx.py
