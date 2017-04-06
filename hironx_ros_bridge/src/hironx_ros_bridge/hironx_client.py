@@ -307,7 +307,16 @@ class HIRONX(HrpsysConfigurator2):
 
     HandGroups = {'rhand': [2, 3, 4, 5], 'lhand': [6, 7, 8, 9]}
 
-    RtcList = []
+    _RTClist = [
+            ['seq', "SequencePlayer"],
+            ['sh', "StateHolder"],
+            ['fk', "ForwardKinematics"],
+            ['ic', "ImpedanceController"],
+            ['el', "SoftErrorLimiter"],
+            # ['co', "CollisionDetector"],
+            ['sc', "ServoController"],
+            ['log', "DataLogger"],
+        ]
 
     # servo controller (grasper)
     sc = None
@@ -442,26 +451,16 @@ class HIRONX(HrpsysConfigurator2):
         @rerutrn List of available components. Each element consists of a list
                  of abbreviated and full names of the component.
         '''
-        rtclist = [
-            ['seq', "SequencePlayer"],
-            ['sh', "StateHolder"],
-            ['fk', "ForwardKinematics"],
-            ['ic', "ImpedanceController"],
-            ['el', "SoftErrorLimiter"],
-            # ['co', "CollisionDetector"],
-            ['sc', "ServoController"],
-            ['log', "DataLogger"],
-            ]
         if hasattr(self, 'rmfo'):
             self.ms.load("RemoveForceSensorLinkOffset")
             self.ms.load("AbsoluteForceSensor")
             if "RemoveForceSensorLinkOffset" in self.ms.get_factory_names():
-                rtclist.append(['rmfo', "RemoveForceSensorLinkOffset"])
+                self._RTClist.append(['rmfo', "RemoveForceSensorLinkOffset"])
             elif "AbsoluteForceSensor" in self.ms.get_factory_names():
-                rtclist.append(['rmfo', "AbsoluteForceSensor"])
+                self._RTClist.append(['rmfo', "AbsoluteForceSensor"])
             else:
                 print "Component rmfo is not loadable."
-        return rtclist
+        return self._RTClist
 
     # hand interface
     # effort: 1~100[%]
