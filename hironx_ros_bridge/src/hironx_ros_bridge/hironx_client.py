@@ -40,12 +40,17 @@ import time
 import roslib
 roslib.load_manifest("hrpsys")
 from hrpsys.hrpsys_config import *
-import OpenHRP
+import rtm
+import imp
+try:
+   imp.find_module('OpenHRP')
+   import OpenHRP
+   from OpenHRP import *
+except:
+   from OpenHRP3 import *
 import OpenRTM_aist
 import OpenRTM_aist.RTM_IDL
-import rtm
 from waitInput import waitInputConfirm, waitInputSelect
-
 
 SWITCH_ON = OpenHRP.RobotHardwareService.SWITCH_ON
 SWITCH_OFF = OpenHRP.RobotHardwareService.SWITCH_OFF
