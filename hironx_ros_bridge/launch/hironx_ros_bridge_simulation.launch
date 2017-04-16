@@ -1,5 +1,7 @@
 <launch>
   <arg name="GUI" default="true" />
+  <!-- See https://github.com/start-jsk/rtmros_hironx/issues/287#issuecomment-64893372 why this temporary hack is necessary. -->
+  <arg name="COLLADA_FILE" default="$(find hironx_ros_bridge)/models/kawada-hironx_issue287.dae" />
   <arg name="corbaport" default="15005" />
   <arg name="MODEL_FILE" default="$(find hironx_ros_bridge)/models/kawada-hironx.dae" />
   <arg name="CONF_FILE" default="$(find hironx_ros_bridge)/conf/kawada-hironx.conf" />
