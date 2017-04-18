@@ -1,0 +1,9 @@
+<launch>
+  <!-- This launch is specifically for the Xtion head for Hironx / NEXTAGE Open
+       that TORk produces. See http://opensource-robotics.tokyo.jp/?p=1337&lang=en
+       for more detail. -->
+
+  <!-- coordinate values should be worked out; these are not yet accurate. -->
+  <node pkg="tf" type="static_transform_publisher" name="head_link_to_xtion_link"
+        args="0.07 0.06 0.09 0 0.0 0 /HEAD_JOINT1_Link /camera_link 100" />
+</launch>

@@ -6,6 +6,7 @@
 
   <arg name="nameserver" default="hiro014" /> <!-- for real robot -->
   <arg name="MODEL_FILE" default="$(find hironx_ros_bridge)/models/kawada-hironx.dae" />
+  <arg name="CAMERA_XTION" default="false" />
   <arg name="COLLADA_FILE" default="$(find hironx_ros_bridge)/models/kawada-hironx.dae" />
   <arg name="SIMULATOR_NAME" default="RobotHardware0" />
   <arg name="corbaport" default="15005" />
@@ -60,5 +61,10 @@
     <!-- Load rqt GUI tool with a pre-setup GUI perspective file  -->
     <node pkg="rqt_gui" type="rqt_gui" name="rqt_hironxo" respawn="false" output="screen"
           args="--perspective-file $(find hironx_ros_bridge)/resource/hironx_rqt_dashboard.perspective"/>
+  </group>
+
+  <!-- add xtion head -->
+  <group if="$(arg CAMERA_XTION)">
+    <include file="$(find hironx_ros_bridge)/launch/hironxo_head_xtion.launch" />
   </group>
 </launch>
