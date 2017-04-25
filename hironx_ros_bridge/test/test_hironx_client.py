@@ -33,6 +33,7 @@
 # ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
 
+from hironx_ros_bridge.hironx_client import HIRONX
 from test_hironx import TestHiro
 
 PKG = 'hironx_ros_bridge'
@@ -40,8 +41,7 @@ PKG = 'hironx_ros_bridge'
 
 class TestHiroClient(TestHiro):
 
-    def test_getRTCList(self):
-        RTC_LIST = [
+    _RTC_LIST = [
             ['seq', "SequencePlayer"],
             ['sh', "StateHolder"],
             ['fk', "ForwardKinematics"],
@@ -50,8 +50,32 @@ class TestHiroClient(TestHiro):
             # ['co', "CollisionDetector"],
             ['sc', "ServoController"],
             ['log', "DataLogger"],
-            ]
-        self.assertListEqual(self.robot.getRTCList(), RTC_LIST)
+        ]
+
+    _RTC_LIST_CUSTOM = [
+            ['seq', "SequencePlayer"],
+            ['sh', "StateHolder"],
+            ['fk', "ForwardKinematics"],
+            ['el', "SoftErrorLimiter"],
+            ['co', "CollisionDetector"],
+            ['log', "DataLogger"],
+        ]
+
+    def test_getRTCList(self):
+        self.assertListEqual(self.robot.getRTCList(), self._RTC_LIST)
+
+    def test_getRTCList_customrtcs(self):
+        '''
+        Test when the RTC list was passed from the client.
+
+        Because this uses HIRONX.init(), which is already done in the
+        superclass, HIRONX class instance is re-generated within this method,
+        which is not elegant but as of now I can't think of a better way.
+        '''
+        self.robot = HIRONX()
+        self.robot.init(rtcs=self._RTC_LIST_CUSTOM)
+
+        self.assertListEqual(self.robot.getRTCList(), self._RTC_LIST_CUSTOM)
 
 if __name__ == '__main__':
     import rostest

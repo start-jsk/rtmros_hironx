@@ -328,7 +328,7 @@ class HIRONX(HrpsysConfigurator2):
                                "the function call was successful, since not " +
                                "all methods internally called return status")
 
-    def init(self, robotname="HiroNX(Robot)0", url=""):
+    def init(self, robotname="HiroNX(Robot)0", url="", rtcs=_RTClist):
         '''
         Calls init from its superclass, which tries to connect RTCManager,
         looks for ModelLoader, and starts necessary RTC components. Also runs
@@ -337,6 +337,11 @@ class HIRONX(HrpsysConfigurator2):
 
         @type robotname: str
         @type url: str
+        @type rtcs: [[str, str]]
+        @param rtcs: List of list of RTC names. Each inner list consists of
+            'SHORTENED' name and the 'FULLNAME'.
+
+            example: [['seq', "SequencePlayer"], ['sh', "StateHolder"],,,]
         '''
         # reload for hrpsys 315.1.8
         print(self.configurator_name + "waiting ModelLoader")
@@ -361,6 +366,8 @@ class HIRONX(HrpsysConfigurator2):
         # HrpsysConfigurator.init(self, robotname=robotname, url=url)
         self.sensors = self.getSensors(url)
 
+        if rtcs:
+            self._RTClist = rtcs
         # all([rtm.findRTC(rn[0], rtm.rootnc) for rn in self.getRTCList()]) # not working somehow...
         if set([rn[0] for rn in self.getRTCList()]).issubset(set([x.name() for x in self.ms.get_components()])) :
             print(self.configurator_name + "hrpsys components are already created and running")

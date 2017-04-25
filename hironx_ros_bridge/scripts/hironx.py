@@ -56,12 +56,23 @@ errormsg_noros = 'No ROS Master found. Without it, you cannot use ROS from' \
                  ' this script, but can use RTM. To use ROS, do not forget' \
                  ' to run rosbridge. How to do so? --> http://wiki.ros.org/rtmros_nextage/Tutorials/Operating%20Hiro%2C%20NEXTAGE%20OPEN'
 
+RTC_LIST = [
+            ['seq', "SequencePlayer"],
+            ['sh', "StateHolder"],
+            ['fk', "ForwardKinematics"],
+            ['ic', "ImpedanceController"],
+            ['el', "SoftErrorLimiter"],
+            # ['co', "CollisionDetector"],
+            ['sc', "ServoController"],
+            ['log', "DataLogger"],]
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='hiro command line interpreters')
     parser.add_argument('--host', help='corba name server hostname')
     parser.add_argument('--port', help='corba name server port number')
     parser.add_argument('--modelfile', help='robot model file nmae')
     parser.add_argument('--robot', help='robot modlule name (RobotHardware0 for real robot, Robot()')
+    parser.add_argument('--rtcs', help='RT components to activate. If nothing passed then default value will be used.')
     args, unknown = parser.parse_known_args()
     unknown = [u for u in unknown if u[:2] != '__'] # filter out ros arguments
 
@@ -73,13 +84,15 @@ if __name__ == '__main__':
         args.robot = "RobotHardware0" if args.host else "HiroNX(Robot)0"
     if not args.modelfile:
         args.modelfile = "/opt/jsk/etc/HIRONX/model/main.wrl" if args.host else ""
+    if not args.rtcs:
+        args.rtcs = RTC_LIST
 
     # support old style format
     if len(unknown) >= 2:
         args.robot = unknown[0]
         args.modelfile = unknown[1]
     robot = hiro = hironx_client.HIRONX()
-    robot.init(robotname=args.robot, url=args.modelfile)
+    robot.init(robotname=args.robot, url=args.modelfile, rtcs=args.rtcs)
 
     # ROS Client
     try:
