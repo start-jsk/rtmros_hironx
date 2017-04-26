@@ -56,15 +56,8 @@ errormsg_noros = 'No ROS Master found. Without it, you cannot use ROS from' \
                  ' this script, but can use RTM. To use ROS, do not forget' \
                  ' to run rosbridge. How to do so? --> http://wiki.ros.org/rtmros_nextage/Tutorials/Operating%20Hiro%2C%20NEXTAGE%20OPEN'
 
-RTC_LIST = [
-            ['seq', "SequencePlayer"],
-            ['sh', "StateHolder"],
-            ['fk', "ForwardKinematics"],
-            ['ic', "ImpedanceController"],
-            ['el', "SoftErrorLimiter"],
-            # ['co', "CollisionDetector"],
-            ['sc', "ServoController"],
-            ['log', "DataLogger"],]
+# The default RTCs for Hironx
+RTC_LIST = 'seq, sh, fk, ic, el, sc, log'
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='hiro command line interpreters')
@@ -72,7 +65,7 @@ if __name__ == '__main__':
     parser.add_argument('--port', help='corba name server port number')
     parser.add_argument('--modelfile', help='robot model file nmae')
     parser.add_argument('--robot', help='robot modlule name (RobotHardware0 for real robot, Robot()')
-    parser.add_argument('--rtcs', help='RT components to activate. If nothing passed then default value will be used.')
+    parser.add_argument('--rtcs', help="RT components to activate. If nothing passed then default value will be used. Example: '{}'".format(RTC_LIST))
     args, unknown = parser.parse_known_args()
     unknown = [u for u in unknown if u[:2] != '__'] # filter out ros arguments
 

@@ -47,24 +47,42 @@ class TestHiroClient(TestHiro):
             ['fk', "ForwardKinematics"],
             ['ic', "ImpedanceController"],
             ['el', "SoftErrorLimiter"],
-            # ['co', "CollisionDetector"],
             ['sc', "ServoController"],
             ['log', "DataLogger"],
+            # rmfo will be automatically added in getRTCList.
+            ['rmfo', 'RemoveForceSensorLinkOffset']
         ]
 
     _RTC_LIST_CUSTOM = [
             ['seq', "SequencePlayer"],
             ['sh', "StateHolder"],
             ['fk', "ForwardKinematics"],
-            ['el', "SoftErrorLimiter"],
-            ['co', "CollisionDetector"],
-            ['log', "DataLogger"],
+            ['rmfo', 'RemoveForceSensorLinkOffset']
         ]
 
-    def test_getRTCList(self):
-        self.assertListEqual(self.robot.getRTCList(), self._RTC_LIST)
+    def _compare_2dlist(self, twodim_list_a, twodim_list_b):
+        '''
+        Compare the first element in all elements of the 2nd list.
+        E.g. For [['a0', 'a1'], ['b0', 'b1'],..., ['n0', 'n1']], this method
+             checks a0, b0, n0
+        @rtype bool
+        '''
+        return set([a[0] for a in twodim_list_a]) == set(
+            [b[0] for b in twodim_list_b])
 
-    def test_getRTCList_customrtcs(self):
+    def test_getRTCList(self):
+        '''
+        Depending on the hrpsys version, different RTC implementation can be
+        returned, e.g. for "rmfo", older returns AbsoluteForceSensor while
+        newer does RemoveForceSensorLinkOffset. So in this testcase we only
+        check the first element of the returned list (e.g. "rmfo" instead of
+        its implementation).
+        '''
+        self.assertTrue(
+            self._compare_2dlist(
+                self.robot.getRTCList(), self._RTC_LIST))
+
+    def test_getRTCList_customrtcs_args_correct(self):
         '''
         Test when the RTC list was passed from the client.
 
@@ -73,9 +91,27 @@ class TestHiroClient(TestHiro):
         which is not elegant but as of now I can't think of a better way.
         '''
         self.robot = HIRONX()
-        self.robot.init(rtcs=self._RTC_LIST_CUSTOM)
+        # Passing 1st elems from _RTC_LIST_CUSTOM, to init method that calls
+        # internally getRTCList.
+        self.robot.init(rtcs='seq, sh, fk')
+        self.assertTrue(
+            self._compare_2dlist(
+                self.robot.getRTCList(), self._RTC_LIST_CUSTOM))
 
-        self.assertListEqual(self.robot.getRTCList(), self._RTC_LIST_CUSTOM)
+    def test_getRTCList_customrtcs_args_wrong(self):
+        '''
+        Test when the RTC list was passed from the client, in wrong format.
+        '''
+        # Passing the list of RTCs falling short of requirement.
+        self.assertRaises(
+            ValueError, self.robot.getRTCList, rtcs_str='seq, sh')
+
+        # Passing 1st elems from _RTC_LIST_CUSTOM,
+        # but list is not the right type of arg.
+        ## http://stackoverflow.com/a/6103930/577001
+        self.assertRaises(
+            TypeError, lambda: self.robot.getRTCList,
+                rtcs_str=['seq', 'sh', 'fk', 'el', 'co', 'log'])
 
 if __name__ == '__main__':
     import rostest

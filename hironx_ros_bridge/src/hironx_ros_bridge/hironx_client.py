@@ -307,7 +307,10 @@ class HIRONX(HrpsysConfigurator2):
 
     HandGroups = {'rhand': [2, 3, 4, 5], 'lhand': [6, 7, 8, 9]}
 
-    _RTClist = [
+    # This shouldn't be accessed once turned to True during `init` method.
+    is_rtc_activated = False
+
+    _RTC_list = [
             ['seq', "SequencePlayer"],
             ['sh', "StateHolder"],
             ['fk', "ForwardKinematics"],
@@ -317,6 +320,9 @@ class HIRONX(HrpsysConfigurator2):
             ['sc', "ServoController"],
             ['log', "DataLogger"],
         ]
+
+    # List of the name of RT Components that hrpsys requires at minimum.
+    _RTC_NAME_MINREQ = ['seq', 'sh', 'fk']
 
     # servo controller (grasper)
     sc = None
@@ -328,7 +334,7 @@ class HIRONX(HrpsysConfigurator2):
                                "the function call was successful, since not " +
                                "all methods internally called return status")
 
-    def init(self, robotname="HiroNX(Robot)0", url="", rtcs=_RTClist):
+    def init(self, robotname="HiroNX(Robot)0", url="", rtcs=None):
         '''
         Calls init from its superclass, which tries to connect RTCManager,
         looks for ModelLoader, and starts necessary RTC components. Also runs
@@ -337,11 +343,10 @@ class HIRONX(HrpsysConfigurator2):
 
         @type robotname: str
         @type url: str
-        @type rtcs: [[str, str]]
-        @param rtcs: List of list of RTC names. Each inner list consists of
-            'SHORTENED' name and the 'FULLNAME'.
+        @type rtcs: [str]
+        @param rtcs: List of abbreviated RTC names.
 
-            example: [['seq', "SequencePlayer"], ['sh', "StateHolder"],,,]
+            example: ['seq', 'sh',,,]
         '''
         # reload for hrpsys 315.1.8
         print(self.configurator_name + "waiting ModelLoader")
@@ -366,10 +371,8 @@ class HIRONX(HrpsysConfigurator2):
         # HrpsysConfigurator.init(self, robotname=robotname, url=url)
         self.sensors = self.getSensors(url)
 
-        if rtcs:
-            self._RTClist = rtcs
         # all([rtm.findRTC(rn[0], rtm.rootnc) for rn in self.getRTCList()]) # not working somehow...
-        if set([rn[0] for rn in self.getRTCList()]).issubset(set([x.name() for x in self.ms.get_components()])) :
+        if set([rn[0] for rn in self.getRTCList(rtcs)]).issubset(set([x.name() for x in self.ms.get_components()])) :
             print(self.configurator_name + "hrpsys components are already created and running")
             self.findComps(max_timeout_count=0, verbose=True)
         else:
@@ -450,24 +453,68 @@ class HIRONX(HrpsysConfigurator2):
                 self.seq_svc.waitInterpolationOfGroup(self.Groups[i][0])
         return ret
 
-    def getRTCList(self):
+    def getRTCList(self, rtcs_str=None):
         '''
+        @summary: Return the list of activated RT components. As opposed to
+                  its naming, this also:
+                      1) activate an rmfo (stands for "remove force offset")
+                         RTC.
+                      2) selectively activate RTCs passed by rtcs_str. This is
+                         possible ONLY during the initialization process done
+                         by `init` method.
         @see: HrpsysConfigurator.getRTCList
 
+        @type rtcs_str: str
+        @param rtcs_str: A single str for a set of abbreviated names of RTCs,
+                         each of which is comma-separated. This is possible
+                         ONLY during the initialization process done by
+                         `init` method.
+            example: "seq, sh, fk, ic, el, sc, log"
         @rtype [[str]]
-        @rerutrn List of available components. Each element consists of a list
+        @return List of available components. Each element consists of a list
                  of abbreviated and full names of the component.
+        @raise TypeError: When rtcs_str isn't a string.
+        @raise ValueError: When rtcs_str does not contain minimum
+                           required RTCs.
         '''
-        if hasattr(self, 'rmfo'):
+        if rtcs_str:
+            if self.is_rtc_activated:
+                print('RTCs are already activated. Skipping the passed request: {}'.format(rtcs_str))
+            else:
+                if not isinstance(rtcs_str, basestring):
+                    raise TypeError('rtcs_str needs to be string.')
+                # Set a new list of RTCs
+                new_rtcs = []
+                # Separate by comma and remove whitespace.
+                rtcs_req_list = [x.strip() for x in rtcs_str.split(",")]
+                # Check if minimum required RTCs are passed.
+                if not all(x in rtcs_req_list for x in self._RTC_NAME_MINREQ):
+                    raise ValueError('{} are required at minimum'.format(
+                        self._RTC_NAME_MINREQ))
+                for rtc_requested in rtcs_req_list:
+                    for elem in self._RTC_list:
+                        if elem[0] == rtc_requested:
+                            new_rtcs.append(elem)
+                            break
+                self._RTC_list = new_rtcs
+                self.is_rtc_activated = True
+
+        is_rmfo_initiated = False
+        # For some reason using built-in "any" method yields
+        # `TypeError: 'module' object is not callable`, so do the iteration.
+        for rtc_list in self._RTC_list:
+            if 'rmfo' in rtc_list:
+                is_rmfo_initiated = True
+        if hasattr(self, 'rmfo') and not is_rmfo_initiated:
             self.ms.load("RemoveForceSensorLinkOffset")
             self.ms.load("AbsoluteForceSensor")
             if "RemoveForceSensorLinkOffset" in self.ms.get_factory_names():
-                self._RTClist.append(['rmfo', "RemoveForceSensorLinkOffset"])
+                self._RTC_list.append(['rmfo', "RemoveForceSensorLinkOffset"])
             elif "AbsoluteForceSensor" in self.ms.get_factory_names():
-                self._RTClist.append(['rmfo', "AbsoluteForceSensor"])
+                self._RTC_list.append(['rmfo', "AbsoluteForceSensor"])
             else:
                 print "Component rmfo is not loadable."
-        return self._RTClist
+        return self._RTC_list
 
     # hand interface
     # effort: 1~100[%]
