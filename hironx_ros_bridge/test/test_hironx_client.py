@@ -41,18 +41,6 @@ PKG = 'hironx_ros_bridge'
 
 class TestHiroClient(TestHiro):
 
-    _RTC_LIST = [
-            ['seq', "SequencePlayer"],
-            ['sh', "StateHolder"],
-            ['fk', "ForwardKinematics"],
-            ['ic', "ImpedanceController"],
-            ['el', "SoftErrorLimiter"],
-            ['sc', "ServoController"],
-            ['log', "DataLogger"],
-            # rmfo will be automatically added in getRTCList.
-            ['rmfo', 'RemoveForceSensorLinkOffset']
-        ]
-
     _RTC_LIST_CUSTOM = [
             ['seq', "SequencePlayer"],
             ['sh', "StateHolder"],
@@ -80,7 +68,9 @@ class TestHiroClient(TestHiro):
         '''
         self.assertTrue(
             self._compare_2dlist(
-                self.robot.getRTCList(), self._RTC_LIST))
+                self.robot.getRTCList(),
+                # Accessing a private member var only for testing purpose. 
+                self.robot._RTC_list))
 
     def test_getRTCList_customrtcs_args_correct(self):
         '''

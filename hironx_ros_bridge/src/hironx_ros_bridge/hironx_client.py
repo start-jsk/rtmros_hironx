@@ -310,13 +310,25 @@ class HIRONX(HrpsysConfigurator2):
     # This shouldn't be accessed once turned to True during `init` method.
     is_rtc_activated = False
 
+    # Default set of RTCs to be activated.
     _RTC_list = [
             ['seq', "SequencePlayer"],
             ['sh', "StateHolder"],
             ['fk', "ForwardKinematics"],
             ['ic', "ImpedanceController"],
             ['el', "SoftErrorLimiter"],
-            # ['co', "CollisionDetector"],
+            ['sc', "ServoController"],
+            ['log', "DataLogger"],
+        ]
+
+    # All available RTCs. This list is meant to be immutable.
+    RTCs_all_available = [
+            ['seq', "SequencePlayer"],
+            ['sh', "StateHolder"],
+            ['fk', "ForwardKinematics"],
+            ['ic', "ImpedanceController"],
+            ['el', "SoftErrorLimiter"],
+            ['co', "CollisionDetector"],
             ['sc', "ServoController"],
             ['log', "DataLogger"],
         ]
@@ -491,8 +503,11 @@ class HIRONX(HrpsysConfigurator2):
                 if not all(x in rtcs_req_list for x in self._RTC_NAME_MINREQ):
                     raise ValueError('{} are required at minimum'.format(
                         self._RTC_NAME_MINREQ))
+
+                # Create a new list of requested RTC with the name of
+                # implementations.
                 for rtc_requested in rtcs_req_list:
-                    for elem in self._RTC_list:
+                    for elem in self.RTCs_all_available:
                         if elem[0] == rtc_requested:
                             new_rtcs.append(elem)
                             break
