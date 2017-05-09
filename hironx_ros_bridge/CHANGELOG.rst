@@ -2,6 +2,11 @@
 Changelog for package hironx_ros_bridge
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* [py] Better error msg, better doc about impedance control. `#496 <https://github.com/start-jsk/rtmros_hironx/pull/496>`_, `#499 <https://github.com/start-jsk/rtmros_hironx/pull/499>`_
+* Contributors: Isaac I.Y. Saito
+
 1.1.23 (2017-04-03)
 -------------------
 * [enhancement][test] Common testcase module location change `#490 <https://github.com/start-jsk/rtmros_hironx/issues/490>`_.
