@@ -1037,6 +1037,26 @@ class HIRONX(HrpsysConfigurator2):
                        (which you can find by "self.hrpsys_version" command).
                        For instance, if your hrpsys is 315.10.1, refer to
                        "startImpedance_315_4" method.
+        @change: (NOTE: This "change" block is a duplicate with the PR in the
+                 upstream https://github.com/fkanehiro/hrpsys-base/pull/1120.
+                 Once it gets merged this block should be removed to avoid
+                 duplicate maintenance effort.)
+
+                 From 315.2.0 onward, following arguments are dropped and can
+                 be set by self.seq_svc.setWrenches instead of this method.
+                 See an example at https://github.com/fkanehiro/hrpsys-base/pull/434/files#diff-6204f002204dd9ae80f203901f155fa9R44:
+                 - ref_force[fx, fy, fz] (unit: N) and
+                   ref_moment[tx, ty, tz] (unit: Nm) can be set via
+                   self.seq_svc.setWrenches. For example:
+
+                   self.seq_svc.setWrenches([0, 0, 0, 0, 0, 0,
+                                             fx, fy, fz, tx, ty, tz,
+                                             0, 0, 0, 0, 0, 0,
+                                             0, 0, 0, 0, 0, 0,])
+
+                   setWrenches takes 6 values per sensor, so the robot in
+                   the example above has 4 sensors where each line represents
+                   a sensor. See this link (https://github.com/fkanehiro/hrpsys-base/pull/434/files) for a concrete example.
         '''
         if StrictVersion(self.hrpsys_version) < StrictVersion('315.2.0'):
             self.startImpedance_315_1(arm, **kwargs)
