@@ -1000,7 +1000,7 @@ class HIRONX(HrpsysConfigurator2):
         '''
         r, p = self.ic_svc.getImpedanceControllerParam(arm)
         if not r:
-            print('{}, Failt to getImpedanceControllerParam({})'.format(self.configurator_name, arm))
+            print('{}, impedance parameter not found for {}.'.format(self.configurator_name, arm))
             return False
         if M_p != None: p.M_p = M_p
         if D_p != None: p.M_p = D_p
