@@ -673,6 +673,22 @@ class HIRONX(HrpsysConfigurator2):
         Turn on servo motors at joint specified.
         Joints need to be calibrated (otherwise error returns).
 
+        *Troubleshooting*
+        When this method does not seem to function as expected, try the
+        following first before you report to the developer's community:
+
+        - Manually move the arms to the safe pose where arms do not obstruct
+          to anything and they can move back to the initial pose by goInitial.
+          Then run the command again.
+        - Make sure the emergency switch is toggled back.
+        - Try running goActual() then servoOn().
+
+        If none of the above did not solve your issue, please report with:
+        - The result of this command (%ROSDISTRO% is "indigo" as of May 2017):
+
+            Ubuntu$ rosversion hironx_ros_bridge
+            Ubuntu$ dpkg -p ros-%ROSDISTRO%-hironx-ros-bridge
+
         @type jname: str
         @param jname: The value 'all' works iteratively for all servos.
         @param destroy: Not used.
