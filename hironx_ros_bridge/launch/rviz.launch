@@ -1,6 +1,6 @@
 <launch> 
   <arg name="RVIZ_FIXEDFRAME" default="WAIST" />
-  <arg name="command_args" value="--fixed-frame $(arg RVIZ_FIXEDFRAME) -d $(find hironx_ros_bridge)/launch/hironxo.rviz" />
+  <arg name="command_args" default="--fixed-frame $(arg RVIZ_FIXEDFRAME) -d $(find hironx_ros_bridge)/launch/hironxo.rviz" />
   
   <!-- Passing true to `debug` allows you to run this launch on gdb. -->
   <arg name="debug" default="false" />
