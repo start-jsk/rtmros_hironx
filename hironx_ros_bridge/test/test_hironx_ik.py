@@ -24,6 +24,8 @@ import numpy as np
 
 from rtm import connectPorts, disconnectPorts
 
+from distutils.version import StrictVersion
+
 class TestHiroIK(unittest.TestCase):
 
     @classmethod
@@ -100,6 +102,34 @@ class TestHiroIK(unittest.TestCase):
         self.robot.waitInterpolationOfGroup("TORSO")
         ret = self.robot.setTargetPose("larm", [0.3255627368715471, 0.1823638733778268, 0.07462449717662004+0.2], [-3.0732189053889805, -1.5690225912054285, 3.0730289207320203], 5, "CHEST_JOINT0")
         self.assertTrue(ret)
+
+    def test_set_target_pose_clear(self):
+        if StrictVersion(self.robot.hrpsys_version) < StrictVersion('315.5.0'):
+            return
+        self.robot.goInitial(tm=3)
+        # https://github.com/tork-a/rtmros_nextage/issues/332
+        self.robot.connectLoggerPort(self.robot.el, 'beepCommand') # Just for checking
+        ret = self.robot.setTargetPose("larm", [0.3255627368715471, 0.1823638733778268, 0.07462449717662004+0.2], [-3.0732189053889805, -1.5690225912054285, 3.0730289207320203], 5, "CHEST_JOINT0")
+        self.robot.waitInterpolationOfGroup("larm")
+        self.assertTrue(ret)
+
+        ret = self.robot.setTargetPose("larm", [0.3255627368715471, 0.1823638733778268, 0.07462449717662004-0.1], [-3.0732189053889805, -1.5690225912054285, 3.0730289207320203], 5, "CHEST_JOINT0")
+        import time
+        time.sleep(1)
+        self.robot.clearOfGroup('larm')
+        self.assertTrue(ret)
+
+        self.robot.clearLog()
+        self.robot.setMaxLogLength(2000)
+        ret = self.robot.setTargetPose("larm", [0.3255627368715471, 0.1823638733778268, 0.07462449717662004+0.2], [-3.0732189053889805, -1.5690225912054285, 3.0730289207320203], 5, "CHEST_JOINT0")
+        self.robot.waitInterpolationOfGroup("larm")
+        self.robot.saveLog(fname='/tmp/test_hironx_ik')
+        print("check /tmp/test_hironx_ik.el_beepCommand")
+        fp = open('/tmp/test_hironx_ik.el_beepCommand', "r")
+        for l in fp:
+            print l
+            assert(False)
+
 
     def test_set_target_pose_relative_319(self): # https://github.com/start-jsk/rtmros_hironx/issues/319
         self.robot.goInitial(tm=3)
