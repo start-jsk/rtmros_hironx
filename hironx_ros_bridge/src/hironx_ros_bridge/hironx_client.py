@@ -1122,7 +1122,11 @@ class HIRONX(HrpsysConfigurator2):
     def clearOfGroup(self, limb):
         '''!@brief
         Clears the Sequencer's current operation for joint groups.
+        @since 315.5.0
         '''
+        if StrictVersion(self.seq_version) < StrictVersion('315.5.0'):
+            raise RuntimeError('clearOfGroup is not available with your '
+                               'software version ' + self.seq_version)
         HrpsysConfigurator.clearOfGroup(self, limb)
         angles = self.getJointAnglesOfGroup(limb)
         print self.configurator_name, 'clearOfGroup(' + limb + ') will send ' + str(angles) + ' to update seqplay until https://github.com/fkanehiro/hrpsys-base/pull/1141 is available'

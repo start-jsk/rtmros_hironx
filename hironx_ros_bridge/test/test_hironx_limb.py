@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+from distutils.version import StrictVersion
+
 from test_hironx import *
 
 class TestHiroLimb(TestHiro):
@@ -64,6 +66,11 @@ class TestHiroLimb(TestHiro):
 
 
     def test_rarm_setJointAngles_Clear (self):
+        if StrictVersion(self.robot.hrpsys_version) < StrictVersion('315.5.0'):
+            # clearOfGroup is not available until '315.5.0'
+            self.assertTrue(True)
+            return
+
         self.limbbody_init()
         # check if clear stops interpolation
         clear_time = [4.5, 4.0, 3.5, 3.0, 2.5, 2.0, 1.5, 1.0]
