@@ -1,14 +1,15 @@
 #!/bin/bash
 
 function usage {
-    echo >&2 "usage: $1 [hostname (default:hiro019)]"
+    echo >&2 "usage: $1 [hostname (default:nextage)]"
+    echo >&2 "       $2 [ossuser_qnx (default:tork)]"
     echo >&2 "          [-h|--help] Print help message."
     exit 0
 }
 
 # command line parse. If the num of argument is not as expected, call usage func.
 OPT=`getopt -o h -l help -- $*`
-if [ $# != 1 ]; then
+if [ $# -lt 1 ]; then
     usage
 fi
 
@@ -23,8 +24,9 @@ while [ -n "$1" ] ; do
 done
 
 hostname=$1
-hostname=${hostname:="hiro019"} 
-ossuser_qnx="tork"
+hostname=${hostname:="nextage"} 
+ossuser_qnx=$2
+ossuser_qnx=${ossuser_qnx:="tork"}
 OSS_FOLDER='/opt/jsk'
 OSS_FOLDER_LOG=${OSS_FOLDER}/var/log
 DATE=`date +"%Y%m%d-%H%M%S"`
@@ -52,6 +54,12 @@ commands="
   "
 
 IS_SUCCESS=1
+
+echo "** You can open the script and check inside **"
+echo "** if you are unsure about the content of this script. **"
+echo "** You can also find the same script source online at **"
+echo "** https://github.com/start-jsk/rtmros_hironx/blob/indigo-devel/hironx_ros_bridge/robot/qnx_fetch_log.sh **"
+echo "** Report if there's any issue for this script at https://github.com/start-jsk/rtmros_hironx/issues **"
 
 read -p "Run the command @ $hostname (y/n)? "
 if [ "$REPLY" == "y" ]; then
