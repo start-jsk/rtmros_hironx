@@ -3,6 +3,7 @@
 function usage {
     echo >&2 "usage: $1 [hostname (default:nextage)]"
     echo >&2 "       $2 [ossuser_qnx (default:tork)]"
+    echo >&2 "       $3 [date_specifier (default:none. Format: yyyymmdd, or it can be partial, e.g. yyyymm. Searches the files whose name matches the given string.)]"
     echo >&2 "          [-h|--help] Print help message."
     exit 0
 }
@@ -27,6 +28,8 @@ hostname=$1
 hostname=${hostname:="nextage"} 
 ossuser_qnx=$2
 ossuser_qnx=${ossuser_qnx:="tork"}
+date_specifier=$3
+date_specifier=${date_specifier:=""}  # By default this isn't set, so fetch files for all dates.
 OSS_FOLDER='/opt/jsk'
 OSS_FOLDER_LOG=${OSS_FOLDER}/var/log
 DATE=`date +"%Y%m%d-%H%M%S"`
@@ -47,7 +50,7 @@ commands="
   set +x;
 
   echo '* Create tarball of ${OSS_FOLDER_LOG} *';
-  tar cfvz opt_jsk_var_logs_${DATE}.tgz ${OSS_FOLDER_LOG}/* || echo '* Failed to create tarball *';
+  tar cfvz opt_jsk_var_logs_${DATE}.tgz ${OSS_FOLDER_LOG}/*${date_specifier}* || echo '* Failed to create tarball *';
 
   echo '* Exitting ssh session to QNX. *';
   exit;
