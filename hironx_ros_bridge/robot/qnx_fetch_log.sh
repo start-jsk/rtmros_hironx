@@ -1,7 +1,7 @@
 #!/bin/bash
 
 function usage {
-    echo >&2 "usage: $0 [hostname (default:hiro019)]"
+    echo >&2 "usage: $1 [hostname (default:hiro019)]"
     echo >&2 "          [-h|--help] Print help message."
     exit 0
 }
