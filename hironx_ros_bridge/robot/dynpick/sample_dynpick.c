@@ -61,7 +61,7 @@ main (int argc, char **argv)
     }
 
   /* Open a connection to the server (fd == coid) */
-  fd = open ("/dev/jr3q", O_RDWR);
+  fd = open ("/dev/serusb1", O_RDWR);
   if (fd == -1)
     {
       fprintf (stderr, "Unable to open server connection: %s\n",
