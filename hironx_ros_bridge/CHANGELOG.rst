@@ -2,6 +2,12 @@
 Changelog for package hironx_ros_bridge
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* [QNX log fetch] Fix to get it working again.
+* [QNX log fetch] Add a feature to remove existing .log files on QNX to save disk space. `#508 <https://github.com/start-jsk/rtmros_hironx/pull/508>`_
+* Contributors: Isaac I.Y. Saito
+
 1.1.24 (2017-05-09)
 -------------------
 * [py] Better error msg, better doc about impedance control. `#496 <https://github.com/start-jsk/rtmros_hironx/pull/496>`_, `#499 <https://github.com/start-jsk/rtmros_hironx/pull/499>`_
