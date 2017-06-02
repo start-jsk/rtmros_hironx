@@ -1,0 +1,11 @@
+#Request definition
+# Used to identify which method to be used.
+# 1: goInit
+# 2: goOffPose
+int8 method_type_id
+uint8 time  # time_to_complete
+bool wait
+uint8 init_pose_type
+---
+#Response definition
+bool success

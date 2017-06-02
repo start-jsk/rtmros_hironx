@@ -1,0 +1,9 @@
+#Request definition
+# default: all hands. As of March 2017 this isn't used and every time the
+# service called effort values get applied for all hands joints. This variable
+# is still defined for future purpose.  
+string  kinematic_group   
+int8    effort  # range 1-100
+---
+#Response definition
+# None returned.

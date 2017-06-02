@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<package>
+  <name>hironx_rpc_server</name>
+  <version>0.0.1</version>
+  <description>This package provides RPC (Remote Procedure Call) server
+  feature for higher level of robot operations for the Hironx-variant robots
+  (i.e. Hironx, NEXTAGE Open).
+  </description>
+  <maintainer email="todotodotodo@keio.jp">Keio University Yamaguchi Lab</maintainer>
+  <author email="dev@opensource-robotics.tokyo.jp">TORK</author>
+  <license>BSD</license>
+  <url type="website">http://wiki.ros.org/hironx_rpc</url>
+  <url type="repository">https://github.com/start-jsk/rtmros_hironx</url>
+  <url type="bugtracker">https://github.com/start-jsk/rtmros_hironx/issues</url>
+
+  <buildtool_depend>catkin</buildtool_depend>
+  <build_depend>roslint</build_depend>
+  <run_depend>hironx_ros_bridge</run_depend>
+  <run_depend>hironx_rpc_msgs</run_depend>
+  <run_depend>hrpsys</run_depend>
+  <run_depend>hrpsys_ros_bridge</run_depend>
+  <run_depend>tork_rpc_util</run_depend>
+  <test_depend>rostest</test_depend>
+
+  <export>
+    <rosdoc config="rosdoc.yaml" />>
+  </export>export>
+</package>

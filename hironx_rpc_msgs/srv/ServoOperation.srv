@@ -1,0 +1,13 @@
+#Request definition
+# Used to identify which method to be used.
+# 1: servoOn
+# 2: servoOff
+# 3: isServoOn
+int8 method_type_id
+string joint_name
+bool   wait
+int8   time  # time to complete the task.
+---
+#Response definition
+int8 result_on  # servoOn and servoOff returns different value format.
+bool result_off

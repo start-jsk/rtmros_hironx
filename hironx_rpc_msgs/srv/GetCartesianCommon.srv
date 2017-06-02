@@ -1,0 +1,25 @@
+# This is a srv commonly used for the services that use the same I/O data format
+# such as get{Current, Reference}{Position, RPY} and get{Current, Reference}RPY.
+#
+# For get{Current, Reference}RPY, which returns a tuple, this srv defines the
+# return value as Vector3 simply because there's no way in ROS srv formatting
+# to define tuple. This forces application deverlopers to convert list to tuple.
+#  
+#Request definition
+# Used to identify which method to be used.
+# 1: getCurrentPosition
+# 2: getCurrentRotation
+# 3: getCurrentRPY
+# 4: getReferencePosition
+# 5: getReferenceRotation
+# 6: getReferenceRPY
+int8 method_type_id
+string linkname
+string  frame_name
+---
+#Response definition
+# Empty for get{Current, Reference}RPY.
+# Can be position in xyz or orientation in rpy.
+geometry_msgs/Vector3 vec3
+# Empty for get{Current, Reference}{Position, RPY}.
+tork_rpc_util/Float32List[] rot

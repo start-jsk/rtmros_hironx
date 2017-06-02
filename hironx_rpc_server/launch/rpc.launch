@@ -1,0 +1,16 @@
+<launch>
+  <arg name="CORBA_NAMESERVER_NAME" default="hiro" />
+  <arg name="CORBA_PORT" default="15005" doc="Value set here is Hironx's default." />
+  <arg name="MODELFILE_HRPSYS" default="/opt/jsk/etc/HIRONX/model/main.wrl" doc="Default value is for a real robot." />
+  <arg name="ROBOTNAME_HRPSYS" default="RobotHardware" doc="Default value is for a real robot." />
+  <arg name="SLEEP_INIT_RTMCLIENT" default="1.0" doc="Seconds to sleep before RTM client initializes." />
+
+  <node pkg="hironx_rpc_server" type="rpc_server_script.py" output="screen"
+        name="rpc_servers_handler" respawn="true">
+    <param name="CORBA_NAMESERVER_NAME" value="$(arg CORBA_NAMESERVER_NAME)" />
+    <param name="CORBA_PORT" value="$(arg CORBA_PORT)" />
+    <param name="MODELFILE_HRPSYS" value="$(arg MODELFILE_HRPSYS)" />
+    <param name="ROBOTNAME_HRPSYS" value="$(arg ROBOTNAME_HRPSYS)" />
+    <param name="SLEEP_INIT_RTMCLIENT" value="$(arg SLEEP_INIT_RTMCLIENT)" />
+  </node>
+</launch>

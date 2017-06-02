@@ -1,0 +1,24 @@
+<launch>
+  <arg name="CORBA_PORT" default="2809" />
+  <arg name="SLEEP_INIT_RTMCLIENT" default="10.0" />
+
+  <!-- BEGIN RTM processes -->
+  <include file="$(find hironx_ros_bridge)/test/test-hironx-ros-bridge-common.launch">
+    <arg name="corbaport" value="$(arg CORBA_PORT)" />
+    <arg name="GUI" value="false" />
+  </include>
+  <!-- END RTM processes -->
+
+  <include file="$(find hironx_rpc_server)/launch/rpc_sim.launch"
+           pass_all_args="true" />
+
+  <!-- Not sure why, but other .test in hironx_ros_bridge are passing CORBA 
+       args so just follow that tradition. 
+       May not be necessary for this .py (which does NOT use RTM client). See:
+       https://github.com/start-jsk/rtmros_hironx/blob/f887fb72bfdd8536433c9772b5f21a088ee98c1e/hironx_ros_bridge/test/test-hironx-ros-bridge.test#L19
+  -->
+ 
+  <test pkg="hironx_rpc_server" type="test_ros_rpc.py"
+        test-name="rpc_py" time-limit="240" retry="4"
+        args="-ORBInitRef NameService=corbaloc:iiop:localhost:$(arg CORBA_PORT)/NameService" />
+</launch>

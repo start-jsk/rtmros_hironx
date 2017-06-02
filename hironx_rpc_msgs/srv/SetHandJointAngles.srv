@@ -1,0 +1,12 @@
+#Request definition
+# Used to identify which method to be used.
+# 1: setHandJointAngles
+# 2: moveHand
+int8 method_type_id
+# E.g. 'lhand', 'rhand', 'centerhand'
+string     handgroup_name
+float32[]  angles
+int8       time  
+---
+#Response definition
+bool result

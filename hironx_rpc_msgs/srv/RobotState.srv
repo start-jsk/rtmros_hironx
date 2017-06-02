@@ -1,0 +1,21 @@
+# Container of the output of HrpsysConfigurator.getActualState().
+#
+# Example output from HrpsysConfigurator.getActualState():
+#   OpenHRP.RobotHardwareService.RobotState(angle=[0.0, 0.0, 0.0, 0.0, -0.010471975511965976, 0.0, -1.7453292519943295, 0.26529004630313807, 0.16406094968746698, 0.05585053606381855, 0.0, 0.0, 0.0, 0.0, 0.010471975511965976, 0.0, -1.7453292519943295, -0.26529004630313807, 0.16406094968746698, -0.05585053606381855, 0.0, 0.0, 0.0, 0.0], command=[0.0, 0.0, 0.0, 0.0, -0.010471975511965976, 0.0, -1.7453292519943295, 0.26529004630313807, 0.16406094968746698, 0.05585053606381855, 0.0, 0.0, 0.0, 0.0, 0.010471975511965976, 0.0, -1.7453292519943295, -0.26529004630313807, 0.16406094968746698, -0.05585053606381855, 0.0, 0.0, 0.0, 0.0], torque=[], servoState=[[7], [7], [7], [7], [7], [7], [7], [7], [7], [7], [7], [7], [7], [7], [7], [7], [7], [7], [7], [7], [7], [7], [7], [7]], force=[[0.0, 0.0, 0.0, 0.0, 0.0, 0.0], [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]], rateGyro=[], accel=[], voltage=0.0, current=0.0)
+#
+# NOTE: As you see in the output example above, "servoState" and "force" are
+#       multi-dimensional list, which is not well supported in ROS messaging
+#       architecture as of March 2017. tork_rpc_util/{Int8List, Float32List}
+#       are introduced in order to work this around. 
+#Request definition
+---
+#Response definition
+float32[] angle
+float32[] command 
+float32[] torque
+tork_rpc_util/Int8List[] servoState
+tork_rpc_util/Float32List[] force
+float32[] rateGyro
+float32[] accel
+float32 voltage
+float32 current

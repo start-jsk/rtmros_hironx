@@ -1,0 +1,9 @@
+#goal definition
+uint8 tm  # time_to_complete
+bool wait
+uint8 init_pose_type
+---
+#result definition
+bool res  # Return the method's return value. True if the method returns successfully.
+---
+#feedback
