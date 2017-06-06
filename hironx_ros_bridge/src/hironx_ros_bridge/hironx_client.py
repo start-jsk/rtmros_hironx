@@ -1094,3 +1094,40 @@ class HIRONX(HrpsysConfigurator2):
     def removeForceSensorOffset(self):
         self.rh_svc.removeForceSensorOffset()
 
+
+    # workaround for issue reported https://github.com/tork-a/rtmros_nextage/issues/332
+    def getJointAnglesOfGroup(self, limb):
+        angles = self.getJointAngles()
+        # fix flag2groups for hironx(sim), which have gripper joints
+        # flat2Groups:  requres 315.2.0
+        # angles = self.flat2Groups(angles)
+        offset = 0
+        if len(angles) != reduce(lambda x,y: x+len(y[1]), self.Groups, 0):
+            offset = 4
+        angles = []
+        index = 0
+        for group in self.Groups:
+            joint_num = len(group[1])
+            angles.append(angles[index: index + joint_num])
+            index += joint_num
+            if group[0] in ['larm', 'rarm']:
+                index += offset ## FIX ME
+        groups = self.Groups
+        for i in range(len(groups)):
+            if groups[i][0] == limb:
+                return angles[i]
+        print self.configurator_name, 'could not find limb name ' + limb
+        print self.configurator_name, ' in' + filter(lambda x: x[0], groups)
+
+    def clearOfGroup(self, limb):
+        '''!@brief
+        Clears the Sequencer's current operation for joint groups.
+        @since 315.5.0
+        '''
+        if StrictVersion(self.seq_version) < StrictVersion('315.5.0'):
+            raise RuntimeError('clearOfGroup is not available with your '
+                               'software version ' + self.seq_version)
+        HrpsysConfigurator.clearOfGroup(self, limb)
+        angles = self.getJointAnglesOfGroup(limb)
+        print self.configurator_name, 'clearOfGroup(' + limb + ') will send ' + str(angles) + ' to update seqplay until https://github.com/fkanehiro/hrpsys-base/pull/1141 is available'
+        self.setJointAnglesOfGroup(limb, angles, 0.1, wait=True)
