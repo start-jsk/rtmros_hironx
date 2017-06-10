@@ -78,8 +78,9 @@ if __name__ == '__main__':
     if len(unknown) >= 2:
         args.robot = unknown[0]
         args.modelfile = unknown[1]
+        args.collision = unknown[4]
     robot = hiro = hironx_client.HIRONX()
-    robot.init(robotname=args.robot, url=args.modelfile)
+    robot.init(robotname=args.robot, url=args.modelfile, collision=args.collision)
 
     # ROS Client
     try:

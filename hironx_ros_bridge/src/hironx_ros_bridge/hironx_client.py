@@ -319,7 +319,7 @@ class HIRONX(HrpsysConfigurator2):
                                "the function call was successful, since not " +
                                "all methods internally called return status")
 
-    def init(self, robotname="HiroNX(Robot)0", url=""):
+    def init(self, robotname="HiroNX(Robot)0", url="", collision=True):
         '''
         Calls init from its superclass, which tries to connect RTCManager,
         looks for ModelLoader, and starts necessary RTC components. Also runs
@@ -383,6 +383,8 @@ class HIRONX(HrpsysConfigurator2):
             pass
         self.setSelfGroups()
         self.hrpsys_version = self.fk.ref.get_component_profile().version
+
+        self.collision = collision
 
     def goOffPose(self, tm=7):
         '''
@@ -461,6 +463,10 @@ class HIRONX(HrpsysConfigurator2):
                 rtclist.append(['rmfo', "AbsoluteForceSensor"])
             else:
                 print "Component rmfo is not loadable."
+
+        if not self.collision:
+            rtclist.remove(['co', "CollisionDetector"])
+
         return rtclist
 
     # hand interface
