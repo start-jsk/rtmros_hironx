@@ -319,6 +319,8 @@ class HIRONX(HrpsysConfigurator2):
                                "the function call was successful, since not " +
                                "all methods internally called return status")
 
+    _collision = True
+
     def init(self, robotname="HiroNX(Robot)0", url="", collision=True):
         '''
         Calls init from its superclass, which tries to connect RTCManager,
@@ -330,6 +332,9 @@ class HIRONX(HrpsysConfigurator2):
         @type url: str
         '''
         # reload for hrpsys 315.1.8
+        
+        self._collision = collision
+
         print(self.configurator_name + "waiting ModelLoader")
         HrpsysConfigurator.waitForModelLoader(self)
         print(self.configurator_name + "start hrpsys")
@@ -384,7 +389,6 @@ class HIRONX(HrpsysConfigurator2):
         self.setSelfGroups()
         self.hrpsys_version = self.fk.ref.get_component_profile().version
 
-        self.collision = collision
 
     def goOffPose(self, tm=7):
         '''
@@ -444,6 +448,7 @@ class HIRONX(HrpsysConfigurator2):
         @rerutrn List of available components. Each element consists of a list
                  of abbreviated and full names of the component.
         '''
+
         rtclist = [
             ['seq', "SequencePlayer"],
             ['sh', "StateHolder"],
@@ -454,6 +459,7 @@ class HIRONX(HrpsysConfigurator2):
             ['sc', "ServoController"],
             ['log', "DataLogger"],
             ]
+
         if hasattr(self, 'rmfo'):
             self.ms.load("RemoveForceSensorLinkOffset")
             self.ms.load("AbsoluteForceSensor")
@@ -464,7 +470,10 @@ class HIRONX(HrpsysConfigurator2):
             else:
                 print "Component rmfo is not loadable."
 
-        if not self.collision:
+        if self._collision:
+            print "\n\nCollision Detection on \n\n"
+        else:
+            print "\n\nCollision Detection off\n\n\n\n"
             rtclist.remove(['co', "CollisionDetector"])
 
         return rtclist
