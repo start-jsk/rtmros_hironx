@@ -36,6 +36,7 @@ import math
 import numpy
 import os
 import time
+import xmlrpclib
 
 import roslib
 roslib.load_manifest("hrpsys")
@@ -43,8 +44,10 @@ from hrpsys.hrpsys_config import *
 import OpenHRP
 import OpenRTM_aist
 import OpenRTM_aist.RTM_IDL
+import rospy
 import rtm
 from waitInput import waitInputConfirm, waitInputSelect
+from geometry_msgs.msg import WrenchStamped
 
 from distutils.version import StrictVersion
 
@@ -383,6 +386,8 @@ class HIRONX(HrpsysConfigurator2):
             pass
         self.setSelfGroups()
         self.hrpsys_version = self.fk.ref.get_component_profile().version
+
+        self._wrench = None
 
     def goOffPose(self, tm=7):
         '''
@@ -1016,7 +1021,7 @@ class HIRONX(HrpsysConfigurator2):
         '''
         r, p = self.ic_svc.getImpedanceControllerParam(arm)
         if not r:
-            print('{}, Failt to getImpedanceControllerParam({})'.format(self.configurator_name, arm))
+            print('{}, Failed to getImpedanceControllerParam({})'.format(self.configurator_name, arm))
             return False
         if M_p != None: p.M_p = M_p
         if D_p != None: p.M_p = D_p
@@ -1039,12 +1044,54 @@ class HIRONX(HrpsysConfigurator2):
     def stopImpedance_315_3(self, arm):
         return self.ic_svc.stopImpedanceController(arm)
 
+    def _find_ref_force(self, wrench_topic):
+        '''
+        @summary: Intended as a callback method for WrenchStamped subscriber.
+        @type wrench_topic: geometric_msgs.WrenchStamped
+        @since: 1.1.24 or higher
+        '''
+        self._wrench = wrench_topic.force
+
+    def _suggest_impedance_params(self, arm, **kwargs):
+        '''
+        @type kwargs: dict
+        @param kwargs: dictionary of the parameters that `startImpedance`
+                       method takes.
+        @since: 1.1.24 or higher
+        @rtype: dict
+        @return: Update kwargs and returns it.
+        '''
+        ref_force_suggested = []
+        # TODO if ROS master is not found, skip the Auto-complete section.
+        m = xmlrpclib.ServerProxy(os.environ['ROS_MASTER_URI'])
+        try:
+            code, msg, val = m.getSystemState('HIRONX')
+        except socket.error:
+            print('[startImpedance] No ROS master found.'
+                  'Skip auto-complete impedance parameters.')
+            return None
+
+        sensor_side = 'lhsensor'
+        if arm == 'rarm':
+            sensor_side = 'rhsensor'
+        rospy.Subscriber(sensor_side, WrenchStamped,
+                         self._find_ref_force)
+        rospy.sleep(3.0)  # Wait to subscribe a topic desired.
+        if not self._wrench:
+            print('[startImpedance] Wrench topic not found.'
+                  'Skip auto-complete impedance parameters.')
+        else:
+            ref_force_suggested[0] = -self._wrench.force.x
+            ref_force_suggested[1] = -self._wrench.force.y
+            ref_force_suggested[2] = -self._wrench.force.z
+        kwargs.update({'ref_force': ref_force_suggested})
+        return kwargs
+
     def startImpedance(self, arm, **kwargs):
         '''
-        Enable the ImpedanceController RT component.
-        This method internally calls startImpedance-*, hrpsys version-specific
-        method.
-
+        @summary: Enable the ImpedanceController RT component.
+                  This method internally calls startImpedance-*,
+                  hrpsys version-specific method.
         @requires: ImpedanceController RTC to be activated on the robot's
                    controller.
         @param arm: Name of the kinematic group (i.e. self.Groups[n][0]).
@@ -1075,6 +1122,8 @@ class HIRONX(HrpsysConfigurator2):
                    a sensor. See this link (https://github.com/fkanehiro/hrpsys-base/pull/434/files) for a concrete example.
         '''
         if StrictVersion(self.hrpsys_version) < StrictVersion('315.2.0'):
+            if 'ref_force' not in kwargs:
+                kwargs = self._suggest_impedance_params(arm, **kwargs)
             self.startImpedance_315_1(arm, **kwargs)
         elif StrictVersion(self.hrpsys_version) < StrictVersion('315.3.0'):
             self.startImpedance_315_2(arm, **kwargs)
