@@ -90,13 +90,13 @@ class ROS_Client(RobotCommander):
             rospy.logerr(errormsg)
             raise e
 
-        super(ROS_Client, self).__init__()  # This solves https://github.com/start-jsk/rtmros_hironx/issues/300
-
-        rospy.init_node('hironx_ros_client')
-
         if not rospy.has_param('robot_description'):
             rospy.logwarn('ROS Bridge is not started yet, Assuming you want just to use RTM')
             return
+
+        super(ROS_Client, self).__init__()  # This solves https://github.com/start-jsk/rtmros_hironx/issues/300
+
+        rospy.init_node('hironx_ros_client')
 
         # See the doc in the method for the reason why this line is still kept
         # even after this class has shifted MoveIt! intensive.
