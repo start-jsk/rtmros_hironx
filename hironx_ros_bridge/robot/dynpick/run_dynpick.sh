@@ -30,12 +30,35 @@
 
 # Written by TORK
 
-# slay devc-serusb
-# sleep 1
+# 201706 We found that "slay -f devc-serusb" occasionally fails, which results in failing this entire 
+#        script. Instead of slaying the process started during OS initialization steps, we found that
+#        not starting devc-serusb for the f/t sensor device works. To do so, we manually edited
+#        /etc/system/enum/devices/usb/char file.
+#        NOTE that this is a hack and still being experimented. How to modify the aforementioned file
+#        is only documented in a private ticket https://github.com/tork-a/delivery/issues/436#issuecomment-306789518
+
+#echo "Before slay devc-serusb"
+#ps -ef | grep devc-serusb
+#slay -f devc-serusb
+sleep 3
+#echo "After slay devc-serusb"
+ps -ef | grep devc-serusb
 ## devc-serusb needs to be that of QNX6.5.0 SP1, to recognize Dynpick WDF-6M200-3, which is USB-Serial with 921.6kbps.
-## And looks like we don't need to specifically call it as long as right version of /sbin/devc-serusb is placed.
-# devc-serusb -E -F -b 921600 -d busno=0,devno=1,vid=0x10c4,did=0xea60
-# sleep 1
+
+#devc-serusb -E -F -b 921600 -d busno=4,devno=2,unit=1,vid=0x10c4,did=0xea60
+# Sensors' USB directly connected to qnx, busno might be 3
+#devc-serusb -E -F -b 921600 -d busno=3,devno=1,unit=1,vid=0x10c4,did=0xea60
+#devc-serusb -E -F -b 921600 -d busno=3,devno=2,unit=2,vid=0x10c4,did=0xea60
+
+# Sensors' USB connected via USB hub, busno might become 4. 
+# {r, t}x_urbs seem to be necessary, to avoid error "serusb_reader: URB not hooked for port /dev/serusb1 - sts = Unknown error, pflags =0x4a7"
+devc-serusb -E -F -b 921600 -d busno=4,devno=2,unit=1,vid=0x10c4,did=0xea60,rx_urbs=50,tx_urbs=50
+sleep 3
+devc-serusb -E -F -b 921600 -d busno=4,devno=3,unit=2,vid=0x10c4,did=0xea60,rx_urbs=50,tx_urbs=50
+sleep 3
+echo "After calling devc-serusb"
+ps -ef | grep devc-serusb
 # stty < /dev/serusb1
 ./dynpick_driver &
 # stty < /dev/serusb1
+sleep 3
