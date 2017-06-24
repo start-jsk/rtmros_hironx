@@ -18,6 +18,7 @@
   <arg name="USE_ROBOT_POSE_EKF" default="false" />
 
   <!-- For rqt dashboard that needs to connect RTM nameserver -->
+  <param name="rtmnameserver_host" type="str" value="$(arg nameserver)" />
   <param name="rtmnameserver_port" type="int" value="$(arg corbaport)" />
   <param name="rtmnameserver_robotname" type="str" value="$(arg SIMULATOR_NAME)" />
 

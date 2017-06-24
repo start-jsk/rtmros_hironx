@@ -76,10 +76,10 @@ class HironxoCommandPanel(QWidget):
         self._guicontext = guicontext
 
         # RTM Client
-        rtm.nshost = self.get_rosmaster_domain().hostname
+        rtm.nshost = rospy.get_param('rtmnameserver_host', 'localhost')
         rtm.nsport = rospy.get_param('rtmnameserver_port', '15005')
         robotname = rospy.get_param('rtmnameserver_robotname', 'HiroNX(Robot)0')
-        rospy.loginfo('Connecting to RTM nameserver. host={}, port={}, robotname={}'.format(rtm.nshost, rtm.nsport, robotname))
+        rospy.loginfo('Connecting to RTM nameserver. host={}, port={}, robotname={} using rtmnameserver_{{host,port,robotname}} ROS param'.format(rtm.nshost, rtm.nsport, robotname))
 
         self._rtm = HIRONX()
         self._rtm.init(robotname=robotname, url='')
