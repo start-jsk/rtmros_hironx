@@ -319,9 +319,9 @@ class HIRONX(HrpsysConfigurator2):
                                "the function call was successful, since not " +
                                "all methods internally called return status")
 
-    _collision = True
+    _collision = False
 
-    def init(self, robotname="HiroNX(Robot)0", url="", collision=True):
+    def init(self, robotname="HiroNX(Robot)0", url="", collision=False):
         '''
         Calls init from its superclass, which tries to connect RTCManager,
         looks for ModelLoader, and starts necessary RTC components. Also runs
@@ -471,9 +471,9 @@ class HIRONX(HrpsysConfigurator2):
                 print "Component rmfo is not loadable."
 
         if self._collision:
-            print "\n\nCollision Detection on \n\n"
+            print "\nCollision Detection on \n"
         else:
-            print "\n\nCollision Detection off\n\n\n\n"
+            print "\nCollision Detection off\n"
             rtclist.remove(['co', "CollisionDetector"])
 
         return rtclist
