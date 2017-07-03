@@ -35,6 +35,8 @@ class TestHiro(unittest.TestCase):
         #robotname = "RobotHardware0"
 
         cls.robot = hironx.HIRONX()
+        if not ['co', "CollisionDetector"] in cls.robot.rtclist:
+            cls.robot.rtclist.append(['co', "CollisionDetector"])
         #cls.robot.init(robotname=robotname, url=modelfile)
         cls.robot.init()
 
