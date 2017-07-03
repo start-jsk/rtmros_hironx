@@ -5,6 +5,7 @@
   <arg name="CONF_FILE" default="$(find hironx_ros_bridge)/conf/kawada-hironx.conf" />
   <arg name="CONF_FILE_COLLISIONDETECT" default="$(find hironx_ros_bridge)/conf/kawada-hironx.conf" />
   <arg name="DEBUG_HRPSYS" default="false" />
+  <arg name="USE_COLLISIONCHECK" default="true" /> <!-- enable collision rtc on simulation -->
 
   <!-- Set model file to parameter server  -->
   <param name="hironx/collada_model_filepath" value="$(arg MODEL_FILE)" />
@@ -15,6 +16,7 @@
     <arg name="corbaport" default="$(arg corbaport)" />
     <arg name="CONF_FILE" value="$(arg CONF_FILE)" />    
     <arg name="DEBUG_HRPSYS" value="$(arg DEBUG_HRPSYS)" />
+    <arg name="USE_COLLISIONCHECK" default="$(arg USE_COLLISIONCHECK)" />
   </include>
   <include file="$(find hironx_ros_bridge)/launch/hironx_ros_bridge.launch" >
     <arg name="nameserver" value="localhost" />
@@ -22,6 +24,7 @@
     <arg name="SIMULATOR_NAME" value="HiroNX(Robot)0" />
     <arg name="corbaport" default="$(arg corbaport)" />
     <arg name="CONF_FILE_COLLISIONDETECT" value="$(arg CONF_FILE_COLLISIONDETECT)" />
+    <arg name="USE_COLLISIONCHECK" default="$(arg USE_COLLISIONCHECK)" />
     <arg name="open_rqt_gui" default="false" />
   </include>
 

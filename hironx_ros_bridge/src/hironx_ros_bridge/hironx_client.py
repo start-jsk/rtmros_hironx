@@ -319,6 +319,16 @@ class HIRONX(HrpsysConfigurator2):
                                "the function call was successful, since not " +
                                "all methods internally called return status")
 
+    rtclist = [
+        ['seq', "SequencePlayer"],
+        ['sh', "StateHolder"],
+        ['fk', "ForwardKinematics"],
+        ['ic', "ImpedanceController"],
+        ['el', "SoftErrorLimiter"],
+        # ['co', "CollisionDetector"],
+        ['sc', "ServoController"],
+        ['log', "DataLogger"],
+    ]
     def init(self, robotname="HiroNX(Robot)0", url=""):
         '''
         Calls init from its superclass, which tries to connect RTCManager,
@@ -442,16 +452,7 @@ class HIRONX(HrpsysConfigurator2):
         @rerutrn List of available components. Each element consists of a list
                  of abbreviated and full names of the component.
         '''
-        rtclist = [
-            ['seq', "SequencePlayer"],
-            ['sh', "StateHolder"],
-            ['fk', "ForwardKinematics"],
-            ['ic', "ImpedanceController"],
-            ['el', "SoftErrorLimiter"],
-            # ['co', "CollisionDetector"],
-            ['sc', "ServoController"],
-            ['log', "DataLogger"],
-            ]
+        rtclist = self.rtclist
         if hasattr(self, 'rmfo'):
             self.ms.load("RemoveForceSensorLinkOffset")
             self.ms.load("AbsoluteForceSensor")
