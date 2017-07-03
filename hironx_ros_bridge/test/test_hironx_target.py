@@ -342,6 +342,7 @@ class TestHiroTarget(TestHiro):
         self.assertRaises(RuntimeError, lambda: self.robot.getCurrentPose())
         self.assertRaises(RuntimeError, lambda: self.robot.getReferencePose())
 
+# python -m unittest test_hironx_target.TestHiroTarget.test_setTargetPoseRelative_rpy
 if __name__ == '__main__':
     import rostest
     rostest.rosrun(PKG, 'test_hronx_target', TestHiroTarget)
