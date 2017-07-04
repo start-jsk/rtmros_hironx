@@ -172,4 +172,6 @@ if __name__ == '__main__':
     print("===================================================")
     print("# Please consult test result with following process")
     print("tail -f /tmp/check-test_hironx_collision.txt")
+    print("# You can run individual test with following command")
+    print("python -m unittest test_hironx_collision.TestHiroCollision.test_CollisionLoopChange")
     rostest.rosrun(PKG, 'test_hronx_collision', TestHiroCollision)
