@@ -121,9 +121,9 @@ class TestHiro(unittest.TestCase):
         if isinstance(max_data, (int, float)):
             max_data = [max_data, 5]
 
-        print "time (= ", _tm_data, ") == ", tm_data, " -> ", abs(_tm_data - tm_data) < tm_data*_tm_thre
-        print " min (= ", _min_data, ") == ", min_data, " -> ", abs(_min_data - min_data[0]) < min_data[1]
-        print " max (= ", _max_data, ") == ", max_data, " -> ", abs(_max_data - max_data[0]) < max_data[1]
+        print "time (= ", _tm_data, ") == ", tm_data, " -> ", abs(_tm_data - tm_data) < tm_data*_tm_thre,  tm_data*_tm_thre - abs(_tm_data - tm_data)
+        print " min (= ", _min_data, ") == ", min_data, " -> ", abs(_min_data - min_data[0]) < min_data[1], min_data[1] - abs(_min_data - min_data[0])
+        print " max (= ", _max_data, ") == ", max_data, " -> ", abs(_max_data - max_data[0]) < max_data[1], max_data[1] - abs(_max_data - max_data[0])
         self.assertTrue(abs(_tm_data - tm_data) < tm_data*_tm_thre)
         self.assertTrue(abs(_min_data - min_data[0]) < min_data[1])
         self.assertTrue(abs(_max_data - max_data[0]) < max_data[1])

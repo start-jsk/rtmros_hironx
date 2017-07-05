@@ -14,7 +14,7 @@
 
   <test type="test_hironx_fullbody.py" pkg="hironx_ros_bridge" test-name="test_hironx_fullbody" time-limit="1000" retry="2"
         args="-ORBInitRef NameService=corbaloc:iiop:localhost:2809/NameService" />
-  <test type="test_hironx_limb.py" pkg="hironx_ros_bridge" test-name="test_hironx_limb" time-limit="200" retry="2"
+  <test type="test_hironx_limb.py" pkg="hironx_ros_bridge" test-name="test_hironx_limb" time-limit="200" retry="4"
         args="-ORBInitRef NameService=corbaloc:iiop:localhost:2809/NameService" />
   <test type="test_hironx_target.py" pkg="hironx_ros_bridge" test-name="test_hironx_target" time-limit="200" retry="2"
         args="-ORBInitRef NameService=corbaloc:iiop:localhost:2809/NameService" />
