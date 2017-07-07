@@ -887,6 +887,9 @@ class HIRONX(HrpsysConfigurator2):
         if self.sc_svc:
             self.sc_svc.servoOn()
 
+        print("Run 'goInitial'")
+        self.goInitial()
+
     def startImpedance_315_1(self, arm,
                        M_p = 100.0,
                        D_p = 100.0,
