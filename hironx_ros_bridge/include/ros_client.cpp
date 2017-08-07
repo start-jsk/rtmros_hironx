@@ -36,9 +36,9 @@
 #define ROS_CLIENT_HPP
 
 #include <ros/ros.h>
-#include <pr2_controllers_msgs/JointTrajectoryAction.h>
-#include <pr2_controllers_msgs/JointTrajectoryActionGoal.h>
-#include <pr2_controllers_msgs/JointTrajectoryGoal.h>
+#include <control_msgs/FollowJointTrajectoryAction.h>
+#include <control_msgs/FollowJointTrajectoryActionGoal.h>
+#include <control_msgs/FollowJointTrajectoryGoal.h>
 #include <trajectory_msgs/JointTrajectoryPoint.h>
 #include <actionlib/client/simple_action_client.h>
 #include <string>
@@ -62,9 +62,9 @@ class ROS_Client
   // or somewhere in the upstream, e.g.:
   // https://github.com/fkanehiro/hrpsys-base/pull/253
 public:
-  typedef actionlib::SimpleActionClient<pr2_controllers_msgs::JointTrajectoryAction> TrajClient;
+  typedef actionlib::SimpleActionClient<control_msgs::FollowJointTrajectoryAction> TrajClient;
 
-  pr2_controllers_msgs::JointTrajectoryGoal goal;
+  control_msgs::FollowJointTrajectoryGoal goal;
 
   ROS_Client() :
       GR_TORSO("torso"), GR_HEAD("head"), GR_LARM("larm"), GR_RARM("rarm"), MSG_ASK_ISSUEREPORT(
@@ -111,7 +111,7 @@ public:
 
     aclient_larm.waitForServer();
     ROS_INFO("ros_client; 1");
-    goal_larm = pr2_controllers_msgs::JointTrajectoryGoal();
+    goal_larm = control_msgs::FollowJointTrajectoryGoal();
     ROS_INFO("ros_client; 2");
     goal_larm.trajectory.joint_names.push_back("LARM_JOINT0");
     goal_larm.trajectory.joint_names.push_back("LARM_JOINT1");
@@ -122,7 +122,7 @@ public:
     ROS_INFO("ros_client; 3");
 
     aclient_rarm.waitForServer();
-    goal_rarm = pr2_controllers_msgs::JointTrajectoryGoal();
+    goal_rarm = control_msgs::FollowJointTrajectoryGoal();
     goal_rarm.trajectory.joint_names.push_back("RARM_JOINT0");
     goal_rarm.trajectory.joint_names.push_back("RARM_JOINT1");
     goal_rarm.trajectory.joint_names.push_back("RARM_JOINT2");
@@ -131,12 +131,12 @@ public:
     goal_rarm.trajectory.joint_names.push_back("RARM_JOINT5");
 
     aclient_head.waitForServer();
-    goal_head = pr2_controllers_msgs::JointTrajectoryGoal();
+    goal_head = control_msgs::FollowJointTrajectoryGoal();
     goal_head.trajectory.joint_names.push_back("HEAD_JOINT0");
     goal_head.trajectory.joint_names.push_back("HEAD_JOINT1");
 
     aclient_torso.waitForServer();
-    goal_torso = pr2_controllers_msgs::JointTrajectoryGoal();
+    goal_torso = control_msgs::FollowJointTrajectoryGoal();
     goal_torso.trajectory.joint_names.push_back("CHEST_JOINT0");
 
     // Display Joint names
@@ -262,10 +262,10 @@ private:
 
   const std::string MSG_ASK_ISSUEREPORT;
 
-  pr2_controllers_msgs::JointTrajectoryGoal goal_larm;
-  pr2_controllers_msgs::JointTrajectoryGoal goal_rarm;
-  pr2_controllers_msgs::JointTrajectoryGoal goal_head;
-  pr2_controllers_msgs::JointTrajectoryGoal goal_torso;
+  control_msgs::FollowJointTrajectoryGoal goal_larm;
+  control_msgs::FollowJointTrajectoryGoal goal_rarm;
+  control_msgs::FollowJointTrajectoryGoal goal_head;
+  control_msgs::FollowJointTrajectoryGoal goal_torso;
 
   /*
    param groupnames: List of the joint group names. Assumes to be in the
