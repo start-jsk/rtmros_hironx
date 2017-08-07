@@ -8,6 +8,12 @@ env:
   - ROS_DISTRO=indigo  ROSWS=wstool BUILDER=catkin    USE_DEB=true  ROS_REPOSITORY_PATH=http://packages.ros.org/ros-shadow-fixed/ubuntu
   - ROS_DISTRO=indigo  ROSWS=wstool BUILDER=catkin    USE_DEB=false ROS_REPOSITORY_PATH=http://packages.ros.org/ros/ubuntu
   - ROS_DISTRO=indigo  TEST_TYPE=work_with_315_1_10
+  - ROS_DISTRO=kinetic ROSWS=wstool BUILDER=catkin    USE_DEB=true  ROS_REPOSITORY_PATH=http://packages.ros.org/ros/ubuntu
+  - ROS_DISTRO=kinetic ROSWS=wstool BUILDER=catkin    USE_DEB=true  ROS_REPOSITORY_PATH=http://packages.ros.org/ros-shadow-fixed/ubuntu
+  - ROS_DISTRO=kinetic ROSWS=wstool BUILDER=catkin    USE_DEB=false ROS_REPOSITORY_PATH=http://packages.ros.org/ros/ubuntu
+  - ROS_DISTRO=kinetic TEST_TYPE=work_with_315_1_10
+allow_failures:
+  - ROS_DISTRO=kinetic ROSWS=wstool BUILDER=catkin    USE_DEB=true  ROS_REPOSITORY_PATH=http://packages.ros.org/ros/ubuntu
 notifications:
   email:
     recipients:
