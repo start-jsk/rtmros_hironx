@@ -18,6 +18,8 @@ env | grep ROS
 
 cd ${CI_SOURCE_PATH}
 
+apt-get update
+apt-get install -y sudo software-properties-common git wget sed
 sudo add-apt-repository -y ppa:openrave/release # http://lists.ros.org/lurker/message/20151016.151904.a9f138f4.en.html
   # Define some config vars
 if [ "$TEST_TYPE" == work_with_315_1_10 ]; then mkdir -p ~/catkin_ws/src; ln -sf `pwd` ~/catkin_ws/src/rtmros_hironx; fi
