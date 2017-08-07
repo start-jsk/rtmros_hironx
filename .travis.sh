@@ -3,9 +3,10 @@ $!/bin/bash
 set -x
 
 function error {
-if [ $BUILDER == rosbuild ]; then find ${HOME}/.ros/rosmake/ -type f -exec echo "=== {} ===" \; -exec cat {} \; ; fi
-find ${HOME}/.ros/test_results -type f -exec echo "=== {} ===" \; -exec cat {} \;
-for file in ${HOME}/.ros/log/rostest-*; do echo "=== $file ==="; cat $file; done
+  if [ $BUILDER == rosbuild ]; then find ${HOME}/.ros/rosmake/ -type f -exec echo "=== {} ===" \; -exec cat {} \; ; fi
+  if [ ${HOME}/.ros/test_results ]; then find ${HOME}/.ros/test_results -type f -exec echo "=== {} ===" \; -exec cat {} \; ; fi
+  for file in ${HOME}/.ros/log/rostest-*; do echo "=== $file ==="; cat $file; done
+  exit 1
 }
 
 trap error ERR
