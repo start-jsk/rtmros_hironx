@@ -26,4 +26,4 @@ before_install: # Use this to prepare the system to install prerequisites or dep
   - export CI_SOURCE_PATH=$(pwd)
   - docker images
 script:
-  - docker run -v $HOME:$HOME -e CI_SOURCE_PATH -e HOME -e DISTRO -e ROS_DISTRO -e ROS_LOG_DIR -e TEST_TYPE -e TEST_PACKAGE -e USE_DEB -e ROSWS -e BUILDER -e ROS_REPOSITORY_PATH -e CI_SOURCE_PATH -e REPOSITORY_NAME -e ROS_PARALLEL_JOBS -e COMILE_OPTION $DOCKER_IMAGE bash -c 'cd $CI_SOURCE_PATH; source .travis.sh'
+  - docker run -v $HOME:$HOME -e CI_SOURCE_PATH -e REPOSITORY_NAME -e HOME -e DISTRO -e ROS_DISTRO -e ROS_LOG_DIR -e TEST_TYPE -e TEST_PACKAGE -e USE_DEB -e ROSWS -e BUILDER -e ROS_REPOSITORY_PATH -e CI_SOURCE_PATH -e REPOSITORY_NAME -e ROS_PARALLEL_JOBS -e COMILE_OPTION $DOCKER_IMAGE bash -c 'cd $CI_SOURCE_PATH; source .travis.sh'

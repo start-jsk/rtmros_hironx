@@ -13,7 +13,7 @@ trap error ERR
 echo "Environment Variables"
 echo "CI_SOURCE_PATH=$CI_SOURCE_PATH"
 echo "REPOSITORY_NAME=$REPOSITORY_NAME"
-echo "ROS_PARALLEL_JOBS=$ROS_PARALLEL_JOBS"
+echo "DISTRO=$DISTRO"
 env | grep ROS
 
 cd ${CI_SOURCE_PATH}
@@ -39,7 +39,7 @@ if [ "$TEST_TYPE" == work_with_315_1_10 ]; then sed -i 's@git clone http://githu
 if [ "$TEST_TYPE" == work_with_315_1_10 ]; then TEST_TYPE=work_with_315_1_10  TEST_PACKAGE=hironx-ros-bridge bash ./work_with_315_1_10_test.sh; exit $?  ; fi
 
 echo "Testing branch $TRAVIS_BRANCH of $REPOSITORY_NAME"
-sudo -E sh -c 'echo "deb $ROS_REPOSITORY_PATH trusty main" > /etc/apt/sources.list.d/ros-latest.list'
+sudo -E sh -c 'echo "deb $ROS_REPOSITORY_PATH $DISTRO main" > /etc/apt/sources.list.d/ros-latest.list'
 cat /etc/apt/sources.list.d/ros-latest.list
 wget http://packages.ros.org/ros.key -O - | sudo apt-key add -
 sudo apt-get update -qq
