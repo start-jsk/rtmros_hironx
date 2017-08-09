@@ -32,6 +32,7 @@ fi
 if [ "$TEST_TYPE" == work_with_315_1_10 ]; then mkdir -p ~/catkin_ws/src; ln -sf `pwd` ~/catkin_ws/src/rtmros_hironx; fi
 if [ "$TEST_TYPE" == work_with_315_1_10 ]; then cd ~/; git clone http://github.com/fkanehiro/hrpsys-base --depth 1; cd hrpsys-base  ; fi
 if [ "$TEST_TYPE" == work_with_315_1_10 ]; then wget https://raw.githubusercontent.com/fkanehiro/hrpsys-base/d7c339e7e8ed64bd4004ed6510ebb4a4179fd8a7/.travis.sh -O work_with_315_1_10_test.sh; fi
+if [ "$TEST_TYPE" == work_with_315_1_10 ]; then sed -i 's@sudo apt-get install -qq -y ros-hydro-$pkg@sudo apt-get install -qq -y ros-hydro-$pkg || echo "OK"@' work_with_315_1_10_test.sh; fi
 if [ "$TEST_TYPE" == work_with_315_1_10 ]; then sed -i 's@$HAVE_MONGO_DB@1@' work_with_315_1_10_test.sh; fi # indigo does not requires mongodb hack
 if [ "$TEST_TYPE" == work_with_315_1_10 ]; then sed -i "s@hydro@$ROS_DISTRO@g" work_with_315_1_10_test.sh; fi # update to $ROS_DISTRO
 if [ "$TEST_TYPE" == work_with_315_1_10 ]; then sed -i "s@precise@$DISTRO@g" work_with_315_1_10_test.sh; fi # update to $ROS_DISTRO
