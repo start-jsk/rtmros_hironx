@@ -33,13 +33,13 @@ if [ "$TEST_TYPE" == work_with_315_1_10 ]; then mkdir -p ~/catkin_ws/src; ln -sf
 if [ "$TEST_TYPE" == work_with_315_1_10 ]; then cd ~/; git clone http://github.com/fkanehiro/hrpsys-base --depth 1; cd hrpsys-base  ; fi
 if [ "$TEST_TYPE" == work_with_315_1_10 ]; then wget https://raw.githubusercontent.com/fkanehiro/hrpsys-base/d7c339e7e8ed64bd4004ed6510ebb4a4179fd8a7/.travis.sh -O work_with_315_1_10_test.sh; fi
 if [ "$TEST_TYPE" == work_with_315_1_10 ]; then sed -i 's@$HAVE_MONGO_DB@1@' work_with_315_1_10_test.sh; fi # indigo does not requires mongodb hack
-if [ "$TEST_TYPE" == work_with_315_1_10 ]; then sed -i 's@hydro@indigo@g' work_with_315_1_10_test.sh; fi # update to indigo
-if [ "$TEST_TYPE" == work_with_315_1_10 ]; then sed -i 's@precise@trusty@g' work_with_315_1_10_test.sh; fi # update to indigo
+if [ "$TEST_TYPE" == work_with_315_1_10 ]; then sed -i "s@hydro@$ROS_DISTRO@g" work_with_315_1_10_test.sh; fi # update to $ROS_DISTRO
+if [ "$TEST_TYPE" == work_with_315_1_10 ]; then sed -i "s@precise@$DISTRO@g" work_with_315_1_10_test.sh; fi # update to $ROS_DISTRO
 if [ "$TEST_TYPE" == work_with_315_1_10 ]; then cat work_with_315_1_10_test.sh; fi # indigo does not requires mongodb hack
 if [ "$TEST_TYPE" == work_with_315_1_10 ]; then sed -i 's@wstool set rtmros_common http://github.com/start-jsk/rtmros_common --git -y@@' work_with_315_1_10_test.sh; fi
 if [ "$TEST_TYPE" == work_with_315_1_10 ]; then sed -i 's@wstool set rtmros_hironx http://github.com/start-jsk/rtmros_hironx --git -y@@' work_with_315_1_10_test.sh; fi
 if [ "$TEST_TYPE" == work_with_315_1_10 ]; then sed -i 's@wstool set rtmros_nextage http://github.com/tork-a/rtmros_nextage --git -y@@' work_with_315_1_10_test.sh; fi
-if [ "$TEST_TYPE" == work_with_315_1_10 ]; then sed -i 's@sudo dpkg -r --force-depends ros-indigo-hrpsys@sudo dpkg -r --force-depends ros-indigo-hrpsys; sudo mkdir -p /opt/ros/indigo/include/hrpsys/idl@' work_with_315_1_10_test.sh; fi
+if [ "$TEST_TYPE" == work_with_315_1_10 ]; then sed -i "s@sudo dpkg -r --force-depends ros-hydro-hrpsys@sudo dpkg -r --force-depends ros-$ROS_DISTRO-hrpsys; sudo mkdir -p /opt/ros/$ROS_DISTRO/include/hrpsys/idl@" work_with_315_1_10_test.sh; fi
 if [ "$TEST_TYPE" == work_with_315_1_10 ]; then sed -i 's%cat hrpsys/catkin.cmake%sed -i "s@foreach(_bin_file \\${_bin_files})@list(REMOVE_DUPLICATES _bin_files)\\nforeach(_bin_file \\${_bin_files})@" hrpsys/catkin.cmake\n            cat hrpsys/catkin.cmake%' work_with_315_1_10_test.sh; fi
 if [ "$TEST_TYPE" == work_with_315_1_10 ]; then sed -i 's@catkin_make_isolated -j1 -l1 --install --only-pkg-with-deps@catkin_make_isolated -j1 -l1 --install --only-pkg-with-deps hrpsys@' work_with_315_1_10_test.sh; fi
 if [ "$TEST_TYPE" == work_with_315_1_10 ]; then sed -i 's@git clone http://github.com/fkanehiro/hrpsys-base --depth 1 -b 315.1.9 ../build_isolated/hrpsys/build/hrpsys-base-source@(git clone http://github.com/fkanehiro/hrpsys-base ../build_isolated/hrpsys/build/hrpsys-base-source; cd ../build_isolated/hrpsys/build/hrpsys-base-source; git checkout 315.1.9; sed -i s%-mt%% lib/util/CMakeLists.txt)@' work_with_315_1_10_test.sh; fi
