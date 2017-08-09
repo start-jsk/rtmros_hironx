@@ -24,6 +24,7 @@ before_install: # Use this to prepare the system to install prerequisites or dep
   - case $ROS_DISTRO in "hydro") export DISTRO=precise;; "indigo") export DISTRO=trusty;; "kinetic") export DISTRO=xenial;; esac;
   - export DOCKER_IMAGE=ubuntu:$DISTRO
   - export CI_SOURCE_PATH=$(pwd)
+  - export REPOSITORY_NAME=${PWD##*/}
   - docker images
 script:
   - docker run -v $HOME:$HOME -e CI_SOURCE_PATH -e REPOSITORY_NAME -e HOME -e DISTRO -e ROS_DISTRO -e ROS_LOG_DIR -e TEST_TYPE -e TEST_PACKAGE -e USE_DEB -e ROSWS -e BUILDER -e ROS_REPOSITORY_PATH -e CI_SOURCE_PATH -e REPOSITORY_NAME -e ROS_PARALLEL_JOBS -e COMILE_OPTION $DOCKER_IMAGE bash -c 'cd $CI_SOURCE_PATH; source .travis.sh'
