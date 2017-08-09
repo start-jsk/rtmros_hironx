@@ -76,7 +76,7 @@ find -L src -name manifest.xml.deprecated | xargs -n 1 -i dirname {} | xargs -n 
 source /opt/ros/$ROS_DISTRO/setup.bash
 if [ $BUILDER == rosbuild ]; then source src/setup.bash        ; fi
 if [ $BUILDER == rosbuild ]; then rospack profile              ; fi
-script: # All commands must exit with code 0 on success. Anything else is considered failure.
+# All commands must exit with code 0 on success. Anything else is considered failure.
   # for catkin
 if [ $BUILDER == catkin -a $USE_DEB == true  ]; then catkin_make ${ROS_PARALLEL_JOBS}            ; fi
   # - if [ $BUILDER == catkin -a $USE_DEB == false ]; then mkdir -p $HOME/ros/ws_$REPOSITORY_NAME/devel_isolated/hrpsys/; echo "$HOME/ros/ws_$REPOSITORY_NAME/devel_isolated/hrpsys/" > $HOME/ros/ws_$REPOSITORY_NAME/devel_isolated/hrpsys/.catkin; fi
