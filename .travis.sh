@@ -73,7 +73,7 @@ find -L src -name package.xml -exec dirname {} \; | xargs -n 1 -i find {} -name 
 rosdep install -r -n --from-paths src --ignore-src --rosdistro $ROS_DISTRO -y
 find -L src -name manifest.xml.deprecated | xargs -n 1 -i dirname {} | xargs -n 1 -i ln -sf `pwd`/{}/manifest.xml.deprecated `pwd`/{}/manifest.xml # rename manifest.xml for rosdep install
   #  find . \! -path "*/.*" -type f | xargs egrep -i "(hoge|fuga)" ; if [ $? == 0 ]; then exit 1; fi
-before_script: # Use this to prepare your build for testing e.g. copy database configurations, environment variables, etc.
+# Use this to prepare your build for testing e.g. copy database configurations, environment variables, etc.
 source /opt/ros/$ROS_DISTRO/setup.bash
 if [ $BUILDER == rosbuild ]; then source src/setup.bash        ; fi
 if [ $BUILDER == rosbuild ]; then rospack profile              ; fi
