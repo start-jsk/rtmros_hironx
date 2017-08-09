@@ -16,6 +16,7 @@ env:
 matrix:
   allow_failures:
   - env: ROS_DISTRO=kinetic ROSWS=wstool BUILDER=catkin    USE_DEB=true  ROS_REPOSITORY_PATH=http://packages.ros.org/ros/ubuntu
+  - env: ROS_DISTRO=kinetic ROSWS=wstool BUILDER=catkin    USE_DEB=false ROS_REPOSITORY_PATH=http://packages.ros.org/ros/ubuntu
 notifications:
   email:
     recipients:
