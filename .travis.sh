@@ -21,6 +21,13 @@ cd ${CI_SOURCE_PATH}
 
 apt-get update
 apt-get install -y sudo software-properties-common git wget sed
+####### https://github.com/ros-planning/moveit/pull/581
+if [ "$ROS_DISTRO" == "kinetic" ]; then
+    apt-get install -y python-pyassimp
+    sed -i 's@load, load_mem, release, dll@load, release, dll@' /usr/lib/python2.7/dist-packages/pyassimp/core.py
+    cat -n /usr/lib/python2.7/dist-packages/pyassimp/core.py
+fi
+#######
   # Define some config vars
 if [ "$TEST_TYPE" == work_with_315_1_10 ]; then mkdir -p ~/catkin_ws/src; ln -sf `pwd` ~/catkin_ws/src/rtmros_hironx; fi
 if [ "$TEST_TYPE" == work_with_315_1_10 ]; then cd ~/; git clone http://github.com/fkanehiro/hrpsys-base --depth 1; cd hrpsys-base  ; fi
