@@ -1,14 +1,12 @@
 cmake_minimum_required(VERSION 2.8.3)
 project(hironx_ros_bridge)
 
-find_package(catkin REQUIRED COMPONENTS hrpsys_ros_bridge pr2_controllers_msgs roslib roslint rostest)
+find_package(catkin REQUIRED COMPONENTS hrpsys_ros_bridge roslib roslint rostest)
 find_package(Boost REQUIRED COMPONENTS system)
 
 catkin_package(
-    CATKIN_DEPENDS std_msgs
-    CATKIN_DEPENDS hrpsys_ros_bridge pr2_controllers_msgs roslib #
+    CATKIN_DEPENDS hrpsys_ros_bridge roslib #
     INCLUDE_DIRS include
-    LIBRARIES ros_client_cpp
 )
 
 catkin_python_setup()
@@ -84,13 +82,15 @@ install(CODE "
   if (EXISTS ${openhrp3_SOURCE_DIR})
     message(\"++sed -i s@${openhrp3_SOURCE_DIR}/share/OpenHRP-3.1@${CMAKE_INSTALL_PREFIX}/share/openhrp3/share/OpenHRP-3.1@g \${_conf_file}\")
   endif()
-  foreach(_file \${_xml_files};\${_conf_files})
-    message(\"  ++ fix \${_file}\")
-    execute_process(COMMAND sed -i s@${PROJECT_SOURCE_DIR}@${CMAKE_INSTALL_PREFIX}/share/${PROJECT_NAME}@ \${_file})
+  message(\"++ xml_files:\${_xml_files} \")
+  message(\"++ conf_files:\${_conf_files} \")
+  foreach(_file \${_xml_files} \; \${_conf_files} )
+    message(\"  ++ fix \${_file} \")
+    execute_process(COMMAND sed -i s@${PROJECT_SOURCE_DIR}@${CMAKE_INSTALL_PREFIX}/share/${PROJECT_NAME}@ \${_file} )
     if (EXISTS ${openhrp3_SOURCE_DIR})
-      execute_process(COMMAND sed -i s@${openhrp3_SOURCE_DIR}/share/OpenHRP-3.1@${CMAKE_INSTALL_PREFIX}/share/openhrp3/share/OpenHRP-3.1@g \${_file})
+      execute_process(COMMAND sed -i s@${openhrp3_SOURCE_DIR}/share/OpenHRP-3.1@${CMAKE_INSTALL_PREFIX}/share/openhrp3/share/OpenHRP-3.1@g \${_file} )
     endif()
-    execute_process(COMMAND sed -i s@${PROJECT_SOURCE_DIR}@${CMAKE_INSTALL_PREFIX}/share/${PROJECT_NAME}@ \${_file})
+    execute_process(COMMAND sed -i s@${PROJECT_SOURCE_DIR}@${CMAKE_INSTALL_PREFIX}/share/${PROJECT_NAME}@ \${_file} )
   endforeach()
   ")
 
