@@ -2,8 +2,8 @@
 Changelog for package hironx_ros_bridge
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+2.0.0 (2017-08-10)
+------------------
 * [ros_bridge.py][startImpedance_315_3] More precise error message. (`#502 <https://github.com/start-jsk/rtmros_hironx/issues/502>`_)
   *  When run by itself, `getImpedanceControllerParam` command at least finishes, so it's not failing. The error message is a bit misleading about what happened internally in `startImpedance_315_3` method.
 

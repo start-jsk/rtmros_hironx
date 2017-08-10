@@ -2,8 +2,8 @@
 Changelog for package hironx_moveit_config
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+2.0.0 (2017-08-10)
+------------------
 * Use docker to run tests and add kinetic test (`#517 <https://github.com/start-jsk/rtmros_hironx/issues/517>`_)
   * remove pr2_controller_msgs and use control_msgs
 
