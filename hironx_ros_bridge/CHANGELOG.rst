@@ -2,6 +2,28 @@
 Changelog for package hironx_ros_bridge
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* [ros_bridge.py][startImpedance_315_3] More precise error message. (`#502 <https://github.com/start-jsk/rtmros_hironx/issues/502>`_)
+  *  When run by itself, `getImpedanceControllerParam` command at least finishes, so it's not failing. The error message is a bit misleading about what happened internally in `startImpedance_315_3` method.
+
+* use docker to run tests and add kinetic test (`#517 <https://github.com/start-jsk/rtmros_hironx/issues/517>`_ from k-okada/kinetic)
+  * fix install(CDOE
+  * use control_msgs is pr2_controllers_msgs is not exists
+  * test/test-hironx.test: add retry=4
+  * remove pr2_controller_msgs and use control_msgs
+
+* enable to output forcesensor value on simulation (`#510 <https://github.com/start-jsk/rtmros_hironx/issues/510>`_)
+
+* [qnx dynpick] Add a working setting to start sensor drivers connected via USB hub (`#509 <https://github.com/start-jsk/rtmros_hironx/issues/509>`_)
+* robot_description before staring ROS_Client (RobotCommander) (`#511 <https://github.com/start-jsk/rtmros_hironx/issues/511>`_)
+* clearOfGroup after setTargetPose breaks sequencer (`#505 <https://github.com/start-jsk/rtmros_hironx/issues/505>`_)
+  * [ros_bridge] Set hrpsys version limitation to some methods.
+  * temporaly workaround utnil https://github.com/fkanehiro/hrpsys-base/pull/1141, send setJointAnglesOfGrup to clear sequencer
+  * add test to check https://github.com/tork-a/rtmros_nextage/issues/332 situation
+
+* Contributors: Isaac I.Y. Saito, Kei Okada
+
 1.1.25 (2017-06-02)
 -------------------
 * [QNX log fetch] Fix to get it working again.
