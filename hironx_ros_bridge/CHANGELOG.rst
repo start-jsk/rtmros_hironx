@@ -2,8 +2,8 @@
 Changelog for package hironx_ros_bridge
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+2.1.0 (2017-09-07)
+------------------
 * get nshost from rtmnameserver, sometimes nshost is different from rosmaster (`#513 <https://github.com/start-jsk/rtmros_hironx/issues/513>`_)
 * hironx_ros_bridge_real.launch: support HRPSYS_PY\_{PKG,NAME,ARGS} as https://github.com/start-jsk/rtmros_common/blob/master/hrpsys_tools/launch/hrpsys.launch#L97-L103 (`#514 <https://github.com/start-jsk/rtmros_hironx/issues/514>`_)
 * Add hand_joint_state_publisher.py for 2017/Feb? verison of MoveIt, that strictly requrired all robot states for planning (`#519 <https://github.com/start-jsk/rtmros_hironx/issues/519>`_)
