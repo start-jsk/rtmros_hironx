@@ -2,6 +2,14 @@
 Changelog for package hironx_moveit_config
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* set trajectory_execution/allowed_execution_duration_scaling to 2.0 (`#518 <https://github.com/start-jsk/rtmros_hironx/issues/518>`_)
+  - Same as https://github.com/tork-a/rtmros_nextage/commit/b568101055fec975b6130cebf6150f85106e3bee
+  - see https://answers.ros.org/question/196586/how-do-i-disable-execution_duration_monitoring/
+  * Change to use moveit_simple_controller
+* Contributors: Ryosuke Tajima
+
 2.0.0 (2017-08-10)
 ------------------
 * Use docker to run tests and add kinetic test (`#517 <https://github.com/start-jsk/rtmros_hironx/issues/517>`_)
