@@ -104,10 +104,10 @@ public:
 
   void init_action_clients()
   {
-    static TrajClient aclient_larm("/larm_controller/joint_trajectory_action", true);
-    static TrajClient aclient_rarm("/rarm_controller/joint_trajectory_action", true);
-    static TrajClient aclient_head("/head_controller/joint_trajectory_action", true);
-    static TrajClient aclient_torso("/torso_controller/joint_trajectory_action", true);
+    static TrajClient aclient_larm("/larm_controller/follow_joint_trajectory_action", true);
+    static TrajClient aclient_rarm("/rarm_controller/follow_joint_trajectory_action", true);
+    static TrajClient aclient_head("/head_controller/follow_joint_trajectory_action", true);
+    static TrajClient aclient_torso("/torso_controller/follow_joint_trajectory_action", true);
 
     aclient_larm.waitForServer();
     ROS_INFO("ros_client; 1");
@@ -202,22 +202,22 @@ public:
 
     if (groupname == GR_TORSO)
     {
-      action_client = new TrajClient("torso_controller/joint_trajectory_action", true);
+      action_client = new TrajClient("torso_controller/follow_joint_trajectory_action", true);
       goal = goal_torso;
     }
     else if (groupname == GR_HEAD)
     {
-      action_client = new TrajClient("head_controller/joint_trajectory_action", true);
+      action_client = new TrajClient("head_controller/follow_joint_trajectory_action", true);
       goal = goal_head;
     }
     else if (groupname == GR_LARM)
     {
-      action_client = new TrajClient("larm_controller/joint_trajectory_action", true);
+      action_client = new TrajClient("larm_controller/follow_joint_trajectory_action", true);
       goal = goal_larm;
     }
     else if (groupname == GR_RARM)
     {
-      action_client = new TrajClient("rarm_controller/joint_trajectory_action", true);
+      action_client = new TrajClient("rarm_controller/follow_joint_trajectory_action", true);
       goal = goal_rarm;
     }
 
