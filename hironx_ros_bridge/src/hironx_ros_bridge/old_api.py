@@ -32,7 +32,23 @@
 # ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
 
+# This module extends the HIRONX client class with some functions
+# from the original HIRO API, so that old code can be ported more easily.
+# Usage in an old script:
+# 1) Add these at the start of your file
+# from hironx_ros_bridge import old_api
+# robot = hironx_client.HIRONX()
+#
+# 2) Go through the code and replace functions like this:
+# moveRelativeL(dz=0.05)              ==>      robot.moveRelativeL(dz=0.05)
+# getCurrentConfiguration(armL_svc)   ==>      robot.getCurrentConfiguration('LARM_JOINT5')
+
+
 def setTargetAngular(self, group_name, x, y, z, r, p, w, rate=10.0, wait=True):
+    ''' 
+    This is only an approximation of the original function. It can be
+    considerably slower for small movements that contain rotation.
+    '''
     if group_name == 'larm':
         joint_name = 'LARM_JOINT5'
     elif group_name == 'rarm':
@@ -89,7 +105,7 @@ from hironx_ros_bridge import hironx_client
 hironx_client.HIRONX.setTargetAngular = setTargetAngular
 hironx_client.HIRONX.move = move
 hironx_client.HIRONX.moveR = moveR
-hironx_client.HIRONX.mvoeL = moveL
+hironx_client.HIRONX.moveL = moveL
 hironx_client.HIRONX.moveRelative = moveRelative
 hironx_client.HIRONX.moveRelativeR = moveRelativeR
 hironx_client.HIRONX.moveRelativeL = moveRelativeL
