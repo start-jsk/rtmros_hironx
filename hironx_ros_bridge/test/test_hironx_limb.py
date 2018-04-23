@@ -92,7 +92,7 @@ class TestHiroLimb(TestHiro):
             data = self.load_log_data(q_filename)
 
             print "check setJointAnglesOfGroup(clear) "+str(clear_time[i])
-            self.check_log_data(data, 6, (5 + clear_time[i]), [(-140+i*40/len(clear_time)),20], -100.0)
+            self.check_log_data(data, 6, (5 + clear_time[i]), [(-140+i*40/len(clear_time)),20], -100.0, acc_thre = 0.1, tm_thre = 0.2)
 
     def test_rarm_setJointAnglesOfGroup_Override_Acceleration (self):
         self.limbbody_init()
@@ -233,6 +233,7 @@ class TestHiroLimb(TestHiro):
         self.robot.goInitial()
         self.assertTrue(self.robot.setTargetPoseRelative('torso', 'CHEST_JOINT0', dw=min_waist_yaw*safety_coeffiecient, tm=durtion_operation))
 
+# python -m unittest test_hironx_limb.TestHiroLimb.test_rarm_setJointAngles_Clear
 if __name__ == '__main__':
     import rostest
     rostest.rosrun(PKG, 'test_hronx_limb', TestHiroLimb) 

@@ -62,6 +62,7 @@ if __name__ == '__main__':
     parser.add_argument('--port', help='corba name server port number')
     parser.add_argument('--modelfile', help='robot model file nmae')
     parser.add_argument('--robot', help='robot modlule name (RobotHardware0 for real robot, Robot()')
+    parser.add_argument('--use-collision', help='install collision detector', action='store_true', default=False)
     args, unknown = parser.parse_known_args()
     unknown = [u for u in unknown if u[:2] != '__'] # filter out ros arguments
 
@@ -79,6 +80,8 @@ if __name__ == '__main__':
         args.robot = unknown[0]
         args.modelfile = unknown[1]
     robot = hiro = hironx_client.HIRONX()
+    if args.use_collision:
+        robot.rtclist.append(['co', "CollisionDetector"])
     robot.init(robotname=args.robot, url=args.modelfile)
 
     # ROS Client
