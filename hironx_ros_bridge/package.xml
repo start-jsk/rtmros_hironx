@@ -29,6 +29,7 @@
   <build_depend>rosbash</build_depend>
   <build_depend>rosbuild</build_depend>
   <build_depend>roslang</build_depend>
+  <build_depend>rtmbuild</build_depend>
   <build_depend>unzip</build_depend>
   <build_depend>gnuplot</build_depend>
 
