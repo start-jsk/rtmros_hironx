@@ -7,6 +7,9 @@ find_package(Boost REQUIRED COMPONENTS system)
 # catkin_python_setup() must be before generate_messages() included in rtmbuild_init()
 catkin_python_setup()
 
+# for generating bridge for old impedance controller
+include(${PROJECT_SOURCE_DIR}/cmake/rtmbuild_customed.cmake)
+
 # initialize rtmbuild for old impedance controller
 rtmbuild_init()
 
@@ -14,10 +17,11 @@ rtmbuild_init()
 catkin_package(
     CATKIN_DEPENDS hrpsys_ros_bridge roslib #
     INCLUDE_DIRS include
+    CFG_EXTRAS rtmbuild_customed.cmake
 )
 
 # generate idl for old impedance controller
-rtmbuild_genidl()
+rtmbuild_genidl_no_py()
 
 # generate bridge for old impedance controller
 rtmbuild_genbridge()
@@ -84,6 +88,7 @@ install(DIRECTORY models DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION} PATTERN
 install(DIRECTORY resource DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION})
 install(DIRECTORY test DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION} USE_SOURCE_PERMISSIONS PATTERN ".svn" EXCLUDE)
 install(DIRECTORY idl DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION} USE_SOURCE_PERMISSIONS)
+install(DIRECTORY cmake DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION} USE_SOURCE_PERMISSIONS)
 install(FILES rqt_plugin.xml DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION})
 
 install(CODE "
