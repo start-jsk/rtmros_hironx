@@ -17,15 +17,19 @@ endif()
 ##
 
 # add_custom_command to compile idl/*.idl file into c++
-# don't generate python
-macro(rtmbuild_genidl_no_py)
-  message("[rtmbuild_genidl_no_py] add_custom_command for idl files in package ${PROJECT_NAME}")
+# Change points from original rtmbuild_genidl:
+# - don't generate python
+# - don't overwrite lib of CORBA skeleton and stub from other pkgs to avoid compile error in those pkgs
+macro(rtmbuild_genidl_customed)
+  message("[rtmbuild_genidl_customed] add_custom_command for idl files in package ${PROJECT_NAME}")
 
   set(_autogen "")
 
   if (use_catkin)
     set(_output_cpp_dir ${CATKIN_DEVEL_PREFIX}/${CATKIN_PACKAGE_INCLUDE_DESTINATION})
-    set(_output_lib_dir ${CATKIN_DEVEL_PREFIX}/${CATKIN_PACKAGE_LIB_DESTINATION})
+    # don't overwrite lib of CORBA skeleton and stub from other pkgs to avoid compile error in those pkgs
+    # set(_output_lib_dir ${CATKIN_DEVEL_PREFIX}/${CATKIN_PACKAGE_LIB_DESTINATION})
+    set(_output_lib_dir ${CATKIN_DEVEL_PREFIX}/${CATKIN_PACKAGE_LIB_DESTINATION}/${PROJECT_NAME})
     # don't generate python
     # set(_output_python_dir ${CATKIN_DEVEL_PREFIX}/${CATKIN_GLOBAL_PYTHON_DESTINATION}/${PROJECT_NAME})
     unset(_output_python_dir)
@@ -47,20 +51,20 @@ macro(rtmbuild_genidl_no_py)
   file(MAKE_DIRECTORY ${_output_lib_dir})
   link_directories(${_output_lib_dir})
 
-  message("[rtmbuild_genidl_no_py] - _output_cpp_dir : ${_output_cpp_dir}")
-  message("[rtmbuild_genidl_no_py] - _output_lib_dir : ${_output_lib_dir}")
+  message("[rtmbuild_genidl_customed] - _output_cpp_dir : ${_output_cpp_dir}")
+  message("[rtmbuild_genidl_customed] - _output_lib_dir : ${_output_lib_dir}")
   # don't generate python
   # message("[rtmbuild_genidl] - _output_python_dir : ${_output_python_dir}")
 
   ## RTMBUILD_${PROJECT_NAME}_genrpc) depends on each RTMBUILD_${PROJECT_NAME}_${_idl_name}_genrpc)
   add_custom_target(RTMBUILD_${PROJECT_NAME}_genrpc)
   if(NOT ${PROJECT_NAME}_idl_files)
-    message(AUTHOR_WARNING "[rtmbuild_genidl_no_py] - no idl file is defined")
+    message(AUTHOR_WARNING "[rtmbuild_genidl_customed] - no idl file is defined")
   endif()
   foreach(_idl_file ${${PROJECT_NAME}_idl_files})
     get_filename_component(_idl_name ${_idl_file} NAME_WE)
-    message("[rtmbuild_genidl_no_py] - _idl_file : ${_idl_file}")
-    message("[rtmbuild_genidl_no_py] - _idl_name : ${_idl_name}")
+    message("[rtmbuild_genidl_customed] - _idl_file : ${_idl_file}")
+    message("[rtmbuild_genidl_customed] - _idl_name : ${_idl_name}")
 
     # set(_input_idl ${PROJECT_SOURCE_DIR}/idl/${_idl})
 
@@ -77,9 +81,9 @@ macro(rtmbuild_genidl_no_py)
     list(APPEND ${PROJECT_NAME}_IDLLIBRARY_DIRS lib${_idl_name}Stub.so lib${_idl_name}Skel.so)
     # call the  rule to compile idl
     if(DEBUG_RTMBUILD_CMAKE)
-      message("[rtmbuild_genidl_no_py] ${_output_idl_hh}\n -> ${_idl_file} ${${_idl}_depends}")
-      message("[rtmbuild_genidl_no_py] ${_output_stub_cpp} ${_output_skel_cpp} ${_output_stub_h} ${_output_skel_h}\n -> ${_output_idl_hh}")
-      message("[rtmbuild_genidl_no_py] ${_output_stub_lib} ${_output_skel_lib}\n -> ${_output_stub_cpp} ${_output_stub_h} ${_output_skel_cpp} ${_output_skel_h}")
+      message("[rtmbuild_genidl_customed] ${_output_idl_hh}\n -> ${_idl_file} ${${_idl}_depends}")
+      message("[rtmbuild_genidl_customed] ${_output_stub_cpp} ${_output_skel_cpp} ${_output_stub_h} ${_output_skel_h}\n -> ${_output_idl_hh}")
+      message("[rtmbuild_genidl_customed] ${_output_stub_lib} ${_output_skel_lib}\n -> ${_output_stub_cpp} ${_output_stub_h} ${_output_skel_cpp} ${_output_skel_h}")
     endif()
     # cpp
     add_custom_command(OUTPUT ${_output_idl_hh}
@@ -97,7 +101,9 @@ macro(rtmbuild_genidl_no_py)
       DEPENDS ${_output_stub_cpp} ${_output_stub_h} ${_output_skel_cpp} ${_output_skel_h})
     list(APPEND ${PROJECT_NAME}_IDLLIBRARY_DIRS ${_output_stub_lib} ${_output_skel_lib})
     if(use_catkin)
-      install(PROGRAMS ${_output_stub_lib} ${_output_skel_lib} DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION})
+      # don't overwrite lib of CORBA skeleton and stub from other pkgs to avoid compile error in those pkgs
+      # install(PROGRAMS ${_output_stub_lib} ${_output_skel_lib} DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION})
+      install(PROGRAMS ${_output_stub_lib} ${_output_skel_lib} DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}/${PROJECT_NAME})
     endif()
     # python
     # don't generate python
@@ -133,11 +139,11 @@ macro(rtmbuild_genidl_no_py)
 
   if(_autogen)
     if(DEBUG_RTMBUILD_CMAKE)
-      message("[rtmbuild_genidl_no_py] ADDITIONAL_MAKE_CLEAN_FILES : ${_autogen}")
+      message("[rtmbuild_genidl_customed] ADDITIONAL_MAKE_CLEAN_FILES : ${_autogen}")
     endif()
     # Also set up to clean the srv_gen directory
     get_directory_property(_old_clean_files ADDITIONAL_MAKE_CLEAN_FILES)
     list(APPEND _old_clean_files ${_autogen})
     set_directory_properties(PROPERTIES ADDITIONAL_MAKE_CLEAN_FILES "${_old_clean_files}")
   endif(_autogen)
-endmacro(rtmbuild_genidl_no_py)
+endmacro(rtmbuild_genidl_customed)

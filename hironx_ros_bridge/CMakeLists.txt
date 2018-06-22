@@ -21,7 +21,7 @@ catkin_package(
 )
 
 # generate idl for old impedance controller
-rtmbuild_genidl_no_py()
+rtmbuild_genidl_customed()
 
 # generate bridge for old impedance controller
 rtmbuild_genbridge()
