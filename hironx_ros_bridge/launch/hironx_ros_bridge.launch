@@ -48,7 +48,7 @@
 
   <!-- Collision detection here runs external to the robot (on Ubuntu) and 
        visualizes the distance between each links. -->
-  <include file="$(find hrpsys_ros_bridge)/launch/collision_detector.launch">
+  <include file="$(find hrpsys_ros_bridge)/launch/collision_detector.launch" unless="$(arg USE_COLLISIONCHECK)">
     <arg name="MODEL_FILE" value="$(arg MODEL_FILE)" />
     <arg name="CONF_FILE" value="$(arg CONF_FILE_COLLISIONDETECT)" />
     <arg name="corbaport" default="$(arg corbaport)" />
