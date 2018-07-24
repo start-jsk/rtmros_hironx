@@ -1117,7 +1117,7 @@ class HIRONX(HrpsysConfigurator2):
             if groups[i][0] == limb:
                 return angles[i]
         print self.configurator_name, 'could not find limb name ' + limb
-        print self.configurator_name, ' in' + filter(lambda x: x[0], groups)
+        print self.configurator_name, ' in ' + str(map(lambda x: x[0], groups))
 
     def clearOfGroup(self, limb):
         '''!@brief
