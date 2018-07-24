@@ -199,6 +199,16 @@ class TestHiroLimb(TestHiro):
 
         self.robot.el_svc.setServoErrorLimit("all", 0.18) # default is 0.18
 
+    def test_getJointAnglesOfGroup(self):
+        self.robot.setJointAnglesOfGroup("torso", [-1.234], 3, wait=False)
+        self.robot.setJointAnglesOfGroup("head", [5.6789, -10.1112], 3, wait=False)
+        self.robot.setJointAnglesOfGroup("rarm", [-1.6, 0, -100, 15.2, 9.4,-3.2], 3, wait=False)
+        self.robot.setJointAnglesOfGroup("larm", [ 1.6, 0, -100,-15.2, 9.4, 3.2], 3, wait=True)
+        numpy.testing.assert_array_almost_equal([-1.234], self.robot.getJointAnglesOfGroup("torso"))
+        numpy.testing.assert_array_almost_equal([5.6789, -10.1112], self.robot.getJointAnglesOfGroup("head"))
+        numpy.testing.assert_array_almost_equal([-1.6, 0, -100, 15.2, 9.4,-3.2], self.robot.getJointAnglesOfGroup("rarm"))
+        numpy.testing.assert_array_almost_equal([ 1.6, 0, -100,-15.2, 9.4, 3.2], self.robot.getJointAnglesOfGroup("larm"))
+
     def test_movejoints_neck_waist(self):
         '''
         Move neck and waist joints to the positional limit defined in
