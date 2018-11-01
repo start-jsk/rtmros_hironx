@@ -33,9 +33,11 @@
 # POSSIBILITY OF SUCH DAMAGE.
 
 import os
-
-from python_qt_binding.QtGui import QMessageBox, QLabel, QPalette
-
+try:
+    from python_qt_binding.QtGui import QMessageBox, QLabel, QPalette
+except ImportError: # Qt5
+    from python_qt_binding.QtWidgets import QMessageBox, QLabel
+    from python_qt_binding.QtGui import QPalette
 from hrpsys_ros_bridge.hrpsys_dashboard import HrpsysDashboard
 from rqt_robot_dashboard.widgets import MenuDashWidget
 

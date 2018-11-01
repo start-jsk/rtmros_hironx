@@ -43,8 +43,12 @@ from hrpsys import rtm
 from hrpsys_ros_bridge.hrpsys_dashboard import HrpsysDashboard
 from python_qt_binding import loadUi
 from python_qt_binding.QtCore import Qt, Signal
-from python_qt_binding.QtGui import (QHeaderView, QItemSelectionModel,
-                                     QWidget)
+try:
+    from python_qt_binding.QtGui import (QHeaderView, QItemSelectionModel,
+                                         QWidget)
+except ImportError: #Qt5
+    from python_qt_binding.QtWidgets import QHeaderView, QWidget
+    from python_qt_binding.QtCore import QItemSelectionModel
 from rosgraph import Master
 from rospkg import RosPack
 import rospy
