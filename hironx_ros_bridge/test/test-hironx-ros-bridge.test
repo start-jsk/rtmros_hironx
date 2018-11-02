@@ -13,12 +13,12 @@
   <param name="joint_states_test/test_duration" value="5.0" />
   <param name="joint_states_test/wait_time" value="60.0" /> <!-- as opposed to its default: 20.0 -->
 
-  <test test-name="joint_states_test" pkg="rostest" type="hztest" name="joint_states_test" time-limit="100"/>
+  <test test-name="joint_states_test" pkg="rostest" type="hztest" name="joint_states_test" time-limit="200" retry="2" />
 
   <test test-name="test_no_moveit" pkg="hironx_ros_bridge" type="test_no_moveit.py" name="test_no_moveit"
         args="HiroNX(Robot)0
               $(find hironx_ros_bridge)/models/kawada-hironx.dae
               -ORBInitRef NameService=corbaloc:iiop:localhost:$(arg corbaport)/NameService"
-         time-limit="100" />
+         time-limit="200" retry="2" />
 
 </launch>
