@@ -8,6 +8,7 @@
   <arg name="USE_ROBOTHARDWARE" default="true" />
   <arg name="USE_SERVOCONTROLLER" default="true" />
   <arg name="USE_IMPEDANCECONTROLLER" default="false"/>
+  <arg name="USE_COLLISIONCHECK" default="false"/>
   <arg name="USE_HAND_JOINT_STATE_PUBLISHER" default="true"/>
 
   <!-- BEGIN:hrpsys.py setting -->
@@ -32,6 +33,7 @@
     <arg name="USE_ROBOTHARDWARE" value="$(arg USE_ROBOTHARDWARE)" />
     <arg name="USE_SERVOCONTROLLER" value="$(arg USE_SERVOCONTROLLER)" />
     <arg name="USE_IMPEDANCECONTROLLER" value="$(arg USE_IMPEDANCECONTROLLER)"/>
+    <arg name="USE_COLLISIONCHECK" value="$(arg USE_COLLISIONCHECK)"/>
   </include>
 
   <node if="$(arg USE_HAND_JOINT_STATE_PUBLISHER)"
