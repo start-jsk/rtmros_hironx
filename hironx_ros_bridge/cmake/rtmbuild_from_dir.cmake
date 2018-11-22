@@ -171,20 +171,19 @@ endmacro(rtmbuild_init_from_dir)
 # add_custom_command to compile idl/*.idl file into c++
 # Change points from original rtmbuild_genidl:
 # - use idl dir name given as argument
+# - add suffix given as argument to lib of CORBA skeleton and stub
 # - don't generate python
-# - don't overwrite lib of CORBA skeleton and stub from other pkgs to avoid compile error in those pkgs
 # use idl dir name given as argument
+# add suffix given as argument to lib of CORBA skeleton and stub
 # macro(rtmbuild_genidl)
-macro(rtmbuild_genidl_from_dir _idl_dir)
+macro(rtmbuild_genidl_from_dir _idl_dir _lib_suffix)
   message("[rtmbuild_genidl_from_dir] add_custom_command for idl files in package ${PROJECT_NAME}")
 
   set(_autogen "")
 
   if (use_catkin)
     set(_output_cpp_dir ${CATKIN_DEVEL_PREFIX}/${CATKIN_PACKAGE_INCLUDE_DESTINATION})
-    # don't overwrite lib of CORBA skeleton and stub from other pkgs to avoid compile error in those pkgs
-    # set(_output_lib_dir ${CATKIN_DEVEL_PREFIX}/${CATKIN_PACKAGE_LIB_DESTINATION})
-    set(_output_lib_dir ${CATKIN_DEVEL_PREFIX}/${CATKIN_PACKAGE_LIB_DESTINATION}/${PROJECT_NAME})
+    set(_output_lib_dir ${CATKIN_DEVEL_PREFIX}/${CATKIN_PACKAGE_LIB_DESTINATION})
     # don't generate python
     # set(_output_python_dir ${CATKIN_DEVEL_PREFIX}/${CATKIN_GLOBAL_PYTHON_DESTINATION}/${PROJECT_NAME})
     unset(_output_python_dir)
@@ -248,9 +247,13 @@ macro(rtmbuild_genidl_from_dir _idl_dir)
     set(_output_skel_h ${_output_cpp_dir}/${_idl_dir}/${_idl_name}Skel.h)
     set(_output_stub_cpp ${_output_cpp_dir}/${_idl_dir}/${_idl_name}Stub.cpp)
     set(_output_skel_cpp ${_output_cpp_dir}/${_idl_dir}/${_idl_name}Skel.cpp)
-    set(_output_stub_lib ${_output_lib_dir}/lib${_idl_name}Stub.so)
-    set(_output_skel_lib ${_output_lib_dir}/lib${_idl_name}Skel.so)
-    list(APPEND ${PROJECT_NAME}_IDLLIBRARY_DIRS lib${_idl_name}Stub.so lib${_idl_name}Skel.so)
+    # add suffix given as argument to lib of CORBA skeleton and stub
+    # set(_output_stub_lib ${_output_lib_dir}/lib${_idl_name}Stub.so)
+    # set(_output_skel_lib ${_output_lib_dir}/lib${_idl_name}Skel.so)
+    # list(APPEND ${PROJECT_NAME}_IDLLIBRARY_DIRS lib${_idl_name}Stub.so lib${_idl_name}Skel.so)
+    set(_output_stub_lib ${_output_lib_dir}/lib${_idl_name}Stub_${_lib_suffix}.so)
+    set(_output_skel_lib ${_output_lib_dir}/lib${_idl_name}Skel_${_lib_suffix}.so)
+    list(APPEND ${PROJECT_NAME}_IDLLIBRARY_DIRS lib${_idl_name}Stub_${_lib_suffix}.so lib${_idl_name}Skel_${_lib_suffix}.so)
     # call the  rule to compile idl
     if(DEBUG_RTMBUILD_CMAKE)
       message("[rtmbuild_genidl_from_dir] ${_output_idl_hh}\n -> ${_idl_file} ${${_idl}_depends}")
@@ -279,9 +282,7 @@ macro(rtmbuild_genidl_from_dir _idl_dir)
       DEPENDS ${_output_stub_cpp} ${_output_stub_h} ${_output_skel_cpp} ${_output_skel_h})
     list(APPEND ${PROJECT_NAME}_IDLLIBRARY_DIRS ${_output_stub_lib} ${_output_skel_lib})
     if(use_catkin)
-      # don't overwrite lib of CORBA skeleton and stub from other pkgs to avoid compile error in those pkgs
-      # install(PROGRAMS ${_output_stub_lib} ${_output_skel_lib} DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION})
-      install(PROGRAMS ${_output_stub_lib} ${_output_skel_lib} DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}/${PROJECT_NAME})
+      install(PROGRAMS ${_output_stub_lib} ${_output_skel_lib} DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION})
     endif()
     # python
     # don't generate python
