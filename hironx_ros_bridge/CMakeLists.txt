@@ -21,7 +21,7 @@ catkin_package(
 )
 
 # generate idl for old impedance controller
-rtmbuild_genidl_from_dir(idl_315_1_9 315_1_9)
+rtmbuild_genidl_from_dir(idl_315_1_9 315_1_9 src/hironx_ros_bridge/hrpsys_315_1_9/hrpsys)
 
 # generate bridge for old impedance controller
 rtmbuild_genbridge()

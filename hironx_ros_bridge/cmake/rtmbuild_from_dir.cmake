@@ -172,11 +172,12 @@ endmacro(rtmbuild_init_from_dir)
 # Change points from original rtmbuild_genidl:
 # - use idl dir name given as argument
 # - add suffix given as argument to lib of CORBA skeleton and stub
-# - don't generate python
+# - generate idl python in dir given as argument
 # use idl dir name given as argument
 # add suffix given as argument to lib of CORBA skeleton and stub
+# generate idl python in dir given as argument
 # macro(rtmbuild_genidl)
-macro(rtmbuild_genidl_from_dir _idl_dir _lib_suffix)
+macro(rtmbuild_genidl_from_dir _idl_dir _lib_suffix _output_idl_py_dir)
   message("[rtmbuild_genidl_from_dir] add_custom_command for idl files in package ${PROJECT_NAME}")
 
   set(_autogen "")
@@ -184,9 +185,9 @@ macro(rtmbuild_genidl_from_dir _idl_dir _lib_suffix)
   if (use_catkin)
     set(_output_cpp_dir ${CATKIN_DEVEL_PREFIX}/${CATKIN_PACKAGE_INCLUDE_DESTINATION})
     set(_output_lib_dir ${CATKIN_DEVEL_PREFIX}/${CATKIN_PACKAGE_LIB_DESTINATION})
-    # don't generate python
+    # generate idl python in dir given as argument
     # set(_output_python_dir ${CATKIN_DEVEL_PREFIX}/${CATKIN_GLOBAL_PYTHON_DESTINATION}/${PROJECT_NAME})
-    unset(_output_python_dir)
+    set(_output_idl_py_dir_abs ${PROJECT_SOURCE_DIR}/${_output_idl_py_dir})
   else()
     # use idl dir name given as argument
     # set(_output_dir ${PROJECT_SOURCE_DIR}/idl_gen)
@@ -195,17 +196,15 @@ macro(rtmbuild_genidl_from_dir _idl_dir _lib_suffix)
     set(_output_dir ${PROJECT_SOURCE_DIR}/${_idl_dir}_gen)
     set(_output_cpp_dir ${PROJECT_SOURCE_DIR}/${_idl_dir}_gen/cpp/${PROJECT_NAME})
     set(_output_lib_dir ${PROJECT_SOURCE_DIR}/${_idl_dir}_gen/lib)
-    # don't generate python
+    # generate idl python in dir given as argument
     # set(_output_python_dir ${PROJECT_SOURCE_DIR}/src/${PROJECT_NAME})
-    unset(_output_python_dir)
+    set(_output_idl_py_dir_abs ${PROJECT_SOURCE_DIR}/${_output_idl_py_dir})
     # use idl dir name given as argument
     # include_directories(${PROJECT_SOURCE_DIR}/idl_gen/cpp/)
     include_directories(${PROJECT_SOURCE_DIR}/${_idl_dir}_gen/cpp/)
   endif()
 
-  # don't generate python
-  # set(_output_idl_py_files "")
-  unset(_output_idl_py_files)
+  set(_output_idl_py_files "")
   set(_output_idl_hh_files "")
   # use idl dir name given as argument
   # file(MAKE_DIRECTORY ${_output_cpp_dir}/idl)
@@ -215,8 +214,9 @@ macro(rtmbuild_genidl_from_dir _idl_dir _lib_suffix)
 
   message("[rtmbuild_genidl_from_dir] - _output_cpp_dir : ${_output_cpp_dir}")
   message("[rtmbuild_genidl_from_dir] - _output_lib_dir : ${_output_lib_dir}")
-  # don't generate python
+  # generate idl python in dir given as argument
   # message("[rtmbuild_genidl] - _output_python_dir : ${_output_python_dir}")
+  message("[rtmbuild_genidl_from_dir] - _output_idl_py_dir_abs: ${_output_idl_py_dir_abs}")
 
   ## RTMBUILD_${PROJECT_NAME}_genrpc) depends on each RTMBUILD_${PROJECT_NAME}_${_idl_name}_genrpc)
   add_custom_target(RTMBUILD_${PROJECT_NAME}_genrpc)
@@ -235,9 +235,9 @@ macro(rtmbuild_genidl_from_dir _idl_dir _lib_suffix)
     # use idl dir name given as argument
     # set(_output_idl_hh ${_output_cpp_dir}/idl/${_idl_name}.hh)
     set(_output_idl_hh ${_output_cpp_dir}/${_idl_dir}/${_idl_name}.hh)
-    # don't generate python
+    # generate idl python in dir given as argument
     # set(_output_idl_py ${_output_python_dir}/${_idl_name}_idl.py)
-    unset(_output_idl_py)
+    set(_output_idl_py ${_output_idl_py_dir_abs}/${_idl_name}_idl.py)
     # use idl dir name given as argument
     # set(_output_stub_h ${_output_cpp_dir}/idl/${_idl_name}Stub.h)
     # set(_output_skel_h ${_output_cpp_dir}/idl/${_idl_name}Skel.h)
@@ -285,14 +285,11 @@ macro(rtmbuild_genidl_from_dir _idl_dir _lib_suffix)
       install(PROGRAMS ${_output_stub_lib} ${_output_skel_lib} DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION})
     endif()
     # python
-    # don't generate python
-    # list(APPEND _output_idl_py_files ${_output_idl_py})
+    list(APPEND _output_idl_py_files ${_output_idl_py})
     # cpp
     list(APPEND _output_idl_hh_files ${_output_idl_hh})
     #
-    # don't generate python
-    # list(APPEND _autogen ${_output_stub_lib} ${_output_skel_lib} ${_output_idl_py})
-    list(APPEND _autogen ${_output_stub_lib} ${_output_skel_lib})
+    list(APPEND _autogen ${_output_stub_lib} ${_output_skel_lib} ${_output_idl_py})
 
     # add custom target
     add_custom_target(RTMBUILD_${PROJECT_NAME}_${_idl_name}_genrpc DEPENDS ${_output_stub_lib} ${_output_skel_lib})
@@ -302,7 +299,7 @@ macro(rtmbuild_genidl_from_dir _idl_dir _lib_suffix)
 
   endforeach(_idl_file)
   # python
-  # don't generate python
+  # generate idl python in dir given as argument
   # add_custom_target(RTMBUILD_${PROJECT_NAME}_genpy DEPENDS ${_output_idl_py_files})
   # add_custom_command(OUTPUT ${_output_idl_py_files}
   #   COMMAND mkdir -p ${_output_python_dir}
@@ -311,6 +308,24 @@ macro(rtmbuild_genidl_from_dir _idl_dir _lib_suffix)
   #   COMMENT "Generating python/idl from ${${PROJECT_NAME}_idl_files}"
   #   DEPENDS ${${PROJECT_NAME}_idl_files})
   # add_dependencies(RTMBUILD_${PROJECT_NAME}_genrpc RTMBUILD_${PROJECT_NAME}_genpy)
+  string(RANDOM _rand_str)
+  set(_rtm_idlc_py_dir /tmp/rtm_idlc_py_${PROJECT_NAME}_${_rand_str})
+  set(_rtm_idlc_idl_py_files "")
+  foreach(_output_idl_py ${_output_idl_py_files})
+    string(REPLACE ${_output_idl_py_dir_abs} ${_rtm_idlc_py_dir} _rtm_idlc_idl_py ${_output_idl_py})
+    list(APPEND _rtm_idlc_idl_py_files ${_rtm_idlc_idl_py})
+  endforeach(_output_idl_py)
+  add_custom_target(RTMBUILD_${PROJECT_NAME}_genpy DEPENDS ${_output_idl_py_files})
+  add_custom_command(OUTPUT ${_output_idl_py_files}
+    COMMAND mkdir -p ${_rtm_idlc_py_dir}
+    COMMAND echo \"${rtm_idlc} -bpython -I${rtm_idldir} -C${_rtm_idlc_py_dir} ${${PROJECT_NAME}_idl_files}\"
+    COMMAND ${rtm_idlc} -bpython -I${rtm_idldir} -C${_rtm_idlc_py_dir} ${${PROJECT_NAME}_idl_files}
+    COMMAND mkdir -p ${_output_idl_py_dir_abs}
+    COMMAND cp ${_rtm_idlc_idl_py_files} ${_output_idl_py_dir_abs}
+    COMMAND rm -rf ${_rtm_idlc_py_dir}
+    COMMENT "Generating python/idl from ${${PROJECT_NAME}_idl_files}"
+    DEPENDS ${${PROJECT_NAME}_idl_files})
+  add_dependencies(RTMBUILD_${PROJECT_NAME}_genrpc RTMBUILD_${PROJECT_NAME}_genpy)
   # cpp (generate all .hh filesbefore compiling rpc https://github.com/fkanehiro/hrpsys-base/pull/886)
   add_custom_target(RTMBUILD_${PROJECT_NAME}_genhh DEPENDS ${_output_idl_hh_files})
   add_dependencies(RTMBUILD_${PROJECT_NAME}_genrpc RTMBUILD_${PROJECT_NAME}_genhh)
