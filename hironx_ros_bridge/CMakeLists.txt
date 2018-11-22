@@ -8,7 +8,7 @@ find_package(Boost REQUIRED COMPONENTS system)
 catkin_python_setup()
 
 # for generating bridge for old impedance controller
-include(${PROJECT_SOURCE_DIR}/cmake/rtmbuild_customed.cmake)
+include(${PROJECT_SOURCE_DIR}/cmake/rtmbuild_from_dir.cmake)
 
 # initialize rtmbuild for old impedance controller
 rtmbuild_init_from_dir(idl_315_1_9)
@@ -17,7 +17,7 @@ rtmbuild_init_from_dir(idl_315_1_9)
 catkin_package(
     CATKIN_DEPENDS hrpsys_ros_bridge roslib #
     INCLUDE_DIRS include
-    CFG_EXTRAS rtmbuild_customed.cmake
+    CFG_EXTRAS rtmbuild_from_dir.cmake
 )
 
 # generate idl for old impedance controller
