@@ -11,7 +11,7 @@ catkin_python_setup()
 include(${PROJECT_SOURCE_DIR}/cmake/rtmbuild_customed.cmake)
 
 # initialize rtmbuild for old impedance controller
-rtmbuild_init()
+rtmbuild_init_from_dir(idl_315_1_9)
 
 # call catkin_package, after rtmbuild_init, before rtmbuild_gen*
 catkin_package(
@@ -21,7 +21,7 @@ catkin_package(
 )
 
 # generate idl for old impedance controller
-rtmbuild_genidl_customed()
+rtmbuild_genidl_from_dir(idl_315_1_9)
 
 # generate bridge for old impedance controller
 rtmbuild_genbridge()
@@ -87,7 +87,7 @@ install(DIRECTORY conf DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION} PATTERN "
 install(DIRECTORY models DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION} PATTERN ".svn" EXCLUDE)
 install(DIRECTORY resource DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION})
 install(DIRECTORY test DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION} USE_SOURCE_PERMISSIONS PATTERN ".svn" EXCLUDE)
-install(DIRECTORY idl DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION} USE_SOURCE_PERMISSIONS)
+install(DIRECTORY idl_315_1_9 DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION} USE_SOURCE_PERMISSIONS)
 install(DIRECTORY cmake DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION} USE_SOURCE_PERMISSIONS)
 install(FILES rqt_plugin.xml DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION})
 
