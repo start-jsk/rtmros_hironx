@@ -2,6 +2,17 @@
 Changelog for package hironx_ros_bridge
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Avoid node clashing when USE_COLLISIONCHECK is true (`#528 <https://github.com/start-jsk/rtmros_hironx/issues/528>`_ )
+* hironx_ros_bridge/test/test-hironx-ros-bridge.test: increse time-limit from 100 to 200 (`#531 <https://github.com/start-jsk/rtmros_hironx/issues/531>`_ )
+
+  * increse time-limit from 100 to 200, to solve https://api.travis-ci.org/v3/job/407698809/log.txt
+
+* fix python_qt_binding for qt5 (`#525 <https://github.com/start-jsk/rtmros_hironx/issues/525>`_ )
+* hironx_ros_bridge/src/hironx_ros_bridge/old_api.py: add python file to support old api (`#521 <https://github.com/start-jsk/rtmros_hironx/issues/521>`_ )
+* Contributors: Guilherme Affonso, Kei Okada, Felix von Drigalski
+
 2.1.0 (2017-09-07)
 ------------------
 * get nshost from rtmnameserver, sometimes nshost is different from rosmaster (`#513 <https://github.com/start-jsk/rtmros_hironx/issues/513>`_)

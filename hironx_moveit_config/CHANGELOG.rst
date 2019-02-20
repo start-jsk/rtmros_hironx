@@ -2,6 +2,9 @@
 Changelog for package hironx_moveit_config
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+
 2.1.0 (2017-09-07)
 ------------------
 * set trajectory_execution/allowed_execution_duration_scaling to 2.0 (`#518 <https://github.com/start-jsk/rtmros_hironx/issues/518>`_)
