@@ -2,8 +2,8 @@
 Changelog for package hironx_ros_bridge
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+2.1.1 (2019-02-20)
+------------------
 * Avoid node clashing when USE_COLLISIONCHECK is true (`#528 <https://github.com/start-jsk/rtmros_hironx/issues/528>`_ )
 * hironx_ros_bridge/test/test-hironx-ros-bridge.test: increse time-limit from 100 to 200 (`#531 <https://github.com/start-jsk/rtmros_hironx/issues/531>`_ )
 
