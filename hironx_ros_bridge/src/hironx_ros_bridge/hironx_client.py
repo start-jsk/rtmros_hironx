@@ -319,7 +319,9 @@ class HIRONX(HrpsysConfigurator2):
                                "the function call was successful, since not " +
                                "all methods internally called return status")
 
-    def init(self, robotname="HiroNX(Robot)0", url=""):
+    _collision = False
+
+    def init(self, robotname="HiroNX(Robot)0", url="", collision=False):
         '''
         Calls init from its superclass, which tries to connect RTCManager,
         looks for ModelLoader, and starts necessary RTC components. Also runs
@@ -330,6 +332,9 @@ class HIRONX(HrpsysConfigurator2):
         @type url: str
         '''
         # reload for hrpsys 315.1.8
+        
+        self._collision = collision
+
         print(self.configurator_name + "waiting ModelLoader")
         HrpsysConfigurator.waitForModelLoader(self)
         print(self.configurator_name + "start hrpsys")
@@ -383,6 +388,7 @@ class HIRONX(HrpsysConfigurator2):
             pass
         self.setSelfGroups()
         self.hrpsys_version = self.fk.ref.get_component_profile().version
+
 
     def goOffPose(self, tm=7):
         '''
@@ -442,16 +448,18 @@ class HIRONX(HrpsysConfigurator2):
         @rerutrn List of available components. Each element consists of a list
                  of abbreviated and full names of the component.
         '''
+
         rtclist = [
             ['seq', "SequencePlayer"],
             ['sh', "StateHolder"],
             ['fk', "ForwardKinematics"],
             ['ic', "ImpedanceController"],
             ['el', "SoftErrorLimiter"],
-            # ['co', "CollisionDetector"],
+            ['co', "CollisionDetector"],
             ['sc', "ServoController"],
             ['log', "DataLogger"],
             ]
+
         if hasattr(self, 'rmfo'):
             self.ms.load("RemoveForceSensorLinkOffset")
             self.ms.load("AbsoluteForceSensor")
@@ -461,6 +469,13 @@ class HIRONX(HrpsysConfigurator2):
                 rtclist.append(['rmfo', "AbsoluteForceSensor"])
             else:
                 print "Component rmfo is not loadable."
+
+        if self._collision:
+            print "\nCollision Detection on \n"
+        else:
+            print "\nCollision Detection off\n"
+            rtclist.remove(['co', "CollisionDetector"])
+
         return rtclist
 
     # hand interface
