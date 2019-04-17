@@ -177,7 +177,7 @@ endmacro(rtmbuild_init_from_dir)
 # add suffix given as argument to lib of CORBA skeleton and stub
 # generate idl python in dir given as argument
 # macro(rtmbuild_genidl)
-macro(rtmbuild_genidl_from_dir _idl_dir _lib_suffix _output_idl_py_dir)
+macro(rtmbuild_genidl_from_dir _idl_dir _lib_suffix)
   message("[rtmbuild_genidl_from_dir] add_custom_command for idl files in package ${PROJECT_NAME}")
 
   set(_autogen "")
@@ -187,7 +187,7 @@ macro(rtmbuild_genidl_from_dir _idl_dir _lib_suffix _output_idl_py_dir)
     set(_output_lib_dir ${CATKIN_DEVEL_PREFIX}/${CATKIN_PACKAGE_LIB_DESTINATION})
     # generate idl python in dir given as argument
     # set(_output_python_dir ${CATKIN_DEVEL_PREFIX}/${CATKIN_GLOBAL_PYTHON_DESTINATION}/${PROJECT_NAME})
-    set(_output_idl_py_dir_abs ${PROJECT_SOURCE_DIR}/${_output_idl_py_dir})
+    set(_output_idl_py_dir ${CATKIN_DEVEL_PREFIX}/${CATKIN_GLOBAL_PYTHON_DESTINATION}/${PROJECT_NAME}/${_idl_dir})
   else()
     # use idl dir name given as argument
     # set(_output_dir ${PROJECT_SOURCE_DIR}/idl_gen)
@@ -198,7 +198,7 @@ macro(rtmbuild_genidl_from_dir _idl_dir _lib_suffix _output_idl_py_dir)
     set(_output_lib_dir ${PROJECT_SOURCE_DIR}/${_idl_dir}_gen/lib)
     # generate idl python in dir given as argument
     # set(_output_python_dir ${PROJECT_SOURCE_DIR}/src/${PROJECT_NAME})
-    set(_output_idl_py_dir_abs ${PROJECT_SOURCE_DIR}/${_output_idl_py_dir})
+    set(_output_idl_py_dir ${PROJECT_SOURCE_DIR}/src/${PROJECT_NAME}/${_idl_dir})
     # use idl dir name given as argument
     # include_directories(${PROJECT_SOURCE_DIR}/idl_gen/cpp/)
     include_directories(${PROJECT_SOURCE_DIR}/${_idl_dir}_gen/cpp/)
@@ -216,7 +216,7 @@ macro(rtmbuild_genidl_from_dir _idl_dir _lib_suffix _output_idl_py_dir)
   message("[rtmbuild_genidl_from_dir] - _output_lib_dir : ${_output_lib_dir}")
   # generate idl python in dir given as argument
   # message("[rtmbuild_genidl] - _output_python_dir : ${_output_python_dir}")
-  message("[rtmbuild_genidl_from_dir] - _output_idl_py_dir_abs: ${_output_idl_py_dir_abs}")
+  message("[rtmbuild_genidl_from_dir] - _output_idl_py_dir: ${_output_idl_py_dir}")
 
   ## RTMBUILD_${PROJECT_NAME}_genrpc) depends on each RTMBUILD_${PROJECT_NAME}_${_idl_name}_genrpc)
   add_custom_target(RTMBUILD_${PROJECT_NAME}_genrpc)
@@ -237,7 +237,7 @@ macro(rtmbuild_genidl_from_dir _idl_dir _lib_suffix _output_idl_py_dir)
     set(_output_idl_hh ${_output_cpp_dir}/${_idl_dir}/${_idl_name}.hh)
     # generate idl python in dir given as argument
     # set(_output_idl_py ${_output_python_dir}/${_idl_name}_idl.py)
-    set(_output_idl_py ${_output_idl_py_dir_abs}/${_idl_name}_idl.py)
+    set(_output_idl_py ${_output_idl_py_dir}/${_idl_name}_idl.py)
     # use idl dir name given as argument
     # set(_output_stub_h ${_output_cpp_dir}/idl/${_idl_name}Stub.h)
     # set(_output_skel_h ${_output_cpp_dir}/idl/${_idl_name}Skel.h)
@@ -312,16 +312,18 @@ macro(rtmbuild_genidl_from_dir _idl_dir _lib_suffix _output_idl_py_dir)
   set(_rtm_idlc_py_dir /tmp/rtm_idlc_py_${PROJECT_NAME}_${_rand_str})
   set(_rtm_idlc_idl_py_files "")
   foreach(_output_idl_py ${_output_idl_py_files})
-    string(REPLACE ${_output_idl_py_dir_abs} ${_rtm_idlc_py_dir} _rtm_idlc_idl_py ${_output_idl_py})
+    string(REPLACE ${_output_idl_py_dir} ${_rtm_idlc_py_dir} _rtm_idlc_idl_py ${_output_idl_py})
     list(APPEND _rtm_idlc_idl_py_files ${_rtm_idlc_idl_py})
   endforeach(_output_idl_py)
-  add_custom_target(RTMBUILD_${PROJECT_NAME}_genpy DEPENDS ${_output_idl_py_files})
-  add_custom_command(OUTPUT ${_output_idl_py_files}
+  set(_output_idl_py_dir_init "${_output_idl_py_dir}/__init__.py")
+  add_custom_target(RTMBUILD_${PROJECT_NAME}_genpy DEPENDS ${_output_idl_py_files} ${_output_idl_py_dir_init})
+  add_custom_command(OUTPUT ${_output_idl_py_files} ${_output_idl_py_dir_init}
     COMMAND mkdir -p ${_rtm_idlc_py_dir}
     COMMAND echo \"${rtm_idlc} -bpython -I${rtm_idldir} -C${_rtm_idlc_py_dir} ${${PROJECT_NAME}_idl_files}\"
     COMMAND ${rtm_idlc} -bpython -I${rtm_idldir} -C${_rtm_idlc_py_dir} ${${PROJECT_NAME}_idl_files}
-    COMMAND mkdir -p ${_output_idl_py_dir_abs}
-    COMMAND cp ${_rtm_idlc_idl_py_files} ${_output_idl_py_dir_abs}
+    COMMAND mkdir -p ${_output_idl_py_dir}
+    COMMAND touch ${_output_idl_py_dir_init}
+    COMMAND cp ${_rtm_idlc_idl_py_files} ${_output_idl_py_dir}
     COMMAND rm -rf ${_rtm_idlc_py_dir}
     COMMENT "Generating python/idl from ${${PROJECT_NAME}_idl_files}"
     DEPENDS ${${PROJECT_NAME}_idl_files})
