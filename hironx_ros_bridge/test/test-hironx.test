@@ -25,4 +25,7 @@
         args="-ORBInitRef NameService=corbaloc:iiop:localhost:2809/NameService" />
   <test type="test_hironx_ik_noinit.py" pkg="hironx_ros_bridge" test-name="test_hironx_ik_noinit" time-limit="3000" retry="4"
         args="-ORBInitRef NameService=corbaloc:iiop:localhost:2809/NameService" />
+  <test type="test_hironx_client.py" pkg="hironx_ros_bridge"
+        test-name="test_hironx_client" time-limit="3000"
+        args="-ORBInitRef NameService=corbaloc:iiop:localhost:2809/NameService" />
 </launch>
