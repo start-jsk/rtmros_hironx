@@ -32,6 +32,7 @@
 # ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
 
+import copy
 import math
 import numpy
 import os
@@ -448,22 +449,46 @@ class HIRONX(HrpsysConfigurator2):
             ['fk', "ForwardKinematics"],
             ['ic', "ImpedanceController"],
             ['el', "SoftErrorLimiter"],
+            ['co', "CollisionDetector"],
             ['sc', "ServoController"],
             ['log', "DataLogger"],
             ]
+
+        # Want to move the following to upstream:
+        ## If "(RTC name).enable: NO" is set in RobotHardware conf, remove that RTC
+        ## e.g. "CollisionDetector.enable: NO" in /opt/jsk/etc/HIRONX/hrprtc/Robot.conf
+        if self.ms and self.ms.ref and len(self.ms.ref.get_component_profiles()) > 0:
+            for rtc in copy.deepcopy(rtclist):
+                try:
+                    enable = next(p for p
+                                  in self.ms.ref.get_component_profiles()[0].properties
+                                  if p.name == (rtc[1] + '.enable')).value.value()
+                except StopIteration:
+                    enable = 'YES'
+                if enable == 'NO':
+                    rtclist.remove(rtc)
+                elif enable != 'YES':
+                    print(self.configurator_name +
+                          '\033[31mConfig "' + (rtc[1] + '.enable') + '" is ' +
+                          enable + '. Set YES or NO\033[0m')
+
+        # Specific code to current HIRONX status:
+        ## CollisionDetector.enable is not set in normal conf, but we must remove CollisionDetector
         if self.ms and self.ms.ref and len(self.ms.ref.get_component_profiles()) > 0:
             try:
-                is_co_enabled = next(p for p in self.ms.ref.get_component_profiles()[0].properties
-                                     if p.name == 'is_collision_detector_enabled').value.value()
+                enable = next(p for p
+                              in self.ms.ref.get_component_profiles()[0].properties
+                              if p.name == 'CollisionDetector.enable').value.value()
             except StopIteration:
-                is_co_enabled = 'NO'
-            if is_co_enabled == 'YES':
-                tmpidx = rtclist.index(['el', "SoftErrorLimiter"])
-                rtclist = rtclist[0:tmpidx+1] + [['co', "CollisionDetector"]] + rtclist[tmpidx+1:]
-            elif is_co_enabled != 'NO':
-                print(self.configurator_name +
-                      "\033[31mConfig 'is_collision_detector_enabled' is " + is_co_enabled +
-                      ". Set YES or NO\033[0m")
+                enable = 'NO'
+            if enable == 'NO':
+                try:
+                    rtclist.remove(['co', "CollisionDetector"])
+                except ValueError:  # list.remove(x): x not in list
+                    pass
+        else:
+            rtclist.remove(['co', "CollisionDetector"])
+
         if hasattr(self, 'rmfo'):
             self.ms.load("RemoveForceSensorLinkOffset")
             self.ms.load("AbsoluteForceSensor")
