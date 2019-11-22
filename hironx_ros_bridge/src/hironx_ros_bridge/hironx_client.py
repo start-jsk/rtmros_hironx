@@ -474,20 +474,18 @@ class HIRONX(HrpsysConfigurator2):
 
         # Specific code to current HIRONX status:
         ## CollisionDetector.enable is not set in normal conf, but we must remove CollisionDetector
-        if self.ms and self.ms.ref and len(self.ms.ref.get_component_profiles()) > 0:
+        co_rtc = ['co', "CollisionDetector"]
+        if co_rtc not in rtclist:
+            pass
+        elif self.ms and self.ms.ref and len(self.ms.ref.get_component_profiles()) > 0:
             try:
-                enable = next(p for p
-                              in self.ms.ref.get_component_profiles()[0].properties
-                              if p.name == 'CollisionDetector.enable').value.value()
+                next(p for p
+                     in self.ms.ref.get_component_profiles()[0].properties
+                     if p.name == (co_rtc[1] + '.enable')).value.value()
             except StopIteration:
-                enable = 'NO'
-            if enable == 'NO':
-                try:
-                    rtclist.remove(['co', "CollisionDetector"])
-                except ValueError:  # list.remove(x): x not in list
-                    pass
+                rtclist.remove(co_rtc)
         else:
-            rtclist.remove(['co', "CollisionDetector"])
+            rtclist.remove(co_rtc)
 
         if hasattr(self, 'rmfo'):
             self.ms.load("RemoveForceSensorLinkOffset")
