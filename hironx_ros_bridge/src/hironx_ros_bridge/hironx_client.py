@@ -448,10 +448,22 @@ class HIRONX(HrpsysConfigurator2):
             ['fk', "ForwardKinematics"],
             ['ic', "ImpedanceController"],
             ['el', "SoftErrorLimiter"],
-            # ['co', "CollisionDetector"],
             ['sc', "ServoController"],
             ['log', "DataLogger"],
             ]
+        if self.ms and self.ms.ref and len(self.ms.ref.get_component_profiles()) > 0:
+            try:
+                is_co_enabled = next(p for p in self.ms.ref.get_component_profiles()[0].properties
+                                     if p.name == 'is_collision_detector_enabled').value.value()
+            except StopIteration:
+                is_co_enabled = 'NO'
+            if is_co_enabled == 'YES':
+                tmpidx = rtclist.index(['el', "SoftErrorLimiter"])
+                rtclist = rtclist[0:tmpidx+1] + [['co', "CollisionDetector"]] + rtclist[tmpidx+1:]
+            elif is_co_enabled != 'NO':
+                print(self.configurator_name +
+                      "\033[31mConfig 'is_collision_detector_enabled' is " + is_co_enabled +
+                      ". Set YES or NO\033[0m")
         if hasattr(self, 'rmfo'):
             self.ms.load("RemoveForceSensorLinkOffset")
             self.ms.load("AbsoluteForceSensor")
