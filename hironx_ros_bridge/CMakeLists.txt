@@ -44,7 +44,8 @@ configure_file(conf/xml.in                      ${PROJECT_SOURCE_DIR}/conf/${ROB
 configure_file(conf/nosim.xml.in                ${PROJECT_SOURCE_DIR}/conf/${ROBOT_NAME}_nosim.xml)
 configure_file(conf/conf.in                     ${PROJECT_SOURCE_DIR}/conf/${ROBOT_NAME}.conf)
 configure_file(conf/nosim.conf.in               ${PROJECT_SOURCE_DIR}/conf/${ROBOT_NAME}_nosim.conf)
-add_custom_target(${PROJECT_NAME}_model_files ALL DEPENDS ${PROJECT_SOURCE_DIR}/conf/${ROBOT_NAME}.RobotHardware.conf ${PROJECT_SOURCE_DIR}/conf/${ROBOT_NAME}_nosim.RobotHardware.conf ${PROJECT_SOURCE_DIR}/conf/${ROBOT_NAME}.xml ${PROJECT_SOURCE_DIR}/conf/${ROBOT_NAME}_nosim.xml ${PROJECT_SOURCE_DIR}/conf/${ROBOT_NAME}.conf ${PROJECT_SOURCE_DIR}/conf/${ROBOT_NAME}_nosim.conf)
+configure_file(conf/rtc_on_off_test.conf.in     ${PROJECT_SOURCE_DIR}/conf/${ROBOT_NAME}_rtc_on_off_test.conf)
+add_custom_target(${PROJECT_NAME}_model_files ALL DEPENDS ${PROJECT_SOURCE_DIR}/conf/${ROBOT_NAME}.RobotHardware.conf ${PROJECT_SOURCE_DIR}/conf/${ROBOT_NAME}_nosim.RobotHardware.conf ${PROJECT_SOURCE_DIR}/conf/${ROBOT_NAME}.xml ${PROJECT_SOURCE_DIR}/conf/${ROBOT_NAME}_nosim.xml ${PROJECT_SOURCE_DIR}/conf/${ROBOT_NAME}.conf ${PROJECT_SOURCE_DIR}/conf/${ROBOT_NAME}_nosim.conf ${PROJECT_SOURCE_DIR}/conf/${ROBOT_NAME}_rtc_on_off_test.conf)
 
 include_directories(include ${catkin_INCLUDE_DIRS} ${Boost_INCLUDE_DIRS})
 
@@ -104,6 +105,7 @@ add_rostest(test/test-hironx-ros-bridge.test)
 add_rostest(test/test-hironx-ros-bridge-send.test)
 add_rostest(test/test-hironx-ros-bridge-pose.test)
 add_rostest(test/test-hironx-ros-bridge-controller.test)
+add_rostest(test/test-hironx-rtc-on-off.test)
 
 if (CATKIN_ENABLE_TESTING)
   catkin_add_nosetests(test/test_no_ros.py)

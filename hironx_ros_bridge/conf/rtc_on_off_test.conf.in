@@ -1,0 +1,10 @@
+model: file://@PROJECT_SOURCE_DIR@/models/@ROBOT_NAME@.dae
+dt: 0.005
+collision_pair: RARM_JOINT2:LARM_JOINT2 RARM_JOINT3:LARM_JOINT3 RARM_JOINT4:LARM_JOINT4 RARM_JOINT5:LARM_JOINT5
+end_effectors: rarm,RARM_JOINT5,CHEST_JOINT0,0.0,0.0,0.0,-0.57735027,-0.57735027,-0.57735027,-2.0943951023931953,larm,LARM_JOINT5,CHEST_JOINT0,0.0,0.0,0.0,-0.57735027,-0.57735027,-0.57735027,-2.0943951023931953,
+
+# RTC disable/enable settings which will be loaded via RobotHardware
+CollisionDetector.enable: YES
+ServoController.enable: NO
+DataLogger.enable: NOO  # Test case when typo exists
+
