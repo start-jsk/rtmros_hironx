@@ -5,6 +5,9 @@ from test_hironx import *
 
 class TestHiroFullbody(TestHiro):
 
+    def test_collision_detector_disabled(self):
+        self.assertFalse(['co', "CollisionDetector"] in self.robot.getRTCList())
+
     def fullbody_init (self):
         self.filenames = []
         self.robot.seq_svc.removeJointGroup("larm")
