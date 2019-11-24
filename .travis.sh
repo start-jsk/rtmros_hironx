@@ -58,7 +58,7 @@ if [ $BUILDER == rosbuild ]; then sudo apt-get install -qq -y ros-$ROS_DISTRO-ro
 if [ "$EXTRA_DEB" ]; then sudo apt-get install -q -qq -y $EXTRA_DEB;  fi
   # Setup rosdep
 sudo rosdep init
-rosdep update; while [ $? != 0 ]; do sleep 1; rosdep update; done
+rosdep update --include-eol-distros; while [ $? != 0 ]; do sleep 1; rosdep update --include-eol-distros; done
   ##
 ### install: # Use this to install any prerequisites or dependencies necessary to run your build
   # Create workspace
