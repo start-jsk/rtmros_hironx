@@ -32,6 +32,7 @@
 # ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
 
+import copy
 import math
 import numpy
 import os
@@ -448,10 +449,44 @@ class HIRONX(HrpsysConfigurator2):
             ['fk', "ForwardKinematics"],
             ['ic', "ImpedanceController"],
             ['el', "SoftErrorLimiter"],
-            # ['co', "CollisionDetector"],
+            ['co', "CollisionDetector"],
             ['sc', "ServoController"],
             ['log', "DataLogger"],
             ]
+
+        # Want to move the following to upstream:
+        ## If "(RTC name).enable: NO" is set in RobotHardware conf, remove that RTC
+        ## e.g. "CollisionDetector.enable: NO" in /opt/jsk/etc/HIRONX/hrprtc/Robot.conf
+        if self.ms and self.ms.ref and len(self.ms.ref.get_component_profiles()) > 0:
+            for rtc in copy.deepcopy(rtclist):
+                try:
+                    enable = next(p for p
+                                  in self.ms.ref.get_component_profiles()[0].properties
+                                  if p.name == (rtc[1] + '.enable')).value.value()
+                except StopIteration:
+                    enable = 'YES'
+                if enable == 'NO':
+                    rtclist.remove(rtc)
+                elif enable != 'YES':
+                    print(self.configurator_name +
+                          '\033[31mConfig "' + (rtc[1] + '.enable') + '" is ' +
+                          enable + '. Set YES or NO\033[0m')
+
+        # Specific code to current HIRONX status:
+        ## CollisionDetector.enable is not set in normal conf, but we must remove CollisionDetector
+        co_rtc = ['co', "CollisionDetector"]
+        if co_rtc not in rtclist:
+            pass
+        elif self.ms and self.ms.ref and len(self.ms.ref.get_component_profiles()) > 0:
+            try:
+                next(p for p
+                     in self.ms.ref.get_component_profiles()[0].properties
+                     if p.name == (co_rtc[1] + '.enable')).value.value()
+            except StopIteration:
+                rtclist.remove(co_rtc)
+        else:
+            rtclist.remove(co_rtc)
+
         if hasattr(self, 'rmfo'):
             self.ms.load("RemoveForceSensorLinkOffset")
             self.ms.load("AbsoluteForceSensor")
