@@ -1139,20 +1139,22 @@ class HIRONX(HrpsysConfigurator2):
         offset = 0
         if len(angles) != reduce(lambda x,y: x+len(y[1]), self.Groups, 0):
             offset = 4
-        angles = []
+        group_angles = []
         index = 0
+        if len(angles) != reduce(lambda x,y: x+len(y[1]), self.Groups, 0) + offset + offset:
+            index = 1
         for group in self.Groups:
             joint_num = len(group[1])
-            angles.append(angles[index: index + joint_num])
+            group_angles.append(angles[index: index + joint_num])
             index += joint_num
             if group[0] in ['larm', 'rarm']:
                 index += offset ## FIX ME
         groups = self.Groups
         for i in range(len(groups)):
             if groups[i][0] == limb:
-                return angles[i]
+                return group_angles[i]
         print self.configurator_name, 'could not find limb name ' + limb
-        print self.configurator_name, ' in' + filter(lambda x: x[0], groups)
+        print self.configurator_name, ' in ' + str(map(lambda x: x[0], groups))
 
     def clearOfGroup(self, limb):
         '''!@brief
