@@ -41,6 +41,16 @@ import time
 import roslib
 roslib.load_manifest("hrpsys")
 from hrpsys.hrpsys_config import *
+
+# hot fix for https://github.com/start-jsk/rtmros_hironx/issues/539
+#  On 16.04 (omniorb4-dev 4.1) if we start openhrp-model-loader with
+# <env name="ORBgiopMaxMsgSize" value="2147483648" />
+# all connection(?) conect respenct giopMaxMsgSize
+#  But on 18.04 (omniorb4-dev 4.2) wnneed to set ORBgiopMaxMsgSize=2147483648
+# for each clients
+if not os.environ.has_key('ORBgiopMaxMsgSize'):
+    os.environ['ORBgiopMaxMsgSize'] = '2147483648'
+
 import OpenHRP
 import OpenRTM_aist
 import OpenRTM_aist.RTM_IDL
