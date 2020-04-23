@@ -60,7 +60,6 @@ namespace NEXTAGE_OPEN
         virtual int wait_for_iob_signal(void) = 0;
         virtual long get_signal_period(void) = 0;
         
-        
         virtual int initializeJointAngle(const char *name, const char *option) = 0;
         virtual int read_digital_input(char *dIn) = 0;
         virtual int length_digital_input(void) = 0;
@@ -68,6 +67,12 @@ namespace NEXTAGE_OPEN
         virtual int write_digital_output_with_mask(const char *doutput, const char *mask) = 0;
         virtual int length_digital_output(void) = 0;
         virtual int read_digital_output(char *doutput) = 0;
+
+        #if defined(ROBOT_IOB_VERSION) && ROBOT_IOB_VERSION >= 2
+            virtual int number_of_thermometers(void) = 0;
+            virtual int number_of_batteries(void) = 0;
+            virtual int read_battery(char *battery) = 0;
+        #endif
     };
 
 }

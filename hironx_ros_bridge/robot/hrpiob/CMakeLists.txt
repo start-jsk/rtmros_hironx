@@ -39,14 +39,25 @@ link_directories(/opt/jsk/lib /usr/pkg/lib)
 #endif()
 
 # hrpsys-base
-#include(FindPkgConfig)
+include(FindPkgConfig)
 
 execute_process(
   COMMAND pkg-config --cflags-only-I hrpsys-base
   OUTPUT_VARIABLE HRPSYSBASE_CXX_FLAGS
   RESULT_VARIABLE RESULT)
 
+execute_process(
+  COMMAND pkg-config --modversion hrpsys-base
+  OUTPUT_VARIABLE HRPSYSBASE_VERSION
+  RESULT_VARIABLE RESULT) 
+
 message("HRPSYSBASE_CXX_FLAGS: ${HRPSYSBASE_CXX_FLAGS}")
+message("HRPSYSBASE_VERSION: ${HRPSYSBASE_VERSION}")
+if(NOT "${HRPSYSBASE_VERSION}" VERSION_LESS "315.4.0")
+  add_definitions(-DROBOT_IOB_VERSION=2)
+  message(STATUS "USE VERSION 2 OF IOB") 
+  message(STATUS "ADD DEFINITION -DROBOT_IOB_VERSION=2")
+endif() 
 
 add_definitions(${HRPSYSBASE_CXX_FLAGS})
 

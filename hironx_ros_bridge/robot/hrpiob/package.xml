@@ -1,0 +1,12 @@
+<package format="2">
+  <name>hrpiob</name>
+  <version>1.0.1</version>
+  <description>Hardware I/O interface definition for hrpsys-based robots specific to Kawada's NEXTAGE robot.
+  </description>
+  <author>Kawada Industries Inc.</author>
+  <author>Kawada Robotics Corporation</author>
+  <maintainer email="dev@opensource-robotics.tokyo.jp">TORK</maintainer>
+  <license>CC BY-NC 4.0</license>
+  <buildtool_depend>cmake</buildtool_depend>
+  <depend>hrpsys</depend>  
+</package>
