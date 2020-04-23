@@ -18,6 +18,9 @@
 
   <buildtool_depend>catkin</buildtool_depend>
 
+  <!-- force build depend hironx_moveit_config, so that hrpsys(plain cmake) runs first -->
+  <build_depend>hironx_moveit_config</build_depend>
+  <run_depend>hironx_moveit_config</run_depend>
   <run_depend>calibration_estimation</run_depend>
   <run_depend>calibration_launch</run_depend>
 

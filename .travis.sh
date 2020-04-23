@@ -1,4 +1,4 @@
-$!/bin/bash
+#!/bin/bash
 
 set -x
 
@@ -10,7 +10,7 @@ function error {
   exit 1
 }
 
-trap error ERR
+#trap error ERR
 
 echo "Environment Variables"
 echo "CI_SOURCE_PATH=$CI_SOURCE_PATH"
