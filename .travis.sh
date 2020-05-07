@@ -21,6 +21,7 @@ env | grep ROS
 cd ${CI_SOURCE_PATH}
 
 apt-get update
+DEBIAN_FRONTEND=noninteractive apt-get install -y tzdata
 apt-get install -y sudo software-properties-common git wget sed
 ####### https://github.com/ros-planning/moveit/pull/581
 if [ "$ROS_DISTRO" == "kinetic" ]; then
