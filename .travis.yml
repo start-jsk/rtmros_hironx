@@ -23,6 +23,7 @@ matrix:
   - env: ROS_DISTRO=kinetic ROSWS=wstool BUILDER=catkin    USE_DEB=false ROS_REPOSITORY_PATH=http://packages.ros.org/ros/ubuntu
   - env: ROS_DISTRO=melodic ROSWS=wstool BUILDER=catkin    USE_DEB=true  ROS_REPOSITORY_PATH=http://packages.ros.org/ros/ubuntu
   - env: ROS_DISTRO=melodic ROSWS=wstool BUILDER=catkin    USE_DEB=false ROS_REPOSITORY_PATH=http://packages.ros.org/ros/ubuntu
+  - env: ROS_DISTRO=melodic TEST_TYPE=work_with_315_1_10
 notifications:
   email:
     recipients:
