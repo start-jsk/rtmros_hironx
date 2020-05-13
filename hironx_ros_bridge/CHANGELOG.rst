@@ -2,6 +2,25 @@
 Changelog for package hironx_ros_bridge
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* force set ORBgiopMaxMsgSize=2147483648  for hironx_client.py (`#540 <https://github.com/start-jsk/rtmros_hironx/issues/540>`_)
+
+  * increase test_no_moveit
+  * hot fix for https://github.com/start-jsk/rtmros_hironx/issues/539
+    On 16.04 (omniorb4-dev 4.1) if we start openhrp-model-loader with   <env name="ORBgiopMaxMsgSize" value="2147483648" /> all connection(?) conect respenct giopMaxMsgSize
+    But on 18.04 (omniorb4-dev 4.2) wnneed to set ORBgiopMaxMsgSize=2147483648  for each clients
+
+* [hironx_ros_bridge] Enable to run CollisionDetector RTC by setting conf (Robot.conf) (`#535 <https://github.com/start-jsk/rtmros_hironx/issues/535>`_)
+
+  * [hironx_ros_bridge] Simplify CollisionDetector disabling specific to HIRONX
+  * [hironx_ros_bridge] Generalize disabling/enabling RTCs from conf
+  * [hironx_ros_bridge] Enable to run CollisionDetector RTC by setting conf (Robot.conf)
+  * [hironx_ros_bridge] Add test to check if CollisionDetector is disabled with default conf
+  * [hironx_ros_bridge] Add test to disable/enable RTCs from conf
+
+* Contributors: Kei Okada, Shun Hasegawa
+
 2.1.1 (2019-02-20)
 ------------------
 * Avoid node clashing when USE_COLLISIONCHECK is true (`#528 <https://github.com/start-jsk/rtmros_hironx/issues/528>`_ )
