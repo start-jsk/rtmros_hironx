@@ -2,8 +2,8 @@
 Changelog for package hironx_ros_bridge
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+2.2.0 (2020-05-13)
+------------------
 * force set ORBgiopMaxMsgSize=2147483648  for hironx_client.py (`#540 <https://github.com/start-jsk/rtmros_hironx/issues/540>`_)
 
   * increase test_no_moveit

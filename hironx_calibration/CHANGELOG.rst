@@ -2,8 +2,8 @@
 Changelog for package hironx_calibration
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+2.2.0 (2020-05-13)
+------------------
 * force set ORBgiopMaxMsgSize=2147483648  for hironx_client.py (`#540 <https://github.com/start-jsk/rtmros_hironx/issues/540>`_)
 
   * force build depend hironx_moveit_config, so that hrpsys(plain cmake) runs before hironx_calibration
