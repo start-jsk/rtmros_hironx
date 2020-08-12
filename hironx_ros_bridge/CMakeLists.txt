@@ -1,15 +1,30 @@
 cmake_minimum_required(VERSION 2.8.3)
 project(hironx_ros_bridge)
 
-find_package(catkin REQUIRED COMPONENTS hrpsys_ros_bridge roslib roslint rostest)
+find_package(catkin REQUIRED COMPONENTS hrpsys_ros_bridge roslib roslint rostest rtmbuild)
 find_package(Boost REQUIRED COMPONENTS system)
 
+# catkin_python_setup() must be before generate_messages() included in rtmbuild_init()
+catkin_python_setup()
+
+# for generating bridge for old impedance controller
+include(${PROJECT_SOURCE_DIR}/cmake/rtmbuild_customed.cmake)
+
+# initialize rtmbuild for old impedance controller
+rtmbuild_init()
+
+# call catkin_package, after rtmbuild_init, before rtmbuild_gen*
 catkin_package(
     CATKIN_DEPENDS hrpsys_ros_bridge roslib #
     INCLUDE_DIRS include
+    CFG_EXTRAS rtmbuild_customed.cmake
 )
 
-catkin_python_setup()
+# generate idl for old impedance controller
+rtmbuild_genidl_customed()
+
+# generate bridge for old impedance controller
+rtmbuild_genbridge()
 
 add_custom_command(OUTPUT ${PROJECT_SOURCE_DIR}/models/kawada-hironx.dae
   COMMAND ${catkin_EXTRAS_DIR}/test/download_checkmd5.py
@@ -73,6 +88,8 @@ install(DIRECTORY conf DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION} PATTERN "
 install(DIRECTORY models DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION} PATTERN ".svn" EXCLUDE)
 install(DIRECTORY resource DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION})
 install(DIRECTORY test DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION} USE_SOURCE_PERMISSIONS PATTERN ".svn" EXCLUDE)
+install(DIRECTORY idl DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION} USE_SOURCE_PERMISSIONS)
+install(DIRECTORY cmake DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION} USE_SOURCE_PERMISSIONS)
 install(FILES rqt_plugin.xml DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION})
 
 install(CODE "
