@@ -403,12 +403,36 @@ class HIRONX(HrpsysConfigurator2):
         @type tm: float
         @param tm: Second to complete.
         '''
+        # If you're using real robot AND servos are off, simply return False
+        # and indicate why.
+        if (not self.simulation_mode) and (not self.isServoOn('any')):
+            return False
+
         for i in range(len(self.Groups)):
             self.setJointAnglesOfGroup(self.Groups[i][0], self.OffPose[i], tm,
                                        wait=False)
         for i in range(len(self.Groups)):
             self.seq_svc.waitInterpolationOfGroup(self.Groups[i][0])
         self.servoOff(wait=False)
+
+    def _servo_ready(self, joint_examined='any'):
+        '''
+        @param joint_examined: Same as `jname` in HIRONX.isServoOn
+        @rtype: [str]
+        @return List of joints that are not ready (e.g. servos that are off).
+        '''
+        # If you're using real robot AND servos are off, simply return False
+        # and indicate why.
+        joints_servooff = None
+        if self.simulation_mode:
+            print('On simulation so servos are always on.')
+        if not self.simulation_mode:
+            joints_servooff = self.isServoOn(joint_examined, return_servos=True)
+            if joints_servooff:
+                print('One or more servos are off: {}'.format(joints_servooff))
+            else:
+                print('All servos are on.')
+        return joints_servooff
 
     def goInitial(self, tm=7, wait=True, init_pose_type=0):
         '''
@@ -425,24 +449,32 @@ class HIRONX(HrpsysConfigurator2):
                                1: factory init pose (specified as
                                   _InitialPose_Factory)
         '''
+        servos_not_ready = self._servo_ready()
+
         if init_pose_type == self.INITPOS_TYPE_FACTORY:
             _INITPOSE = self._InitialPose_Factory
         else:
             _INITPOSE = self._InitialPose
 
         ret = True
+        joints_failed = None
         for i in range(len(self.Groups)):
             # radangles = [x/180.0*math.pi for x in self._InitialPose[i]]
             print(
                 '{}, JntAnglesOfGr={}, INITPOSE[i]={}, tm={}, wait={}'.format(
                     self.configurator_name, self.Groups[i][0], _INITPOSE[i],
                     tm, wait))
-            ret &= self.setJointAnglesOfGroup(self.Groups[i][0],
+            ret_joint = self.setJointAnglesOfGroup(self.Groups[i][0],
                                               _INITPOSE[i],
                                               tm, wait=False)
+            if not ret_joint:
+                joints_failed.extend(self.Groups[i][0])
+            ret &= ret_joint
         if wait:
             for i in range(len(self.Groups)):
                 self.seq_svc.waitInterpolationOfGroup(self.Groups[i][0])
+        if not ret:
+            print('Joints failed to execute the command: {}'.format(joints_failed))
         return ret
 
     def getRTCList(self):
@@ -651,7 +683,7 @@ class HIRONX(HrpsysConfigurator2):
                     return False
         return True
 
-    def isServoOn(self, jname='any'):
+    def isServoOn(self, jname='any', return_servos=False):
         '''
         Check whether servo control has been turned on. Check is done by
         HIRONX.getActualState().servoState.
@@ -662,25 +694,38 @@ class HIRONX(HrpsysConfigurator2):
                       Reserved values:
                       - any: This command will check all servos available.
                       - all: Same as 'any'.
-        @rtype bool
-        @return: If jname is specified either 'any' or 'all', return False
-                 if the control of any of servos isn't available.
+        @type return_servos: bool
+        @param return_servos: Set True to return the tuple (see @return section).
+        @rtype bool (or [str] if return_servos is True)
+        @return: - If jname is specified either 'any' or 'all', return False
+                   if the control of any of servos isn't available.
+                 - If return_servos is True, list of the joint names that are not
+                   ready to take commands.
         '''
         if self.simulation_mode:
             return True
         else:
             s_s = self.getActualState().servoState
+            joints_off = []
             if jname.lower() == 'any' or jname.lower() == 'all':
                 for s in s_s:
                     # print self.configurator_name, 's = ', s
                     if (s[0] & 2) == 0:
-                        return False
+                        if return_servos:
+                            joints_off.append(s[0])
             else:
                 jid = eval('self.' + jname)
                 print self.configurator_name, s_s[jid]
                 if s_s[jid][0] & 1 == 0:
+                    joints_off.append(s[0])
+            # If no servos are off, return True.
+            if len(joints_off) == 0:
+                return True
+            else:
+                if return_servos:
+                    return joints_off
+                else:
                     return False
-            return True
         return False
 
     def flat2Groups(self, flatList):

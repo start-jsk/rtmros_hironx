@@ -233,6 +233,22 @@ class TestHiroLimb(TestHiro):
         self.robot.goInitial()
         self.assertTrue(self.robot.setTargetPoseRelative('torso', 'CHEST_JOINT0', dw=min_waist_yaw*safety_coeffiecient, tm=durtion_operation))
 
+    def test_isServoOn_virtual(self):
+        '''
+        Test isServoOn method virtually (ie. without robot hardware).
+        '''
+        # TODO @130s tried to add more tests, such as passing specific joints
+        #      as an arg to HIRONX.isServoOn, but the approached tried doesn't
+        #      work (servoOff a joint on simulation with robot.simulation_mode == False),
+        #      so solution is required here.
+        self.robot.simulation_mode = False
+        # We want to test cases where the tests fail, but as mentioned above
+        # it's not yet figured out how. So here just simply test if the methods return True,
+        # which should always happen on simulation.
+        self.assertTrue(self.robot.isServoOn('all'))
+        self.assertIsNotNone(self.robot.isServoOn(return_servos=True))
+
+
 if __name__ == '__main__':
     import rostest
     rostest.rosrun(PKG, 'test_hronx_limb', TestHiroLimb) 
