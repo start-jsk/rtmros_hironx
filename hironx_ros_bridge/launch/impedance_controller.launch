@@ -1,0 +1,23 @@
+<!-- Launch ros bridge for old impedance controller in HiroNX -->
+<launch>
+  <arg name="nameserver" default="localhost" />
+  <arg name="corbaport" default="15005" />
+  <arg name="SIMULATOR_NAME" default="RobotHardware0"/>
+  <env name="SIMULATOR_NAME" value="$(arg SIMULATOR_NAME)" />
+  <env name="RTCTREE_NAMESERVERS" value="$(arg nameserver):$(arg corbaport)" />
+
+  <arg name="omniorb_args" default="-ORBInitRef NameService=corbaloc:iiop:$(arg nameserver):$(arg corbaport)/NameService" />
+  <arg name="openrtm_args" default='-o "corba.nameservers:$(arg nameserver):$(arg corbaport)" -o "naming.formats:%n.rtc" -o "exec_cxt.periodic.type:PeriodicExecutionContext" -o "exec_cxt.periodic.rate:2000" -o "logger.file_name:/tmp/rtc%p.log"' />
+
+  <!-- Launch ImpedanceController and AbsoluteForceSensor -->
+  <node pkg="hironx_ros_bridge" name="ImpedanceControllerServiceROSBridge" type="ImpedanceControllerServiceROSBridgeComp"
+        output="screen" args ="$(arg openrtm_args)" />
+  <node pkg="hironx_ros_bridge" name="AbsoluteForceSensorServiceROSBridge" type="AbsoluteForceSensorServiceROSBridgeComp"
+        output="screen" args="$(arg openrtm_args)" />
+  <rtconnect from="ImpedanceControllerServiceROSBridge.rtc:ImpedanceControllerService" to="ic.rtc:ImpedanceControllerService"  subscription_type="new"/>
+  <rtactivate component="ImpedanceControllerServiceROSBridge.rtc" />
+  <rtconnect from="AbsoluteForceSensorServiceROSBridge.rtc:AbsoluteForceSensorService" to="rmfo.rtc:AbsoluteForceSensorService"  subscription_type="new"/>
+  <rtactivate component="AbsoluteForceSensorServiceROSBridge.rtc" />
+  <node name="rtmlaunch_impedance_controller" pkg="openrtm_tools" type="rtmlaunch.py"
+        args="$(find hironx_ros_bridge)/launch/impedance_controller.launch" />
+</launch>

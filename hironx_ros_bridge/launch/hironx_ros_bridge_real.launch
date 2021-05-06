@@ -7,7 +7,7 @@
   <env name="RTCTREE_NAMESERVERS" value="$(arg nameserver):$(arg corbaport)" />
   <arg name="USE_ROBOTHARDWARE" default="true" />
   <arg name="USE_SERVOCONTROLLER" default="true" />
-  <arg name="USE_IMPEDANCECONTROLLER" default="false"/>
+  <arg name="USE_IMPEDANCECONTROLLER" default="true"/>
   <arg name="USE_COLLISIONCHECK" default="false"/>
   <arg name="USE_HAND_JOINT_STATE_PUBLISHER" default="true"/>
 

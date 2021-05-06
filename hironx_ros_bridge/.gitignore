@@ -1,0 +1,9 @@
+# For rtmbuild
+msg/OpenHRP_*
+srv/OpenHRP_*
+src_gen
+
+# For others
+conf/*.conf
+conf/*.xml
+*.pyc
