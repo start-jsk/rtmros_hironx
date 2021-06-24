@@ -1,28 +1,35 @@
 #   Original Author: Kei Okada, William Woodall, Mani Monajjemi
 sudo: required
-dist: trusty
+dist: bionic
 # Force travis to use its minimal image with default Python settings
 language: generic
+cache:
+  apt: true
+  pip: true
+  directories:
+    - $HOME/.ccache
+    - $HOME/.cache/pip
+    - $HOME/apt-cacher-ng
 env:
+  global:
+    - ROSWS=wstool
+    - BUILDER=catkin
+    - USE_TRAVIS=true
+    - USE_DOCKER=true
   matrix:
-  - ROS_DISTRO=indigo  ROSWS=wstool BUILDER=catkin    USE_DEB=true  ROS_REPOSITORY_PATH=http://packages.ros.org/ros/ubuntu
-  - ROS_DISTRO=indigo  ROSWS=wstool BUILDER=catkin    USE_DEB=true  ROS_REPOSITORY_PATH=http://packages.ros.org/ros-shadow-fixed/ubuntu
-  - ROS_DISTRO=indigo  ROSWS=wstool BUILDER=catkin    USE_DEB=false ROS_REPOSITORY_PATH=http://packages.ros.org/ros/ubuntu
-  - ROS_DISTRO=indigo  TEST_TYPE=work_with_315_1_10
-  - ROS_DISTRO=kinetic ROSWS=wstool BUILDER=catkin    USE_DEB=true  ROS_REPOSITORY_PATH=http://packages.ros.org/ros/ubuntu
-  - ROS_DISTRO=kinetic ROSWS=wstool BUILDER=catkin    USE_DEB=true  ROS_REPOSITORY_PATH=http://packages.ros.org/ros-shadow-fixed/ubuntu
-  - ROS_DISTRO=kinetic ROSWS=wstool BUILDER=catkin    USE_DEB=false ROS_REPOSITORY_PATH=http://packages.ros.org/ros/ubuntu
+  - ROS_DISTRO=indigo USE_DEB=true
+  - ROS_DISTRO=indigo USE_DEB=false
+  - ROS_DISTRO=indigo TEST_TYPE=work_with_315_1_10
+  - ROS_DISTRO=kinetic USE_DEB=true
+  - ROS_DISTRO=kinetic USE_DEB=false
   - ROS_DISTRO=kinetic TEST_TYPE=work_with_315_1_10
-  - ROS_DISTRO=melodic ROSWS=wstool BUILDER=catkin    USE_DEB=true  ROS_REPOSITORY_PATH=http://packages.ros.org/ros/ubuntu
-  - ROS_DISTRO=melodic ROSWS=wstool BUILDER=catkin    USE_DEB=true  ROS_REPOSITORY_PATH=http://packages.ros.org/ros-shadow-fixed/ubuntu
-  - ROS_DISTRO=melodic ROSWS=wstool BUILDER=catkin    USE_DEB=false ROS_REPOSITORY_PATH=http://packages.ros.org/ros/ubuntu
+  - ROS_DISTRO=melodic USE_DEB=true
+  - ROS_DISTRO=melodic USE_DEB=false
   - ROS_DISTRO=melodic TEST_TYPE=work_with_315_1_10
 matrix:
   allow_failures:
-  - env: ROS_DISTRO=kinetic ROSWS=wstool BUILDER=catkin    USE_DEB=true  ROS_REPOSITORY_PATH=http://packages.ros.org/ros/ubuntu
-  - env: ROS_DISTRO=kinetic ROSWS=wstool BUILDER=catkin    USE_DEB=false ROS_REPOSITORY_PATH=http://packages.ros.org/ros/ubuntu
-  - env: ROS_DISTRO=melodic ROSWS=wstool BUILDER=catkin    USE_DEB=true  ROS_REPOSITORY_PATH=http://packages.ros.org/ros/ubuntu
-  - env: ROS_DISTRO=melodic ROSWS=wstool BUILDER=catkin    USE_DEB=false ROS_REPOSITORY_PATH=http://packages.ros.org/ros/ubuntu
+  - env: ROS_DISTRO=kinetic USE_DEB=false
+  - env: ROS_DISTRO=melodic USE_DEB=false
   - env: ROS_DISTRO=melodic TEST_TYPE=work_with_315_1_10
 notifications:
   email:
@@ -31,10 +38,11 @@ notifications:
     on_success: always #[always|never|change] # default: change
     on_failure: always #[always|never|change] # default: always
 before_install: # Use this to prepare the system to install prerequisites or dependencies
-  - case $ROS_DISTRO in "hydro") export DISTRO=precise;; "indigo") export DISTRO=trusty;; "kinetic") export DISTRO=xenial;; "melodic") export DISTRO=bionic;; "noetic") export DISTRO=focal;; esac;
-  - export DOCKER_IMAGE=ubuntu:$DISTRO
-  - export CI_SOURCE_PATH=$(pwd)
-  - export REPOSITORY_NAME=${PWD##*/}
-  - docker images
+  - if [ "${TEST_TYPE}" != "" ] ; then case $ROS_DISTRO in "hydro") export DISTRO=precise;; "indigo") export DISTRO=trusty;; "kinetic") export DISTRO=xenial;; "melodic") export DISTRO=bionic;; "noetic") export DISTRO=focal;; esac; fi
+  - if [ "${TEST_TYPE}" != "" ] ; then export DOCKER_IMAGE=ubuntu:$DISTRO; fi
+  - if [ "${TEST_TYPE}" != "" ] ; then export CI_SOURCE_PATH=$(pwd); fi
+  - if [ "${TEST_TYPE}" != "" ] ; then export REPOSITORY_NAME=${PWD##*/}; fi
+  - if [ "${TEST_TYPE}" != "" ] ; then docker images; fi
 script:
-  - docker run -v $HOME:$HOME -e CI_SOURCE_PATH -e REPOSITORY_NAME -e HOME -e DISTRO -e ROS_DISTRO -e ROS_LOG_DIR -e TEST_TYPE -e TEST_PACKAGE -e USE_DEB -e ROSWS -e BUILDER -e ROS_REPOSITORY_PATH -e CI_SOURCE_PATH -e REPOSITORY_NAME -e ROS_PARALLEL_JOBS -e COMILE_OPTION $DOCKER_IMAGE bash -c 'cd $CI_SOURCE_PATH; source .travis.sh'
+  - if [ "${TEST_TYPE}" == "" ] ; then source .travis/travis.sh; fi
+  - if [ "${TEST_TYPE}" != "" ] ; then docker run -v $HOME:$HOME -e CI_SOURCE_PATH -e REPOSITORY_NAME -e HOME -e DISTRO -e ROS_DISTRO -e ROS_LOG_DIR -e TEST_TYPE -e TEST_PACKAGE -e USE_DEB -e ROSWS -e BUILDER -e ROS_REPOSITORY_PATH -e CI_SOURCE_PATH -e REPOSITORY_NAME -e ROS_PARALLEL_JOBS -e COMILE_OPTION $DOCKER_IMAGE bash -c 'cd $CI_SOURCE_PATH; source .travis.sh'; fi

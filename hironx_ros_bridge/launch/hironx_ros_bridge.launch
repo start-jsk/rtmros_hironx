@@ -39,6 +39,7 @@
     <arg name="USE_SERVOCONTROLLER" value="$(arg USE_SERVOCONTROLLER)" />
 
     <arg name="corbaport" default="$(arg corbaport)" />
+    <arg name="periodic_rate" default="200" />
   </include>
 <!--
   <node name="hironx_rviz" pkg="rviz" type="rviz" respawn="true"
