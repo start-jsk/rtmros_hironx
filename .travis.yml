@@ -3,10 +3,19 @@ sudo: required
 dist: bionic
 # Force travis to use its minimal image with default Python settings
 language: generic
+cache:
+  apt: true
+  pip: true
+  directories:
+    - $HOME/.ccache
+    - $HOME/.cache/pip
+    - $HOME/apt-cacher-ng
 env:
   global:
     - ROSWS=wstool
     - BUILDER=catkin
+    - USE_TRAVIS=true
+    - USE_DOCKER=true
   matrix:
   - ROS_DISTRO=indigo USE_DEB=true
   - ROS_DISTRO=indigo USE_DEB=false
