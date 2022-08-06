@@ -20,4 +20,6 @@ install(DIRECTORY launch config models test www
   USE_SOURCE_PERMISSIONS)
 
 
-add_rostest(test/test-hironx-moveit.test)
+if (CATKIN_ENABLE_TESTING)
+  add_rostest(test/test-hironx-moveit.test)
+endif()
