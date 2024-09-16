@@ -1,0 +1,14 @@
+<launch>
+  
+<!-- A launch file to independently (re-)launch the point head action for debugging -->
+
+<group ns="head_controller" >  
+  <node name="point_head_action"
+        pkg="hironx_head_action" type="head_action" output="screen" >
+    <rosparam>
+      success_angle_threshold: 0.01
+    </rosparam>
+  </node>
+</group>
+
+</launch>
