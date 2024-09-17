@@ -38,4 +38,6 @@
 
   <node if="$(arg USE_HAND_JOINT_STATE_PUBLISHER)"
 	name="hand_joint_state_publisher" type="hand_joint_state_publisher.py" pkg="hironx_ros_bridge"/>
+
+  <node name="waist_link_publisher" type="static_transform_publisher" pkg="tf" args="0 0 0 0 0 0 /WAIST /WAIST_Link 1"/>
 </launch>
