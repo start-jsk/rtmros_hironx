@@ -57,12 +57,12 @@ def setTargetAngular(self, group_name, x, y, z, r, p, w, rate=10.0, wait=True):
     scaling_factor_translation = 50
     scaling_factor_rotation = 5
     x_now, y_now, z_now, r_now, p_now, w_now = self.getCurrentConfiguration(joint_name)
-    translation_distances = map(abs, [x-x_now * scaling_factor_translation,
+    translation_distances = list(map(abs, [x-x_now * scaling_factor_translation,
                                       y-y_now * scaling_factor_translation,
-                                      z-z_now * scaling_factor_translation])
-    rotation_distances = map(abs, [r-r_now * scaling_factor_rotation,
+                                      z-z_now * scaling_factor_translation]))
+    rotation_distances = list(map(abs, [r-r_now * scaling_factor_rotation,
                                    p-p_now * scaling_factor_rotation,
-                                   w-w_now * scaling_factor_rotation])
+                                   w-w_now * scaling_factor_rotation]))
     max_dist = max(translation_distances + rotation_distances)  # This is just concatenated
     mvmt_time = max_dist / rate
 
