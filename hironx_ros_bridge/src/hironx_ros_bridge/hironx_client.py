@@ -39,6 +39,7 @@ import os
 import time
 
 import roslib
+from functools import reduce
 roslib.load_manifest("hrpsys")
 from hrpsys.hrpsys_config import *
 
@@ -48,7 +49,7 @@ from hrpsys.hrpsys_config import *
 # all connection(?) conect respenct giopMaxMsgSize
 #  But on 18.04 (omniorb4-dev 4.2) wnneed to set ORBgiopMaxMsgSize=2147483648
 # for each clients
-if not os.environ.has_key('ORBgiopMaxMsgSize'):
+if 'ORBgiopMaxMsgSize' not in os.environ:
     os.environ['ORBgiopMaxMsgSize'] = '2147483648'
 
 import OpenHRP
@@ -81,7 +82,7 @@ def delete_module(modname, paranoid=None):
         else:
             these_symbols = paranoid[:]
     del modules[modname]
-    for mod in modules.values():
+    for mod in list(modules.values()):
         try:
             delattr(mod, modname)
         except AttributeError:
@@ -249,7 +250,7 @@ class HrpsysConfigurator2(HrpsysConfigurator): ## JUST FOR TEST, REMOVE WHEN YOU
         # This method should be removed as part of
         # https://github.com/start-jsk/rtmros_hironx/pull/470, once
         # https://github.com/fkanehiro/hrpsys-base/pull/1063 resolves.
-        if gname.upper() not in map (lambda x : x[0].upper(), self.Groups):
+        if gname.upper() not in [x[0].upper() for x in self.Groups]:
             print("setTargetPose failed. {} is not available in the kinematic groups. "
                   "Check available Groups (by e.g. self.Groups/robot.Groups). ".format(gname))
             return False
@@ -347,13 +348,13 @@ class HIRONX(HrpsysConfigurator2):
 
         print(self.configurator_name + "finding RTCManager and RobotHardware")
         HrpsysConfigurator.waitForRTCManagerAndRoboHardware(self, robotname=robotname)
-        print self.configurator_name, "Hrpsys controller version info: "
+        print(self.configurator_name, "Hrpsys controller version info: ")
         if self.ms :
-            print self.configurator_name, "  ms = ", self.ms
+            print(self.configurator_name, "  ms = ", self.ms)
         if self.ms and self.ms.ref :
-            print self.configurator_name, "  ref = ", self.ms.ref
+            print(self.configurator_name, "  ref = ", self.ms.ref)
         if self.ms and self.ms.ref and len(self.ms.ref.get_component_profiles()) > 0:
-            print self.configurator_name, "  version  = ", self.ms.ref.get_component_profiles()[0].version
+            print(self.configurator_name, "  version  = ", self.ms.ref.get_component_profiles()[0].version)
         if self.ms and self.ms.ref and len(self.ms.ref.get_component_profiles()) > 0 and StrictVersion(self.ms.ref.get_component_profiles()[0].version) < StrictVersion('315.2.0'):
             sys.path.insert(0, os.path.join(os.path.dirname(os.path.realpath(__file__)), 'hrpsys_315_1_9/hrpsys'))
             delete_module('ImpedanceControllerService_idl')
@@ -505,7 +506,7 @@ class HIRONX(HrpsysConfigurator2):
             elif "AbsoluteForceSensor" in self.ms.get_factory_names():
                 rtclist.append(['rmfo', "AbsoluteForceSensor"])
             else:
-                print "Component rmfo is not loadable."
+                print("Component rmfo is not loadable.")
         return rtclist
 
     # hand interface
@@ -562,7 +563,7 @@ class HIRONX(HrpsysConfigurator2):
         @type effort: int
         '''
 
-        for i in [v for vs in self.HandGroups.values() for v in vs]:  # flatten
+        for i in [v for vs in list(self.HandGroups.values()) for v in vs]:  # flatten
             self.sc_svc.setMaxTorque(i, effort)
 
     def setHandWidth(self, hand, width, tm=1, effort=None):
@@ -582,7 +583,7 @@ class HIRONX(HrpsysConfigurator2):
         if hand:
             self.setHandJointAngles(hand, self.hand_width2angles(width), tm)
         else:
-            for h in self.HandGroups.keys():
+            for h in list(self.HandGroups.keys()):
                 self.setHandJointAngles(h, self.hand_width2angles(width), tm)
 
     def moveHand(self, hand, av, tm=1):  # direction av: + for open, - for close
@@ -633,7 +634,7 @@ class HIRONX(HrpsysConfigurator2):
         #      natural if it accepts it.
         for item in self.Groups:
             self.seq_svc.addJointGroup(item[0], item[1])
-        for k, v in self.HandGroups.iteritems():
+        for k, v in self.HandGroups.items():
             if self.sc_svc:
                 self.sc_svc.addJointGroup(k, v)
 
@@ -677,7 +678,7 @@ class HIRONX(HrpsysConfigurator2):
                         return False
             else:
                 jid = eval('self.' + jname)
-                print self.configurator_name, s_s[jid]
+                print(self.configurator_name, s_s[jid])
                 if s_s[jid][0] & 1 == 0:
                     return False
             return True
@@ -793,25 +794,25 @@ class HIRONX(HrpsysConfigurator2):
             time.sleep(2)
             # time.sleep(7)
             if not self.isServoOn(jname):
-                print self.configurator_name, 'servo on failed.'
+                print(self.configurator_name, 'servo on failed.')
                 raise
         except:
-            print self.configurator_name, 'exception occured'
+            print(self.configurator_name, 'exception occured')
 
         try:
-            angles = self.flat2Groups(map(numpy.rad2deg,
-                                          self.getActualState().angle))
-            print 'Move to Actual State, Just a minute.'
+            angles = self.flat2Groups(list(map(numpy.rad2deg,
+                                          self.getActualState().angle)))
+            print('Move to Actual State, Just a minute.')
             for i in range(len(self.Groups)):
                 self.setJointAnglesOfGroup(self.Groups[i][0], angles[i], tm,
                                            wait=False)
             for i in range(len(self.Groups)):
                 self.seq_svc.waitInterpolationOfGroup(self.Groups[i][0])
         except:
-            print self.configurator_name, 'post servo on motion trouble'
+            print(self.configurator_name, 'post servo on motion trouble')
 
         # turn on hand motors
-        print 'Turn on Hand Servo'
+        print('Turn on Hand Servo')
         if self.sc_svc:
             is_servoon = self.sc_svc.servoOn()
             print('Hands Servo on: ' + str(is_servoon))
@@ -838,10 +839,10 @@ class HIRONX(HrpsysConfigurator2):
         '''
         # do nothing for simulation
         if self.simulation_mode:
-            print self.configurator_name, 'omit servo off'
+            print(self.configurator_name, 'omit servo off')
             return 0
 
-        print 'Turn off Hand Servo'
+        print('Turn off Hand Servo')
         if self.sc_svc:
             self.sc_svc.servoOff()
         # if the servos aren't on switch power off
@@ -866,13 +867,13 @@ class HIRONX(HrpsysConfigurator2):
                 self.rh_svc.power('all', SWITCH_OFF)
 
             # turn off hand motors
-            print 'Turn off Hand Servo'
+            print('Turn off Hand Servo')
             if self.sc_svc:
                 self.sc_svc.servoOff()
 
             return 2
         except:
-            print self.configurator_name, 'servo off: communication error'
+            print(self.configurator_name, 'servo off: communication error')
             return -1
 
     def checkEncoders(self, jname='all', option=''):
@@ -911,15 +912,15 @@ class HIRONX(HrpsysConfigurator2):
         try:
             waitInputConfirm(msg)
         except:
-            print "If you're connecting to the robot from remote, " + \
-                  "make sure tunnel X (eg. -X option with ssh)."
+            print("If you're connecting to the robot from remote, " + \
+                  "make sure tunnel X (eg. -X option with ssh).")
             self.rh_svc.power('all', SWITCH_OFF)
             return 0
 
         is_result_hw = True
-        print self.configurator_name, 'calib-joint ' + jname + ' ' + option
+        print(self.configurator_name, 'calib-joint ' + jname + ' ' + option)
         self.rh_svc.initializeJointAngle(jname, option)
-        print self.configurator_name, 'done'
+        print(self.configurator_name, 'done')
         is_result_hw = is_result_hw and self.rh_svc.power('all', SWITCH_OFF)
         self.goActual()  # This needs to happen before turning servo on.
         time.sleep(0.1)
@@ -928,7 +929,7 @@ class HIRONX(HrpsysConfigurator2):
             # The step described in the following msg is confirmed by the manufacturer 12/14/2015
             print("Turning servos ({}) failed. This is likely because of issues happening in lower level. Please check if the Kawada's proprietary tool NextageOpenSupervisor returns without issue or not. If the issue persists, contact the manufacturer.".format(jname))
         # turn on hand motors
-        print 'Turn on Hand Servo'
+        print('Turn on Hand Servo')
         if self.sc_svc:
             self.sc_svc.servoOn()
 
@@ -966,7 +967,7 @@ class HIRONX(HrpsysConfigurator2):
             ic_sensor_name = 'lhsensor'
             ic_target_name = 'LARM_JOINT5'
         else:
-            print 'startImpedance: argument must be rarm or larm.'
+            print('startImpedance: argument must be rarm or larm.')
             return
 
         self.ic_svc.setImpedanceControllerParam(
@@ -996,7 +997,7 @@ class HIRONX(HrpsysConfigurator2):
         elif arm == 'larm':
             ic_sensor_name = 'lhsensor'
         else:
-            print 'startImpedance: argument must be rarm or larm.'
+            print('startImpedance: argument must be rarm or larm.')
             return
         self.ic_svc.deleteImpedanceControllerAndWait(ic_sensor_name)
 
@@ -1161,8 +1162,8 @@ class HIRONX(HrpsysConfigurator2):
         for i in range(len(groups)):
             if groups[i][0] == limb:
                 return angles[i]
-        print self.configurator_name, 'could not find limb name ' + limb
-        print self.configurator_name, ' in' + filter(lambda x: x[0], groups)
+        print(self.configurator_name, 'could not find limb name ' + limb)
+        print(self.configurator_name, ' in' + [x for x in groups if x[0]])
 
     def clearOfGroup(self, limb):
         '''!@brief
@@ -1174,5 +1175,5 @@ class HIRONX(HrpsysConfigurator2):
                                'software version ' + self.seq_version)
         HrpsysConfigurator.clearOfGroup(self, limb)
         angles = self.getJointAnglesOfGroup(limb)
-        print self.configurator_name, 'clearOfGroup(' + limb + ') will send ' + str(angles) + ' to update seqplay until https://github.com/fkanehiro/hrpsys-base/pull/1141 is available'
+        print(self.configurator_name, 'clearOfGroup(' + limb + ') will send ' + str(angles) + ' to update seqplay until https://github.com/fkanehiro/hrpsys-base/pull/1141 is available')
         self.setJointAnglesOfGroup(limb, angles, 0.1, wait=True)

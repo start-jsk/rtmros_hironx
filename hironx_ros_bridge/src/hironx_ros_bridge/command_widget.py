@@ -34,7 +34,7 @@
 
 import os
 try:  # Python2
-    from urlparse import urlparse
+    from urllib.parse import urlparse
 except ImportError:  # Python3
     from urllib.parse import urlparse
 
